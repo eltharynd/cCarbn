@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "fs": "0.0.1-security",
     "rjs": "^4.0.2",
     "tmi": "^2.0.0"
   }

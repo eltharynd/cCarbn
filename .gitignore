@@ -1,5 +1,6 @@
+twitch_credentials.json
+
 node_modules
 dist
 **/~$*
-
-twitch_credentials
+twitch_credentials.json

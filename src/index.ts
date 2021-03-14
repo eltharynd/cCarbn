@@ -1,4 +1,5 @@
 import tmi from 'tmi'
+import * as fs from 'fs'
 
 console.log('elthabot started')
 
