@@ -1,6 +1,6 @@
 twitch_credentials.json
+mongo_credentials.json
 
 node_modules
 dist
 **/~$*
-twitch_credentials.json
