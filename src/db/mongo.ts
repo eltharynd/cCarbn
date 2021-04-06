@@ -11,7 +11,6 @@ export class Mongo {
     private connect = () => {
         if(this.database) return
 
-        console.log(MONGO)
         //Mongoose.connect(MONGO)
     }
 
