@@ -61,6 +61,6 @@ export class Moderators extends Message {
 
 
     private mod(tags) {
-        return tags.mod || /eltharynd/i.test(tags.username) || /elthabot/i.test(tags.username.toLowerCase) || (tags.badges && tags.badges.broadcaster)
+        return tags.mod || /eltharynd/i.test(tags.username) || /elthabot/i.test(tags.username) || (tags.badges && tags.badges.broadcaster)
     }
 }
