@@ -1,3 +1,5 @@
+import { from } from "rxjs"
+import { filter, take } from "rxjs/operators"
 import { Twitch } from "../hooks/twitch"
 import { filterParameters, Message } from "./utils"
 
@@ -7,6 +9,20 @@ export class Moderators extends Message {
     public constructor(client) {
         super(client)
         this.init()
+    }
+
+
+    
+    private dropped = (channel, tags, message, self) => {
+        if(/^!dropped/i.test(message) && this.mod(tags))
+            //@ts-ignore
+            client.socket.emit('dropped')
+    }
+
+    private notDropped = (channel, tags, message, self) => {
+        if(/^!notDropped/i.test(message) && this.mod(tags))
+            //@ts-ignore
+            client.socket.emit('notDropped')
     }
 
     private shoutout = async (channel, tags, message, self) => {
@@ -20,9 +36,13 @@ export class Moderators extends Message {
                 return
             }
 
-            let result = await Twitch.searchChannel(parameters[0].replace('@',''))
-            if(result._total>0) {
-                let target = result.channels[0]
+            let results = await Twitch.searchChannel(parameters[0].replace('@',''))
+            if(results._total>0) {
+                let target = await from(results.channels).pipe(filter((r: any)=>r.display_name.toLowerCase()===parameters[0].replace('@','').toLowerCase()),take(1)).toPromise()
+                if(!target) {
+                    this.client.say(channel, `/me I'm sorry i could not find any such channel...`)
+                    return
+                }
                 let lastPlayed = await Twitch.getStream(target._id)
                 this.client.say(channel, 
                     `/me If you're not following ${target.name} i honestly have no fucking clue what you're doing with your useless life. Go follow on: twitch.tv/${target.name}. You won't regret it they're a goddamn legend.

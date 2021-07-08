@@ -46,14 +46,14 @@ export class Everyone extends Message {
 
     private jam = (channel, tags, message, self) => {
         if(/^!jam/i.test(message)) {
-            //if(this.timeout(20*60)) return
+            //if(this.timeout(20)) return
             this.client.say(channel, `/me catJAM WE catJAM CAT catJAM WE catJAM JAM catJAM NO catJAM MODS catJAM NO catJAM BAN catJAM`)
         }
     }
 
     private leydyHype = (channel, tags, message, self) => {
         if(/^!leydy/i.test(message)) {
-            if(this.timeout(4*60)) return
+            if(this.timeout(4)) return
             this.client.say(channel, `/me HIT EM HIT EM blobDance Jammies SMACK EM DOWN hollowD hypeE WE'RE THE LEYDY SQUAD MODS pepeDS AND WE'LL SNATCH THIS RUN ppJedi blobDance`)
         }
     }
@@ -106,6 +106,12 @@ export class Everyone extends Message {
         if(/^!bread/i.test(message)) {
             if(this.timeout(10)) return
             this.client.say(channel, `/me Yeah, he's dumb!`)
+        }
+    }
+    private rng = (channel, tags, message, self) => {
+        if(/^!rng/i.test(message)) {
+            if(this.timeout(10)) return
+            this.client.say(channel, `/me This is literally the trashiest fucking RNG I've ever seen`)
         }
     }
     private andre = (channel, tags, message, self) => {
@@ -279,7 +285,7 @@ export class Everyone extends Message {
 
     private justice = (channel, tags, message, self) => {
         if(/!justice/.test(message)) {
-            if(this.timeout(20*60)) return
+            if(this.timeout(20)) return
             this.client.say(channel, `I have brought peace, freedom, justice, and security to my new empire.`)
             setTimeout(() => {
                 this.client.say(channel, `Your new empire?`)
@@ -368,7 +374,7 @@ export class Everyone extends Message {
     
     private kayBan = (channel, tags, message, self) => {
         if(/^!kay/.test(message)) {
-            if(this.timeout(20*60)) return
+            if(this.timeout(20)) return
             this.client.say(channel, `/me You mess with @killakayttv you get the ban hammer.`)
             setTimeout(() => {
                 this.client.say(channel, `/me I swear to fucking god!`)
@@ -611,12 +617,6 @@ export class Everyone extends Message {
         }
     }
     
-    private soldi = (channel, tags, message, self) => {
-        if((/soldi/.test(message) || /name/.test(message)) && /italian/.test(message) && /money/.test(message)) {
-            if(this.timeout(10*60)) return
-            this.client.say(channel, `/me @${tags.username} yes he fucking knows it....... he gets it once a day ffs just stop already...`)
-        }
-    }
 
 }
 

@@ -1,4 +1,5 @@
 import axios from "axios"
+import { client } from "tmi.js"
 import { Twitch } from "../hooks/twitch"
 import { filterParameters, Message } from "./utils"
 
@@ -11,6 +12,11 @@ export class Common extends Message {
         
     }
     
+/*     private play = (channel, tags, message, self) => {
+        if(/^!play/i.test(message) && /eltharynd/.test(tags.username)) {
+            this.client.say(channel, `!play`)
+        }
+    } */
     private hug = (channel, tags, message, self) => {
         if(/^!hug [\@a-zA-Z0-9][a-zA-Z0-9]*/i.test(message) ) {
             console.log(message, filterParameters(message))
@@ -55,9 +61,6 @@ export class Common extends Message {
             this.client.say(channel, `/me @${tags.username} We don't use that language over here...`)
         }
     }
-
-
-    
 
     private F = (channel, tags, message, self) => {
         if(/^F$/.test(message)) {
