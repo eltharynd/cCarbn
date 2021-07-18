@@ -7,7 +7,6 @@ import { Everyone } from './message/Everyone'
 import { Moderators } from './message/Moderators'
 import { Twitch } from './hooks/twitch'
 import { Socket } from './hooks/socket'
-import { BPM } from './hooks/bpm'
 import { Mongo } from './db/mongo'
 
 export const CREDENTIALS = JSON.parse(''+fs.readFileSync('twitch_credentials.json'))
@@ -53,7 +52,6 @@ client.connect().then((value) => {
     new Everyone(client)
     new Moderators(client)
 
-    //let bpm = new BPM()
     let socket =  new Socket(3000, [/* bpm */])
     client.socket = socket.io
 

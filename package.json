@@ -39,7 +39,6 @@
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "http": "0.0.1-security",
-    "miband": "^0.1.4",
     "mongoose": "^5.12.3",
     "noble": "^1.9.1",
     "rjs": "^4.0.2",
