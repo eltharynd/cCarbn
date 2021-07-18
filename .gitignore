@@ -4,3 +4,5 @@ mongo_credentials.json
 node_modules
 dist
 **/~$*
+
+./package_lock.json
