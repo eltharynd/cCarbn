@@ -109,8 +109,8 @@ let init = async () => {
         else 
             console.log('\x1b[33m%s\x1b[0m', `Using existing credentials...`)
     } else {
-        fs.copyFileSync('src/assets/twitch_template.json', 'twitch_credentials.json')
-        fs.copyFileSync('src/assets/mongo_template.json', 'mongo_credentials.json')
+        fs.copyFileSync('assets/twitch_template.json', 'twitch_credentials.json')
+        fs.copyFileSync('assets/mongo_template.json', 'mongo_credentials.json')
         await prepareCredentials()
     }
 
