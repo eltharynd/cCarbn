@@ -9,7 +9,7 @@
         "outDir": "dist",
         "noImplicitAny": false,
         "target": "es5",
-        "moduleResolution": "classic",
+        "moduleResolution": "node",
         "noStrictGenericChecks": false,
     }
 }
