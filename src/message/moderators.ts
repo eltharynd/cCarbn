@@ -12,22 +12,9 @@ export class Moderators extends Message {
     }
 
 
-    
-    private dropped = (channel, tags, message, self) => {
-        if(/^!dropped/i.test(message) && this.mod(tags))
-            //@ts-ignore
-            client.socket.emit('dropped')
-    }
-
-    private notDropped = (channel, tags, message, self) => {
-        if(/^!notDropped/i.test(message) && this.mod(tags))
-            //@ts-ignore
-            client.socket.emit('notDropped')
-    }
 
     private shoutout = async (channel, tags, message, self) => {
-        if(!this.mod(tags)) return
-        
+        if(!this.mod(tags)) return   
 
         let parameters = filterParameters(message)
         if(/^!so [\@a-zA-Z0-9][a-zA-Z0-9]*/i.test(message)) {

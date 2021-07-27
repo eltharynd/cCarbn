@@ -10,9 +10,6 @@ export class Everyone extends Message {
         
     }
 
-
-
-
     private pantsGrabBackToCakeums = (channel, tags, message, self) => {
         if(self) return
         if(/cakeums/i.test(tags.username) && /^PantsGrab$/i.test(message)) {
@@ -20,74 +17,13 @@ export class Everyone extends Message {
             setTimeout(() => {
                 this.client.say(channel, `/me @${tags.username} also PantsGrab`)
             }, 750);
-        }
-    }
-
-    private jam = (channel, tags, message, self) => {
-        if(/^!jam/i.test(message)) {
-            if(this.timeout(5)) return
-            this.client.say(channel, `/me catJAM WE catJAM CAT catJAM WE catJAM JAM catJAM NO catJAM MODS catJAM NO catJAM BAN catJAM`)
-        }
-    }
-
-    private dick = (channel, tags, message, self) => {
-        if(/^!dick/i.test(message)) {
-            if(this.timeout(10)) return
-            this.client.say(channel, `/me Don't be a dick!!!`)
+        } else if(/!cakeums/gi.test(message) || /!cake/gi.test(message) || /!haley/gi.test(message)) {
+            this.client.say(channel, `/me @cakeums PantsGrab`)
         }
     }
 
 
-    
-/*     private greed = (channel, tags, message, self) => {
-        if(/^!greed/i.test(message)) {
-            if(this.timeout(10)) return
-            this.client.say(channel, `/me I promise, this is the last time I was greedy. Never, ever again...`)
-        }
-    } */
-    
-    private top10  = (channel, tags, message, self) => {
-        if(/^!top10/i.test(message)) {
-            if(this.timeout(10)) return
-            this.client.say(channel, `/me I promise you I will take you to top 10, soon, not right now, someday...`)
-        }
-    }
-
-
-    
-    private blame = (channel, tags, message, self) => {
-        if(/^!blame/i.test(message)) {
-            if(this.timeout(10)) return
-            this.client.say(channel, `/me I blame @Hayitmeagain as usual! LUL`)
-        }
-    }
-
-    private origami = (channel, tags, message, self) => {
-        if(/^!origami/i.test(message)) {
-            if(this.timeout(10)) return
-            this.client.say(channel, `/me Trust me I’m an engineer!`)
-        }
-    }
-    private mana = (channel, tags, message, self) => {
-        if(/^!mana/i.test(message)) {
-            if(this.timeout(10)) return
-            this.client.say(channel, `/me Suck a duck!`)
-        }
-    }
-    private bread = (channel, tags, message, self) => {
-        if(/^!bread/i.test(message)) {
-            if(this.timeout(10)) return
-            this.client.say(channel, `/me Yeah, he's dumb!`)
-        }
-    }
-    private rng = (channel, tags, message, self) => {
-        if(/^!rng/i.test(message)) {
-            if(this.timeout(10)) return
-            this.client.say(channel, `/me This is literally the trashiest fucking RNG I've ever seen`)
-        }
-    }
-
-    private andre = (channel, tags, message, self) => {
+    private andreJeron = (channel, tags, message, self) => {
         if(/^!andre/i.test(message) || /^!jeron/i.test(message) || /^!jf0rce/i.test(message)) {
             if(this.timeout(10)) return
             let timeout = 750
@@ -102,14 +38,6 @@ export class Everyone extends Message {
                 }, timeout);
             }, timeout);
 
-
-            /* 
-            
-            
-            
-            
-            
-            */
         }
     }
 
@@ -251,11 +179,6 @@ export class Everyone extends Message {
         }
     }
 
-
-
-    
-
-
     private justice = (channel, tags, message, self) => {
         if(/!justice/.test(message)) {
             if(this.timeout(20)) return
@@ -281,32 +204,8 @@ export class Everyone extends Message {
         }
     }
 
-
-    
-    username
-    rating
-    private pp = (channel, tags, message, self) => {
-        if(/leydybug/i.test(channel) && /^!pp/i.test(message)) {
-            if(!this.username)
-            this.username= tags.username
-            this.rating = parseInt(message.replace(/I can confirm that .* has /, '').replace('/10 big PP energy.',''))
-            setTimeout(() => {
-                this.username = null
-            }, 1500);
-            //this.client.say(channel, `I can confirm that @${tags.username} has ${Math.floor(Math.random() * 11)}/10 big pp energy!`)
-        } else if(/leydybug/i.test(channel) && /nightbot/i.test(tags.username) && this.username) {
-            this.client.say(channel, `/me @Nightbot uuuh not? @${this.username} clearly ${Math.floor(Math.random() * 5)+11}/10...`)
-            this.username = null
-            
-        } else if(/^!pp/i.test(message)) {
-            if(this.timeout(5)) return
-            this.client.say(channel, `/me I can confirm that @${tags.username} has ${Math.floor(Math.random() * 10)+1}/10 big pp energy!`)
-        }
-    }
-
-
     private eightBall = (channel, tags, message, self) => {
-        if(/^!8ball/i.test(message)) {
+        if(/!8ball/i.test(message)) {
             let samples = [
                 'As I see it, yes.',
                 'Ask again later.',
@@ -334,6 +233,8 @@ export class Everyone extends Message {
     }
 
 
+
+
     private dadjokes = async (channel, tags, message, self) => {
         if(/^!hitusup/i.test(message)) {
             if(this.timeout(5)) return
@@ -348,7 +249,6 @@ export class Everyone extends Message {
                 this.client.say(channel, `/me I'm trying to get some cool dad jokes but this dudes aren't answering... I suppose that's what you get with free APIs`)
         }
     }
-
 
     private darkjokes = async (channel, tags, message, self) => {
         if(/^!dark/i.test(message)) {
@@ -369,6 +269,7 @@ export class Everyone extends Message {
                 this.client.say(channel, `/me I'm trying to get some cool dark jokes but this dudes aren't answering... I suppose that's what you get with free APIs`)
         }
     } 
+
 
 
  
@@ -438,7 +339,6 @@ export class Everyone extends Message {
         }
     }
      
-
     private move = async (channel, tags, message, self) => {
         if(/^!move [\w\s]+/i.test(message)) {
             if(filterParameters(message).length==0) {

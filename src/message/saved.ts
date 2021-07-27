@@ -5,7 +5,7 @@ import { Message } from "./utils"
 
 const RGX_USER = /\@\w+(\s|$)/gi
 const RGX_EVAL = /\$eval\(.+\)(\s|$)/gi
-const RGX_RAND = /\$((rand)|(rnd))\d+(\s|$)/gi
+const RGX_RAND = /\$((rand)|(rnd))\d+/gi
 
 const FORMAT_ERROR = 'This command is formatted wrong... Please check your spelling or consult the documentation...'
 
@@ -70,11 +70,11 @@ export class Saved extends Message {
                 }
                 
                 if(rand) for(let i of rand) {
-                    parameters.push(i.replace(' ', '').replace('rand', 'rnd'))
-                    buffer = buffer.replace(i, `{{${index++}}} `)
+                    parameters.push(i.replace('rand', 'rnd'))
+                    buffer = buffer.replace(i, `{{${index++}}}`)
                 }
 
-            
+                console.log(parameters)
                 let result
                 if(exists) {
                     let found = await Mongo.instance.fetch(name)
@@ -90,6 +90,7 @@ export class Saved extends Message {
 
                 this.commands.push(result)
                 result.listener = this.generateListener(result)
+                console.log(result)
                 this.client.on('message', result.listener)
 
                 this.client.say(channel, `/me Successfully ${exists ? 'edited' : 'added new'} command...`)
@@ -137,9 +138,9 @@ export class Saved extends Message {
             //for(let p of command.params)
             //    tester += `\\s${p.startsWith('@') ? '@\\w+' : '\\w+'}`
             if(new RegExp(tester, 'i').test(message) && (!command.mods || this.mod(tags))) {
-                if(this.timeout(10, tester)) return
+                if(this.timeout(10, tester === '!pp' ? tester + tags.zsername : tester)) return
                 let answer = command.answer
-                let inputs: string[] = message.replace(`!${command.command} `, '').split(' ')
+                let inputs: string[] = message.replace(`${command.command} `, '').split(' ')
                 let shift = () =>{
                     if(inputs.length<1)
                         throw new Error()
@@ -151,7 +152,7 @@ export class Saved extends Message {
                         let p = command.params[i]
                         
                         if(new RegExp(RGX_USER).test(p)) {
-                            answer = answer.replace(`{{${i}}}`, /@user/gi.test(p) ? `@${tags.username}` : shift())
+                            answer = answer.replace(`{{${i}}}`, /@user/gi.test(p) ? `@${tags.username}` : inputs.length===1 && /@\w+/ ? p : shift())
                         } else if(new RegExp(RGX_EVAL).test(p)) {
                             answer = answer.replace(`{{${i}}}`, `${eval(p.replace(/^\$eval\(/, '').replace(/\)$/, ''))}`)
                         } else if(new RegExp(RGX_RAND).test(p)) {
