@@ -32,6 +32,10 @@ export class Socket {
                     c.events(socket, this.io)
         })
 
+        this.app.get('*', async (req, res) => {
+            res.status(200).send(`No route specified... but hey, I'm working!!`)
+        })
+
         this.server.listen(port)
     }
     
