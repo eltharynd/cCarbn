@@ -28,18 +28,7 @@ const client: any = new tmi.Client({
         //http://twitchapps.com/tmi/
     },
     channels: [
-        CREDENTIALS.channel, 
-        /* 'terfiel', */
-        /* 'leydybug', */
-        /* 'soldi', */
-        /* 'trashnutt',  */
-        /* 'cederic_drachenreign', */ 
-        /* 'cakeums', */
-        /* 'jf0rce', */
-        /* 'gottablast', */
-        /* 'killakayttv', */
-        /* 'godgamerkate', */
-        /* 'ainrun', */
+        CREDENTIALS.channel,
     ]
 })
 
@@ -52,6 +41,7 @@ client.connect().then((value) => {
     new Everyone(client)
     new Moderators(client)
 
+    //let bpm = new BPM()
     let socket =  new Socket(3000, [/* bpm */])
     client.socket = socket.io
 
