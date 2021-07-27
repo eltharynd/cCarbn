@@ -72,7 +72,7 @@ export class Common extends Message {
     }
 
     private cats = async (channel, tags, message, self) => {
-        if(/^!cat/i.test(message)) {
+        if(/!cat/i.test(message)) {
             if(this.timeout(5)) return
             let facts = (await axios.get(`https://cat-fact.herokuapp.com/facts`)).data
             if(facts && facts.length>0)
@@ -83,29 +83,13 @@ export class Common extends Message {
     }
 
     private dogs = async (channel, tags, message, self) => {
-        if(/^!dog/i.test(message)) {
+        if(/!dog/i.test(message)) {
             if(this.timeout(5)) return
             let facts = (await axios.get(`https://dog-facts-api.herokuapp.com/api/v1/resources/dogs/all`)).data
             if(facts && facts.length>0)
                 this.client.say(channel, `/me ${facts[Math.floor(Math.random() * facts.length)].fact}`)
             else
                 this.client.say(channel, `/me I'm trying to get some cool dog facts but this dudes aren't answering... I suppose that's what you get with free APIs`)
-        }
-    }
-
-    private bttv = async (channel, tags, message, self) => {
-        if(/^!bttv/i.test(message) || /^!bttv/i.test(message)) {
-            if(this.timeout(30)) return
-
-            this.client.say(channel, `/me Are you a boomer? have you been wondering why chat sometimes types weird shit like DONUT or PepegaCredit ? Well fuck off then. JK, there's two very popular chrome extensions for twitch that allow users to have the dankest emotes of all.. Just go here and give it one click each then refresh the chat page to join the alpha twitchers club. betterttv${/eltharynd/i.test(channel) ? '.' : ''}com and frankerfacez${/eltharynd/i.test(channel) ? '.' : ''}com`)
-
-        }
-    }
-
-    private disc = async (channel, tags, message, self) => {
-        if(/^!disc/i.test(message) || /^!bttv/i.test(message)) {
-            if(this.timeout(30)) return
-            this.client.say(channel, `/me You can join our discord at https://discord.gg/uTmEUxGHKC`)
         }
     }
 
