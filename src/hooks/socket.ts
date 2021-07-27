@@ -20,6 +20,11 @@ export class Socket {
         }))
         this.app.use(bodyParser.json())
 
+        this.app.get('*', async (req, res) => {
+            console.log('HERE')
+            res.status(200).send(`No route specified... but hey, I'm working!!`)
+        })
+        
         this.server = createServer(this.app)
         this.io = new socketIO.Server(this.server, {
             path: '/socket.io',
@@ -32,9 +37,7 @@ export class Socket {
                     c.events(socket, this.io)
         })
 
-        this.app.get('*', async (req, res) => {
-            res.status(200).send(`No route specified... but hey, I'm working!!`)
-        })
+       
 
         this.server.listen(port)
     }
