@@ -34,6 +34,7 @@ export class Saved extends Message {
         return result ? result._id : null
     }
 
+    
     //TODO implement mods only commands
     private command = async (channel, tags, message, self) => {
         if(/^!((command)|(cmd)) ((add)|(save)|(edit)|(delete)|(show)|(answer)|(source)) .+$/i.test(message)) {
