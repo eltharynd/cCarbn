@@ -117,14 +117,29 @@ let init = async () => {
 
     let answer = await questionSync(`Would you like to generate a new oauth? (y/n)`)
     if(/y/gi.test(answer)) {
-        let token = await getOauth()
-        if(token) {
-            let twitch = JSON.parse(''+fs.readFileSync('twitch_credentials.json'))
-            twitch.oauth = token
-            fs.writeFileSync('twitch_credentials.json', JSON.stringify(twitch, null, 4))
-            console.log('\x1b[33m%s\x1b[0m', `Access token retrieved and saved...`)
+        answer = await questionSync(`Can the host device open chrome? (y/n)`)
+        if(/y/gi.test(answer)) {
+            let token = await getOauth()
+            if(token) {
+                let twitch = JSON.parse(''+fs.readFileSync('twitch_credentials.json'))
+                twitch.oauth = token
+                fs.writeFileSync('twitch_credentials.json', JSON.stringify(twitch, null, 4))
+                console.log('\x1b[33m%s\x1b[0m', `Access token retrieved and saved...`)
+            } else {
+                console.log('\x1b[31m%s\x1b[0m','Could not retrieve a token... Please check your credentials...')
+            }
         } else {
-            console.log('\x1b[31m%s\x1b[0m','Could not retrieve a token... Please check your credentials...')
+            console.log('\x1b[33m%s\x1b[0m', `Unfortunately there is no way to get a chat user token without confirming from the browser... You will have to insert your token manually... `)
+            let token = await questionSync(`Go to this website (http://twitchapps.com/tmi/), then copy paste the token you get in here:`)
+            if(!token || !/^oauth\:/.test(token)) {
+                console.log('\x1b[31m%s\x1b[0m','Token provided is invalid... Shutting down...')
+                exit()
+            } else {
+                let twitch = JSON.parse(''+fs.readFileSync('twitch_credentials.json'))
+                twitch.oauth = token.replace(/^oauth\:/, '')
+                fs.writeFileSync('twitch_credentials.json', JSON.stringify(twitch, null, 4))
+                console.log('\x1b[33m%s\x1b[0m', `Access token saved...`) 
+            }
         }
     } else 
         console.log('\x1b[33m%s\x1b[0m', `Using existing oauth...`)

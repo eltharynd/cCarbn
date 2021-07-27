@@ -3,13 +3,14 @@ import { MONGO } from "../index"
 
 export class Mongo {
 
+    static instance
     
     private database: Mongoose.Connection
-    constructor() {
-        this.connect()
+    constructor(then?: Function) {
+        this.connect(then)
     }
 
-    private connect = async () => {
+    private connect = async (then?: Function) => {
         if(this.database) return
 
         Mongoose.connect(MONGO.connection, {useNewUrlParser: true, useUnifiedTopology: true})
@@ -21,10 +22,13 @@ export class Mongo {
             this.Command = Mongoose.model('Command', this.commandSchema)
 
             //await this.clearAll()
-
-
             //await this.save('test', 'asdasdasd')
-            //await this.fetch(null)
+            let res = await this.fetch(null)
+            console.log(res)
+
+
+            Mongo.instance = this
+            if(then) then()
         })
     }
 

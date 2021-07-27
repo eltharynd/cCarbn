@@ -10,6 +10,7 @@ import { Moderators } from './message/Moderators'
 import { Twitch } from './hooks/twitch'
 import { Socket } from './hooks/socket'
 import { Mongo } from './db/mongo'
+import { Saved } from './message/saved'
 
 export const PORT = 3000
 export const CREDENTIALS= JSON.parse(''+fs.readFileSync('twitch_credentials.json'))
@@ -51,13 +52,14 @@ client.connect().then((value) => {
     new Everyone(client)
     new Moderators(client)
 
-    //let bpm = new BPM()
-    let socket =  new Socket(3000, [/* bpm */])
+    let socket =  new Socket(3000, [])
     client.socket = socket.io
 
-    new Mongo()
+    new Mongo(() => {
+        console.log('after')
+        new Saved(client)
+    })
 
-    
 
 }).catch((reason) => {
     //console.log(reason)
