@@ -14,7 +14,7 @@ export class Message {
     protected init = () => {
         let keys = []
         for(let key of Object.keys(this)) 
-            if(typeof this[key] === 'function' && key !== 'init' && key !== 'timeout')
+            if(typeof this[key] === 'function' && key !== 'init' && key !== 'timeout' && key !== 'fetch' && key !== 'exists' && key !== 'mod' && key !== 'generateListener')
                 keys.push(key)
         this.client.on('message', (channel, tags, message, self) => {
             if(self) return 
@@ -22,8 +22,8 @@ export class Message {
                 this[key](channel, tags, message, self)
         })   
     }
-    protected timeout = (timeInSeconds?: number): boolean => {
-        let caller = (new Error).stack.split('\n')[2].replace(/^.*\.\_this\./,'').replace(/ \(.*\)$/,'')
+    protected timeout = (timeInSeconds?: number, identifier?: string): boolean => {
+        let caller = identifier ? identifier : (new Error).stack.split('\n')[2].replace(/^.*\.\_this\./,'').replace(/ \(.*\)$/,'')
         if(timeInSeconds && Date.now() - this.cooldowns[caller] < timeInSeconds * 1000) {
             return true
         } else {

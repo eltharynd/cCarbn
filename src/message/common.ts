@@ -12,11 +12,6 @@ export class Common extends Message {
         
     }
     
-/*     private play = (channel, tags, message, self) => {
-        if(/^!play/i.test(message) && /eltharynd/.test(tags.username)) {
-            this.client.say(channel, `!play`)
-        }
-    } */
     private hug = (channel, tags, message, self) => {
         if(/^!hug [\@a-zA-Z0-9][a-zA-Z0-9]*/i.test(message) ) {
             console.log(message, filterParameters(message))
@@ -24,7 +19,7 @@ export class Common extends Message {
         }
     }
 
-    private ruck = (channel, tags, message, self) => {
+    private tuck = (channel, tags, message, self) => {
         if(/^!tuck [\@a-zA-Z0-9][a-zA-Z0-9]*/i.test(message) ) {
             this.client.say(channel, `/me @${tags.username} tucks @${filterParameters(message)[0].replace('@','')} in their bed! Good Night you PogChamp!`)
         }
@@ -49,7 +44,7 @@ export class Common extends Message {
                 `@${tags.username} sup? here to chill a bit as well?`,
                 `I was just thinking about you @${tags.username}!!! D: D: D:`,
 
-                `@${tags.username} this is ACTUALLY funny cause my server jsut got a 1 on a Math.random which is pretty fucking incredible if you ask me... I didn't even think this was possible ngl...`
+                `@${tags.username} this is ACTUALLY funny cause my server just got a 1 on a Math.random which is pretty fucking incredible if you ask me... I didn't even think this was ever gonna happen ngl...`
             ]
             this.client.say(channel, options[Math.floor(Math.random() * options.length)])
         }
@@ -66,6 +61,13 @@ export class Common extends Message {
         if(/^F$/.test(message)) {
             if(this.timeout(20*60)) return
             this.client.say(channel, `/me F`)
+        }
+    }
+
+    private quote = (channel, tags, message, self) => {
+        if(/^F$/.test(message)) {
+            if(this.timeout(20*60)) return
+            this.client.say(channel, `/me ^^`)
         }
     }
 
@@ -103,9 +105,7 @@ export class Common extends Message {
     private disc = async (channel, tags, message, self) => {
         if(/^!disc/i.test(message) || /^!bttv/i.test(message)) {
             if(this.timeout(30)) return
-
-            this.client.say(channel, `/me You can join our discord at https://discord.gg/FxmSUcCe`)
-
+            this.client.say(channel, `/me You can join our discord at https://discord.gg/uTmEUxGHKC`)
         }
     }
 

@@ -11,19 +11,6 @@ export class Everyone extends Message {
     }
 
 
-    private hands = (channel, tags, message, self) => {
-        if(/^!hands/i.test(message) ) {
-            
-            this.client.say(channel, `/me @cakeums You've been away for 4 minutes 42 seconds... if you factor the pie i determine a 73% probability for washing hands... above your average, not so bad!`)
-        }
-    }
-
-    private peepoClap = (channel, tags, message, self) => {
-        if(/peepoClap/.test(message)) {
-            if(this.timeout(5)) return
-            this.client.say(channel, `/me peepoClap peepoClap peepoClap peepoClap peepoClap peepoClap peepoClap peepoClap peepoClap peepoClap peepoClap peepoClap peepoClap peepoClap peepoClap `)
-        }
-    }
 
 
     private pantsGrabBackToCakeums = (channel, tags, message, self) => {
@@ -36,24 +23,10 @@ export class Everyone extends Message {
         }
     }
 
-    private kay = (channel, tags, message, self) => {
-        if(/killakayttv/.test(tags.username)) {
-            if(this.timeout(20*60)) return
-            this.client.say(channel, `/me ^ Whatever @killakayttv just said I agree 100%`)
-        }
-    }
-
     private jam = (channel, tags, message, self) => {
         if(/^!jam/i.test(message)) {
-            //if(this.timeout(20)) return
+            if(this.timeout(5)) return
             this.client.say(channel, `/me catJAM WE catJAM CAT catJAM WE catJAM JAM catJAM NO catJAM MODS catJAM NO catJAM BAN catJAM`)
-        }
-    }
-
-    private leydyHype = (channel, tags, message, self) => {
-        if(/^!leydy/i.test(message)) {
-            if(this.timeout(4)) return
-            this.client.say(channel, `/me HIT EM HIT EM blobDance Jammies SMACK EM DOWN hollowD hypeE WE'RE THE LEYDY SQUAD MODS pepeDS AND WE'LL SNATCH THIS RUN ppJedi blobDance`)
         }
     }
 
@@ -66,12 +39,12 @@ export class Everyone extends Message {
 
 
     
-    private greed = (channel, tags, message, self) => {
+/*     private greed = (channel, tags, message, self) => {
         if(/^!greed/i.test(message)) {
             if(this.timeout(10)) return
             this.client.say(channel, `/me I promise, this is the last time I was greedy. Never, ever again...`)
         }
-    }
+    } */
     
     private top10  = (channel, tags, message, self) => {
         if(/^!top10/i.test(message)) {
@@ -113,8 +86,9 @@ export class Everyone extends Message {
             this.client.say(channel, `/me This is literally the trashiest fucking RNG I've ever seen`)
         }
     }
+
     private andre = (channel, tags, message, self) => {
-        if(/^!andre/i.test(message)) {
+        if(/^!andre/i.test(message) || /^!jeron/i.test(message) || /^!jf0rce/i.test(message)) {
             if(this.timeout(10)) return
             let timeout = 750
             this.client.say(channel, `/me I’ve known Andre a long time. Too long. He’s a bit full of himself- why do you think he never wears a shirt. His craftsmanship is poor- I can buy his weapon smith box and do just as good of a job myself. He price gouges. `)
@@ -138,6 +112,8 @@ export class Everyone extends Message {
             */
         }
     }
+
+
 
 
     private time = async (channel, tags, message, self) => {
@@ -174,8 +150,6 @@ export class Everyone extends Message {
 
         }
     }
-
-
 
     voters = {}
     birds = {}
@@ -331,7 +305,6 @@ export class Everyone extends Message {
     }
 
 
-
     private eightBall = (channel, tags, message, self) => {
         if(/^!8ball/i.test(message)) {
             let samples = [
@@ -360,29 +333,6 @@ export class Everyone extends Message {
         }
     }
 
-    
-/*     private hmmm = (channel, tags, message, self) => {
-        if(/^hmmm/.test(message)) {
-            if(this.timeout(20*60)) return
-            this.client.say(channel, `/me analyzing @Laydybug 's hands right now....`)
-            setTimeout(() => {
-                this.client.say(channel, `/me hands are clean. good job!`)
-            }, 3000);
-        }
-    } */
-    
-    private kayBan = (channel, tags, message, self) => {
-        if(/^!kay/.test(message)) {
-            if(this.timeout(20)) return
-            this.client.say(channel, `/me You mess with @killakayttv you get the ban hammer.`)
-            setTimeout(() => {
-                this.client.say(channel, `/me I swear to fucking god!`)
-            }, 500);
-        }
-    }
-
-    
-
 
     private dadjokes = async (channel, tags, message, self) => {
         if(/^!hitusup/i.test(message)) {
@@ -399,7 +349,8 @@ export class Everyone extends Message {
         }
     }
 
-/*      private darkjokes = async (channel, tags, message, self) => {
+
+    private darkjokes = async (channel, tags, message, self) => {
         if(/^!dark/i.test(message)) {
             if(this.timeout(5)) return
             let result = (await axios.get(`https://v2.jokeapi.dev/joke/Dark` + '?blacklistFlags=religious,political,racist,sexist', {
@@ -417,7 +368,7 @@ export class Everyone extends Message {
             } else
                 this.client.say(channel, `/me I'm trying to get some cool dark jokes but this dudes aren't answering... I suppose that's what you get with free APIs`)
         }
-    }  */
+    } 
 
 
  

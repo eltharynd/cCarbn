@@ -3,7 +3,7 @@ import { MONGO } from "../index"
 
 export class Mongo {
 
-    static instance
+    static instance: Mongo
     
     private database: Mongoose.Connection
     constructor(then?: Function) {
@@ -22,10 +22,8 @@ export class Mongo {
             this.Command = Mongoose.model('Command', this.commandSchema)
 
             //await this.clearAll()
-            //await this.save('test', 'asdasdasd')
-            let res = await this.fetch(null)
-            console.log(res)
-
+            //await this.save('test', 'Test Works!!!')
+            //await this.fetch()
 
             Mongo.instance = this
             if(then) then()
@@ -33,24 +31,28 @@ export class Mongo {
     }
 
 
-    save = async (name: string, command: string) => {
-        let buffer = new this.Command({name: name, command: command })
+    save = async (command: string, answer: string, mods?: boolean, params?: string[], source?: string) => {
+        let buffer = new this.Command({command: command, answer: answer, mods: mods ? true : false, params: params?.length>0 ? params : [], source: source})
         await buffer.save()
+        return buffer
     }
 
-    fetch = async (name: string) => {
-        return await this.Command.find(name? {name: name} : null)
+    fetch = async (command?: string) => {
+        let buffer = await this.Command.find(command? {command: command} : null)
+        return buffer?.length===1 ? buffer[0] : buffer
     }
 
-    private clearAll = async () => {
+    clearAll = async () => {
         await this.Command.deleteMany()
     }
 
     private Command: Mongoose.Model<any, any>
     private commandSchema = new Mongoose.Schema({
-        name: String,
         command: String,
-        mods: Boolean
+        params: Array,
+        answer: String,
+        mods: Boolean,
+        source: String
     })
 }
 

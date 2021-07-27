@@ -28,7 +28,7 @@ const authProvider = new RefreshableAuthProvider(new StaticAuthProvider(CREDENTI
     }
 }) 
 
-const client: any = new tmi.Client({
+const client = new tmi.Client({
     options: {
         debug: true,
         messagesLogLevel: 'info',
@@ -44,8 +44,6 @@ const client: any = new tmi.Client({
 })
 
 client.connect().then((value) => {
-    console.log(`connected: ${value}`)
-
     Twitch.init()
 
     new Common(client)
@@ -53,17 +51,15 @@ client.connect().then((value) => {
     new Moderators(client)
 
     let socket =  new Socket(3000, [])
+    //@ts-ignore
     client.socket = socket.io
 
     new Mongo(() => {
-        console.log('after')
         new Saved(client)
     })
 
 
 }).catch((reason) => {
-    //console.log(reason)
     console.log(`Could not connect to twitch chat for reason: ${reason}`)
-    //let oauthSocket = new Socket(3000)
 })
 
