@@ -1,5 +1,4 @@
 import axios from "axios"
-import { encode } from "node:punycode"
 import { filterParameters, Message } from "./utils"
 
 

@@ -2,26 +2,16 @@
 
 In order to get started you will need to create two json files in the root folder (where package.json is) containing your twitch app user and oauth credentials, and your mongodb connection string, as these cannot be included in the git for obvious reasons...
 
-## CREATE A TWITCH CREDENTIALS FILE
-Create `twitch_credentials.json` in the root folder with the following setup
-
+## CREATE THE NECESSARY CREDENTIALS FILES WITH THE SETUP
+Run the following to install all nodes packages that come included for convenience
+```
+npm install
+```
+Run
  ```
- {
-    "channel": "<CHANNEL_YOU_WANT_TO_CONNECT_TO>",
-    "username": "<YOUR_BOT_USERNAME>",
-    "oauth": "<YOUR_OAUTH_TOKEN>",
-    "clientID": "<YOUR_TWITCH_APP_ID>"
- }
+npm run init
  ```
-
-## CREATE A MONGODB CREDENTIALS FILE
-Create `mongo_credentials.json` in the root folder with the following setup
-
- ```
-{
-    "connection": "mongodb+srv://<USERNAME>:<PASSWORD>@<CONNECTION_STRING>"
-}
- ```
+and input the data required
 
 # RUN ON A DEVELOPMENT ENVIRONMENT
 Run the following to install all nodes packages that come included for convenience

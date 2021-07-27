@@ -1,6 +1,5 @@
 twitch_credentials.json
 mongo_credentials.json
-get_oauth.html
 
 node_modules
 dist

@@ -25,7 +25,6 @@ export class Socket {
             path: '/socket.io',
         })
 
-        console.log('here')
 
         this.io.on('connection', (socket) => {
             if(connectors) 

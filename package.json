@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "init": "node init.js"
   },
   "repository": {
     "type": "git",
@@ -40,11 +40,13 @@
     "fs": "0.0.1-security",
     "http": "0.0.1-security",
     "mongoose": "^5.12.3",
-    "noble": "^1.9.1",
+    "open": "^8.2.1",
     "rjs": "^4.0.2",
     "rxjs": "^6.6.7",
     "socket.io": "^4.0.1",
     "tmi.js": "^1.7.5",
-    "twitch-api-v5": "^2.0.4"
+    "twitch-api-v5": "^2.0.4",
+    "twitch-auth": "^4.6.4",
+    "twitch-auth-tmi": "^4.6.4"
   }
 }

@@ -12,7 +12,7 @@ export class Mongo {
     private connect = async () => {
         if(this.database) return
 
-        Mongoose.connect(MONGO, {useNewUrlParser: true, useUnifiedTopology: true})
+        Mongoose.connect(MONGO.connection, {useNewUrlParser: true, useUnifiedTopology: true})
         this.database = Mongoose.connection
 
         this.database.on('error', console.error.bind(console, 'connection error'))

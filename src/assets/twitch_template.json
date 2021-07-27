@@ -1,0 +1,6 @@
+{
+    "channel": "<CHANNEL_YOU_WANT_TO_CONNECT_TO>",
+    "clientID": "<YOUR_TWITCH_APP_ID>",
+    "secret": "<YOUR_TWITCH_APP_SECRET>",
+    "oauth": "<YOUR_OAUTH_TOKEN>"
+ }
