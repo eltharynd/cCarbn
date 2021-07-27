@@ -75,7 +75,7 @@ let getOauth = async () => {
             res.status(200).send(`<html><body><h1>Access token retrieved. You can close this tab...</h1></body><script>
             console.log('here')
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://localhost:3001/token", true);
+            xhr.open("POST", "http://localhost:3000/token", true);
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(JSON.stringify({
                 "hash": window.location.hash
@@ -84,12 +84,12 @@ let getOauth = async () => {
             //server.close()
         })
         let server = createServer(app)
-        server.listen(3001)
+        server.listen(3000)
 
         let oauthString = 
             `https://id.twitch.tv/oauth2/authorize
             ?client_id=${twitch.clientID}
-            &redirect_uri=http://localhost:3001/oauth
+            &redirect_uri=http://localhost:3000/oauth
             &response_type=token
             &scope=chat:read+chat:edit+channel:moderate+whispers:read+whispers:edit+channel_editor`
             .replace(/\s/g, '')
