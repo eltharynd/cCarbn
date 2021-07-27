@@ -11,6 +11,6 @@
         "target": "es5",
         "moduleResolution": "node",
         "noStrictGenericChecks": false,
-        "types": ["node"]
+        "rootDir": "src"
     }
 }
