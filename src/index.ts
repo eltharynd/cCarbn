@@ -5,7 +5,6 @@ import * as fs from 'fs'
 import { auth } from 'twitch-api-v5'
 
 import { Common } from './message/common'
-import { Message } from './message/utils'
 import { Everyone } from './message/Everyone'
 import { Moderators } from './message/Moderators'
 import { Twitch } from './hooks/twitch'
