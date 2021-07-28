@@ -22,7 +22,7 @@ export class Socket {
 
         this.app.get('*', async (req, res) => {
             console.log('HERE')
-            res.status(200).send(`No route specified... but, HEY!!! I'm working!!`)
+            res.status(200).send(`No route specified... but, HEY!!! I'm working!! TEST`)
         })
 
         this.server = createServer(this.app)
