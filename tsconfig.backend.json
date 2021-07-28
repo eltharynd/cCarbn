@@ -1,0 +1,16 @@
+{
+  "include": [
+      "src/backend/*.ts",
+      "src/backend/**/*.ts",
+      "src/backend/**/*.json"
+  ],
+  "compileOnSave": false,
+  "compilerOptions": {
+      "outDir": "dist",
+      "noImplicitAny": false,
+      "target": "es5",
+      "moduleResolution": "node",
+      "noStrictGenericChecks": false,
+      "rootDir": "src/backend"
+  }
+}
