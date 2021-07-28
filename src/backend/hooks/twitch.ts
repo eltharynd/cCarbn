@@ -1,32 +1,40 @@
+import { ApiClient } from '@twurple/api'
+import { ClientCredentialsAuthProvider } from '@twurple/auth'
+//TODO remove as well as all usages of it
 import * as api from 'twitch-api-v5'
-import * as util from 'util'
-import { CREDENTIALS } from "../index"
+import { from } from 'rxjs'
+import { filter, take } from 'rxjs/operators'
+
+import { CREDENTIALS } from '../index'
 
 export class Twitch {
+  private static authProvider
+  static client: ApiClient
+  static channelID: number
 
+  public static async init() {
+    Twitch.authProvider = new ClientCredentialsAuthProvider(CREDENTIALS.clientID, CREDENTIALS.secret)
+    Twitch.client = new ApiClient({
+      authProvider: this.authProvider,
+    })
 
-    public static init() {
-        // @ts-ignore
-        api.clientID = CREDENTIALS.clientID
-    }
+    let channel = await this.searchChannel(CREDENTIALS.channel)
+    Twitch.channelID = channel ? channel.id : null
 
+    if (!Twitch.channelID)
+      console.error(`Could not find channel ID for channel: '${CREDENTIALS.channel}'. Please check your spelling and runf 'npm run setup' again if necessary...`)
+  }
 
-    public static searchChannel = async (name, live?: boolean): Promise<any> => {
-        let search = util.promisify(api.search.channels)
+  public static searchChannel = async (name): Promise<any> => {
+    return await from((await Twitch.client.search.searchChannels(name)).data)
+      .pipe(
+        filter((channel) => channel.name === name),
+        take(1)
+      )
+      .toPromise()
+  }
 
-        // @ts-ignore
-        return await search({
-            query: name
-        })
-    }
-
-
-    public static getStream = async (channelID): Promise<any> => {
-        let read = util.promisify(api.streams.channel)
-
-        return (await read({
-            channelID: channelID
-        })).stream
-    }
-
+  public static getStream = async (userId): Promise<any> => {
+    return await Twitch.client.streams.getStreamByUserId(userId)
+  }
 }
