@@ -31,7 +31,6 @@ export class Socket {
             path: '/socket.io',
         })
 
-
         this.io.on('connection', (socket) => {
             if(connectors) 
                 for(let c of connectors)
