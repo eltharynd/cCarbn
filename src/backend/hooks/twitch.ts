@@ -1,7 +1,5 @@
 import { ApiClient } from '@twurple/api'
 import { ClientCredentialsAuthProvider } from '@twurple/auth'
-//TODO remove as well as all usages of it
-import * as api from 'twitch-api-v5'
 import { from } from 'rxjs'
 import { filter, take } from 'rxjs/operators'
 
