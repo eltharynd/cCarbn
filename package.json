@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "scripts": {
     "setup": "node init",
-    "build": "npm install && rm -rf dist && tsc --project tsconfig.backend.json",
+    "build": "rm -rf node_modules && npm install && rm -rf dist && tsc --project tsconfig.backend.json",
     "start": "ng serve --host 0.0.0.0 --port 443 & node dist/index.js",
     "serve": "tsc --project tsconfig.backend.json && nodemon dist/index.js & ng serve --host 0.0.0.0 --port 443 & tsc -w --project tsconfig.backend.json",
     "angular": "nodemon dist/index.js",
