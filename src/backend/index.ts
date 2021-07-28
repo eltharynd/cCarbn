@@ -51,7 +51,7 @@ client.connect().then((value) => {
     new Everyone(client)
     new Moderators(client)
 
-    let socket =  new Socket(8080, [])
+    let socket =  new Socket(PORT, [])
     //@ts-ignore
     client.socket = socket.io
 
