@@ -24,7 +24,7 @@ const authProvider = new RefreshableAuthProvider(new StaticAuthProvider(CREDENTI
         let newCredentials = Object.assign(CREDENTIALS, {})
         newCredentials.oauth = accessToken
         newCredentials.refreshToken = refreshToken
-        newCredentials.expiration = expiryDate.getTime()
+        newCredentials.expiration = expiryDate?.getTime()
         await fs.writeFileSync('twitch_credentials.json', JSON.stringify(newCredentials, null, 4))
     }
 })
