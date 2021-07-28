@@ -25,6 +25,7 @@ export class Socket {
             res.status(200).send(`No route specified... but, HEY!!! I'm working!!`)
         })
 
+        
         this.server = createServer(this.app)
         this.io = new socketIO.Server(this.server, {
             path: '/socket.io',
