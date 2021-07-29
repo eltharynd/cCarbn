@@ -1,30 +1,33 @@
+import { TwitchPrivateMessage } from '@twurple/chat/lib/commands/TwitchPrivateMessage'
 import { from } from 'rxjs'
-import { filter, take } from 'rxjs/operators'
-import { Mongo } from '../db/mongo'
-import { Message } from './utils'
+import { filter, map, take, toArray } from 'rxjs/operators'
+import { Mongo } from '../../db/mongo'
+import { Chat } from '../../twitch/chat'
+import { Message } from '../message'
 
 const RGX_USER = /\@\w+(\s|$)/gi
+//@user replaces with user sending the message
 const RGX_EVAL = /\$eval\(.+\)(\s|$)/gi
 const RGX_RAND = /\$((rand)|(rnd))\d+/gi
 
 const FORMAT_ERROR = 'This command is formatted wrong... Please check your spelling or consult the documentation...'
 
-export class Saved extends Message {
+export class Storeable extends Message {
   commands = []
 
-  public constructor(client) {
-    super(client)
+  public constructor() {
+    super()
     this.fetch(true)
     this.init()
   }
 
   private fetch = async (bind?) => {
-    let buffer = await Mongo.instance.fetch()
+    let buffer = await Mongo.fetch()
     this.commands = buffer instanceof Array ? buffer : [buffer]
     if (bind)
       for (let c of this.commands) {
         c.listener = await this.generateListener(c)
-        this.client.on('message', c.listener)
+        Chat.client.onMessage(c.listener)
       }
   }
 
@@ -39,10 +42,10 @@ export class Saved extends Message {
   }
 
   //TODO implement mods only commands
-  private command = async (channel, tags, message, self) => {
+  private command = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!((command)|(cmd)) ((add)|(save)|(edit)|(delete)|(show)|(answer)|(source)) .+$/i.test(message)) {
-      if (!this.mod(tags)) {
-        this.client.say(channel, `/me Only mods can edit commands...`)
+      if (!msg.userInfo.isMod && !msg.userInfo.isBroadcaster) {
+        Chat.client.say(channel, `/me Only mods can edit commands...`)
         return
       }
 
@@ -51,9 +54,9 @@ export class Saved extends Message {
         let edit = buffer.startsWith('edit') ? true : false
         buffer = buffer.replace('add ', '').replace('save ', '').replace('edit ', '')
 
-        let name = buffer.match(/^\!*\w+ /i)
+        let name: RegExpMatchArray|string = buffer.match(/^\!*\w+ /i)
         if (!name) {
-          this.client.say(channel, `/me ${FORMAT_ERROR}`)
+          Chat.client.say(channel, `/me ${FORMAT_ERROR}`)
           return
         }
 
@@ -62,7 +65,7 @@ export class Saved extends Message {
 
         let exists = await this.exists(name)
         if (!edit && exists) {
-          this.client.say(
+          Chat.client.say(
             channel,
             `/me This command already exists... If you want to modify it please use '!cmd edit' instead, if you're not sure what the command is atm you can always use '!cmd source'`
           )
@@ -93,10 +96,9 @@ export class Saved extends Message {
             buffer = buffer.replace(i, `{{${index++}}}`)
           }
 
-        console.log(parameters)
         let result
         if (exists) {
-          let found = await Mongo.instance.fetch(name)
+          let found = await Mongo.fetch(name)
           found.command = name
           found.answer = buffer
           found.params = parameters
@@ -104,27 +106,26 @@ export class Saved extends Message {
           found.mods = null
           found.save()
           result = found
-        } else result = await Mongo.instance.save(name, buffer, null, parameters, message)
+        } else result = await Mongo.save(name, buffer, null, parameters, message)
 
         this.commands.push(result)
         result.listener = this.generateListener(result)
-        console.log(result)
-        this.client.on('message', result.listener)
+        Chat.client.onMessage(result.listener)
 
-        this.client.say(channel, `/me Successfully ${exists ? 'edited' : 'added new'} command...`)
+        Chat.client.say(channel, `/me Successfully ${exists ? 'edited' : 'added new'} command...`)
       } else if (buffer.startsWith('delete')) {
         buffer = buffer.replace('delete ', '')
 
-        let name = buffer.match(/^\!*\w+(\s|$)/i)
+        let name: RegExpMatchArray|string = buffer.match(/^\!*\w+(\s|$)/i)
         if (!name) {
-          this.client.say(channel, `/me ${FORMAT_ERROR}`)
+          Chat.client.say(channel, `/me ${FORMAT_ERROR}`)
           return
         }
         name = name[0].replace(' ', '')
 
         let exists = await this.exists(name)
         if (!exists) {
-          this.client.say(channel, `/me This command doesn't exist...`)
+          Chat.client.say(channel, `/me This command doesn't exist...`)
           return
         }
 
@@ -136,30 +137,43 @@ export class Saved extends Message {
             )
             .toPromise()
         ).listener
-        this.client.removeListener('message', listener)
-        let found = await Mongo.instance.fetch(name)
+        Chat.client.removeMessageListener(listener)
+        let found = await Mongo.fetch(name)
         found.delete()
-        this.client.say(channel, `/me Successfully deleted command...`)
+        Chat.client.say(channel, `/me Successfully deleted command...`)
       } else if (buffer.startsWith('show')) {
         buffer = buffer.replace('show ', '').replace('answer ', '')
-        if (await this.exists(buffer)) this.client.say(channel, `/me Here's the answer for command "${buffer}": \`${(await Mongo.instance.fetch(buffer)).answer}\``)
-        else this.client.say(channel, `/me I couldn't find such command...`)
+        if (await this.exists(buffer)) Chat.client.say(channel, `/me Here's the answer for command "${buffer}": \`${(await Mongo.fetch(buffer)).answer}\``)
+        else Chat.client.say(channel, `/me I couldn't find such command...`)
       } else if (buffer.startsWith('source')) {
         buffer = buffer.replace('source ', '')
-        if (await this.exists(buffer)) this.client.say(channel, `/me Here's the source for command "${buffer}": \`${(await Mongo.instance.fetch(buffer)).source}\``)
-        else this.client.say(channel, `/me I couldn't find such command...`)
+        if (await this.exists(buffer)) Chat.client.say(channel, `/me Here's the source for command "${buffer}": \`${(await Mongo.fetch(buffer)).source}\``)
+        else Chat.client.say(channel, `/me I couldn't find such command...`)
       }
+    } else if(/!commands/.test(message)) {
+      //PRINT THE LIST OF ALL SAVED COMMANDS
+      let printables = await from(this.commands).pipe(
+        map((v, i) => {
+          return v.command
+        }),
+        toArray() 
+      ).toPromise()
+
+      //TODO check if message length > 500
+      if(!printables || printables.length<1) 
+        Chat.client.say(channel, `/me No commands saved yet...`)
+      else
+        Chat.client.say(channel, `/me There's the current commands: '${printables.join(`', '`)}'.`)
+
+      console.log(printables)
     }
   }
 
   private generateListener = (command) => {
-    return (channel, tags, message, self) => {
-      if (self) return
+    return (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
       let tester = command.command
-      //for(let p of command.params)
-      //    tester += `\\s${p.startsWith('@') ? '@\\w+' : '\\w+'}`
-      if (new RegExp(tester, 'i').test(message) && (!command.mods || this.mod(tags))) {
-        if (this.timeout(10, tester === '!pp' ? tester + tags.zsername : tester)) return
+      if (new RegExp('^' + tester, 'i').test(message) && (!command.mods || (msg.userInfo.isMod || msg.userInfo.isBroadcaster))) {
+        if (this.timeout(10, tester === '!pp' ? tester + user : tester)) return
         let answer = command.answer
         let inputs: string[] = message.replace(`${command.command} `, '').split(' ')
         let shift = () => {
@@ -172,7 +186,7 @@ export class Saved extends Message {
             let p = command.params[i]
 
             if (new RegExp(RGX_USER).test(p)) {
-              answer = answer.replace(`{{${i}}}`, /@user/gi.test(p) ? `@${tags.username}` : inputs.length === 1 && /@\w+/ ? p : shift())
+              answer = answer.replace(`{{${i}}}`, /@user/gi.test(p) ? `@${msg.userInfo.displayName}` : inputs.length === 1 && /@\w+/ ? p : shift())
             } else if (new RegExp(RGX_EVAL).test(p)) {
               answer = answer.replace(`{{${i}}}`, `${eval(p.replace(/^\$eval\(/, '').replace(/\)$/, ''))}`)
             } else if (new RegExp(RGX_RAND).test(p)) {
@@ -180,28 +194,29 @@ export class Saved extends Message {
               answer = answer.replace(`{{${i}}}`, `${Math.floor(Math.random() * ++num)}`)
             }
           }
-          this.client.say(channel, `/me ${answer}`)
+          Chat.client.say(channel, `/me ${answer}`)
         } catch (e) {
-          this.client.say(channel, `/me This command requires more parameters...`)
+          Chat.client.say(channel, `/me This command requires more parameters...`)
         }
       }
     }
   }
 
   confirmation = false
-  private flush = async (channel, tags, message, self) => {
+  private flush = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!cmd flush$/i.test(message)) {
-      if (tags.username.toLowerCase() !== channel.replace('#', '').toLowerCase()) this.client.say(channel, `/me Only the streamer can flush all commands from db... `)
+      if(!msg.userInfo.isBroadcaster)
+        Chat.client.say(channel, `/me Only the streamer can flush all commands from db... `)
       else if (this.confirmation) {
-        await Mongo.instance.clearAll()
+        await Mongo.clearAll()
         for (let c of this.commands) {
-          if (c.listener) this.client.removeListener('message', c.listener)
+          if (c.listener) Chat.client.removeMessageListener(c.listener)
         }
         this.commands = []
-        this.client.say(channel, `/me Oooohkay boss... deleted everything... I hope you know what you're doing...`)
+        Chat.client.say(channel, `/me Oooohkay boss... deleted everything... I hope you know what you're doing...`)
         this.confirmation = false
       } else {
-        this.client.say(
+        Chat.client.say(
           channel,
           `/me This command will delete EVERY command you ever saved... They are NOT recoverable... If you're sure about this enter the same command again within 10 seconds...`
         )
@@ -213,7 +228,4 @@ export class Saved extends Message {
     }
   }
 
-  private mod(tags) {
-    return tags.mod || (tags.badges && tags.badges.broadcaster)
-  }
 }

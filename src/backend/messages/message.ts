@@ -1,3 +1,5 @@
+import { Chat } from '../twitch/chat'
+
 export const filterParameters = (message) => {
   let parameters = message.split(' ')
   parameters.shift()
@@ -5,21 +7,18 @@ export const filterParameters = (message) => {
 }
 
 export class Message {
-  protected client
   private cooldowns = {}
-  constructor(client) {
-    this.client = client
-  }
+
   protected init = () => {
     let keys = []
     for (let key of Object.keys(this))
       if (typeof this[key] === 'function' && key !== 'init' && key !== 'timeout' && key !== 'fetch' && key !== 'exists' && key !== 'mod' && key !== 'generateListener')
         keys.push(key)
-    this.client.on('message', (channel, tags, message, self) => {
-      if (self) return
-      for (let key of keys) this[key](channel, tags, message, self)
+    Chat.client.onMessage((channel, user, message, msg) => {
+      for (let key of keys) this[key](channel, user, message, msg)
     })
   }
+
   protected timeout = (timeInSeconds?: number, identifier?: string): boolean => {
     let caller = identifier
       ? identifier
