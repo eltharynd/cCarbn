@@ -48,9 +48,9 @@ client
   .then((value) => {
     Twitch.init()
 
-    //new Common(client)
-    //new Everyone(client)
-    //new Moderators(client)
+    new Common(client)
+    new Everyone(client)
+    new Moderators(client)
 
     let socket = new Socket(PORT, [])
     //@ts-ignore

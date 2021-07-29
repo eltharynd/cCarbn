@@ -51,9 +51,7 @@ export class Twitch {
   public static searchChannel = async (name): Promise<HelixChannelSearchResult> => {
     return await from((await Twitch.client.search.searchChannels(name)).data)
       .pipe(
-        filter((channel) => {
-          return channel.name === name
-        }),
+        filter((channel) => channel.name === name),
         take(1)
       )
       .toPromise()

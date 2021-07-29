@@ -17,7 +17,7 @@ export class Moderators extends Message {
         return
       }
 
-      let result = await Twitch.searchChannel(parameters[0].replace('@', ''))
+      let result = await Twitch.searchChannel(parameters[0].replace('@', '').toLowerCase())
       if (result) {
         let stream = await Twitch.getStream(result.id)
         this.client.say(
