@@ -1,26 +1,29 @@
-import { Twitch } from '../hooks/twitch'
-import { filterParameters, Message } from './utils'
+import { TwitchPrivateMessage } from '@twurple/chat/lib/commands/TwitchPrivateMessage'
+import { Chat } from '../../twitch/chat'
+import { Twitch } from '../../twitch/twitch'
+import { filterParameters, Message } from '../message'
 
 export class Moderators extends Message {
-  public constructor(client) {
-    super(client)
+  public constructor() {
+    super()
     this.init()
   }
 
-  private shoutout = async (channel, tags, message, self) => {
-    if (!this.mod(tags)) return
+  private shoutout = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
+    
+    if (!msg.userInfo.isMod && !msg.userInfo.isBroadcaster) return
 
     let parameters = filterParameters(message)
     if (/^!so [\@\w]\w*/i.test(message) || /^!search [\@\w]\w*/i.test(message)) {
       if (parameters.length == 0) {
-        this.client.say(channel, `/me You didn't specify a user to look up for... You piece of shit...`)
+        Chat.client.say(channel, `/me You didn't specify a user to look up for... You piece of shit...`)
         return
       }
 
       let result = await Twitch.searchChannel(parameters[0].replace('@', '').toLowerCase())
       if (result) {
         let stream = await Twitch.getStream(result.id)
-        this.client.say(
+        Chat.client.say(
           channel,
           `/me ${
             /^!search/i.test(message)
@@ -34,11 +37,8 @@ export class Moderators extends Message {
               : `They've actually never streamed before so.. there's that...`
           }`.replace('\n', '')
         )
-      } else this.client.say(channel, `/me I'm sorry i could not find any such channel...`)
+      } else Chat.client.say(channel, `/me I'm sorry i could not find any such channel...`)
     }
   }
 
-  private mod(tags) {
-    return tags.mod || /eltharynd/i.test(tags.username) || /elthabot/i.test(tags.username) || (tags.badges && tags.badges.broadcaster)
-  }
 }
