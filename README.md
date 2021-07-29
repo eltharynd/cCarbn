@@ -13,12 +13,12 @@ Althought a GUI Dashboard will eventually come, the coolest functionality will a
 Here's a list of prerequisites that you need to have in order to deploy this project. A more detailed eplaination might be included in the future but it does not really concern the scope of this file.
 
 - A domain name with a valid SSL certificate for such domain (**the Twitch app webhook requires the endpoint to be on a Secure domain, on a development server you can setup a reverse proxy to redirect such requests to your local machine**)
-- A mongodb instance installed and running (you can create a free one on https://www.mongodb.com/cloud/atlas/)
+- A mongodb instance installed and running (you can create a free one on <https://www.mongodb.com/cloud/atlas/>)
 - Having the twitch 2FA enabled is a Twitch developer prerequisite (I believe, if it's not: you should still use that...)
 
 ### Setting up a Twitch developer account
 
-You will need to create your own Twitch app for authorization, therefore you are required to enroll (freely) in the Twitch dev program (https://dev.twitch.tv/).
+You will need to create your own Twitch app for authorization, therefore you are required to enroll (freely) in the Twitch dev program (<https://dev.twitch.tv/>).
 
 Note that whichever account is used to create this app is the account that will actually write to (and read from) chat, so if you want it to be different from your channel account (with which you will still need to log in at some point to authorize the app) you can create a new account with whatever name you like (and is available) and use that instead.
 
@@ -91,7 +91,7 @@ npm run backend
 
 At this point any change in the code will reload the necessary components, which are available at:
 
-- Angular: http://localhost:4200
-- Backend (express/socket.io): http://localhost:3000
+- Angular: `http://localhost:4200`
+- Backend (express/socket.io): `http://localhost:3000`
 
 Note that there's an extra port listening (3001) for the Twitch API webhooks.
