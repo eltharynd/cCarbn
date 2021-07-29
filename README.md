@@ -81,17 +81,21 @@ There's two main components to run:
 
 you can look in the `package.json` file for the specifics, but there's two scripts in there made to simplify running these (for both dev and prod).
 
-So you can run these in two different terminals (or terminal tabs in vscode)
+So you can run these in three different terminals (or terminal tabs in vscode)
 
 ```bash
 npm run angular
 ```
 
 ```bash
+tsc -w -project backend.tsconfig.json
+```
+
+```bash
 npm run backend
 ```
 
-At this point both terminals will run and watch the code so that any change in the code will reload the necessary components, which are available at:
+At this point all terminals will run and watch the code so that any change in the code will reload the necessary components, which are available at:
 
 - Angular: `http://localhost:4200`
 - Backend (express/socket.io): `http://localhost:3000` directly or `http://localhost:4200/api` through angular proxy
