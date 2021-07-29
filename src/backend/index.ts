@@ -11,6 +11,7 @@ import { Socket } from './hooks/socket'
 import { Mongo } from './db/mongo'
 import { Saved } from './message/saved'
 
+//TODO use this port in init.js too
 export const PORT = 3000
 export const CREDENTIALS = JSON.parse('' + fs.readFileSync('twitch_credentials.json'))
 export const MONGO = JSON.parse('' + fs.readFileSync('mongo_credentials.json'))
