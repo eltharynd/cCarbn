@@ -26,8 +26,7 @@ export class Storeable extends Message {
     this.commands = buffer instanceof Array ? buffer : [buffer]
     if (bind)
       for (let c of this.commands) {
-        c.listener = await this.generateListener(c)
-        Chat.client.onMessage(c.listener)
+        c.listener = Chat.client.onMessage(await this.generateListener(c))
       }
   }
 
@@ -54,7 +53,7 @@ export class Storeable extends Message {
         let edit = buffer.startsWith('edit') ? true : false
         buffer = buffer.replace('add ', '').replace('save ', '').replace('edit ', '')
 
-        let name: RegExpMatchArray|string = buffer.match(/^\!*\w+ /i)
+        let name: RegExpMatchArray | string = buffer.match(/^\!*\w+ /i)
         if (!name) {
           Chat.client.say(channel, `/me ${FORMAT_ERROR}`)
           return
@@ -109,14 +108,14 @@ export class Storeable extends Message {
         } else result = await Mongo.save(name, buffer, null, parameters, message)
 
         this.commands.push(result)
-        result.listener = this.generateListener(result)
-        Chat.client.onMessage(result.listener)
+        let listener = this.generateListener(result)
+        result.listener = Chat.client.onMessage(listener)
 
         Chat.client.say(channel, `/me Successfully ${exists ? 'edited' : 'added new'} command...`)
       } else if (buffer.startsWith('delete')) {
         buffer = buffer.replace('delete ', '')
 
-        let name: RegExpMatchArray|string = buffer.match(/^\!*\w+(\s|$)/i)
+        let name: RegExpMatchArray | string = buffer.match(/^\!*\w+(\s|$)/i)
         if (!name) {
           Chat.client.say(channel, `/me ${FORMAT_ERROR}`)
           return
@@ -129,17 +128,16 @@ export class Storeable extends Message {
           return
         }
 
-        let listener = (
-          await from(this.commands)
-            .pipe(
-              filter((c) => c.command === name),
-              take(1)
-            )
-            .toPromise()
-        ).listener
-        Chat.client.removeMessageListener(listener)
+        let command = await from(this.commands)
+          .pipe(
+            filter((c) => c.command === name),
+            take(1)
+          )
+          .toPromise()
+        command.listener.unbind()
         let found = await Mongo.fetch(name)
         found.delete()
+        this.commands.splice(this.commands.indexOf(command), 1)
         Chat.client.say(channel, `/me Successfully deleted command...`)
       } else if (buffer.startsWith('show')) {
         buffer = buffer.replace('show ', '').replace('answer ', '')
@@ -150,29 +148,27 @@ export class Storeable extends Message {
         if (await this.exists(buffer)) Chat.client.say(channel, `/me Here's the source for command "${buffer}": \`${(await Mongo.fetch(buffer)).source}\``)
         else Chat.client.say(channel, `/me I couldn't find such command...`)
       }
-    } else if(/!commands/.test(message)) {
+    } else if (/!commands/.test(message)) {
       //PRINT THE LIST OF ALL SAVED COMMANDS
-      let printables = await from(this.commands).pipe(
-        map((v, i) => {
-          return v.command
-        }),
-        toArray() 
-      ).toPromise()
+      let printables = await from(this.commands)
+        .pipe(
+          map((v, i) => {
+            return v.command
+          }),
+          toArray()
+        )
+        .toPromise()
 
       //TODO check if message length > 500
-      if(!printables || printables.length<1) 
-        Chat.client.say(channel, `/me No commands saved yet...`)
-      else
-        Chat.client.say(channel, `/me There's the current commands: '${printables.join(`', '`)}'.`)
-
-      console.log(printables)
+      if (!printables || printables.length < 1) Chat.client.say(channel, `/me No commands saved yet...`)
+      else Chat.client.say(channel, `/me There's the current commands: '${printables.join(`', '`)}'.`)
     }
   }
 
   private generateListener = (command) => {
     return (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
       let tester = command.command
-      if (new RegExp('^' + tester, 'i').test(message) && (!command.mods || (msg.userInfo.isMod || msg.userInfo.isBroadcaster))) {
+      if (new RegExp('^' + tester, 'i').test(message) && (!command.mods || msg.userInfo.isMod || msg.userInfo.isBroadcaster)) {
         if (this.timeout(10, tester === '!pp' ? tester + user : tester)) return
         let answer = command.answer
         let inputs: string[] = message.replace(`${command.command} `, '').split(' ')
@@ -205,8 +201,7 @@ export class Storeable extends Message {
   confirmation = false
   private flush = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!cmd flush$/i.test(message)) {
-      if(!msg.userInfo.isBroadcaster)
-        Chat.client.say(channel, `/me Only the streamer can flush all commands from db... `)
+      if (!msg.userInfo.isBroadcaster) Chat.client.say(channel, `/me Only the streamer can flush all commands from db... `)
       else if (this.confirmation) {
         await Mongo.clearAll()
         for (let c of this.commands) {
@@ -227,5 +222,4 @@ export class Storeable extends Message {
       }
     }
   }
-
 }
