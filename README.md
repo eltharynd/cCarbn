@@ -70,7 +70,7 @@ Go through the setup project. You can then verify that everything has been saved
 
 You are now ready to start developing.
 
-## Developing on your local environment
+## DEVELOPING ON YOUR LOCAL ENVIRONMENT
 
 There's two main components to run:
 
