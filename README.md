@@ -68,6 +68,8 @@ node init.js
 
 Go through the setup project. You can then verify that everything has been saved correctly by checking the `*_credentials.json` files in the root folder.
 
+These `*_credentials.json` files are then stored in mongodb and deleted on first execution.
+
 You are now ready to start developing.
 
 ## DEVELOPING ON YOUR LOCAL ENVIRONMENT
