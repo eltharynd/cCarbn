@@ -14,6 +14,7 @@ Here's a list of prerequisites that you need to have in order to deploy this pro
 
 - A domain name with a valid SSL certificate for such domain (**the Twitch app webhook requires the endpoint to be on a Secure domain, on a development server you can setup a reverse proxy to redirect such requests to your local machine**)
 - A mongodb instance installed and running (you can create a free one on https://www.mongodb.com/cloud/atlas/)
+- Having the twitch 2FA enabled is a Twitch developer prerequisite (I believe, if it's not: you should still use that...)
 
 ### Setting up a Twitch developer account
 
@@ -65,7 +66,7 @@ Now you can run the aforementioned guided setup script
 node init.js
 ```
 
-Go through the setup project. You can then verify that everything has been saved correctly by checking the \*\_credentials.json files in the root folder.
+Go through the setup project. You can then verify that everything has been saved correctly by checking the `*_credentials.json` files in the root folder.
 
 You are now ready to start developing.
 
