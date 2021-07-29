@@ -28,10 +28,10 @@ let prepareCredentials = async () => {
 
     let channel = await questionSync(`Enter the twitch channel you'd like to connect the bot to:`)
     if(channel) twitch.channel = channel
-    let clientID = await questionSync(`Enter the twitch app clientID (https://dev.twitch.tv/console/apps):`)
-    if(clientID) twitch.clientID = clientID
-    let secret = await questionSync(`Enter the twitch app secret (https://dev.twitch.tv/console/apps):`)
-    if(secret) twitch.secret = secret
+    let clientId = await questionSync(`Enter the twitch app clientId (https://dev.twitch.tv/console/apps):`)
+    if(clientId) twitch.clientId = clientId
+    let clientSecret = await questionSync(`Enter the twitch app clientSecret (https://dev.twitch.tv/console/apps):`)
+    if(clientSecret) twitch.clientSecret = clientSecret
 
     let mUser = await questionSync(`Enter the mongo username:`)
     if(mUser) mongo.connection = mongo.connection.replace(`<USERNAME>`, mUser)
@@ -86,12 +86,39 @@ let getOauth = async () => {
         let server = createServer(app)
         server.listen(3000)
 
+        let scopes = [
+          'bits:read',
+          'channel:edit:commercial',
+          'channel:manage:broadcast',
+          'channel:manage:polls',
+          'channel:manage:predictions',
+          'channel:manage:redemptions',
+          'channel:manage:schedule',
+          'channel:read:hype_train',
+          'channel:read:polls',
+          'channel:read:predictions',
+          'channel:read:redemptions',
+          'channel:read:subscriptions',
+          'clips:edit',
+          'moderation:read',
+          'user:edit',
+          'user:manage:blocked_users',
+          'user:read:blocked_users',
+          'user:read:broadcast',
+          'user:read:follows',
+          'user:read:subscriptions',
+          'channel:moderate',
+          'chat:edit',
+          'chat:read',
+          'whispers:read',
+          'whispers:edit'
+        ]
         let oauthString =
             `https://id.twitch.tv/oauth2/authorize
-            ?client_id=${twitch.clientID}
+            ?client_id=${twitch.clientId}
             &redirect_uri=http://localhost:3000/oauth
             &response_type=token
-            &scope=chat:read+chat:edit+channel:moderate+whispers:read+whispers:edit+channel_editor`
+            &scope=${scopes.join('+')}`
             .replace(/\s/g, '')
         open(oauthString, {app: {name: 'chrome', arguments: ['--incognito']}})
 
@@ -122,7 +149,9 @@ let init = async () => {
             let token = await getOauth()
             if(token) {
                 let twitch = JSON.parse(''+fs.readFileSync('twitch_credentials.json'))
-                twitch.oauth = token
+                twitch.accessToken = token
+                twitch.expiresIn = 60 * 24 * 60 * 60 * 1000
+                twitch.obtainmentTimestamp = Date.now()
                 fs.writeFileSync('twitch_credentials.json', JSON.stringify(twitch, null, 4))
                 console.log('\x1b[33m%s\x1b[0m', `Access token retrieved and saved...`)
             } else {
@@ -136,13 +165,37 @@ let init = async () => {
                 exit()
             } else {
                 let twitch = JSON.parse(''+fs.readFileSync('twitch_credentials.json'))
-                twitch.oauth = token.replace(/^oauth\:/, '')
+                twitch.accessToken = token.replace(/^oauth\:/, '')
+                twitch.expiresIn = 60 * 24 * 60 * 60 * 1000
+                twitch.obtainmentTimestamp = Date.now()
                 fs.writeFileSync('twitch_credentials.json', JSON.stringify(twitch, null, 4))
                 console.log('\x1b[33m%s\x1b[0m', `Access token saved...`)
             }
         }
     } else
         console.log('\x1b[33m%s\x1b[0m', `Using existing oauth...`)
+
+    answer = await questionSync(`Would you like to setup the endpoint? (y/n)`)
+    if(/y/gi.test(answer)) {
+      if(fs.existsSync('endpoint_credentials.json')) {
+        answer = await questionSync(`An initialization already exists... Would you like to reinitialize it? (y/n)`)
+        if(/y/gi.test(answer))
+          fs.copyFileSync('src/assets/endpoint_template.json', 'endpoint_credentials.json')
+      } else
+        fs.copyFileSync('src/assets/endpoint_template.json', 'endpoint_credentials.json')
+
+      let endpoint = JSON.parse(''+fs.readFileSync('endpoint_credentials.json'))
+      let hostname = await questionSync(`Enter the hostname for the client listener:`)
+      if(hostname) endpoint.hostname = hostname
+      let crt = await questionSync(`Enter the path to the SSL certificate:`)
+      if(crt) endpoint.crt = crt
+      let key = await questionSync(`Enter the path to the SSL key:`)
+      if(key) endpoint.key = key
+      fs.writeFileSync('endpoint_credentials.json', JSON.stringify(endpoint, null, 4))
+      console.log('\x1b[33m%s\x1b[0m', `Endpoint configuration successfully saved.`)
+    } else {
+      console.log('\x1b[33m%s\x1b[0m', `Using existing endpoint config...`)
+    }
     console.log('\x1b[33m%s\x1b[0m', `Initialization process is over... Shutting down...`)
     exit()
 }

@@ -1,0 +1,5 @@
+{
+  "hostname": "<YOUR_HOSTNAME_HERE>",
+  "crt": "<PATH_TO_CERT>",
+  "key": "<PATH_TO_KEY>"
+}

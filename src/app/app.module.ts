@@ -7,12 +7,14 @@ import { AppComponent } from './app.component';
 import { StatusService } from './shared/status.service';
 import { WebsourceComponent } from './websource/websource.component';
 import { IndexComponent } from './index/index.component';
+import { PredictionsComponent } from './websource/predictions/predictions.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     WebsourceComponent,
-    IndexComponent
+    IndexComponent,
+    PredictionsComponent
   ],
   imports: [
     BrowserModule,

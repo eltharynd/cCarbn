@@ -47,5 +47,6 @@ Thumbs.db
 
 /dist
 **/~$*
-twitch_credentials.json
-mongo_credentials.json
+*_credentials.json
+*.crt
+*.key

@@ -1,6 +1,9 @@
 {
     "channel": "<CHANNEL_YOU_WANT_TO_CONNECT_TO>",
-    "clientID": "<YOUR_TWITCH_APP_ID>",
-    "secret": "<YOUR_TWITCH_APP_SECRET>",
-    "oauth": "<YOUR_OAUTH_TOKEN>"
+    "clientId": "<YOUR_TWITCH_APP_ID>",
+    "clientSecret": "<YOUR_TWITCH_APP_SECRET>",
+    "accessToken": "INITIAL_ACCESS_TOKEN",
+    "refreshToken": "INITIAL_REFRESH_TOKEN",
+    "expiresIn": 0,
+    "obtainmentTimestamp": 0
  }

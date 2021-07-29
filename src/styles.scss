@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#outlet {
+  position: absolute;
+  width: 1920px;
+  height: 1080px;
+
+  //TODO remove after testing
+  background-color: rgba(0, 0, 255, 0.2) !important;
+}

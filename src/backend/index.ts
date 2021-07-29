@@ -14,16 +14,18 @@ import { Saved } from './message/saved'
 export const PORT = 3000
 export const CREDENTIALS = JSON.parse('' + fs.readFileSync('twitch_credentials.json'))
 export const MONGO = JSON.parse('' + fs.readFileSync('mongo_credentials.json'))
-const authProvider = new RefreshableAuthProvider(new StaticAuthProvider(CREDENTIALS.clientID, CREDENTIALS.oauth), {
-  clientSecret: CREDENTIALS.secret,
-  refreshToken: CREDENTIALS.oauth,
-  expiry: CREDENTIALS.expiration ? new Date(CREDENTIALS.expiration) : null,
+const authProvider = new RefreshableAuthProvider(new StaticAuthProvider(CREDENTIALS.clientId, CREDENTIALS.accessToken), {
+  clientSecret: CREDENTIALS.clientSecret,
+  refreshToken: CREDENTIALS.accessToken,
+  expiry: CREDENTIALS.obtainmentTimestamp + CREDENTIALS.expiresIn,
   onRefresh: async ({ accessToken, refreshToken, expiryDate }) => {
-    let newCredentials = Object.assign(CREDENTIALS, {})
-    newCredentials.oauth = accessToken
+    console.log('---------------------------------- NEW TOKEN DATA RECEIVED (INDEX) ----------------------------------')
+    let newCredentials = JSON.parse(`${fs.readFileSync('twitch_credentials.json')}`)
+    newCredentials.accessToken = accessToken
     newCredentials.refreshToken = refreshToken
-    newCredentials.expiration = expiryDate?.getTime()
-    await fs.writeFileSync('twitch_credentials.json', JSON.stringify(newCredentials, null, 4))
+    newCredentials.expiresIn = expiryDate?.getTime() - Date.now()
+    newCredentials.obtainmentTimestamp = Date.now()
+    fs.writeFileSync('twitch_credentials.json', JSON.stringify(newCredentials, null, 4))
   },
 })
 
@@ -45,9 +47,9 @@ client
   .then((value) => {
     Twitch.init()
 
-    new Common(client)
-    new Everyone(client)
-    new Moderators(client)
+    //new Common(client)
+    //new Everyone(client)
+    //new Moderators(client)
 
     let socket = new Socket(PORT, [])
     //@ts-ignore

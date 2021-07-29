@@ -3,8 +3,7 @@ import { StatusService } from './shared/status.service'
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  template: '<div id="outlet"><router-outlet></router-outlet></div>'
 })
 export class AppComponent implements OnInit {
   title = 'elthabot'
