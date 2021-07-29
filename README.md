@@ -77,7 +77,7 @@ There's two main components to run:
 - Angular
 - The node app
 
-you can look in the `package.json` file for the specific, but there's two scripts in there made to simplify running these (for both dev and prod).
+you can look in the `package.json` file for the specifics, but there's two scripts in there made to simplify running these (for both dev and prod).
 
 So you can run these in two different terminals (or terminal tabs in vscode)
 
