@@ -91,7 +91,7 @@ npm run angular
 npm run backend
 ```
 
-At this point any change in the code will reload the necessary components, which are available at:
+At this point both terminals will run and watch the code so that any change in the code will reload the necessary components, which are available at:
 
 - Angular: `http://localhost:4200`
 - Backend (express/socket.io): `http://localhost:3000`
