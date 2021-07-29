@@ -94,6 +94,6 @@ npm run backend
 At this point both terminals will run and watch the code so that any change in the code will reload the necessary components, which are available at:
 
 - Angular: `http://localhost:4200`
-- Backend (express/socket.io): `http://localhost:3000`
+- Backend (express/socket.io): `http://localhost:3000` directly or `http://localhost:4200/api` through angular proxy
 
 Note that there's an extra port listening (3001) for the Twitch API webhooks.
