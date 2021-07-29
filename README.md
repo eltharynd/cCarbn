@@ -46,7 +46,7 @@ Then you can run the initialization script. This will guide you through a setup 
 
 ⚠⚠⚠
 
-**NEVER** share your accessTokens with anyone.
+**NEVER** share your access tokens with anyone.
 
 This app will **NEVER** ask for your twitch password directly.
 
