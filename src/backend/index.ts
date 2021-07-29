@@ -37,7 +37,6 @@ export const userProvider = new RefreshingAuthProvider(
   },
   CREDENTIALS
 )
-
 export var channelID
 
 let startApp = async () => {
