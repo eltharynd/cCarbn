@@ -6,6 +6,11 @@ In other words it's goal is to allow content creators to develop custom commands
 
 Althought a GUI Dashboard will eventually come, the coolest functionality will always have to be coded ad-hoc so at least some software development skills are necessary.
 
+## ROADMAP
+
+- After the main project is ready and user friendly I will also develop an elgato Stream Deck plugin for it.
+- After that's done I will build a one-click cloud installator for non-developers to use this as well, or at least the basic functionalities
+
 ## GETTING STARTED
 
 ### Prerequisites
