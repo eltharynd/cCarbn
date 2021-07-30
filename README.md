@@ -1,8 +1,8 @@
 # elthabot
 
-elthabot aims to be a powerful Twitch chatbot, Twitch API interface and Websource (for OBS or similar) generator.
+elthabot aims to be a powerful Twitch chatbot, Twitch API interface and Browser Source (for OBS or similar) generator.
 
-In other words it's goal is to allow content creators to develop custom commands that are currently not possible with alternatives such as nightbot, as well as to integrate that with events not capturable via chat (hype trains and such) and to allow the creation of dynamic single page web apps (through Angular) that can be controlled based on chat and/or events and can ultimately be used as websources in OBS and such.
+In other words it's goal is to allow content creators to develop custom commands that are currently not possible with alternatives such as nightbot, as well as to integrate that with events not capturable via chat (hype trains and such) and to allow the creation of dynamic single page web apps (through Angular) that can be controlled based on chat and/or events and can ultimately be used as Browser Sources in OBS and such.
 
 Althought a GUI Dashboard will eventually come, the coolest functionality will always have to be coded ad-hoc so at least some software development skills are necessary.
 
