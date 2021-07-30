@@ -9,7 +9,7 @@ Althought a GUI Dashboard will eventually come, the coolest functionality will a
 ## ROADMAP
 
 - After the main project is ready and user friendly I will also develop an elgato Stream Deck plugin for it.
-- After that's done I will build a one-click cloud installator for non-developers to use this as well, or at least the basic functionalities
+- After that's done I will build a one-click cloud installator for non-developers to use this as well, or at least the basic functionalities. This will be hosted on elthabot's servers so that youdon't require a domain name and SSL certificate.
 
 ## GETTING STARTED
 
