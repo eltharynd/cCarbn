@@ -12,11 +12,11 @@ export class AppComponent implements OnInit {
   constructor(private statusService: StatusService) {}
 
   ngOnInit() {
-    /* this.statusService
+    this.statusService
       .getStatus()
       .then((result: any) => {
         this.status = result.status
-      }) */
+      })
   }
 
 }
