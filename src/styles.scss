@@ -5,11 +5,13 @@
   box-sizing: border-box;
 }
 
-#outlet {
+/* #outlet {
   position: absolute;
   width: 1920px;
   height: 1080px;
 
   //TODO remove after testing
   background-color: rgba(0, 0, 255, 0.2) !important;
-}
+} */
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
