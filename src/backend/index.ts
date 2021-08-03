@@ -48,13 +48,13 @@ let startApp = async () => {
 
 
   await Twitch.init()
-  //await Chat.init()
+  await Chat.init()
 
-  //new Common()
-  //new Everyone()
-  //new Moderators()
+  new Common()
+  new Everyone()
+  new Moderators()
 
-  //await Mongo.connect()
-  //new Storeable()
+  await Mongo.connect()
+  new Storeable()
 }
 startApp()
