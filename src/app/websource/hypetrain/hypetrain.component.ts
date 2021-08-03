@@ -12,8 +12,8 @@ import { StatusService } from 'src/app/shared/status.service'
   styleUrls: ['./hypetrain.component.scss'],
 })
 export class HypetrainComponent implements OnInit, OnDestroy {
-  currentLevel: number = 1
-  currentVolume: number = .5
+  currentLevel: number = 0
+  currentVolume: number = 1
 
   percentage: number = 0
   expiryDate: number = Date.now()
