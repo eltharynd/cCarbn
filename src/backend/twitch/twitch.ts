@@ -35,11 +35,11 @@ export class Twitch {
     await Twitch.listener.listen(3001)
     Twitch.channelID = await Twitch.client.users.getUserByName(CREDENTIALS.channel)
 
-    Twitch.subscriptions.push(Twitch.listener.subscribeToChannelCheerEvents(Twitch.channelID, Cheers.cheerEvent))
+    Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelCheerEvents(Twitch.channelID, Cheers.cheerEvent))
 
-    Twitch.subscriptions.push(Twitch.listener.subscribeToChannelHypeTrainBeginEvents(Twitch.channelID, HypeTrain.hypeTrainBegin))
-    Twitch.subscriptions.push(Twitch.listener.subscribeToChannelHypeTrainProgressEvents (Twitch.channelID, HypeTrain.hypeTrainProgress))
-    Twitch.subscriptions.push(Twitch.listener.subscribeToChannelHypeTrainEndEvents (Twitch.channelID, HypeTrain.hypeTrainEnd))
+    Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainBeginEvents(Twitch.channelID, HypeTrain.hypeTrainBegin))
+    Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainProgressEvents (Twitch.channelID, HypeTrain.hypeTrainProgress))
+    Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainEndEvents (Twitch.channelID, HypeTrain.hypeTrainEnd))
 
     process.on('SIGINT', () => {
       for(let sub of Twitch.subscriptions)
