@@ -14,6 +14,8 @@ export class Twitch {
 
   static channelID: HelixUser
 
+  private static subscriptions = []
+  
   public static async init() {
     Twitch.client = new ApiClient({
       authProvider: clientProvider,
@@ -33,11 +35,16 @@ export class Twitch {
     await Twitch.listener.listen(3001)
     Twitch.channelID = await Twitch.client.users.getUserByName(CREDENTIALS.channel)
 
-    Twitch.listener.subscribeToChannelCheerEvents(Twitch.channelID, Cheers.cheerEvent)
+    Twitch.subscriptions.push(Twitch.listener.subscribeToChannelCheerEvents(Twitch.channelID, Cheers.cheerEvent))
 
-    Twitch.listener.subscribeToChannelHypeTrainBeginEvents(Twitch.channelID, HypeTrain.hypeTrainBegin)
-    Twitch.listener.subscribeToChannelHypeTrainProgressEvents (Twitch.channelID, HypeTrain.hypeTrainProgress)
-    Twitch.listener.subscribeToChannelHypeTrainEndEvents (Twitch.channelID, HypeTrain.hypeTrainEnd)
+    Twitch.subscriptions.push(Twitch.listener.subscribeToChannelHypeTrainBeginEvents(Twitch.channelID, HypeTrain.hypeTrainBegin))
+    Twitch.subscriptions.push(Twitch.listener.subscribeToChannelHypeTrainProgressEvents (Twitch.channelID, HypeTrain.hypeTrainProgress))
+    Twitch.subscriptions.push(Twitch.listener.subscribeToChannelHypeTrainEndEvents (Twitch.channelID, HypeTrain.hypeTrainEnd))
+
+    process.on('SIGINT', () => {
+      for(let sub of Twitch.subscriptions)
+        sub.stop()
+    })
 
   }
 
