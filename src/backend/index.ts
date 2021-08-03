@@ -2,7 +2,8 @@ import { ClientCredentialsAuthProvider, RefreshingAuthProvider } from '@twurple/
 import * as fs from 'fs'
 
 import { Mongo } from './db/mongo'
-import { Socket } from './hooks/socket'
+import { Api } from './api/express'
+import { Socket } from './socket/socket'
 
 import { Twitch } from './twitch/twitch'
 
@@ -37,18 +38,23 @@ export const userProvider = new RefreshingAuthProvider(
   },
   CREDENTIALS
 )
+
 export var channelID
 
 let startApp = async () => {
+
+  new Api()
+  new Socket()
+
+
   await Twitch.init()
-  channelID = await Twitch.client.users.getUserByName(CREDENTIALS.channel)
-  await Chat.init()
+  //await Chat.init()
 
-  new Common()
-  new Everyone()
-  new Moderators()
+  //new Common()
+  //new Everyone()
+  //new Moderators()
 
-  await Mongo.connect()
-  new Storeable()
+  //await Mongo.connect()
+  //new Storeable()
 }
 startApp()

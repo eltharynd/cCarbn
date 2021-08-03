@@ -152,6 +152,7 @@ let init = async () => {
                 twitch.accessToken = token
                 twitch.expiresIn = 60 * 24 * 60 * 60 * 1000
                 twitch.obtainmentTimestamp = Date.now()
+                twitch.secret = `${twitch.channel}-${Date.now()}` 
                 fs.writeFileSync('twitch_credentials.json', JSON.stringify(twitch, null, 4))
                 console.log('\x1b[33m%s\x1b[0m', `Access token retrieved and saved...`)
             } else {

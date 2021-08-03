@@ -1,21 +1,24 @@
-import { ApiClient, HelixChannelSearchResult, HelixStream } from '@twurple/api'
+import { ApiClient, HelixChannelSearchResult, HelixStream, HelixUser } from '@twurple/api'
 import { DirectConnectionAdapter, EventSubListener } from '@twurple/eventsub'
 import { from } from 'rxjs'
 import * as fs from 'fs'
 import { filter, take } from 'rxjs/operators'
 
-import { clientProvider, CREDENTIALS } from '../index'
-import { ENDPOINT } from '../index'
+import { clientProvider, CREDENTIALS, ENDPOINT } from '../index'
+import { HypeTrain } from '../socket/events/hypetrain'
+import { Cheers } from '../socket/events/cheers'
 
 export class Twitch {
   static client: ApiClient
   static listener: EventSubListener
 
+  static channelID: HelixUser
+
   public static async init() {
     Twitch.client = new ApiClient({
       authProvider: clientProvider,
     })
-    
+
     Twitch.listener = new EventSubListener({
       apiClient: Twitch.client,
       adapter: new DirectConnectionAdapter({
@@ -25,20 +28,17 @@ export class Twitch {
           key: `${fs.readFileSync(ENDPOINT.key)}`,
         },
       }),
-      secret: `${CREDENTIALS.channel}${Date.now()}`,
+      secret: CREDENTIALS.secret,
     })
-    //await Twitch.listener.listen(3001)
+    await Twitch.listener.listen(3001)
+    Twitch.channelID = await Twitch.client.users.getUserByName(CREDENTIALS.channel)
 
-    /*  
-    Twitch.listener.subscribeToChannelHypeTrainBeginEvents(Twitch.channelID, (event) => {
-      console.log('subscribeToChannelHypeTrainBeginEvents')
-      console.log(event)
-    })
-    Twitch.listener.subscribeToChannelCheerEvents(Twitch.channelID, (event) => {
-      console.log('subscribeToChannelCheerEvents')
-      console.log(event)
-    }) 
-    */
+    Twitch.listener.subscribeToChannelCheerEvents(Twitch.channelID, Cheers.cheerEvent)
+
+    Twitch.listener.subscribeToChannelHypeTrainBeginEvents(Twitch.channelID, HypeTrain.hypeTrainBegin)
+    Twitch.listener.subscribeToChannelHypeTrainProgressEvents (Twitch.channelID, HypeTrain.hypeTrainProgress)
+    Twitch.listener.subscribeToChannelHypeTrainEndEvents (Twitch.channelID, HypeTrain.hypeTrainEnd)
+
   }
 
   public static searchChannel = async (name): Promise<HelixChannelSearchResult> => {

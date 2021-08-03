@@ -7,6 +7,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WebsourceComponent implements OnInit {
 
+
+  predictions: any
+  hypeTrain: any = {}
+
   constructor() { }
 
   ngOnInit(): void {

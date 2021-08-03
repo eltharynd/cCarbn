@@ -5,6 +5,7 @@ import { WebsourceComponent } from './websource/websource.component';
 
 const routes: Routes = [
   {path: 'websource', component: WebsourceComponent},
+  {path: 'websource/hypetrain', component: WebsourceComponent},
   {path: '**', component: IndexComponent},
 ];
 
