@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
 import { EventSubChannelHypeTrainBeginEvent, EventSubChannelHypeTrainEndEvent, EventSubChannelHypeTrainProgressEvent } from "@twurple/eventsub/lib"
+import { from } from 'rxjs'
+import { filter, take } from 'rxjs/operators'
+import { SeamlessLoop } from 'src/app/shared/seamlessloop'
 import { StatusService } from 'src/app/shared/status.service'
 
-export const MAX_LEVEL = 6
-export const FADEOUT_DURATION = 30 * 1000
 
 @Component({
   selector: 'app-hypetrain',
@@ -11,20 +12,25 @@ export const FADEOUT_DURATION = 30 * 1000
   styleUrls: ['./hypetrain.component.scss'],
 })
 export class HypetrainComponent implements OnInit, OnDestroy {
-  currentLevel: number = 0
-  currentVolume: number = 1
+  currentLevel: number = 1
+  currentVolume: number = .5
 
   percentage: number = 0
-  expiryDate: number = Date.now() + 1*60*1000
+  expiryDate: number = Date.now()
 
-  private loops = {}
+  loops = {}
 
   now = Date.now()
+  nowHandler
 
   constructor(private status: StatusService) {}
 
   ngOnInit(): void {
-    
+
+    this.nowHandler = setInterval(() => {
+      this.now = Date.now()
+    }, 5)
+
     this.status.socketIO.emit('hypetrain')
     this.status.socketIO.on('hypetrain', (data) => {
       if(data.eventName === 'start') {
@@ -51,45 +57,51 @@ export class HypetrainComponent implements OnInit, OnDestroy {
         this.onLevelChange()
       }
       
-    })
+    }) 
 
-    for (let i = 1; i <= MAX_LEVEL; i++) {
-      this.loops[`lvl${i}`] = new Audio()
-      this.loops[`lvl${i}`].src = `assets/Hype Train Level ${i} Loop.mp3`
-      this.loops[`lvl${i}`].load()
-      this.loops[`lvl${i}`].autoplay = true
-      this.loops[`lvl${i}`].volume = 0
-    }
+    this.loadAudio()
 
-    setInterval(() => {
-      this.now = Date.now()
-    }, 56)
 
   }
 
   ngOnDestroy() {
     this.status.socketIO.emit('hypetrain')
-    for (let i = 1; i <= MAX_LEVEL; i++) this.loops[`lvl${i}`].stop()
+    this.stopAudio()
+
+    if(this.nowHandler) {
+      clearInterval(this.nowHandler)
+      this.nowHandler = null
+    }
+  }
+
+  loadAudio() {
+  }
+
+  stopAudio() {
   }
 
   onVolumeChange() {
-    for (let i = 1; i <= MAX_LEVEL; i++) this.loops[`lvl${i}`].volume = this.loops[`lvl${i}`].volume > 0 ? this.currentVolume : 0
+  }
+
+  timeout
+  fader
+  async onLevelChange() {
   }
 
   onProgress() {
-
   }
 
-  onLevelChange() {
-    for (let i = 1; i <= MAX_LEVEL; i++) 
-      this.loops[`lvl${i}`].volume = 0
-    if(this.currentLevel>0)
-      this.loops[`lvl${Math.min(Math.max(1, this.currentLevel), MAX_LEVEL)}`].volume = this.currentVolume
-    
-    if(this.currentLevel === MAX_LEVEL)
-      setTimeout(() => {
-        this.currentLevel = 0
-        this.onLevelChange()
-      }, FADEOUT_DURATION)
+  reset() {
+    this.currentLevel = 0
+  }
+
+  endNow() {
+    if(this.timeout) clearTimeout(this.timeout)
+    if(this.fader) clearInterval(this.fader)
+
+    this.timeout = null
+    this.fader = null
+
+    this.reset()
   }
 }

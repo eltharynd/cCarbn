@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common'
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { MatButtonModule } from '@angular/material/button'
 import { MatSliderModule } from '@angular/material/slider'
 
 @NgModule({
@@ -15,6 +16,7 @@ import { MatSliderModule } from '@angular/material/slider'
     FormsModule,
     ReactiveFormsModule,
 
+    MatButtonModule,
     MatSliderModule,
   ],
   exports: [
@@ -25,6 +27,7 @@ import { MatSliderModule } from '@angular/material/slider'
     FormsModule,
     ReactiveFormsModule,
 
+    MatButtonModule,
     MatSliderModule,
   ]
 })
