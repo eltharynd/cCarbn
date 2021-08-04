@@ -4,7 +4,7 @@ import { from } from 'rxjs'
 import * as fs from 'fs'
 import { filter, take } from 'rxjs/operators'
 
-import { clientProvider, CREDENTIALS, ENDPOINT } from '../index'
+import { clientProvider, CREDENTIALS, ENDPOINT, userProvider } from '../index'
 import { HypeTrain } from '../socket/events/hypetrain'
 import { Cheers } from '../socket/events/cheers'
 
@@ -17,9 +17,11 @@ export class Twitch {
   private static subscriptions = []
   
   public static async init() {
+
     Twitch.client = new ApiClient({
-      authProvider: clientProvider,
-    })
+      authProvider: userProvider,
+    }) 
+
 
     Twitch.listener = new EventSubListener({
       apiClient: Twitch.client,
@@ -33,13 +35,22 @@ export class Twitch {
       secret: CREDENTIALS.secret,
     })
     await Twitch.listener.listen(3001)
+
     Twitch.channelID = await Twitch.client.users.getUserByName(CREDENTIALS.channel)
 
-    Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelCheerEvents(Twitch.channelID, Cheers.cheerEvent))
+    //console.log(Twitch.channelID)
+    //let res = (await await Twitch.client.hypeTrain.getHypeTrainEventsForBroadcaster(Twitch.channelID))
+    //console.log(res)
 
-    Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainBeginEvents(Twitch.channelID, HypeTrain.hypeTrainBegin))
-    Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainProgressEvents (Twitch.channelID, HypeTrain.hypeTrainProgress))
-    Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainEndEvents (Twitch.channelID, HypeTrain.hypeTrainEnd))
+
+
+
+
+    //Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelCheerEvents(Twitch.channelID, Cheers.cheerEvent))
+
+    //Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainBeginEvents(Twitch.channelID, HypeTrain.hypeTrainBegin))
+    //Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainProgressEvents (Twitch.channelID, HypeTrain.hypeTrainProgress))
+    //Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainEndEvents (Twitch.channelID, HypeTrain.hypeTrainEnd))
 
     process.on('SIGINT', () => {
       for(let sub of Twitch.subscriptions)

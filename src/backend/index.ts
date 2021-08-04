@@ -27,11 +27,10 @@ export const userProvider = new RefreshingAuthProvider(
     clientSecret: CREDENTIALS.clientSecret,
     onRefresh: (token) => {
       let newToken = JSON.parse('' + fs.readFileSync('twitch_credentials.json'))
-
-      if (token.accessToken) newToken.accessToken
-      if (token.refreshToken) newToken.refreshToken
-      if (token.expiresIn) newToken.expiresIn
-      if (token.obtainmentTimestamp) newToken.obtainmentTimestamp
+      if (token.accessToken) newToken.accessToken = token.accessToken
+      if (token.refreshToken) newToken.refreshToken = token.refreshToken
+      if (token.expiresIn) newToken.expiresIn = token.expiresIn
+      if (token.obtainmentTimestamp) newToken.obtainmentTimestamp = token.obtainmentTimestamp
 
       fs.writeFileSync('twitch_credentials.json', JSON.stringify(newToken, null, 4))
     },
@@ -48,13 +47,13 @@ let startApp = async () => {
 
 
   await Twitch.init()
-  await Chat.init()
+  //await Chat.init()
 
-  new Common()
-  new Everyone()
-  new Moderators()
+  //new Common()
+  //new Everyone()
+  //new Moderators()
 
-  await Mongo.connect()
-  new Storeable()
+  //await Mongo.connect()
+  //new Storeable()
 }
 startApp()

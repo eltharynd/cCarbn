@@ -6,6 +6,7 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const createServer = require('http').createServer
+const { default: axios } = require('axios')
 
 const rl = (require('readline')).createInterface({
     input: process.stdin,
@@ -59,14 +60,15 @@ let getOauth = async () => {
         }))
         app.use(bodyParser.json())
 
-        app.post('/token', async (req,res) => {
-            let token = req.body.hash.replace(/\&scope.*$/, '').replace(/^\#access_token=/,'')
-            resolve(token)
+        app.get('/token', async (req,res) => {
+            let auth = req?.query?.code
+            let response = await axios.post(`https://id.twitch.tv/oauth2/token?client_id=${twitch.clientId}&client_secret=${twitch.clientSecret}&code=${auth}&grant_type=authorization_code&redirect_uri=http://localhost:3000/oauth`)
+            resolve(response.data)
             res.status(200).send('Done extracting the token')
             server.close()
         })
 
-        app.get('/oauth', async (req,res) => {
+/*         app.get('/oauth', async (req,res) => {
 
             if(req?.query?.code) {
                 token = req.query.code
@@ -82,7 +84,7 @@ let getOauth = async () => {
             }));
             </script></html>`)
             //server.close()
-        })
+        }) */
         let server = createServer(app)
         server.listen(3000)
 
@@ -116,8 +118,8 @@ let getOauth = async () => {
         let oauthString =
             `https://id.twitch.tv/oauth2/authorize
             ?client_id=${twitch.clientId}
-            &redirect_uri=http://localhost:3000/oauth
-            &response_type=token
+            &redirect_uri=http://localhost:3000/token
+            &response_type=code
             &scope=${scopes.join('+')}`
             .replace(/\s/g, '')
         open(oauthString, {app: {name: 'chrome', arguments: ['--incognito']}})
@@ -149,8 +151,9 @@ let init = async () => {
             let token = await getOauth()
             if(token) {
                 let twitch = JSON.parse(''+fs.readFileSync('twitch_credentials.json'))
-                twitch.accessToken = token
-                twitch.expiresIn = 60 * 24 * 60 * 60 * 1000
+                twitch.accessToken = token.access_token
+                twitch.refreshToken = token.refresh_token
+                twitch.expiresIn = token.expires_in
                 twitch.obtainmentTimestamp = Date.now()
                 twitch.secret = `${twitch.channel}-${Date.now()}` 
                 fs.writeFileSync('twitch_credentials.json', JSON.stringify(twitch, null, 4))
