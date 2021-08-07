@@ -63,8 +63,10 @@ export class Twitch {
     Twitch.clients.push(iClient)
    
     
-    /* Twitch.listener = new EventSubListener({
-      apiClient: Twitch.client,
+    //TODO FINISH
+    console.log(ENDPOINT.hostname)
+    let listener = new EventSubListener({
+      apiClient: client,
       adapter: new DirectConnectionAdapter({
         hostName: ENDPOINT.hostname,
         sslCert: {
@@ -72,11 +74,14 @@ export class Twitch {
           key: `${fs.readFileSync(ENDPOINT.key)}`,
         },
       }),
-      secret: CREDENTIALS.secret,
+      secret: token.secret,
     })
-    await Twitch.listener.listen(3001) */
+    await listener.listen(3001)
+    let channel = await client.users.getUserByName('cakeums')
+    console.log(channel)
+    await listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent)
 
-    //Twitch.channelID = await Twitch.client.users.getUserByName(CREDENTIALS.channel)
+    //
 
     //console.log(Twitch.channelID)
     //let res = (await await Twitch.client.hypeTrain.getHypeTrainEventsForBroadcaster(Twitch.channelID))
@@ -86,7 +91,7 @@ export class Twitch {
 
 
 
-    //Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelCheerEvents(Twitch.channelID, Cheers.cheerEvent))
+    //await listener.subscribeToChannelCheerEvents(user._id, Cheers.cheerEvent)
 
     //Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainBeginEvents(Twitch.channelID, HypeTrain.hypeTrainBegin))
     //Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainProgressEvents (Twitch.channelID, HypeTrain.hypeTrainProgress))
