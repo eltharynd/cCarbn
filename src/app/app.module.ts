@@ -9,12 +9,9 @@ import { AppRoutingModule } from './app-routing.module';
 import { SharedMaterialModule } from './sharedmaterial.module';
 
 import { AppComponent } from './app.component';
-import { StatusService } from './shared/status.service';
 import { WebsourceComponent } from './websource/websource.component';
-import { IndexComponent } from './index/index.component';
 import { PredictionsComponent } from './websource/predictions/predictions.component';
 import { HypetrainComponent } from './websource/hypetrain/hypetrain.component';
-import { AuthModule } from './auth/auth.module'
 
 @NgModule({
   imports: [
@@ -28,12 +25,11 @@ import { AuthModule } from './auth/auth.module'
   declarations: [
     AppComponent,
     WebsourceComponent,
-    IndexComponent,
     PredictionsComponent,
     HypetrainComponent,
   ],
 
-  providers: [StatusService],
+  providers: [],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

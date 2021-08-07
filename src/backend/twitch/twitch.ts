@@ -7,21 +7,24 @@ import { filter, take } from 'rxjs/operators'
 import { clientProvider, CREDENTIALS, ENDPOINT, userProvider } from '../index'
 import { HypeTrain } from '../socket/events/hypetrain'
 import { Cheers } from '../socket/events/cheers'
+import { TokenInfo } from '@twurple/auth/lib'
 
 export class Twitch {
-  static client: ApiClient
-  static listener: EventSubListener
+
+  public userId
+
+  client: ApiClient
+  listener: EventSubListener
 
   static channelID: HelixUser
 
   private static subscriptions = []
   
-  public static async init() {
+  public async init() {
 
-    /* Twitch.client = new ApiClient({
+    this.client = new ApiClient({
       authProvider: userProvider,
-    })  */
-
+    })
 
     /* Twitch.listener = new EventSubListener({
       apiClient: Twitch.client,
@@ -59,8 +62,8 @@ export class Twitch {
 
   }
 
-  public static searchChannel = async (name): Promise<HelixChannelSearchResult> => {
-    return await from((await Twitch.client.search.searchChannels(name)).data)
+  public searchChannel = async (name): Promise<HelixChannelSearchResult> => {
+    return await from((await this.client.search.searchChannels(name)).data)
       .pipe(
         filter((channel) => channel.name === name),
         take(1)
@@ -68,8 +71,8 @@ export class Twitch {
       .toPromise()
   }
 
-  public static getStream = async (userId): Promise<HelixStream> => {
-    return await Twitch.client.streams.getStreamByUserId(userId)
+  public getStream = async (userId): Promise<HelixStream> => {
+    return await this.client.streams.getStreamByUserId(userId)
   }
 
 }

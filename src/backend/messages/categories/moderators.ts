@@ -4,6 +4,8 @@ import { Twitch } from '../../twitch/twitch'
 import { filterParameters, Message } from '../message'
 
 export class Moderators extends Message {
+
+  twitch = new Twitch()
   public constructor() {
     super()
     this.init()
@@ -20,9 +22,9 @@ export class Moderators extends Message {
         return
       }
 
-      let result = await Twitch.searchChannel(parameters[0].replace('@', '').toLowerCase())
+      let result = await this.twitch.searchChannel(parameters[0].replace('@', '').toLowerCase())
       if (result) {
-        let stream = await Twitch.getStream(result.id)
+        let stream = await this.twitch.getStream(result.id)
         Chat.client.say(
           channel,
           `/me ${

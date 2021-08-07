@@ -42,18 +42,18 @@ export var channelID
 
 let startApp = async () => {
 
+  await Mongo.connect()
+
   new Api()
   new Socket()
 
 
-  await Twitch.init()
+  //await Twitch.init()
   //await Chat.init()
 
   //new Common()
   //new Everyone()
   //new Moderators()
-
-  //await Mongo.connect()
   //new Storeable()
 }
 startApp()

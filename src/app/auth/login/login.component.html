@@ -1,4 +1,10 @@
-<p>login works!</p>
 
+<div *ngIf="!auth.currentUser">
+  <p *ngIf="message">{{message}}</p>
+  <button *ngIf="!message" mat-raised-button (click)="loginWithTwitch()" color="primary">LOGIN WITH TWITCH</button>
+</div>
+<div *ngIf="auth.currentUser">
+  <p>You're currently logged in as {{auth.currentUser?.name}}</p>
+  <button mat-raised-button (click)="auth.logout()" color="primary">LOGOUT</button>
+</div>
 
-<mat-slider></mat-slider>

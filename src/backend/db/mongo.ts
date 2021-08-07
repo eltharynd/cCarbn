@@ -12,12 +12,7 @@ export class Mongo {
       Mongoose.connect(MONGO.connection, { useNewUrlParser: true, useUnifiedTopology: true })
       Mongo.database = Mongoose.connection
       Mongo.database.on('error', console.error.bind(console, 'connection error'))
-  
       Mongo.database.once('open', () => {
-        //await this.clearAll()
-        //await this.save('test', 'Test Works!!!')
-        //await this.fetch()
-
         resolve(true)
       })
     })

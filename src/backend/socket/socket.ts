@@ -1,4 +1,5 @@
 import * as socketIO from 'socket.io'
+import { CREDENTIALS } from '..'
 import { Api } from '../api/express'
 import { Cheers } from './events/cheers'
 import { HypeTrain } from './events/hypetrain'
@@ -17,6 +18,10 @@ export class Socket {
 
     Socket.io.on('connect', (socket: socketIO.Socket) => {
       Socket.connections.push(socket)
+
+      socket.emit('clientId', {
+        clientId: CREDENTIALS.clientId,
+      })
 
       Cheers.bind(socket)
       HypeTrain.bind(socket)
