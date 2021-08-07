@@ -1,3 +1,7 @@
+# ⚠⚠⚠
+# This is severely outdated.. will update whenever i have time
+# ⚠⚠⚠
+
 # elthabot
 
 elthabot aims to be a powerful Twitch chatbot, Twitch API interface and Browser Source (for OBS or similar) generator.
