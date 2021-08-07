@@ -3,6 +3,8 @@ import { createServer, Server } from 'http'
 import * as cors from 'cors'
 import * as bodyParser from 'body-parser'
 import { PORT } from '..'
+import { Auth } from './endpoints/auth'
+import { User } from './endpoints/user'
 
 export class Api {
   static endpoints: express.Express
@@ -21,16 +23,29 @@ export class Api {
       res.header('Access-Control-Allow-Origin', '*')
       next()
     })
+    Api.endpoints.use((err, req, res, next) => {
+      console.error(err.stack)
+      res.status(500).send({message: 'Unspecified internal error', details: err.message})
+    })
+    
 
     Api.server = createServer(Api.endpoints)
     Api.server.listen(PORT)
 
-    Api.endpoints.get('/api/status', function (req, res) {
+
+    Auth.bind()
+    User.bind()
+
+
+    Api.endpoints.get('/api/status', async (req, res) => {
       res.status(200).json({ status: 'UP', test: 'working' })
     })
 
     Api.endpoints.get('*', async (req, res) => {
       res.status(200).send(`No route specified... but, HEY!!! I'm working!!`)
     })
+
+
+  
   }
 }

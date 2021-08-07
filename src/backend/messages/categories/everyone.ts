@@ -4,19 +4,19 @@ import { Chat } from '../../twitch/chat'
 import { filterParameters, Message } from '../message'
 
 export class Everyone extends Message {
-  public constructor() {
-    super()
+  public constructor(iClient) {
+    super(iClient)
     this.init()
   }
 
   private pantsGrabBackToCakeums = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/cakeums/i.test(user) && /PantsGrab$/i.test(message)) {
-      Chat.client.say(channel, `/me @${msg.userInfo.displayName} no u nouCHEER`)
+      this.client.say(channel, `/me @${msg.userInfo.displayName} no u nouCHEER`)
       setTimeout(() => {
-        Chat.client.say(channel, `/me @${msg.userInfo.displayName} also PantsGrab`)
+        this.client.say(channel, `/me @${msg.userInfo.displayName} also PantsGrab`)
       }, 750)
     } else if (/!cakeums/gi.test(message) || /!cake/gi.test(message) || /!haley/gi.test(message)) {
-      Chat.client.say(channel, `/me @cakeums PantsGrab`)
+      this.client.say(channel, `/me @cakeums PantsGrab`)
     }
   }
 
@@ -24,22 +24,22 @@ export class Everyone extends Message {
     if (/^!andre/i.test(message) || /^!jeron/i.test(message) || /^!jf0rce/i.test(message)) {
       if (this.timeout(10)) return
       let timeout = 750
-      Chat.client.say(
+      this.client.say(
         channel,
         `/me I’ve known Andre a long time. Too long. He’s a bit full of himself- why do you think he never wears a shirt. His craftsmanship is poor- I can buy his weapon smith box and do just as good of a job myself. He price gouges. `
       )
       setTimeout(() => {
-        Chat.client.say(
+        this.client.say(
           channel,
           `/me He charges 800 for a damn titanite shard. 800 human souls for a ROCK- when I can easily get one from the frail and decrepit hollows that he’s got protecting his workshop. The man is charging 20000 human souls for a key to a door, when there’s a perfectly good back way that provides a scenic route AND doesn’t have killer trees blocking the path. `
         )
         setTimeout(() => {
-          Chat.client.say(
+          this.client.say(
             channel,
             `/me Cake is right in her decision, Andre is the reason the world is falling to crumbles. He’s essentially the bezos of souls. Open your eyes people`
           )
           setTimeout(() => {
-            Chat.client.say(channel, `/me tho this is necessary for the run, I have to say I really do not agree with this.... RIP andre`)
+            this.client.say(channel, `/me tho this is necessary for the run, I have to say I really do not agree with this.... RIP andre`)
           }, 1500)
         }, timeout)
       }, timeout)
@@ -56,23 +56,23 @@ export class Everyone extends Message {
       } catch (e) {}
 
       if (data && data.abbreviation) {
-        Chat.client.say(channel, `/me I've found time for timezone ${data.abbreviation} do be ${data.datetime.slice(11, 16)}`)
+        this.client.say(channel, `/me I've found time for timezone ${data.abbreviation} do be ${data.datetime.slice(11, 16)}`)
         return
       } else if (data && data.length && data.length > 0) {
-        Chat.client.say(channel, `/me I've found multiple results... try one of the following: ${data[0]}, ${data[1]}, ${data[2]}, ...`)
+        this.client.say(channel, `/me I've found multiple results... try one of the following: ${data[0]}, ${data[1]}, ${data[2]}, ...`)
         return
       } else {
         try {
           data = (await axios.get(`http://worldtimeapi.org/api/timezone/${par.replace(/ /g, '_')}`)).data
         } catch (e) {}
         if (data && data.abbreviation) {
-          Chat.client.say(channel, `/me I've found time for timezone ${data.abbreviation} do be ${data.datetime.slice(11, 16)}`)
+          this.client.say(channel, `/me I've found time for timezone ${data.abbreviation} do be ${data.datetime.slice(11, 16)}`)
           return
         } else if (data && data.length && data.length > 0) {
-          Chat.client.say(channel, `/me I've found multiple results... try one of the following: ${data[0]}, ${data[1]}, ${data[2]}, ...`)
+          this.client.say(channel, `/me I've found multiple results... try one of the following: ${data[0]}, ${data[1]}, ${data[2]}, ...`)
           return
         } else {
-          Chat.client.say(channel, `/me I could not find that timezone... try something like '!time CET' (Central European Time, uncle sam....)`)
+          this.client.say(channel, `/me I could not find that timezone... try something like '!time CET' (Central European Time, uncle sam....)`)
         }
       }
     }
@@ -89,12 +89,12 @@ export class Everyone extends Message {
       if (this.voters[who]) {
         this.birds[bird] = Math.max(0, (this.birds[bird] ? +this.birds[bird] : 0) + 1)
         this.birds[this.voters[who]] = Math.max(0, (this.birds[this.voters[who]] ? +this.birds[this.voters[who]] : 0) - 1)
-        Chat.client.say(channel, `/me ${msg.userInfo.displayName} changed his previous vote to frick '${this.voters[who]}', he now wants to frick '${bird}' instead`)
+        this.client.say(channel, `/me ${msg.userInfo.displayName} changed his previous vote to frick '${this.voters[who]}', he now wants to frick '${bird}' instead`)
         this.voters[who] = bird
       } else {
         this.birds[bird] = (this.birds[bird] ? +this.birds[bird] : 0) + 1
         this.voters[who] = bird
-        Chat.client.say(channel, `/me ${msg.userInfo.displayName} voted to frick '${bird}'.`)
+        this.client.say(channel, `/me ${msg.userInfo.displayName} voted to frick '${bird}'.`)
       }
 
       let winner
@@ -116,7 +116,7 @@ export class Everyone extends Message {
 
       if (tier) {
         setTimeout(() => {
-          Chat.client.say(
+          this.client.say(
             channel,
             `/me '${winner}' and '${tier}' are currently tied on top to be fricked next. They've got a total of ${votes} votes winning with a ${
               (Math.floor((votes / total) * 100) / 100) * 100
@@ -125,19 +125,19 @@ export class Everyone extends Message {
         }, 1000)
       } else {
         setTimeout(() => {
-          Chat.client.say(
+          this.client.say(
             channel,
             `/me '${winner}' is currently on top to be fricked next. It's got a total of ${votes} votes winning with a ${(Math.floor((votes / total) * 100) / 100) * 100}%.`
           )
         }, 1000)
       }
     } else if (/^!votereset$/.test(message) && (msg.userInfo.isMod || msg.userInfo.isBroadcaster)) {
-      Chat.client.say(channel, `/me votes have been reset.`)
+      this.client.say(channel, `/me votes have been reset.`)
       this.voters = {}
       this.birds = {}
     } else if (/^!votestatus$/.test(message)) {
       if (Object.keys(this.voters).length < 1) {
-        Chat.client.say(channel, `/me there are currently no votes.... prick!`)
+        this.client.say(channel, `/me there are currently no votes.... prick!`)
         return
       }
       let winner
@@ -158,21 +158,21 @@ export class Everyone extends Message {
       }
 
       if (tier) {
-        Chat.client.say(
+        this.client.say(
           channel,
           `/me '${winner}' and '${tier}' are currently tied on top to be fricked next. They've got a total of ${votes} votes winning with a ${
             (Math.floor((votes / total) * 100) / 100) * 100
           }%. What should we do if they end up tied? frick em both?`
         )
       } else {
-        Chat.client.say(
+        this.client.say(
           channel,
           `/me '${winner}' is currently on top to be fricked next. It's got a total of ${votes} votes winning with a ${(Math.floor((votes / total) * 100) / 100) * 100}%.`
         )
       }
     } else if (/^!votelist/i.test(message)) {
       if (Object.keys(this.voters).length < 1) {
-        Chat.client.say(channel, `/me there are currently no votes.... prick!`)
+        this.client.say(channel, `/me there are currently no votes.... prick!`)
         return
       }
 
@@ -182,28 +182,28 @@ export class Everyone extends Message {
         else string = ''
         string += `${key}: ${this.birds[key]}`
       }
-      Chat.client.say(channel, `/me Here's the current casts: ${string}`)
+      this.client.say(channel, `/me Here's the current casts: ${string}`)
     } else if (/^!vote/i.test(message)) {
-      Chat.client.say(channel, `/me You can cast your votes by typing '!vote YOUR_VOTE' or check status with '!votestatus'`)
+      this.client.say(channel, `/me You can cast your votes by typing '!vote YOUR_VOTE' or check status with '!votestatus'`)
     }
   }
 
   private justice = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/!justice/.test(message)) {
       if (this.timeout(20)) return
-      Chat.client.say(channel, `I have brought peace, freedom, justice, and security to my new empire.`)
+      this.client.say(channel, `I have brought peace, freedom, justice, and security to my new empire.`)
       setTimeout(() => {
-        Chat.client.say(channel, `Your new empire?`)
+        this.client.say(channel, `Your new empire?`)
         setTimeout(() => {
-          Chat.client.say(channel, `Don't make me kill you.`)
+          this.client.say(channel, `Don't make me kill you.`)
           setTimeout(() => {
-            Chat.client.say(channel, `Anakin, my allegiance is to the Republic, to Democracy!`)
+            this.client.say(channel, `Anakin, my allegiance is to the Republic, to Democracy!`)
             setTimeout(() => {
-              Chat.client.say(channel, `If you are not with me, then you are my enemy.`)
+              this.client.say(channel, `If you are not with me, then you are my enemy.`)
               setTimeout(() => {
-                Chat.client.say(channel, `Only a Sith deals in absolutes. I will do what I must.`)
+                this.client.say(channel, `Only a Sith deals in absolutes. I will do what I must.`)
                 setTimeout(() => {
-                  Chat.client.say(channel, `You will try.`)
+                  this.client.say(channel, `You will try.`)
                 }, 3500)
               }, 2500)
             }, 2500)
@@ -237,7 +237,7 @@ export class Everyone extends Message {
         'Yes - definitely.',
         'You may rely on it.',
       ]
-      Chat.client.say(channel, `/me @${msg.userInfo.displayName} ${samples[Math.floor(Math.random() * samples.length)]}`)
+      this.client.say(channel, `/me @${msg.userInfo.displayName} ${samples[Math.floor(Math.random() * samples.length)]}`)
     }
   }
 
@@ -251,8 +251,8 @@ export class Everyone extends Message {
           },
         })
       ).data
-      if (facts) Chat.client.say(channel, `/me ${facts.joke}`)
-      else Chat.client.say(channel, `/me I'm trying to get some cool dad jokes but this dudes aren't answering... I suppose that's what you get with free APIs`)
+      if (facts) this.client.say(channel, `/me ${facts.joke}`)
+      else this.client.say(channel, `/me I'm trying to get some cool dad jokes but this dudes aren't answering... I suppose that's what you get with free APIs`)
     }
   }
 
@@ -267,13 +267,13 @@ export class Everyone extends Message {
         })
       ).data
       if (result && result.joke) {
-        Chat.client.say(channel, `/me ${result.joke}`)
+        this.client.say(channel, `/me ${result.joke}`)
       } else if (result && result.setup) {
-        Chat.client.say(channel, `/me ${result.setup}`)
+        this.client.say(channel, `/me ${result.setup}`)
         setTimeout(() => {
-          Chat.client.say(channel, `/me ${result.delivery}`)
+          this.client.say(channel, `/me ${result.delivery}`)
         }, 5000)
-      } else Chat.client.say(channel, `/me I'm trying to get some cool dark jokes but this dudes aren't answering... I suppose that's what you get with free APIs`)
+      } else this.client.say(channel, `/me I'm trying to get some cool dark jokes but this dudes aren't answering... I suppose that's what you get with free APIs`)
     }
   }
 
@@ -285,11 +285,11 @@ export class Everyone extends Message {
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.replace(' ', '-')}`)).data
       } catch (error) {
-        Chat.client.say(channel, `/me Sorry I couldn't find that pokemon... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that pokemon... check your spelling bitch!`)
         return
       }
       if (!data || !data.types) {
-        Chat.client.say(channel, `/me Sorry I couldn't find that pokemon... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that pokemon... check your spelling bitch!`)
         return
       }
 
@@ -332,7 +332,7 @@ export class Everyone extends Message {
           immuneString += `[${type.type.toUpperCase()}] `
         }
       }
-      Chat.client.say(
+      this.client.say(
         channel,
         `/me
                 ${data.name.substring(0, 1).toUpperCase()}${data.name.substring(1)} typings is: [${data.types[0].type.name.toUpperCase()}]${
@@ -344,14 +344,14 @@ export class Everyone extends Message {
             `.replace(/\n/g, '')
       )
     } else if (/^!weak/i.test(message)) {
-      Chat.client.say(channel, `/me You didn't specify a pokemon to look up for... You piece of shit...`)
+      this.client.say(channel, `/me You didn't specify a pokemon to look up for... You piece of shit...`)
     }
   }
 
   private move = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!move [\w\s]+/i.test(message)) {
       if (filterParameters(message).length == 0) {
-        Chat.client.say(channel, `/me You didn't specify a move to look up for... You piece of shit...`)
+        this.client.say(channel, `/me You didn't specify a move to look up for... You piece of shit...`)
         return
       }
 
@@ -361,16 +361,16 @@ export class Everyone extends Message {
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/move/${move.replace(' ', '-')}`)).data
       } catch (error) {
-        Chat.client.say(channel, `/me Sorry I couldn't find that move... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that move... check your spelling bitch!`)
         return
       }
 
       if (!data || !data.type) {
-        Chat.client.say(channel, `/me Sorry I couldn't find that move... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that move... check your spelling bitch!`)
         return
       }
 
-      Chat.client.say(
+      this.client.say(
         channel,
         `/me ${move.substring(0, 1).toUpperCase()}${move.substring(1)} is a [${data.type.name.toUpperCase()}] ${data.damage_class.name.toUpperCase()} move${
           data.accuracy ? ` with ${data.accuracy}% accuracy` : ''
@@ -379,14 +379,14 @@ export class Everyone extends Message {
         }`.replace(/\n/g, '')
       )
     } else if (/^!move/i.test(message)) {
-      Chat.client.say(channel, `/me You didn't specify a move to look up for... You piece of shit...`)
+      this.client.say(channel, `/me You didn't specify a move to look up for... You piece of shit...`)
     }
   }
 
   private nature = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!nature [\w\s]+/i.test(message)) {
       if (filterParameters(message).length == 0) {
-        Chat.client.say(channel, `/me You didn't specify a move to look up for... You piece of shit...`)
+        this.client.say(channel, `/me You didn't specify a move to look up for... You piece of shit...`)
         return
       }
 
@@ -396,16 +396,16 @@ export class Everyone extends Message {
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/nature/${nature.replace(' ', '-')}`)).data
       } catch (error) {
-        Chat.client.say(channel, `/me Sorry I couldn't find that nature... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that nature... check your spelling bitch!`)
         return
       }
 
       if (!data || !data.decreased_stat) {
-        Chat.client.say(channel, `/me Sorry I couldn't find that nature... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that nature... check your spelling bitch!`)
         return
       }
 
-      Chat.client.say(
+      this.client.say(
         channel,
         `/me pokemon with a ${nature.toUpperCase()} nature have increased ${data.increased_stat.name.toUpperCase()} and decreased ${data.decreased_stat.name.toUpperCase()}`.replace(
           /\n/g,
@@ -413,14 +413,14 @@ export class Everyone extends Message {
         )
       )
     } else if (/^!nature/i.test(message)) {
-      Chat.client.say(channel, `/me You didn't specify a nature to look up for... You piece of shit...`)
+      this.client.say(channel, `/me You didn't specify a nature to look up for... You piece of shit...`)
     }
   }
 
   private ability = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!ability [\w\s]+/i.test(message)) {
       if (filterParameters(message).length == 0) {
-        Chat.client.say(channel, `/me You didn't specify a move to look up for... You piece of shit...`)
+        this.client.say(channel, `/me You didn't specify a move to look up for... You piece of shit...`)
         return
       }
 
@@ -430,13 +430,13 @@ export class Everyone extends Message {
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/ability/${ability.replace(' ', '-')}`)).data
       } catch (error) {
-        Chat.client.say(channel, `/me Sorry I couldn't find that ability... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that ability... check your spelling bitch!`)
         return
       }
 
       //console.log(ability)
       if (!data || !data.flavor_text_entries) {
-        Chat.client.say(channel, `/me Sorry I couldn't find that ability... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that ability... check your spelling bitch!`)
         return
       }
 
@@ -448,7 +448,7 @@ export class Everyone extends Message {
         }
       }
 
-      Chat.client.say(
+      this.client.say(
         channel,
         `/me ${ability.substring(0, 1).toUpperCase()}${ability.substring(1)} ability: ${data.flavor_text_entries[0].flavor_text.replace(
           /\n/g,
@@ -457,7 +457,7 @@ export class Everyone extends Message {
       )
     } else if (/^!ability\+ [\w\s]+/i.test(message)) {
       if (filterParameters(message).length == 0) {
-        Chat.client.say(channel, `/me You didn't specify a move to look up for... You piece of shit...`)
+        this.client.say(channel, `/me You didn't specify a move to look up for... You piece of shit...`)
         return
       }
 
@@ -467,12 +467,12 @@ export class Everyone extends Message {
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/ability/${ability.replace(' ', '-')}`)).data
       } catch (error) {
-        Chat.client.say(channel, `/me Sorry I couldn't find that ability... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that ability... check your spelling bitch!`)
         return
       }
 
       if (!data || !data.flavor_text_entries) {
-        Chat.client.say(channel, `/me Sorry I couldn't find that ability... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that ability... check your spelling bitch!`)
         return
       }
 
@@ -483,9 +483,9 @@ export class Everyone extends Message {
           break
         }
       }
-      Chat.client.say(channel, `/me ${text}`.replace(/\n/g, ''))
+      this.client.say(channel, `/me ${text}`.replace(/\n/g, ''))
     } else if (/^!ability/i.test(message)) {
-      Chat.client.say(channel, `/me You didn't specify a ability to look up for... You piece of shit...`)
+      this.client.say(channel, `/me You didn't specify a ability to look up for... You piece of shit...`)
     }
   }
 }

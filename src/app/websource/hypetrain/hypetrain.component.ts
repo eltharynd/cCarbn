@@ -2,8 +2,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core'
 import { EventSubChannelHypeTrainBeginEvent, EventSubChannelHypeTrainEndEvent, EventSubChannelHypeTrainProgressEvent } from "@twurple/eventsub/lib"
 import { from } from 'rxjs'
 import { filter, take } from 'rxjs/operators'
+import { DataService } from 'src/app/shared/data.service'
 import { SeamlessLoop } from 'src/app/shared/seamlessloop'
-import { StatusService } from 'src/app/shared/status.service'
 
 
 @Component({
@@ -23,7 +23,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   now = Date.now()
   nowHandler
 
-  constructor(private status: StatusService) {}
+  constructor(private data: DataService) {}
 
   ngOnInit(): void {
 
@@ -31,8 +31,8 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       this.now = Date.now()
     }, 5)
 
-    this.status.socketIO.emit('hypetrain')
-    this.status.socketIO.on('hypetrain', (data) => {
+    this.data.socketIO.emit('hypetrain')
+    this.data.socketIO.on('hypetrain', (data) => {
       if(data.eventName === 'start') {
         this.currentLevel = 1
         this.expiryDate = data.expiryDate.getTime()
@@ -65,7 +65,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.status.socketIO.emit('hypetrain')
+    this.data.socketIO.emit('hypetrain')
     this.stopAudio()
 
     if(this.nowHandler) {

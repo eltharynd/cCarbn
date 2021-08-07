@@ -7,6 +7,14 @@ export const filterParameters = (message) => {
 }
 
 export class Message {
+
+  iClient
+  client
+  constructor(iClient) {
+    this.iClient = iClient
+    this.client = iClient.client
+  }
+
   private cooldowns = {}
 
   protected init = () => {
@@ -14,7 +22,7 @@ export class Message {
     for (let key of Object.keys(this))
       if (typeof this[key] === 'function' && key !== 'init' && key !== 'timeout' && key !== 'fetch' && key !== 'exists' && key !== 'mod' && key !== 'generateListener')
         keys.push(key)
-    Chat.client.onMessage((channel, user, message, msg) => {
+      this.client.onMessage((channel, user, message, msg) => {
       for (let key of keys) this[key](channel, user, message, msg)
     })
   }
@@ -32,5 +40,5 @@ export class Message {
       this.cooldowns[caller] = Date.now()
       return false
     }
-  }
+  } 
 }
