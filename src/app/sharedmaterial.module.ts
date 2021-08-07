@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { MatButtonModule } from '@angular/material/button'
 import { MatSliderModule } from '@angular/material/slider'
 import { MatCheckboxModule } from '@angular/material/checkbox'
+import { MatSlideToggleModule } from '@angular/material/slide-toggle'
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox'
 
     MatButtonModule,
     MatSliderModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSlideToggleModule,
   ],
   exports: [
     CommonModule,
@@ -24,6 +26,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox'
     MatButtonModule,
     MatSliderModule,
     MatCheckboxModule,
+    MatSlideToggleModule,
   ]
 })
 export class SharedMaterialModule { }

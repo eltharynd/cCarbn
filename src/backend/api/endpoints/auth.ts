@@ -1,12 +1,40 @@
 import { ApiClient } from "@twurple/api"
 import { RefreshingAuthProvider } from "@twurple/auth"
 import axios from "axios"
-import { CREDENTIALS } from "../.."
-import { User } from "../../db/models/user"
+import { UserToken } from "../../db/models/tokens"
+import { Administrator, User } from "../../db/models/user"
+import { Mongo } from "../../db/mongo"
 import { Socket } from "../../socket/socket"
 import { Api } from "../express"
 
+export const authMiddleware = async (req, res, next) => {
+  let token = req?.headers?.authorization ? req.headers.authorization.replace(/^Basic\s/, '') : null
+  if(!token) {
+    res.status(403).send('Missing Authorization Header')
+    return
+  } else {
+    let user: any = await User.findOne({token: token})
+    if(user) {
+      req.headers.authorization = user.toJSON()
+      req.headers.authorization._id = req.headers.authorization._id.toString()
 
+      if(req.params.userId && req.params.userId !== req.headers.authorization._id) {
+        res.status(403).send(`You don't have permission to access this resource...`)
+        return
+      }
+      
+      next()
+    } else {
+      user = await Administrator.findOne({token: token})
+      if(user) {
+        req.headers.authorization = user.toJSON()
+        req.headers.authorization._id = req.headers.authorization._id.toString()
+        next()
+      } else
+        res.status(403).send('Incorrect Authorization header')
+    } 
+  }
+}
 export class Auth {
 
   static bind() {
@@ -19,8 +47,8 @@ export class Auth {
       try {
         let response = await axios.post(`
           https://id.twitch.tv/oauth2/token
-          ?client_id=${CREDENTIALS.clientId}
-          &client_secret=${CREDENTIALS.clientSecret}
+          ?client_id=${Mongo.clientId}
+          &client_secret=${Mongo.clientSecret}
           &code=${req.body.code}
           &grant_type=authorization_code
           &state=${req.body.state}
@@ -28,7 +56,7 @@ export class Auth {
         if(!response.data)
           throw new Error()
 
-        let token = {
+        let token: any = {
           accessToken: response.data.access_token,
           refreshToken: response.data.refresh_token,
           expiresIn: response.data.expires_in,
@@ -37,8 +65,8 @@ export class Auth {
       
         let userProvider = new RefreshingAuthProvider(
           {
-            clientId: CREDENTIALS.clientId,
-            clientSecret: CREDENTIALS.clientSecret,
+            clientId: Mongo.clientId,
+            clientSecret: Mongo.clientSecret,
             onRefresh: (token) => {},
           },
           token
@@ -52,13 +80,30 @@ export class Auth {
           twitchId: tokenInfo.userId,
           twitchName: tokenInfo.userName
         }
-        let registered: any = await User.findOne({ twitchId: user.twitchId })
+        let registered: any = await Administrator.findOne({ twitchId: user.twitchId })
         if(!registered) {
-          registered = new User(user)
-          registered.save()
+          registered = await User.findOne({ twitchId: user.twitchId })
+          if(!registered) {
+            registered = new User(user)
+            await registered.save()
+            token.userId = registered._id
+            let userToken = new UserToken(token)
+            await userToken.save()
+          } else {
+            let found = await UserToken.findOne({userId: registered._id})
+            if(found) {
+              found.overwrite(token)
+              await found.save()
+            } else {
+              token.userId = registered._id
+              let userToken = new UserToken(token)
+              await userToken.save()
+            }
+          }
         }
 
         Socket.io.emit(req.body.state, {
+          _id: registered._id,
           name: registered.twitchName,
           token: registered.token
         })
@@ -76,7 +121,19 @@ export class Auth {
         res.status(400).send('Bad Request')
         return
       }
-      res.send(user)
+
+      let registered: any = await User.findOne({token: req.body.token})
+      if(!registered)
+        registered = await Administrator.findOne({token: req.body.token})
+
+      if(!registered)
+        res.status(401).send('Could not resume session...')
+
+      res.send({
+        _id: registered._id,
+        name: registered.twitchName,
+        token: registered.token,
+      })
     })
   }
 

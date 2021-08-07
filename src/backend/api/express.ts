@@ -4,6 +4,7 @@ import * as cors from 'cors'
 import * as bodyParser from 'body-parser'
 import { PORT } from '..'
 import { Auth } from './endpoints/auth'
+import { User } from './endpoints/user'
 
 export class Api {
   static endpoints: express.Express
@@ -33,6 +34,7 @@ export class Api {
 
 
     Auth.bind()
+    User.bind()
 
 
     Api.endpoints.get('/api/status', async (req, res) => {

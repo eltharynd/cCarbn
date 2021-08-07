@@ -4,28 +4,65 @@ import { from } from 'rxjs'
 import * as fs from 'fs'
 import { filter, take } from 'rxjs/operators'
 
-import { clientProvider, CREDENTIALS, ENDPOINT, userProvider } from '../index'
+import { ENDPOINT } from '../index'
 import { HypeTrain } from '../socket/events/hypetrain'
 import { Cheers } from '../socket/events/cheers'
-import { TokenInfo } from '@twurple/auth/lib'
+import { ClientCredentialsAuthProvider, RefreshingAuthProvider, TokenInfo } from '@twurple/auth'
+import { Mongo } from '../db/mongo'
+import { UserToken } from '../db/models/tokens'
 
 export class Twitch {
 
-  public userId
-
+  /* userId
   client: ApiClient
   listener: EventSubListener
-
   static channelID: HelixUser
-
   private static subscriptions = []
-  
-  public async init() {
+ */
 
-    this.client = new ApiClient({
-      authProvider: userProvider,
+
+
+  static clients: IApiClient[] = []
+  
+  static async find(userId) {
+    return await from(Twitch.clients).pipe(filter(c => c.userId === userId.toString())).toPromise()
+  }
+
+  static async connect(user, settings?) {
+    if(await this.find(user._id))
+      throw new Error()
+
+    let token: any = await UserToken.findOne({userId: user._id})
+    let userClient = new ApiClient({
+      authProvider: new RefreshingAuthProvider({
+        clientId: Mongo.clientId,
+        clientSecret: Mongo.clientSecret,
+        onRefresh: async token => {
+          let userToken: any = await UserToken.findOne({userId: user._id})
+          userToken.accesToken = token.accessToken
+          userToken.refreshToken = token.refreshToken
+          userToken.expiresIn = token.expiresIn
+          userToken.obtainmentTimestamp = Date.now()
+          await userToken.save()
+          }
+        },
+        token.toJSON()
+      )
+    }) 
+
+    let client = new ApiClient({
+      authProvider: new ClientCredentialsAuthProvider(Mongo.clientId, Mongo.clientSecret)
     })
 
+    let iClient = Object.assign(new IApiClient(), {
+      userId: user._id,
+      user: await client.users.getUserByName(user.twitchName), 
+      client: client,
+      userClient: userClient
+    })
+    Twitch.clients.push(iClient)
+   
+    
     /* Twitch.listener = new EventSubListener({
       apiClient: Twitch.client,
       adapter: new DirectConnectionAdapter({
@@ -55,24 +92,37 @@ export class Twitch {
     //Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainProgressEvents (Twitch.channelID, HypeTrain.hypeTrainProgress))
     //Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainEndEvents (Twitch.channelID, HypeTrain.hypeTrainEnd))
 
-    process.on('SIGINT', () => {
+    /* process.on('SIGINT', () => {
       for(let sub of Twitch.subscriptions)
         sub.stop()
-    })
+    }) */
 
   }
 
-  public searchChannel = async (name): Promise<HelixChannelSearchResult> => {
+  static async disconnect(user) {
+  
+  }
+
+}
+
+
+
+export class IApiClient {
+  userId: string
+  user: HelixUser
+  client: ApiClient
+  userClient: ApiClient
+
+  searchChannel = async (name): Promise<HelixChannelSearchResult> => {
     return await from((await this.client.search.searchChannels(name)).data)
-      .pipe(
-        filter((channel) => channel.name === name),
-        take(1)
-      )
-      .toPromise()
+    .pipe(
+      filter((channel) => channel.name === name),
+      take(1)
+    )
+    .toPromise() 
   }
 
-  public getStream = async (userId): Promise<HelixStream> => {
+  getStream = async (userId): Promise<HelixStream> => {
     return await this.client.streams.getStreamByUserId(userId)
   }
-
 }

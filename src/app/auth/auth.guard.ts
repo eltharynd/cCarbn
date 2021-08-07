@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import axios from 'axios'
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { SERVER_URL } from '../shared/data.service'
 
 @Injectable({
@@ -9,23 +9,35 @@ import { SERVER_URL } from '../shared/data.service'
 })
 export class AuthGuard implements CanActivate {
 
-  public currentUser
+  public currentUser: User|null
+
+  public static resumed: Subject<boolean> = new Subject<boolean>()
 
   constructor(private router: Router) {
-    if (localStorage.currentUser) this.resume()
+    if (localStorage.currentUser) {
+      this.resume()
+    } else {
+      AuthGuard.resumed.complete()
+    }
   }
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      if(this.currentUser) return true
-
-      this.router.navigate(['auth'])
-      return false
+      return new Promise(async resolve => {
+        await AuthGuard.resumed.toPromise()
+        if(this.currentUser) {
+          resolve(true)
+          return
+        }
+  
+        this.router.navigate(['auth'])
+        resolve(false)
+      })
   }
 
 
-  public login(user: string) {
+  public login(user: User) {
     this.currentUser = user
     localStorage.currentUser = JSON.stringify(user)
     this.router.navigate([''])
@@ -44,10 +56,21 @@ export class AuthGuard implements CanActivate {
       if(response?.data) {
         this.currentUser = response.data
         localStorage.currentUser = JSON.stringify(response.data)
+          
       } else this.logout()
+
     } catch {
       this.logout()
     }
+
+    AuthGuard.resumed.complete()
   }
   
+}
+
+
+export interface User {
+  _id: string,
+  name: string,
+  token: string
 }

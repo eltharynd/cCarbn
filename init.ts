@@ -6,7 +6,7 @@ import { resolve } from 'dns'
 import * as Mongoose from 'mongoose'
 import * as open from 'open'
 
-import { DefaultUser } from './src/backend/db/models/user'
+import { Administrator } from './src/backend/db/models/user'
 import { DefaultUserToken , DefaultClientToken } from './src/backend/db/models/tokens'
 
 const express = require('express')
@@ -32,8 +32,21 @@ function questionSync(query) {
 
 
 let prepareCredentials = async () => {
-    let twitch = JSON.parse(''+fs.readFileSync('twitch_credentials.json'))
-    let mongo = JSON.parse(''+fs.readFileSync('mongo_credentials.json'))
+    let twitch
+    try {
+        twitch = JSON.parse(''+fs.readFileSync('twitch_credentials.json'))
+    } catch (e) {
+        fs.copyFileSync('src/assets/twitch_template.json', 'twitch_credentials.json')
+        twitch = JSON.parse(''+fs.readFileSync('twitch_credentials.json'))
+    }
+    let mongo
+    try {
+        mongo = JSON.parse(''+fs.readFileSync('mongo_credentials.json'))
+    } catch (e) {
+        fs.copyFileSync('src/assets/mongo_template.json', 'mongo_credentials.json')
+        mongo = JSON.parse(''+fs.readFileSync('mongo_credentials.json'))
+    }
+
 
     let clientId = await questionSync(`Enter the twitch app clientId (https://dev.twitch.tv/console/apps):`)
     if(clientId) twitch.clientId = clientId
@@ -53,8 +66,6 @@ let getOauth = async () => {
 
         let twitch = JSON.parse(''+fs.readFileSync('twitch_credentials.json'))
         console.log('\x1b[33m%s\x1b[0m', `Attempting to get access token...`)
-        let token = null
-
         let app = express()
         app.use(cors({
             origin: '*',
@@ -201,24 +212,24 @@ let init = async () => {
                         twitchId: tokenInfo.userId,
                         twitchName: tokenInfo.userName
                       }
-                      await DefaultUser.deleteMany()
+                      await Administrator.deleteMany()
 
-                      let registered: any = await DefaultUser.findOne({ twitchId: user.twitchId })
+                      let registered: any = await Administrator.findOne({ twitchId: user.twitchId })
                       if(!registered) {
-                        registered = new DefaultUser(user)
-                        registered.save()
+                        registered = new Administrator(user)
+                        await registered.save()
                       }
                       token.userId = registered._id
                       await DefaultUserToken.deleteMany()
                       let defaultUserToken = new DefaultUserToken(token)
-                      defaultUserToken.save()
+                      await defaultUserToken.save()
                       await DefaultClientToken.deleteMany()
                       let defaultClientToken = new DefaultClientToken({
                           userId: token.userId,
                           clientId: twitch.clientId,
                           clientSecret: twitch.clientSecret
                       })
-                      defaultClientToken.save()
+                      await defaultClientToken.save()
 
                       console.log('\x1b[33m%s\x1b[0m', `Tokens saved to mongodb...`)
 

@@ -23,5 +23,6 @@ export const clientTokenSchema: Schema = new Schema({
   clientId: String,
   clientSecret: String
 })
-export const ClientToken = model('ClientToken', clientTokenSchema)
+//TODO do i need this??? users log into this client so it shouldn't matter....
+//export const ClientToken = model('ClientToken', clientTokenSchema)
 export const DefaultClientToken = model('DefaultClientToken', clientTokenSchema)

@@ -4,21 +4,21 @@ import { Chat } from '../../twitch/chat'
 import { filterParameters, Message } from '../message'
 
 export class Common extends Message {
-  public constructor() {
-    super()
+  public constructor(iClient) {
+    super(iClient)
     this.init()
   }
 
   private hug = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!hug [\@a-zA-Z0-9][a-zA-Z0-9]*/i.test(message)) {
       console.log(message, filterParameters(message))
-      Chat.client.say(channel, `/me @${user} hugs @${filterParameters(message)[0].replace('@', '')} then lowkey licks their cheek!`)
+      this.client.say(channel, `/me @${user} hugs @${filterParameters(message)[0].replace('@', '')} then lowkey licks their cheek!`)
     }
   }
 
   private tuck = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!tuck [\@a-zA-Z0-9][a-zA-Z0-9]*/i.test(message)) {
-      Chat.client.say(channel, `/me @${user} tucks @${filterParameters(message)[0].replace('@', '')} in their bed! Good Night you PogChamp!`)
+      this.client.say(channel, `/me @${user} tucks @${filterParameters(message)[0].replace('@', '')} in their bed! Good Night you PogChamp!`)
     }
   }
 
@@ -38,28 +38,28 @@ export class Common extends Message {
 
         `@${user} this is ACTUALLY funny cause my server just got a 1 on a Math.random which is pretty fucking incredible if you ask me... I didn't even think this was ever gonna happen ngl...`,
       ]
-      Chat.client.say(channel, options[Math.floor(Math.random() * options.length)])
+      this.client.say(channel, options[Math.floor(Math.random() * options.length)])
     }
   }
 
   private simp = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/ simp /i.test(message) || / simp[\?\!]/.test(message) || / simp$/.test(message) || / simping /.test(message) || / simping$/.test(message)) {
       if (this.timeout(10)) return
-      Chat.client.say(channel, `/me @${user} We don't use that language over here...`)
+      this.client.say(channel, `/me @${user} We don't use that language over here...`)
     }
   }
 
   private F = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^F$/.test(message)) {
       if (this.timeout(20 * 60)) return
-      Chat.client.say(channel, `/me F`)
+      this.client.say(channel, `/me F`)
     }
   }
 
   private quote = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^F$/.test(message)) {
       if (this.timeout(20 * 60)) return
-      Chat.client.say(channel, `/me ^^`)
+      this.client.say(channel, `/me ^^`)
     }
   }
 
@@ -68,9 +68,9 @@ export class Common extends Message {
       if (this.timeout(5)) return
       let facts = (await axios.get(`https://cat-fact.herokuapp.com/facts`)).data
       if (facts && facts.length > 0) 
-        Chat.client.say(channel, `/me ${facts[Math.floor(Math.random() * facts.length)].text}`)
+        this.client.say(channel, `/me ${facts[Math.floor(Math.random() * facts.length)].text}`)
       else 
-        Chat.client.say(channel, `/me I'm trying to get some cool cat facts but this dudes aren't answering... I suppose that's what you get with free APIs`)
+        this.client.say(channel, `/me I'm trying to get some cool cat facts but this dudes aren't answering... I suppose that's what you get with free APIs`)
     }
   }
 
@@ -78,8 +78,8 @@ export class Common extends Message {
     if (/!dog/i.test(message)) {
       if (this.timeout(5)) return
       let facts = (await axios.get(`https://dog-facts-api.herokuapp.com/api/v1/resources/dogs/all`)).data
-      if (facts && facts.length > 0) Chat.client.say(channel, `/me ${facts[Math.floor(Math.random() * facts.length)].fact}`)
-      else Chat.client.say(channel, `/me I'm trying to get some cool dog facts but this dudes aren't answering... I suppose that's what you get with free APIs`)
+      if (facts && facts.length > 0) this.client.say(channel, `/me ${facts[Math.floor(Math.random() * facts.length)].fact}`)
+      else this.client.say(channel, `/me I'm trying to get some cool dog facts but this dudes aren't answering... I suppose that's what you get with free APIs`)
     }
   }
 }

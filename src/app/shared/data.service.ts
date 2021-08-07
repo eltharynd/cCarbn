@@ -24,11 +24,9 @@ export class DataService {
 
 
     this.socketIO.on('connect', () => {
-      console.log('connected')
     })
     this.socketIO.on('clientId', (data) => {
       DataService.clientId = data.clientId
-      console.log('clientID received')
     })
 
     this.socketIO.connect()

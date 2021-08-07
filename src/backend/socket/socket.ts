@@ -1,6 +1,6 @@
 import * as socketIO from 'socket.io'
-import { CREDENTIALS } from '..'
 import { Api } from '../api/express'
+import { Mongo } from '../db/mongo'
 import { Cheers } from './events/cheers'
 import { HypeTrain } from './events/hypetrain'
 import { Predictions } from './events/predictions'
@@ -20,7 +20,7 @@ export class Socket {
       Socket.connections.push(socket)
 
       socket.emit('clientId', {
-        clientId: CREDENTIALS.clientId,
+        clientId: Mongo.clientId,
       })
 
       Cheers.bind(socket)

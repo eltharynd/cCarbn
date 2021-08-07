@@ -14,5 +14,5 @@ export const userSchema: Schema = new Schema({
   }
 })
 export const User = model('User', userSchema)
-export const DefaultUser = model('DefaultUser', userSchema)
+export const Administrator = model('Administrator', userSchema)
 
