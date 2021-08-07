@@ -4,9 +4,16 @@ import { Twitch } from '../../twitch/twitch'
 import { filterParameters, Message } from '../message'
 
 export class Moderators extends Message {
-  public constructor() {
-    super()
+
+  twitch
+  public constructor(iClient) {
+    super(iClient)
     this.init()
+    this.initApi()
+  }
+
+  private async initApi() {
+    this.twitch = await Twitch.find(this.iClient.userId.toString())
   }
 
   private shoutout = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
@@ -16,14 +23,14 @@ export class Moderators extends Message {
     let parameters = filterParameters(message)
     if (/^!so [\@\w]\w*/i.test(message) || /^!search [\@\w]\w*/i.test(message)) {
       if (parameters.length == 0) {
-        Chat.client.say(channel, `/me You didn't specify a user to look up for... You piece of shit...`)
+        this.client.say(channel, `/me You didn't specify a user to look up for... You piece of shit...`)
         return
       }
 
-      let result = await Twitch.searchChannel(parameters[0].replace('@', '').toLowerCase())
+      let result = await this.twitch.searchChannel(parameters[0].replace('@', '').toLowerCase())
       if (result) {
-        let stream = await Twitch.getStream(result.id)
-        Chat.client.say(
+        let stream = await this.twitch.getStream(result.id)
+        this.client.say(
           channel,
           `/me ${
             /^!search/i.test(message)
@@ -37,7 +44,7 @@ export class Moderators extends Message {
               : `They've actually never streamed before so.. there's that...`
           }`.replace('\n', '')
         )
-      } else Chat.client.say(channel, `/me I'm sorry i could not find any such channel...`)
+      } else this.client.say(channel, `/me I'm sorry i could not find any such channel...`)
     }
   }
 

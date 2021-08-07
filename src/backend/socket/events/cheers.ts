@@ -5,6 +5,7 @@ export class Cheers {
 
   static cheerEvent = (event: EventSubChannelCheerEvent) => {
     console.log(event)
+    console.log(event.toJSON())
   }
 
 

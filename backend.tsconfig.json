@@ -11,6 +11,7 @@
       "target": "es5",
       "moduleResolution": "node",
       "noStrictGenericChecks": false,
-      "rootDir": "src/backend"
+      "rootDir": "src/backend",
+      "strictPropertyInitialization": false
   }
 }
