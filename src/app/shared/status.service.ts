@@ -16,7 +16,7 @@ export class StatusService {
       transports: ['websocket']
     })
 
-    this.socketIO.connect()
+    //this.socketIO.connect()
     this.socketIO.on('connect', () => {
     })
 

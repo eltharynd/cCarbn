@@ -18,12 +18,12 @@ export class Twitch {
   
   public static async init() {
 
-    Twitch.client = new ApiClient({
+    /* Twitch.client = new ApiClient({
       authProvider: userProvider,
-    }) 
+    })  */
 
 
-    Twitch.listener = new EventSubListener({
+    /* Twitch.listener = new EventSubListener({
       apiClient: Twitch.client,
       adapter: new DirectConnectionAdapter({
         hostName: ENDPOINT.hostname,
@@ -34,9 +34,9 @@ export class Twitch {
       }),
       secret: CREDENTIALS.secret,
     })
-    await Twitch.listener.listen(3001)
+    await Twitch.listener.listen(3001) */
 
-    Twitch.channelID = await Twitch.client.users.getUserByName(CREDENTIALS.channel)
+    //Twitch.channelID = await Twitch.client.users.getUserByName(CREDENTIALS.channel)
 
     //console.log(Twitch.channelID)
     //let res = (await await Twitch.client.hypeTrain.getHypeTrainEventsForBroadcaster(Twitch.channelID))
