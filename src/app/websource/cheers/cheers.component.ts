@@ -3,11 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router'
 import { DataService } from 'src/app/shared/data.service'
 
 @Component({
-  selector: 'app-predictions',
-  templateUrl: './predictions.component.html',
-  styleUrls: ['./predictions.component.scss']
+  selector: 'app-cheers',
+  templateUrl: './cheers.component.html',
+  styleUrls: ['./cheers.component.scss']
 })
-export class PredictionsComponent implements OnInit, OnDestroy {
+export class CheersComponent implements OnInit, OnDestroy {
 
   userId: string
 
@@ -24,14 +24,14 @@ export class PredictionsComponent implements OnInit, OnDestroy {
     if(!this.userId) 
       return
 
-    this.data.socketIO.emit('prediction', {userId: this.userId})
-    this.data.socketIO.on('prediction', (data) => {
+    this.data.socketIO.emit('cheer', {userId: this.userId})
+    this.data.socketIO.on('cheer', (data) => {
       console.log(data)
     })
   }
 
   async ngOnDestroy() {
-    this.data.socketIO.emit('prediction', {userId: this.userId})
+    this.data.socketIO.emit('cheer', {userId: this.userId})
   }
 
 }

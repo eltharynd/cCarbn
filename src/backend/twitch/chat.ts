@@ -46,7 +46,7 @@ export class Chat {
     if(settings?.chatbot?.categories?.storeable) new Storeable(iClient)
   }
 
-  static async disconnect(user) {
+  static async disconnect(user, settings?) {
     let iClient = await this.find(user._id)
     if(iClient) {
       await iClient.client.quit() 

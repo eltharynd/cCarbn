@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core'
-import { EventSubChannelHypeTrainBeginEvent, EventSubChannelHypeTrainEndEvent, EventSubChannelHypeTrainProgressEvent } from "@twurple/eventsub/lib"
+import { ActivatedRoute } from '@angular/router'
 import { from } from 'rxjs'
 import { filter, take } from 'rxjs/operators'
 import { DataService } from 'src/app/shared/data.service'
@@ -12,6 +12,9 @@ import { SeamlessLoop } from 'src/app/shared/seamlessloop'
   styleUrls: ['./hypetrain.component.scss'],
 })
 export class HypetrainComponent implements OnInit, OnDestroy {
+
+  userId: string
+
   currentLevel: number = 0
   currentVolume: number = 1
 
@@ -23,15 +26,26 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   now = Date.now()
   nowHandler
 
-  constructor(private data: DataService) {}
+  constructor(private data: DataService, private route: ActivatedRoute) {}
 
-  ngOnInit(): void {
+  async ngOnInit() {
+
+    this.userId = await new Promise((resolve) => {
+      this.route.queryParams.subscribe(async params => {
+        resolve(params.userId)
+      })
+    })
+
+    if(!this.userId) 
+      return
+
+
 
     this.nowHandler = setInterval(() => {
       this.now = Date.now()
     }, 5)
 
-    this.data.socketIO.emit('hypetrain')
+    this.data.socketIO.emit('hypetrain', {userId: this.userId})
     this.data.socketIO.on('hypetrain', (data) => {
       if(data.eventName === 'start') {
         this.currentLevel = 1
@@ -65,7 +79,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.data.socketIO.emit('hypetrain')
+    this.data.socketIO.emit('hypetrain', {userId: this.userId})
     this.stopAudio()
 
     if(this.nowHandler) {

@@ -175,7 +175,7 @@ var getOauth = function () { return __awaiter(void 0, void 0, void 0, function (
     });
 }); };
 var init = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var answer_1, answer, endpoint, hostname, crt, key, data, twitch, mongo, token, connected, userProvider, client, tokenInfo, user, registered, defaultUserToken, defaultClientToken;
+    var answer_1, answer, endpoint, hostname, crt, key, data, twitch, mongo_1, token, connected, userProvider, client, tokenInfo, user, registered, defaultUserToken, defaultClientToken;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -250,10 +250,9 @@ var init = function () { return __awaiter(void 0, void 0, void 0, function () {
                 return [4 /*yield*/, getOauth()];
             case 19:
                 data = _a.sent();
-                console.log('success', data);
                 if (!data) return [3 /*break*/, 33];
                 twitch = JSON.parse('' + fs.readFileSync('twitch_credentials.json'));
-                mongo = JSON.parse('' + fs.readFileSync('mongo_credentials.json'));
+                mongo_1 = JSON.parse('' + fs.readFileSync('mongo_credentials.json'));
                 token = {
                     accessToken: data.access_token,
                     refreshToken: data.refresh_token,
@@ -261,10 +260,9 @@ var init = function () { return __awaiter(void 0, void 0, void 0, function () {
                     obtainmentTimestamp: Date.now(),
                     secret: uuid.v4()
                 };
-                console.log(token);
-                Mongoose.connect(mongo.connection, { useNewUrlParser: true, useUnifiedTopology: true });
                 return [4 /*yield*/, new Promise(function (resolve) {
-                        Mongoose.connection.on('error', function () { return resolve(false); });
+                        Mongoose.connect(mongo_1.connection, { useNewUrlParser: true, useUnifiedTopology: true });
+                        Mongoose.connection.on('error', function (error) { console.error(error); resolve(false); });
                         Mongoose.connection.once('open', function () { return resolve(true); });
                     })];
             case 20:
@@ -321,7 +319,7 @@ var init = function () { return __awaiter(void 0, void 0, void 0, function () {
                 return [4 /*yield*/, questionSync("Do you wanna delete the twitch_credentials.json file? (y/n)")];
             case 30:
                 answer = _a.sent();
-                if (answer) {
+                if (/y/gi.test(answer)) {
                     fs.unlinkSync('twitch_credentials.json');
                     console.log('\x1b[33m%s\x1b[0m', "Deleted twitch_credentials.json...");
                 }

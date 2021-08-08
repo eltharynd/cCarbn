@@ -113,7 +113,7 @@ export class Storeable extends Message {
           found.params = parameters
           found.source = message
           found.mods = null
-          found.save()
+          await found.save()
           result = found
         } else result = await this.save(name, buffer, null, parameters, message)
 

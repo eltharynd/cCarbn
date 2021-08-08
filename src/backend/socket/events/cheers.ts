@@ -7,16 +7,19 @@ export class Cheers {
 
   static cheerEvent = (event: EventSubChannelCheerEvent) => {
     console.log(toJSON(event))
-    Socket.io.to('hypetrain').emit('hypetrain', Object.assign({eventName: 'start'}, toJSON(event)))
+    Socket.io.to('cheer').emit('cheer', Object.assign({eventName: 'start'}, toJSON(event)))
   }
 
 
   static bind = (socket: socketIO.Socket) => {
-    socket.on('cheers', (data) => {
-      if(socket.rooms.has('cheers'))
-        socket.leave('cheers')
-      else
-        socket.join('cheers')
+    socket.on('cheer', (data) => {
+      if(data.userId) {
+        socket.join(data.userId)
+        if(socket.rooms.has('cheer'))
+          socket.leave('cheer')
+        else
+          socket.join('cheer')
+      }
     })
   }
 

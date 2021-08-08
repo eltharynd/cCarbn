@@ -174,12 +174,11 @@ let init = async () => {
         answer = await questionSync(`Can the host device open chrome? (y/n)`)
         if(/y/gi.test(answer)) {
             let data: any = await getOauth()
-            console.log('success', data)
             if(data) {
 
                 let twitch: any = JSON.parse(''+fs.readFileSync('twitch_credentials.json'))
                 let mongo: any = JSON.parse(''+fs.readFileSync('mongo_credentials.json'))
-                
+    
                 let token: any = {
                     accessToken: data.access_token,
                     refreshToken: data.refresh_token,
@@ -188,10 +187,11 @@ let init = async () => {
                     secret: uuid.v4()
                 }
 
-                Mongoose.connect(mongo.connection, { useNewUrlParser: true, useUnifiedTopology: true })
+                
                 
                 let connected = await new Promise((resolve) => {
-                    Mongoose.connection.on('error', () => resolve(false))
+                    Mongoose.connect(mongo.connection, { useNewUrlParser: true, useUnifiedTopology: true })
+                    Mongoose.connection.on('error', (error) => {console.error(error);resolve(false)})
                     Mongoose.connection.once('open', () => resolve(true))
                 })
                 if(connected) {
@@ -234,7 +234,7 @@ let init = async () => {
                       console.log('\x1b[33m%s\x1b[0m', `Tokens saved to mongodb...`)
 
                       answer = await questionSync(`Do you wanna delete the twitch_credentials.json file? (y/n)`)
-                      if(answer) {
+                      if(/y/gi.test(answer)) {
                         fs.unlinkSync('twitch_credentials.json')
                         console.log('\x1b[33m%s\x1b[0m', `Deleted twitch_credentials.json...`)
                       }

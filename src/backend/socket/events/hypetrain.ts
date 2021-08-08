@@ -24,11 +24,13 @@ export class HypeTrain {
 
   static bind = (socket: socketIO.Socket) => {
     socket.on('hypetrain', (data) => {
-
-      if(socket.rooms.has('hypetrain'))
-        socket.leave('hypetrain')
-      else
-        socket.join('hypetrain')
+      if(data.userId) {
+        socket.join(data.userId)
+        if(socket.rooms.has('hypetrain'))
+          socket.leave('hypetrain')
+        else
+          socket.join('hypetrain')
+      }
     })
   }
 

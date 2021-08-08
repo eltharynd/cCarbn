@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard'
-import { WebsourceComponent } from './websource/websource.component';
 
 const routes: Routes = [
   {
@@ -17,12 +16,13 @@ const routes: Routes = [
       m => m.DashboardModule
     ),
   },
-
   {
-    path: 'websource', 
-    component: WebsourceComponent
+    path: 'websource',
+    //canActivate: [AuthGuard],
+    loadChildren: () => import('./websource/websource.module').then(
+      m => m.WebSourceModule
+    ),
   },
-  {path: 'websource/hypetrain', component: WebsourceComponent},
   {path: '**', redirectTo: 'dashboard'},
 ];
 

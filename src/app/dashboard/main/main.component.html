@@ -1,13 +1,15 @@
 
 <div *ngIf="settings">
   <mat-slide-toggle [disabled]="data.busy" [(ngModel)]="settings.api.enabled" (change)="toggleApi()">Api</mat-slide-toggle><br>
-  <div *ngFor="let k of object.keys(settings.api.listeners)">
-    &nbsp;&nbsp;&nbsp;&nbsp;<mat-slide-toggle (change)="save()" [(ngModel)]="settings.api.listeners[k]" [disabled]="data.busy || !settings.api.enabled">{{k}}</mat-slide-toggle><br>
+  <div *ngFor="let k of object.keys(settings.api.listeners)" style="margin-left: 1rem;">
+    <mat-slide-toggle style="width:150px;" (change)="save()" [(ngModel)]="settings.api.listeners[k]" [disabled]="data.busy || !settings.api.enabled">{{k}}</mat-slide-toggle>
+    &nbsp;<a [href]="'https://elthabot.eltharynd.com/websource/' + auth.currentUser?._id +'/' + k">htts://elthabot.eltharynd.com/websource/{{auth.currentUser?._id}}/{{k}}</a>
+    <br>
   </div>
   
   <mat-slide-toggle [disabled]="data.busy" [(ngModel)]="settings.chatbot.enabled" (change)="toggleChatBot()">Chatbot</mat-slide-toggle><br>
-  <div *ngFor="let k of object.keys(settings.chatbot.categories)">
-    &nbsp;&nbsp;&nbsp;&nbsp;<mat-slide-toggle (change)="save()" [(ngModel)]="settings.chatbot.categories[k]" [disabled]="data.busy || !settings.chatbot.enabled">{{k}}</mat-slide-toggle><br>
+  <div *ngFor="let k of object.keys(settings.chatbot.categories)" style="margin-left: 1rem;">
+    <mat-slide-toggle (change)="save()" [(ngModel)]="settings.chatbot.categories[k]" [disabled]="data.busy || !settings.chatbot.enabled">{{k}}</mat-slide-toggle><br>
   </div>
 </div>
 

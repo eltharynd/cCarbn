@@ -9,9 +9,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { SharedMaterialModule } from './sharedmaterial.module';
 
 import { AppComponent } from './app.component';
-import { WebsourceComponent } from './websource/websource.component';
-import { PredictionsComponent } from './websource/predictions/predictions.component';
-import { HypetrainComponent } from './websource/hypetrain/hypetrain.component';
 
 @NgModule({
   imports: [
@@ -24,9 +21,6 @@ import { HypetrainComponent } from './websource/hypetrain/hypetrain.component';
   ],
   declarations: [
     AppComponent,
-    WebsourceComponent,
-    PredictionsComponent,
-    HypetrainComponent,
   ],
 
   providers: [],

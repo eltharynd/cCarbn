@@ -1,19 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-websource',
-  templateUrl: './websource.component.html',
-  styleUrls: ['./websource.component.scss']
+  template: '<router-outlet></router-outlet>',
 })
-export class WebsourceComponent implements OnInit {
-
-
-  predictions: any
-  hypeTrain: any = {}
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-}
+export class WebSourceComponent {}

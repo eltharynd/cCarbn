@@ -126,14 +126,14 @@ export class Auth {
       if(!registered)
         registered = await Administrator.findOne({token: req.body.token})
 
-      if(!registered)
+      if(!registered) 
         res.status(401).send('Could not resume session...')
-
-      res.send({
-        _id: registered._id,
-        name: registered.twitchName,
-        token: registered.token,
-      })
+      else
+        res.send({
+          _id: registered._id,
+          name: registered.twitchName,
+          token: registered.token,
+        })
     })
   }
 

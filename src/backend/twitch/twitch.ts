@@ -113,7 +113,7 @@ export class Twitch {
     //await userClient.hypeTrain.getHypeTrainEventsForBroadcaster(channel.id)
   }
 
-  static async disconnect(user) {
+  static async disconnect(user, settings?) {
     let iClient = await this.find(user._id)
     if(iClient) {
       for(let sub of iClient.subscriptions) {
