@@ -16,9 +16,11 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   userId: string
 
   currentLevel: number = 0
-  currentVolume: number = 1
+  prematureEnd: boolean
+  currentVolume: number = 0.2
 
-  fadingLength: number = 60
+  runsBeforeCompleted = 3
+  fadingLength: number = 30
 
   percentage: number = 0
   expiryDate: number //Date.now()
@@ -63,6 +65,9 @@ export class HypetrainComponent implements OnInit, OnDestroy {
           this.onProgress()
       } else if(data.eventName === 'end') {
         this.currentLevel = 6
+        if(data.level !== 6)
+          this.prematureEnd = true
+
         this.expiryDate = 0
         this.percentage = 0
         this.onLevelChange()
@@ -87,7 +92,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
 
   loadAudio() {
     let loaded = 0
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 1; i <= 6; i++) {
       let audio = new Audio()
       audio.src = `assets/Level ${i} Byte.mp3`
       audio.load
@@ -97,8 +102,8 @@ export class HypetrainComponent implements OnInit, OnDestroy {
         this.loops[`lvl${i}`].addUri(`/assets/Level ${i} Byte.mp3`, audio.duration*1000, 'loop')
         this.loops[`lvl${i}`].callback(() => {
           loaded++
-          if(loaded===5) {
-            for (let j=1; j<=5; j++)
+          if(loaded===6) {
+            for (let j=1; j<=6; j++)
               this.loops[`lvl${j}`].start('loop')
           }
         })
@@ -107,11 +112,11 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   }
 
   stopAudio() {
-    for (let i = 1; i <= 5; i++) this.loops[`lvl${i}`].stop()
+    for (let i = 1; i <= 6; i++) this.loops[`lvl${i}`].stop()
   }
 
   onVolumeChange() {
-    for (let i = 1; i <= 5; i++) this.loops[`lvl${i}`].volume(this.loops[`lvl${i}`]._volume > 0 ? this.currentVolume : 0)
+    for (let i = 1; i <= 6; i++) this.loops[`lvl${i}`].volume(this.loops[`lvl${i}`]._volume > 0 ? this.currentVolume : 0)
   }
 
   timeout
@@ -120,38 +125,69 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     if(this.currentLevel === 6) {
       let currentLevel = await from(Object.keys(this.loops)).pipe(filter((k) => this.loops[k]._volume>0), take(1)).toPromise()
       if(currentLevel) {
-        this.loops[currentLevel].volume(this.currentVolume)
-        /* this.loops[currentLevel].transitionCallBack = () => {
-          this.loops[currentLevel].transitionCallBack = null
-          this.loops[currentLevel].volume(0)
+
+        if(this.prematureEnd) {
+          let i = 0
+          this.expiryDate = Date.now() + this.fadingLength*1000
+          this.fader = setInterval(() => {
+            let x = ++i / 100
+            let f_x = Math.sin((Math.PI/2 * x) + (Math.PI/2))
+
+            this.loops[currentLevel].volume(Math.max(0, Math.min(f_x * this.currentVolume, 1)))
+            if(f_x * this.currentVolume<=0) {
+              clearInterval(this.fader)
+              this.fader = null
+            }
+          }, this.fadingLength*1000 / 100)
+
+          this.timeout = setTimeout(() => {
+            this.timeout=null
+            this.reset()
+          }, this.loops[currentLevel].duration*1000);
+
+        } else {
           this.loops[currentLevel].volume(this.currentVolume)
-        } */
+          let ran = 0
+          await new Promise((resolve) => {
+            this.loops[currentLevel].transitionCallBack = () => {
+            
+              if(++ran === this.runsBeforeCompleted) {
+                this.loops[currentLevel].transitionCallBack = null
+                this.loops[currentLevel].volume(0)
+                this.loops[currentLevel].volume(this.currentVolume)
+                resolve(true)
+              }
+            }
+          })
 
-        let i = 0
-        this.expiryDate = Date.now() + this.fadingLength*1000
-        this.fader = setInterval(() => {
-          
-          let x = ++i / 100
-          let f_x = Math.sin((Math.PI/2 * x) + (Math.PI/2))
+          this.loops['lvl6'].volume(this.currentVolume)
+          this.loops['lvl6'].start('loop')
 
-          this.loops[currentLevel].volume(Math.max(0, Math.min(f_x * this.currentVolume, 1)))
-          console.log(f_x * this.currentVolume)
-          if(f_x * this.currentVolume<=0) {
-            clearInterval(this.fader)
-            this.fader = null
-          }
-        }, (this.fadingLength*1000) / 100)
+          let i = 0
+          this.expiryDate = Date.now() + this.loops[`lvl6`].duration
+          this.fader = setInterval(() => {
+            let x = ++i / 100
+            let f_x = Math.sin((Math.PI/2 * x) + (Math.PI/2))
 
-        this.timeout = setTimeout(() => {
-          console.log('timeout')
-          this.timeout=null
-          this.reset()
-        }, this.fadingLength*1000);
-      
+            //this.loops['lvl6'].volume(Math.max(0, Math.min(f_x * this.currentVolume, 1)))
+            if(f_x * this.currentVolume<=0) {
+              clearInterval(this.fader)
+              this.fader = null
+            }
+          }, this.loops[`lvl6`].duration / 100)
+
+          this.timeout = setTimeout(() => {
+            this.timeout=null
+            this.reset()
+          }, this.loops[`lvl6`].duration*1000);
+
+        }
+        
+
       }
     } else if(this.currentLevel>0) {
       this.loops[`lvl${this.currentLevel}`].volume(this.currentVolume)
-      for (let i = 1; i <= 5; i++) 
+      for (let i = 1; i <= 6; i++) 
         if(i!==this.currentLevel)  
           this.loops[`lvl${i}`].volume(0)
     } else {
@@ -164,11 +200,12 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   }
 
   reset() {
-    for (let i = 1; i<=5; i++) {
+    for (let i = 1; i<=6; i++) {
       this.loops[`lvl${i}`].volume(0)
     }
     this.currentLevel = 0
-    this.expiryDate = 0
+    this.expiryDate = 0 
+    this.prematureEnd = false
   }
 
   endNow() {

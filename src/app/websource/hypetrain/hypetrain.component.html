@@ -10,7 +10,11 @@
   </div>
 
   <div>
-    fading length: {{fadingLength}} secs&nbsp;
+    runs before <b>success</b> fading: {{runsBeforeCompleted}}&nbsp;
+    <mat-slider min="1" max="10" step="1" [disabled]="currentLevel>=6" [(ngModel)]="runsBeforeCompleted"></mat-slider>
+  </div>
+  <div>
+    <b>failed</b> fading duration: {{fadingLength}} secs&nbsp;
     <mat-slider min="10" max="180" step="10" [disabled]="fader" [(ngModel)]="fadingLength"></mat-slider>
   </div>
 
@@ -27,7 +31,9 @@
     <mat-slider [disabled]="currentLevel===6" min="0" max="6" step="1" (change)="onLevelChange()" [(ngModel)]="currentLevel"></mat-slider>
   </div>
   <div>
-    <button *ngIf="currentLevel>=6" mat-raised-button color="accent" [disabled]="currentLevel<6" (click)="endNow()">end now</button>
+    <button mat-raised-button color="accent" [disabled]="currentLevel>=6 ||currentLevel===0" (click)="currentLevel = 6; prematureEnd = true; onLevelChange()">fail (end)</button>
+    &nbsp;&nbsp;
+    <button mat-raised-button color="accent" [disabled]="currentLevel<6" (click)="endNow()">stop fade</button>
   </div>
 
   <br>
