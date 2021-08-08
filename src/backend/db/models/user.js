@@ -1,6 +1,6 @@
 "use strict";
 exports.__esModule = true;
-exports.Administrator = exports.User = exports.userSchema = void 0;
+exports.User = exports.userSchema = void 0;
 var mongoose_1 = require("mongoose");
 var uuid = require("uuid");
 exports.userSchema = new mongoose_1.Schema({
@@ -8,6 +8,7 @@ exports.userSchema = new mongoose_1.Schema({
         type: String,
         "default": "" + uuid.v4()
     },
+    admin: Boolean,
     twitchId: String,
     twitchName: String,
     created: {
@@ -16,4 +17,4 @@ exports.userSchema = new mongoose_1.Schema({
     }
 });
 exports.User = mongoose_1.model('User', exports.userSchema);
-exports.Administrator = mongoose_1.model('Administrator', exports.userSchema);
+//export const Administrator = model('Administrator', userSchema)

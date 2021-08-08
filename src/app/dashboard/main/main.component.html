@@ -3,7 +3,7 @@
   <mat-slide-toggle [disabled]="data.busy" [(ngModel)]="settings.api.enabled" (change)="toggleApi()">Api</mat-slide-toggle><br>
   <div *ngFor="let k of object.keys(settings.api.listeners)" style="margin-left: 1rem;">
     <mat-slide-toggle style="width:150px;" (change)="save()" [(ngModel)]="settings.api.listeners[k]" [disabled]="data.busy || !settings.api.enabled">{{k}}</mat-slide-toggle>
-    &nbsp;<a [href]="'https://elthabot.eltharynd.com/websource/' + auth.currentUser?._id +'/' + k">htts://elthabot.eltharynd.com/websource/{{auth.currentUser?._id}}/{{k}}</a>
+    &nbsp;<a [href]="url + 'websource/' + auth.currentUser?._id +'/' + k">{{url}}websource/{{auth.currentUser?._id}}/{{k}}</a>
     <br>
   </div>
   

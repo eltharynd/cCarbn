@@ -1,13 +1,16 @@
 import { EventSubChannelCheerEvent } from "@twurple/eventsub/lib"
 import * as socketIO from "socket.io"
+import { User } from "../../db/models/user"
 import { Socket } from "../socket"
 import { toJSON } from "./util/toJSON"
 
 export class Cheers {
 
-  static cheerEvent = (event: EventSubChannelCheerEvent) => {
+  static cheerEvent = async (event: EventSubChannelCheerEvent) => {
     console.log(toJSON(event))
-    Socket.io.to('cheer').emit('cheer', Object.assign({eventName: 'start'}, toJSON(event)))
+    let found: any = await User.findOne({twitchId: event.broadcasterId})
+    if(found)
+      Socket.io.to(found._id.toString()).emit('cheer', Object.assign({eventName: 'start'}, toJSON(event)))
   }
 
 
@@ -15,10 +18,6 @@ export class Cheers {
     socket.on('cheer', (data) => {
       if(data.userId) {
         socket.join(data.userId)
-        if(socket.rooms.has('cheer'))
-          socket.leave('cheer')
-        else
-          socket.join('cheer')
       }
     })
   }

@@ -1,8 +1,4 @@
-import { RefreshingAuthProvider } from '@twurple/auth/lib'
 import { ChatClient } from '@twurple/chat'
-import { DefaultUserToken } from '../db/models/tokens'
-import { User } from '../db/models/user'
-import { Mongo } from '../db/mongo'
 import { from } from 'rxjs'
 import { filter } from 'rxjs/operators'
 

@@ -1,7 +1,7 @@
 import * as Mongoose from 'mongoose'
 import { MONGO } from '../index'
-import { Command } from './models/command'
-import { DefaultClientToken } from './models/tokens'
+import { Settings } from './models/settings'
+import { ClientToken } from './models/tokens'
 export class Mongo {
   private static database: Mongoose.Connection
   
@@ -17,7 +17,7 @@ export class Mongo {
       Mongo.database.on('error', console.error.bind(console, 'connection error'))
       Mongo.database.once('open', async () => {
 
-        let defClientToken: any = await DefaultClientToken.findOne()
+        let defClientToken: any = await ClientToken.findOne()
         Mongo.clientId = defClientToken.clientId
         Mongo.clientSecret = defClientToken.clientSecret
 
@@ -26,4 +26,8 @@ export class Mongo {
     })
   }
 
+  static async clear() {
+    await Mongo.database.dropDatabase()
+    console.log(await Settings.find())
+  }
 }

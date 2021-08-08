@@ -6,6 +6,7 @@ export const userSchema: Schema = new Schema({
     type: String,
     default : `${uuid.v4()}`
   },
+  admin: Boolean,
   twitchId: String,
   twitchName: String,
   created: {
@@ -14,5 +15,5 @@ export const userSchema: Schema = new Schema({
   }
 })
 export const User = model('User', userSchema)
-export const Administrator = model('Administrator', userSchema)
+//export const Administrator = model('Administrator', userSchema)
 

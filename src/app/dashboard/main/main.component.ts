@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthGuard } from 'src/app/auth/auth.guard'
-import { DataService } from 'src/app/shared/data.service'
+import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 
 @Component({
   selector: 'app-main',
@@ -9,7 +9,9 @@ import { DataService } from 'src/app/shared/data.service'
 })
 export class MainComponent implements OnInit {
 
+  url = SERVER_URL.replace('/api', '').replace(':3000', ':4200')
   object = Object
+
 
   settings: any
   constructor(public data: DataService, public auth: AuthGuard) { }

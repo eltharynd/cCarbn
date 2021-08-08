@@ -9,16 +9,8 @@ import { HypeTrain } from '../socket/events/hypetrain'
 import { Cheers } from '../socket/events/cheers'
 import { ClientCredentialsAuthProvider, RefreshingAuthProvider, TokenInfo } from '@twurple/auth'
 import { Mongo } from '../db/mongo'
-import { DefaultClientToken, DefaultUserToken, UserToken } from '../db/models/tokens'
+import { UserToken, ClientToken } from '../db/models/tokens'
 export class Twitch {
-
-  /* userId
-  client: ApiClient
-  listener: EventSubListener
-  static channelID: HelixUser
-  private static subscriptions = []
- */
-
   
   static client: ApiClient
   static listener: EventSubListener
@@ -33,7 +25,7 @@ export class Twitch {
     Twitch.client = new ApiClient({
       authProvider: new ClientCredentialsAuthProvider(Mongo.clientId, Mongo.clientSecret)
     })
-    let token: any = await DefaultUserToken.findOne()
+    let token: any = await ClientToken.findOne()
     await Twitch.client.eventSub.deleteAllSubscriptions()
     Twitch.listener = new EventSubListener({
       apiClient: Twitch.client,

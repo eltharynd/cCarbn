@@ -16,13 +16,13 @@ export const userTokenSchema: Schema = new Schema({
   },
 })
 export const UserToken = model('UserToken', userTokenSchema)
-export const DefaultUserToken = model('DefaultUserToken', userTokenSchema)
 
 export const clientTokenSchema: Schema = new Schema({
-  userId: Schema.Types.ObjectId,
   clientId: String,
-  clientSecret: String
+  clientSecret: String,
+  secret: {
+    type: String,
+    default: uuid.v4()
+  },
 })
-//TODO do i need this??? users log into this client so it shouldn't matter....
-//export const ClientToken = model('ClientToken', clientTokenSchema)
-export const DefaultClientToken = model('DefaultClientToken', clientTokenSchema)
+export const ClientToken = model('DefaultClientToken', clientTokenSchema)

@@ -43,6 +43,7 @@ var api_1 = require("@twurple/api");
 var Mongoose = require("mongoose");
 var open = require("open");
 var user_1 = require("./src/backend/db/models/user");
+var settings_1 = require("./src/backend/db/models/settings");
 var tokens_1 = require("./src/backend/db/models/tokens");
 var express = require('express');
 var cors = require('cors');
@@ -175,7 +176,7 @@ var getOauth = function () { return __awaiter(void 0, void 0, void 0, function (
     });
 }); };
 var init = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var answer_1, answer, endpoint, hostname, crt, key, data, twitch, mongo_1, token, connected, userProvider, client, tokenInfo, user, registered, defaultUserToken, defaultClientToken;
+    var answer_1, answer, endpoint, hostname, crt, key, data, twitch, mongo_1, token, connected, userProvider, client, tokenInfo, user, existed, admin, userToken, clientToken;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -242,15 +243,15 @@ var init = function () { return __awaiter(void 0, void 0, void 0, function () {
             case 16: return [4 /*yield*/, questionSync("Would you like to generate a new oauth? (y/n)")];
             case 17:
                 answer = _a.sent();
-                if (!/y/gi.test(answer)) return [3 /*break*/, 37];
+                if (!/y/gi.test(answer)) return [3 /*break*/, 38];
                 return [4 /*yield*/, questionSync("Can the host device open chrome? (y/n)")];
             case 18:
                 answer = _a.sent();
-                if (!/y/gi.test(answer)) return [3 /*break*/, 35];
+                if (!/y/gi.test(answer)) return [3 /*break*/, 36];
                 return [4 /*yield*/, getOauth()];
             case 19:
                 data = _a.sent();
-                if (!data) return [3 /*break*/, 33];
+                if (!data) return [3 /*break*/, 34];
                 twitch = JSON.parse('' + fs.readFileSync('twitch_credentials.json'));
                 mongo_1 = JSON.parse('' + fs.readFileSync('mongo_credentials.json'));
                 token = {
@@ -267,7 +268,7 @@ var init = function () { return __awaiter(void 0, void 0, void 0, function () {
                     })];
             case 20:
                 connected = _a.sent();
-                if (!connected) return [3 /*break*/, 31];
+                if (!connected) return [3 /*break*/, 32];
                 userProvider = new auth_1.RefreshingAuthProvider({
                     clientId: twitch.clientId,
                     clientSecret: twitch.clientSecret,
@@ -283,63 +284,66 @@ var init = function () { return __awaiter(void 0, void 0, void 0, function () {
                     twitchId: tokenInfo.userId,
                     twitchName: tokenInfo.userName
                 };
-                return [4 /*yield*/, user_1.Administrator.deleteMany()];
+                return [4 /*yield*/, user_1.User.findOne({ twitchId: user.twitchId })];
             case 22:
-                _a.sent();
-                return [4 /*yield*/, user_1.Administrator.findOne({ twitchId: user.twitchId })];
+                existed = _a.sent();
+                if (!existed) return [3 /*break*/, 25];
+                return [4 /*yield*/, tokens_1.UserToken.deleteOne({ userId: existed._id })];
             case 23:
-                registered = _a.sent();
-                if (!!registered) return [3 /*break*/, 25];
-                registered = new user_1.Administrator(user);
-                return [4 /*yield*/, registered.save()];
+                _a.sent();
+                return [4 /*yield*/, settings_1.Settings.deleteOne({ userId: existed._id })];
             case 24:
                 _a.sent();
                 _a.label = 25;
-            case 25:
-                token.userId = registered._id;
-                return [4 /*yield*/, tokens_1.DefaultUserToken.deleteMany()];
+            case 25: return [4 /*yield*/, user_1.User.deleteOne({ admin: true })];
             case 26:
                 _a.sent();
-                defaultUserToken = new tokens_1.DefaultUserToken(token);
-                return [4 /*yield*/, defaultUserToken.save()];
+                admin = new user_1.User(user);
+                admin.admin = true;
+                return [4 /*yield*/, admin.save()];
             case 27:
                 _a.sent();
-                return [4 /*yield*/, tokens_1.DefaultClientToken.deleteMany()];
+                token.userId = admin._id;
+                userToken = new tokens_1.UserToken(token);
+                return [4 /*yield*/, userToken.save()];
             case 28:
                 _a.sent();
-                defaultClientToken = new tokens_1.DefaultClientToken({
+                return [4 /*yield*/, tokens_1.ClientToken.deleteMany()];
+            case 29:
+                _a.sent();
+                clientToken = new tokens_1.ClientToken({
                     userId: token.userId,
                     clientId: twitch.clientId,
                     clientSecret: twitch.clientSecret
                 });
-                return [4 /*yield*/, defaultClientToken.save()];
-            case 29:
+                return [4 /*yield*/, clientToken.save()];
+            case 30:
                 _a.sent();
                 console.log('\x1b[33m%s\x1b[0m', "Tokens saved to mongodb...");
                 return [4 /*yield*/, questionSync("Do you wanna delete the twitch_credentials.json file? (y/n)")];
-            case 30:
+            case 31:
                 answer = _a.sent();
                 if (/y/gi.test(answer)) {
                     fs.unlinkSync('twitch_credentials.json');
                     console.log('\x1b[33m%s\x1b[0m', "Deleted twitch_credentials.json...");
                 }
-                return [3 /*break*/, 32];
-            case 31:
+                return [3 /*break*/, 33];
+            case 32:
                 console.log('\x1b[31m%s\x1b[0m', 'Could not connect to mongodb... Please check your credentials...');
-                _a.label = 32;
-            case 32: return [3 /*break*/, 34];
-            case 33:
+                _a.label = 33;
+            case 33: return [3 /*break*/, 35];
+            case 34:
                 console.log('\x1b[31m%s\x1b[0m', 'Could not retrieve a token... Please check your credentials...');
-                _a.label = 34;
-            case 34: return [3 /*break*/, 36];
-            case 35:
+                _a.label = 35;
+            case 35: return [3 /*break*/, 37];
+            case 36:
                 console.log('\x1b[33m%s\x1b[0m', "Unfortunately there is no way to get a chat user token without confirming from the browser... You will have to upload your token manually... ");
-                _a.label = 36;
-            case 36: return [3 /*break*/, 38];
-            case 37:
-                console.log('\x1b[33m%s\x1b[0m', "Using existing oauth...");
-                _a.label = 38;
+                _a.label = 37;
+            case 37: return [3 /*break*/, 39];
             case 38:
+                console.log('\x1b[33m%s\x1b[0m', "Using existing oauth...");
+                _a.label = 39;
+            case 39:
                 console.log('\x1b[33m%s\x1b[0m', "Initialization process is over... Shutting down...");
                 exit();
                 return [2 /*return*/];

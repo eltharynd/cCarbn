@@ -26,20 +26,15 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   now = Date.now()
   nowHandler
 
-  constructor(private data: DataService, private route: ActivatedRoute) {}
+  constructor(private data: DataService, private route: ActivatedRoute) {
+    this.route.parent?.params.subscribe(params => {
+      this.userId = params.userId
+    })
+  }
 
   async ngOnInit() {
-
-    this.userId = await new Promise((resolve) => {
-      this.route.queryParams.subscribe(async params => {
-        resolve(params.userId)
-      })
-    })
-
     if(!this.userId) 
       return
-
-
 
     this.nowHandler = setInterval(() => {
       this.now = Date.now()

@@ -2,7 +2,7 @@ import { ApiClient } from "@twurple/api"
 import { RefreshingAuthProvider } from "@twurple/auth"
 import axios from "axios"
 import { UserToken } from "../../db/models/tokens"
-import { Administrator, User } from "../../db/models/user"
+import { User } from "../../db/models/user"
 import { Mongo } from "../../db/mongo"
 import { Socket } from "../../socket/socket"
 import { Api } from "../express"
@@ -18,21 +18,12 @@ export const authMiddleware = async (req, res, next) => {
       req.headers.authorization = user.toJSON()
       req.headers.authorization._id = req.headers.authorization._id.toString()
 
-      if(req.params.userId && req.params.userId !== req.headers.authorization._id) {
+      if(!user.admin && req.params.userId && req.params.userId !== req.headers.authorization._id) {
         res.status(403).send(`You don't have permission to access this resource...`)
         return
       }
-      
       next()
-    } else {
-      user = await Administrator.findOne({token: token})
-      if(user) {
-        req.headers.authorization = user.toJSON()
-        req.headers.authorization._id = req.headers.authorization._id.toString()
-        next()
-      } else
-        res.status(403).send('Incorrect Authorization header')
-    } 
+    }
   }
 }
 export class Auth {
@@ -80,27 +71,25 @@ export class Auth {
           twitchId: tokenInfo.userId,
           twitchName: tokenInfo.userName
         }
-        let registered: any = await Administrator.findOne({ twitchId: user.twitchId })
+        let registered: any = await User.findOne({ twitchId: user.twitchId })
         if(!registered) {
-          registered = await User.findOne({ twitchId: user.twitchId })
-          if(!registered) {
-            registered = new User(user)
-            await registered.save()
+          registered = new User(user)
+          await registered.save()
+          token.userId = registered._id
+          let userToken = new UserToken(token)
+          await userToken.save()
+        } else {
+          let found = await UserToken.findOne({userId: registered._id})
+          if(found) {
+            found.overwrite(token)
+            await found.save()
+          } else {
             token.userId = registered._id
             let userToken = new UserToken(token)
             await userToken.save()
-          } else {
-            let found = await UserToken.findOne({userId: registered._id})
-            if(found) {
-              found.overwrite(token)
-              await found.save()
-            } else {
-              token.userId = registered._id
-              let userToken = new UserToken(token)
-              await userToken.save()
-            }
           }
         }
+        
 
         Socket.io.emit(req.body.state, {
           _id: registered._id,
@@ -123,9 +112,6 @@ export class Auth {
       }
 
       let registered: any = await User.findOne({token: req.body.token})
-      if(!registered)
-        registered = await Administrator.findOne({token: req.body.token})
-
       if(!registered) 
         res.status(401).send('Could not resume session...')
       else

@@ -2,12 +2,12 @@ const fs = require('fs')
 const { exit } = require('process')
 import { RefreshingAuthProvider } from '@twurple/auth'
 import { ApiClient } from '@twurple/api'
-import { resolve } from 'dns'
 import * as Mongoose from 'mongoose'
 import * as open from 'open'
 
-import { Administrator } from './src/backend/db/models/user'
-import { DefaultUserToken , DefaultClientToken } from './src/backend/db/models/tokens'
+import { User } from './src/backend/db/models/user'
+import { Settings } from './src/backend/db/models/settings'
+import { UserToken, ClientToken } from './src/backend/db/models/tokens'
 
 const express = require('express')
 const cors = require('cors')
@@ -212,24 +212,26 @@ let init = async () => {
                         twitchId: tokenInfo.userId,
                         twitchName: tokenInfo.userName
                       }
-                      await Administrator.deleteMany()
 
-                      let registered: any = await Administrator.findOne({ twitchId: user.twitchId })
-                      if(!registered) {
-                        registered = new Administrator(user)
-                        await registered.save()
+                      let existed = await User.findOne({twitchId: user.twitchId})
+                      if(existed) {
+                        await UserToken.deleteOne({userId: existed._id})
+                        await Settings.deleteOne({userId: existed._id})
                       }
-                      token.userId = registered._id
-                      await DefaultUserToken.deleteMany()
-                      let defaultUserToken = new DefaultUserToken(token)
-                      await defaultUserToken.save()
-                      await DefaultClientToken.deleteMany()
-                      let defaultClientToken = new DefaultClientToken({
-                          userId: token.userId,
+                      await User.deleteOne({admin: true})
+                      let admin: any = new User(user)
+                      admin.admin = true
+                      await admin.save()
+                      token.userId = admin._id
+ 
+                      let userToken = new UserToken(token)
+                      await userToken.save()
+                      await ClientToken.deleteMany()
+                      let clientToken = new ClientToken({
                           clientId: twitch.clientId,
-                          clientSecret: twitch.clientSecret
+                          clientSecret: twitch.clientSecret,
                       })
-                      await defaultClientToken.save()
+                      await clientToken.save()
 
                       console.log('\x1b[33m%s\x1b[0m', `Tokens saved to mongodb...`)
 
