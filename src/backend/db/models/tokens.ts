@@ -25,4 +25,4 @@ export const clientTokenSchema: Schema = new Schema({
     default: uuid.v4()
   },
 })
-export const ClientToken = model('DefaultClientToken', clientTokenSchema)
+export const ClientToken = model('ClientToken', clientTokenSchema)

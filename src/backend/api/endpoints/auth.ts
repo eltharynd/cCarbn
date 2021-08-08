@@ -81,6 +81,7 @@ export class Auth {
         } else {
           let found = await UserToken.findOne({userId: registered._id})
           if(found) {
+            token.userId = registered._id
             found.overwrite(token)
             await found.save()
           } else {
