@@ -136,8 +136,10 @@ export class HypetrainComponent implements OnInit, OnDestroy {
 
           this.loops[currentLevel].volume(Math.max(0, Math.min(f_x * this.currentVolume, 1)))
           console.log(f_x * this.currentVolume)
-          if(f_x * this.currentVolume<=0)
+          if(f_x * this.currentVolume<=0) {
             clearInterval(this.fader)
+            this.fader = null
+          }
         }, (this.fadingLength*1000) / 100)
 
         this.timeout = setTimeout(() => {
