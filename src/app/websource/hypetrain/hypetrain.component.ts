@@ -168,6 +168,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       this.loops[`lvl${i}`].volume(0)
     }
     this.currentLevel = 0
+    this.expiryDate = 0
   }
 
   endNow() {
