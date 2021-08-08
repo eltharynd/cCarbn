@@ -1,5 +1,5 @@
 import { ApiClient, HelixChannelSearchResult, HelixStream, HelixUser } from '@twurple/api'
-import { DirectConnectionAdapter, EventSubListener, EventSubSubscription } from '@twurple/eventsub'
+import { DirectConnectionAdapter, EventSubListener, EventSubSubscription, ReverseProxyAdapter } from '@twurple/eventsub'
 import { from, Subject } from 'rxjs'
 import * as fs from 'fs'
 import { filter, take } from 'rxjs/operators'
@@ -29,6 +29,7 @@ export class Twitch {
     await Twitch.client.eventSub.deleteAllSubscriptions()
     Twitch.listener = new EventSubListener({
       apiClient: Twitch.client,
+      //TODO ReverseProxyAdapter instead?
       adapter: new DirectConnectionAdapter({
         hostName: ENDPOINT.hostname,
         sslCert: {
