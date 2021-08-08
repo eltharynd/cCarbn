@@ -28,7 +28,7 @@
   </div>
   <div>
     level: {{currentLevel>0 ? currentLevel<6 ? currentLevel : 'ending' : 'none'}}&nbsp;
-    <mat-slider [disabled]="currentLevel===6 || now - changedAt <= 1*1000" [min]="0" max="6" step="1" (change)="prematureEnd = lastLevel!==5; onLevelChange()" [(ngModel)]="currentLevel"></mat-slider>
+    <mat-slider [disabled]="currentLevel===6 || now - changedAt <= 500" [min]="0" max="6" step="1" (change)="prematureEnd = lastLevel!==5; onLevelChange()" [(ngModel)]="currentLevel"></mat-slider>
   </div>
   <div>
     <button mat-raised-button color="accent" [disabled]="currentLevel>=6 ||currentLevel===0" (click)="currentLevel = 6; prematureEnd = true; onLevelChange()">fail (end)</button>
