@@ -143,7 +143,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
           this.timeout = setTimeout(() => {
             this.timeout=null
             this.reset()
-          }, this.loops[currentLevel].duration*1000);
+          }, this.fadingLength*1000);
 
         } else {
           this.loops[currentLevel].volume(this.currentVolume)
