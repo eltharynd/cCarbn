@@ -1,6 +1,6 @@
 import { ApiClient, HelixChannelSearchResult, HelixStream, HelixUser } from '@twurple/api'
 import { DirectConnectionAdapter, EventSubListener, EventSubSubscription } from '@twurple/eventsub'
-import { from } from 'rxjs'
+import { from, Subject } from 'rxjs'
 import * as fs from 'fs'
 import { filter, take } from 'rxjs/operators'
 
@@ -9,7 +9,7 @@ import { HypeTrain } from '../socket/events/hypetrain'
 import { Cheers } from '../socket/events/cheers'
 import { ClientCredentialsAuthProvider, RefreshingAuthProvider, TokenInfo } from '@twurple/auth'
 import { Mongo } from '../db/mongo'
-import { UserToken } from '../db/models/tokens'
+import { DefaultClientToken, UserToken } from '../db/models/tokens'
 
 process.on('SIGINT', () => {
   for(let iClient of Twitch.clients) {
@@ -29,7 +29,9 @@ export class Twitch {
  */
 
   
-
+  static client: ApiClient
+  static listener: EventSubListener
+  static clientReady: Subject<any>
   static clients: IApiClient[] = []
   
   static async find(userId) {
@@ -37,6 +39,33 @@ export class Twitch {
   }
 
   static async connect(user, settings?) {
+
+    if(!Twitch.client) {
+      if(Twitch.clientReady)
+        await Twitch.clientReady.toPromise()
+      else
+        Twitch.clientReady = new Subject()
+
+      Twitch.client = new ApiClient({
+        authProvider: new ClientCredentialsAuthProvider(Mongo.clientId, Mongo.clientSecret)
+      })
+      let token: any = await DefaultClientToken.findOne()
+      await Twitch.client.eventSub.deleteAllSubscriptions()
+      Twitch.listener = new EventSubListener({
+        apiClient: Twitch.client,
+        adapter: new DirectConnectionAdapter({
+          hostName: ENDPOINT.hostname,
+          sslCert: {
+            cert: `${fs.readFileSync(ENDPOINT.crt)}`,
+            key: `${fs.readFileSync(ENDPOINT.key)}`,
+          },
+        }),
+        secret: token.secret,
+      })
+      await Twitch.listener.listen(3001)
+      Twitch.clientReady.complete()
+    }
+
     if(await this.find(user._id))
       throw new Error()
 
@@ -58,32 +87,16 @@ export class Twitch {
       )
     }) 
 
-    let client = new ApiClient({
-      authProvider: new ClientCredentialsAuthProvider(Mongo.clientId, Mongo.clientSecret)
-    })
 
-    let listener = new EventSubListener({
-      apiClient: client,
-      adapter: new DirectConnectionAdapter({
-        hostName: ENDPOINT.hostname,
-        sslCert: {
-          cert: `${fs.readFileSync(ENDPOINT.crt)}`,
-          key: `${fs.readFileSync(ENDPOINT.key)}`,
-        },
-      }),
-      secret: token.secret,
-    })
-    //TODO do this better (this will crash)
-    await listener.listen(3001 + Twitch.clients.length)
-
-    let channel = await client.users.getUserByName(user.twitchName)
+  
+    let channel = await Twitch.client.users.getUserByName(user.twitchName)
 
     let subscriptions = []
     try {
-      subscriptions.push(await listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent))
+      /* subscriptions.push(await listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent))
       subscriptions.push(await listener.subscribeToChannelHypeTrainBeginEvents(channel.id, HypeTrain.hypeTrainBegin))
       subscriptions.push(await listener.subscribeToChannelHypeTrainProgressEvents(channel.id, HypeTrain.hypeTrainProgress))
-      subscriptions.push(await listener.subscribeToChannelHypeTrainEndEvents(channel.id, HypeTrain.hypeTrainEnd))
+      subscriptions.push(await listener.subscribeToChannelHypeTrainEndEvents(channel.id, HypeTrain.hypeTrainEnd)) */
     } catch(e) {
       console.error(e)
     }
@@ -92,9 +105,9 @@ export class Twitch {
     let iClient = Object.assign(new IApiClient(), {
       userId: user._id,
       user: channel, 
-      client: client,
+      client: Twitch.client,
       userClient: userClient,
-      listener: listener,
+      listener: Twitch.listener,
       subscriptions: subscriptions
     })
     Twitch.clients.push(iClient)
