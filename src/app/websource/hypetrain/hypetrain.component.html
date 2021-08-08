@@ -9,10 +9,10 @@
     <mat-slider min="0.1" max="1" step="0.1" (change)="onVolumeChange()" [(ngModel)]="currentVolume"></mat-slider>
   </div>
 
-  <div>
+  <!-- <div>
     runs before <b>success</b> fading: {{runsBeforeCompleted}}&nbsp;
     <mat-slider min="1" max="10" step="1" [disabled]="currentLevel>=6" [(ngModel)]="runsBeforeCompleted"></mat-slider>
-  </div>
+  </div> -->
   <div>
     <b>failed</b> fading duration: {{fadingLength}} secs&nbsp;
     <mat-slider min="10" max="180" step="10" [disabled]="fader" [(ngModel)]="fadingLength"></mat-slider>

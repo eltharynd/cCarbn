@@ -129,8 +129,11 @@ export class SeamlessLoop {
   
   volume(vol) {
     if(typeof vol != "undefined") {
-      this.actual._1.volume = vol;
-            this.actual._2.volume = vol;
+      console.log(this.actual)
+      if(this.actual._1)
+        this.actual._1.volume = vol;
+      if(this.actual._2)
+        this.actual._2.volume = vol;
       this._volume = vol;
     }
     return vol;
@@ -138,10 +141,14 @@ export class SeamlessLoop {
   
   stop() {
     clearTimeout(this.timeout);
-    this.actual._1.currentTime = 0;
-    this.actual._1.pause();
-    this.actual._2.currentTime = 0;
-    this.actual._2.pause();
+    if(this.actual._1) {
+      this.actual._1.currentTime = 0;
+      this.actual._1.pause();
+    }
+    if(this.actual._2) {
+      this.actual._2.currentTime = 0;
+      this.actual._2.pause();
+    }
   }
   
   callback(cb_loaded) {
