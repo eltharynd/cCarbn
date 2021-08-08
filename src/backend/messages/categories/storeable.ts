@@ -25,13 +25,15 @@ export class Storeable extends Message {
   private fetch = async (command?: string, listener?: boolean): Promise<any> => {
     let buffer: any = await Command.find(command ? {userId: this.iClient.userId, command: command} : {userId: this.iClient.userId})
     buffer = buffer?.length === 1 ? buffer[0] : buffer
-    this.commands = buffer instanceof Array ? buffer : [buffer]
+    if(buffer) {
+      this.commands = buffer instanceof Array ? buffer : [buffer]
     
-    if (listener)
-      for (let c of this.commands) {
-        c.listener = this.client.onMessage(await this.generateListener(c))
-      }
-    
+      if (listener)
+        for (let c of this.commands) {
+          c.listener = this.client.onMessage(await this.generateListener(c))
+        }
+    }
+    return buffer 
   }
 
   private save = async (command: string, answer: string, mods?: boolean, params?: string[], source?: string) => {
