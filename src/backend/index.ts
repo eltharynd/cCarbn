@@ -7,7 +7,7 @@ import { Chat } from './twitch/chat'
 import { RefreshingAuthProvider } from '@twurple/auth'
 import { Settings } from './db/models/settings'
 import { Twitch } from './twitch/twitch'
-import { ClientToken } from './db/models/tokens'
+import { ClientToken, UserToken } from './db/models/tokens'
 
 export const PORT = 3000
 
@@ -23,14 +23,14 @@ let startApp = async () => {
   new Api()
   new Socket()
 
-
-  let clientToken: any = await ClientToken.findOne()
+  let admin: any = await User.findOne({admin: true})
+  let defaultUserToken: any = await UserToken.findOne({userId: admin._id})
   Chat.defaultUserProvider = new RefreshingAuthProvider(
     {
       clientId: Mongo.clientId,
       clientSecret: Mongo.clientSecret,
       onRefresh: async (token) => {
-        let defaultUserToken: any = await ClientToken.findOne()
+        let defaultUserToken: any = await UserToken.findOne({admin:true})
         defaultUserToken.accesToken = token.accessToken
         defaultUserToken.refreshToken = token.refreshToken
         defaultUserToken.expiresIn = token.expiresIn
@@ -38,7 +38,7 @@ let startApp = async () => {
         await defaultUserToken.save()
       },
     },
-    clientToken.toJSON()
+    defaultUserToken.toJSON()
   )
   let settings: any[] = await Settings.find()
 
