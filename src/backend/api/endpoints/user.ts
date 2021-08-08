@@ -29,11 +29,17 @@ export class User {
       try {
 
         if(req.params.action === 'enable') {
-          Chat.connect(req.headers.authorization)
+          await Chat.connect(req.headers.authorization)
         } else 
-          Chat.disconnect(req.headers.authorization)
+          await Chat.disconnect(req.headers.authorization)
         
-        res.send({})
+        let settings: any = await Settings.findOne({userId: req.params.userId})
+        let json = settings.json
+        json.chatbot = req.params.action === 'enable'
+        settings.json = json
+        await settings.save()
+
+        res.send(settings.json)
 
       } catch(e) {
         res.status(500).send('Internal server error')
@@ -44,11 +50,17 @@ export class User {
       try {
 
         if(req.params.action === 'enable') {
-          Twitch.connect(req.headers.authorization)
+          await Twitch.connect(req.headers.authorization)
         } else 
-          Twitch.disconnect(req.headers.authorization)
+          await Twitch.disconnect(req.headers.authorization)
         
-        res.send({})
+        let settings: any = await Settings.findOne({userId: req.params.userId})
+        let json = settings.json
+        json.api = req.params.action === 'enable'
+        settings.json = json
+        await settings.save()
+
+        res.send(settings.json)
 
       } catch(e) {
         res.status(500).send('Internal server error')

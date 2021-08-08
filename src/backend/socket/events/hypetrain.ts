@@ -5,18 +5,18 @@ import { Socket } from "../socket"
 export class HypeTrain {
 
   static hypeTrainBegin = (event: EventSubChannelHypeTrainBeginEvent) => {
-    console.log(event)
-    Socket.io.to('hypetrain').emit('hypetrain', Object.assign({eventName: 'start'}, event))
+    console.log(event.toJSON())
+    Socket.io.to('hypetrain').emit('hypetrain', Object.assign({eventName: 'start'}, event.toJSON()))
   }
 
   static hypeTrainProgress = (event: EventSubChannelHypeTrainProgressEvent) => {
-    console.log(event)
-    Socket.io.to('hypetrain').emit('hypetrain', Object.assign({eventName: 'progress'}, event))
+    console.log(event.toJSON())
+    Socket.io.to('hypetrain').emit('hypetrain', Object.assign({eventName: 'progress'}, event.toJSON()))
   }
 
   static hypeTrainEnd = (event: EventSubChannelHypeTrainEndEvent) => {
-    console.log(event)
-    Socket.io.to('hypetrain').emit('hypetrain', Object.assign({eventName: 'end'}, event))
+    console.log(event.toJSON())
+    Socket.io.to('hypetrain').emit('hypetrain', Object.assign({eventName: 'end'}, event.toJSON()))
   }
 
 

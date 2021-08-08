@@ -17,7 +17,7 @@ export class Chat {
   static defaultUserProvider
 
   private static async find(userId) {
-    return await from(Chat.clients).pipe(filter(c => c.userId === userId.toString())).toPromise()
+    return await from(Chat.clients).pipe(filter(c => c.userId.toString() === userId.toString())).toPromise()
   }
 
   static async connect(user, settings?) {
@@ -47,11 +47,12 @@ export class Chat {
   }
 
   static async disconnect(user) {
-    let found = await this.find(user._id)
-    if(found) {
-      found.client.quit() 
-      Chat.clients.splice(Chat.clients.indexOf(found), 1)
+    let iClient = await this.find(user._id)
+    if(iClient) {
+      await iClient.client.quit() 
+      Chat.clients.splice(Chat.clients.indexOf(iClient), 1)
     }
+
   }
 
 }

@@ -1,5 +1,5 @@
 import { ApiClient, HelixChannelSearchResult, HelixStream, HelixUser } from '@twurple/api'
-import { DirectConnectionAdapter, EventSubListener } from '@twurple/eventsub'
+import { DirectConnectionAdapter, EventSubListener, EventSubSubscription } from '@twurple/eventsub'
 import { from } from 'rxjs'
 import * as fs from 'fs'
 import { filter, take } from 'rxjs/operators'
@@ -11,6 +11,14 @@ import { ClientCredentialsAuthProvider, RefreshingAuthProvider, TokenInfo } from
 import { Mongo } from '../db/mongo'
 import { UserToken } from '../db/models/tokens'
 
+process.on('SIGINT', () => {
+  for(let iClient of Twitch.clients) {
+    for(let sub of iClient.subscriptions)
+      sub.stop()
+    if(iClient.listener)
+      iClient.listener.unlisten() 
+  }
+})
 export class Twitch {
 
   /* userId
@@ -20,12 +28,12 @@ export class Twitch {
   private static subscriptions = []
  */
 
-
+  
 
   static clients: IApiClient[] = []
   
   static async find(userId) {
-    return await from(Twitch.clients).pipe(filter(c => c.userId === userId.toString())).toPromise()
+    return await from(Twitch.clients).pipe(filter(c => c.userId.toString() === userId.toString())).toPromise()
   }
 
   static async connect(user, settings?) {
@@ -54,17 +62,6 @@ export class Twitch {
       authProvider: new ClientCredentialsAuthProvider(Mongo.clientId, Mongo.clientSecret)
     })
 
-    let iClient = Object.assign(new IApiClient(), {
-      userId: user._id,
-      user: await client.users.getUserByName(user.twitchName), 
-      client: client,
-      userClient: userClient
-    })
-    Twitch.clients.push(iClient)
-   
-    
-    //TODO FINISH
-    console.log(ENDPOINT.hostname)
     let listener = new EventSubListener({
       apiClient: client,
       adapter: new DirectConnectionAdapter({
@@ -76,36 +73,42 @@ export class Twitch {
       }),
       secret: token.secret,
     })
-    await listener.listen(3001)
-    let channel = await client.users.getUserByName('cakeums')
-    console.log(channel)
-    await listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent)
+    //TODO do this better (this will crash)
+    await listener.listen(3001 + Twitch.clients.length)
 
-    //
+    let channel = await client.users.getUserByName(user.twitchName)
 
-    //console.log(Twitch.channelID)
-    //let res = (await await Twitch.client.hypeTrain.getHypeTrainEventsForBroadcaster(Twitch.channelID))
-    //console.log(res)
+    let subscriptions = []
+    try {
+      subscriptions.push(await listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent))
+      subscriptions.push(await listener.subscribeToChannelHypeTrainBeginEvents(channel.id, HypeTrain.hypeTrainBegin))
+      subscriptions.push(await listener.subscribeToChannelHypeTrainProgressEvents(channel.id, HypeTrain.hypeTrainProgress))
+      subscriptions.push(await listener.subscribeToChannelHypeTrainEndEvents(channel.id, HypeTrain.hypeTrainEnd))
+    } catch(e) {
+      console.error(e)
+    }
 
 
+    let iClient = Object.assign(new IApiClient(), {
+      userId: user._id,
+      user: channel, 
+      client: client,
+      userClient: userClient,
+      listener: listener,
+      subscriptions: subscriptions
+    })
+    Twitch.clients.push(iClient)
 
-
-
-    //await listener.subscribeToChannelCheerEvents(user._id, Cheers.cheerEvent)
-
-    //Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainBeginEvents(Twitch.channelID, HypeTrain.hypeTrainBegin))
-    //Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainProgressEvents (Twitch.channelID, HypeTrain.hypeTrainProgress))
-    //Twitch.subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainEndEvents (Twitch.channelID, HypeTrain.hypeTrainEnd))
-
-    /* process.on('SIGINT', () => {
-      for(let sub of Twitch.subscriptions)
-        sub.stop()
-    }) */
-
+    //await userClient.hypeTrain.getHypeTrainEventsForBroadcaster(channel.id)
   }
 
   static async disconnect(user) {
-  
+    let iClient = await this.find(user._id)
+    if(iClient) {
+      if(iClient.listener)
+        await iClient.listener.unlisten() 
+      Twitch.clients.splice(Twitch.clients.indexOf(iClient), 1)
+    }
   }
 
 }
@@ -117,6 +120,9 @@ export class IApiClient {
   user: HelixUser
   client: ApiClient
   userClient: ApiClient
+
+  listener: EventSubListener
+  subscriptions: EventSubSubscription[]
 
   searchChannel = async (name): Promise<HelixChannelSearchResult> => {
     return await from((await this.client.search.searchChannels(name)).data)

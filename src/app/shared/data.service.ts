@@ -10,7 +10,7 @@ export const SERVER_URL = 'http://localhost:3000/api/'
   providedIn: 'root'
 })
 export class DataService {
-  busy: Boolean = false
+  busy: boolean = false
   socketIO: Socket
 
   static clientId
