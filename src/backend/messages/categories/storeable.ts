@@ -18,38 +18,17 @@ export class Storeable extends Message {
 
   public constructor(client) {
     super(client)
-    this.fetch(null, true)
+    this.fetch()
     this.init()
   }
 
-  private fetch = async (command?: string, listener?: boolean): Promise<any> => {
-    let buffer: any = await Command.find(command ? {userId: this.iClient.userId, command: command} : {userId: this.iClient.userId})
-    buffer = buffer?.length === 1 ? buffer[0] : buffer
-    if(buffer) {
-      this.commands = buffer instanceof Array ? buffer : [buffer]
-    
-      if (listener)
-        for (let c of this.commands) {
-          c.listener = this.client.onMessage(await this.generateListener(c))
-        }
+  private fetch = async (): Promise<any> => {
+    let buffer: any = await Command.find({userId: this.iClient.userId})
+    for (let c of buffer) {
+      let command = c.toJSON()
+      command.listener = this.client.onMessage(await this.generateListener(command))
+      this.commands.push(command)
     }
-    return buffer 
-  }
-
-  private save = async (command: string, answer: string, mods?: boolean, params?: string[], source?: string) => {
-    let buffer = new Command({ userId: this.iClient.userId, command: command, answer: answer, mods: mods ? true : false, params: params?.length > 0 ? params : [], source: source })
-    await buffer.save()
-    return buffer
-  }
-
-  private exists = async (command) => {
-    let result = await from(this.commands)
-      .pipe(
-        filter((c) => c.command === command),
-        take(1)
-      )
-      .toPromise()
-    return result ? result._id : null
   }
 
   //TODO implement mods only commands
@@ -74,7 +53,7 @@ export class Storeable extends Message {
         name = name[0].replace(' ', '')
         buffer = buffer.replace(/^\!*\w+ /i, '')
 
-        let exists = await this.exists(name)
+        let exists: any = await Command.findOne({userId: this.iClient.userId, command: name})
         if (!edit && exists) {
           this.client.say(
             channel,
@@ -107,20 +86,28 @@ export class Storeable extends Message {
             buffer = buffer.replace(i, `{{${index++}}}`)
           }
 
-        let result
         if (exists) {
-          let found = await this.fetch(name)
-          found.command = name
-          found.answer = buffer
-          found.params = parameters
-          found.source = message
-          found.mods = null
-          await found.save()
-          result = found
-        } else result = await this.save(name, buffer, null, parameters, message)
+          exists.command = name
+          exists.answer = buffer
+          exists.params = parameters
+          exists.source = message
+          exists.mods = null
+          await exists.save()
+        } else {
+          exists = new Command({
+            userId: this.iClient.userId,
+            command: name,
+            answer: buffer,
+            params: parameters,
+            source: message,
+            mods: null
+          })
+          await exists.save()
+        }
 
+        let result = exists.toJSON()
         this.commands.push(result)
-        let listener = this.generateListener(result)
+        let listener = this.generateListener(exists)
         result.listener = this.client.onMessage(listener)
 
         this.client.say(channel, `/me Successfully ${exists ? 'edited' : 'added new'} command...`)
@@ -134,7 +121,7 @@ export class Storeable extends Message {
         }
         name = name[0].replace(' ', '')
 
-        let exists = await this.exists(name)
+        let exists = await Command.findOne({userId: this.iClient.userId, command: name})
         if (!exists) {
           this.client.say(channel, `/me This command doesn't exist...`)
           return
@@ -147,17 +134,18 @@ export class Storeable extends Message {
           )
           .toPromise()
         command.listener.unbind()
-        let found = await this.fetch(name)
-        found.delete()
+        await Command.deleteOne({userId: this.iClient.userId, command: name})
         this.commands.splice(this.commands.indexOf(command), 1)
         this.client.say(channel, `/me Successfully deleted command...`)
       } else if (buffer.startsWith('show')) {
         buffer = buffer.replace('show ', '').replace('answer ', '')
-        if (await this.exists(buffer)) this.client.say(channel, `/me Here's the answer for command "${buffer}": \`${(await this.fetch(buffer)).answer}\``)
+        let found: any = await Command.findOne({userId: this.iClient.userId, command: buffer})
+        if (found) this.client.say(channel, `/me Here's the answer for command "${buffer}": \`${found.answer}\``)
         else this.client.say(channel, `/me I couldn't find such command...`)
       } else if (buffer.startsWith('source')) {
         buffer = buffer.replace('source ', '')
-        if (await this.exists(buffer)) this.client.say(channel, `/me Here's the source for command "${buffer}": \`${(await this.fetch(buffer)).source}\``)
+        let found: any = await Command.findOne({userId: this.iClient.userId, command: buffer})
+        if (found) this.client.say(channel, `/me Here's the source for command "${buffer}": \`${found.source}\``)
         else this.client.say(channel, `/me I couldn't find such command...`)
       }
     } else if (/!commands/.test(message)) {
