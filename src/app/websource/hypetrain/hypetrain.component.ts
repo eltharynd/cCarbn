@@ -19,7 +19,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   prematureEnd: boolean
   currentVolume: number = 1
 
-  //runsBeforeCompleted = 3
+  runsBeforeCompleted = 3
   fadingLength: number = 30
 
   percentage: number = 0
@@ -114,20 +114,24 @@ export class HypetrainComponent implements OnInit, OnDestroy {
 
   timeout
   fader
+  transitioning
   lastLevel = 0
   changedAt
   async onLevelChange() {
     this.changedAt = Date.now()
 
+    console.log(`${this.lastLevel} -> ${this.currentLevel}`)
+
     if(this.lastLevel<1) {
       for (let j=1; j<=4; j++)
         this.loops[`lvl${j}`].start('loop')
+    } else if(this.lastLevel === 5 && this.currentLevel<6) {
+      this.loops[`lvl5`].volume(0)
+      this.loops[`lvl5`].stop()
     }
-    this.lastLevel = this.currentLevel
-    this.expiryDate = Date.now() + 5*60*1000
     if(this.currentLevel === 6) {
+      this.lastLevel = this.currentLevel
       let currentLevel = await from(Object.keys(this.loops)).pipe(filter((k) => this.loops[k]._volume>0), take(1)).toPromise()
-
       let i = 0
       if(this.prematureEnd) {
         this.expiryDate = Date.now() + this.fadingLength*1000
@@ -158,8 +162,21 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       }
       
     } else if(this.currentLevel>0) {
-      if(this.currentLevel === 5) 
+      this.expiryDate = Date.now() + 5*60*1000
+      if(this.currentLevel === 5) {
+        let ran = 0
+        this.transitioning = true
+        await new Promise(resolve => {
+          this.loops[`lvl${this.lastLevel}`].transitionCallBack = () => {
+            if(++ran === this.runsBeforeCompleted)
+              resolve(true)
+          }
+        })
+        this.transitioning = false
         this.loops[`lvl${this.currentLevel}`].start('loop')
+      }
+      this.lastLevel = this.currentLevel
+      
       this.loops[`lvl${this.currentLevel}`].volume(this.currentVolume)
       for (let i = 1; i <= 4; i++) 
         if(i!==this.currentLevel) 

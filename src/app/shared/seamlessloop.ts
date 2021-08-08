@@ -129,7 +129,6 @@ export class SeamlessLoop {
   
   volume(vol) {
     if(typeof vol != "undefined") {
-      console.log(this.actual)
       if(this.actual._1)
         this.actual._1.volume = vol;
       if(this.actual._2)

@@ -9,10 +9,10 @@
     <mat-slider min="0.1" max="1" step="0.1" (change)="onVolumeChange()" [(ngModel)]="currentVolume"></mat-slider>
   </div>
 
-  <!-- <div>
+  <div>
     runs before <b>success</b> fading: {{runsBeforeCompleted}}&nbsp;
     <mat-slider min="1" max="10" step="1" [disabled]="currentLevel>=6" [(ngModel)]="runsBeforeCompleted"></mat-slider>
-  </div> -->
+  </div>
   <div>
     <b>failed</b> fading duration: {{fadingLength}} secs&nbsp;
     <mat-slider min="10" max="180" step="10" [disabled]="fader" [(ngModel)]="fadingLength"></mat-slider>
@@ -22,13 +22,13 @@
     <button mat-raised-button color="accent" [disabled]="loops['lvl1']?._volume<=0">lvl1</button>
     <button mat-raised-button color="accent" [disabled]="loops['lvl2']?._volume<=0">lvl2</button>
     <button mat-raised-button color="accent" [disabled]="loops['lvl3']?._volume<=0">lvl3</button>
-    <button mat-raised-button color="accent" [disabled]="loops['lvl4']?._volume<=0">lvl4</button>
-    <button mat-raised-button color="accent" [disabled]="loops['lvl5']?._volume<=0">lvl5</button>
+    <button mat-raised-button color="accent" [disabled]="loops['lvl4']?._volume<=0">lvl4{{transitioning ? '->' : ''}}</button>
+    <button mat-raised-button color="accent" [disabled]="loops['lvl5']?._volume<=0">{{transitioning ? '->' : ''}}lvl5</button>
     <button mat-raised-button color="accent" [disabled]="!(fader || timeout)">fade</button>
   </div>
   <div>
     level: {{currentLevel>0 ? currentLevel<6 ? currentLevel : 'ending' : 'none'}}&nbsp;
-    <mat-slider [disabled]="currentLevel===6 || now - changedAt <= 500" [min]="0" max="6" step="1" (change)="prematureEnd = lastLevel!==5; onLevelChange()" [(ngModel)]="currentLevel"></mat-slider>
+    <mat-slider [disabled]="transitioning || currentLevel===6 || now - changedAt <= 500" [min]="0" max="6" step="1" (change)="prematureEnd = lastLevel!==5; onLevelChange()" [(ngModel)]="currentLevel"></mat-slider>
   </div>
   <div>
     <button mat-raised-button color="accent" [disabled]="currentLevel>=6 ||currentLevel===0" (click)="currentLevel = 6; prematureEnd = true; onLevelChange()">fail (end)</button>
