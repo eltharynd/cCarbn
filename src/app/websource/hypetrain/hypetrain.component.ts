@@ -121,7 +121,11 @@ export class HypetrainComponent implements OnInit, OnDestroy {
 
   timeout
   fader
+  lastLevel
+  changedAt
   async onLevelChange() {
+    this.changedAt = Date.now()
+    this.lastLevel = this.currentLevel
     if(this.currentLevel === 6) {
       let currentLevel = await from(Object.keys(this.loops)).pipe(filter((k) => this.loops[k]._volume>0), take(1)).toPromise()
       if(currentLevel) {
@@ -154,7 +158,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
               if(++ran === this.runsBeforeCompleted) {
                 this.loops[currentLevel].transitionCallBack = null
                 this.loops[currentLevel].volume(0)
-                this.loops[currentLevel].volume(this.currentVolume)
                 resolve(true)
               }
             }
