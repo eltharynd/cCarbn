@@ -17,7 +17,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
 
   currentLevel: number = 0
   prematureEnd: boolean
-  currentVolume: number = 0.2
+  currentVolume: number = 1
 
   runsBeforeCompleted = 3
   fadingLength: number = 30
