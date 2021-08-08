@@ -1,2 +1,7 @@
 <mat-slide-toggle [disabled]="data.busy" [(ngModel)]="settings.api" (change)="toggleApi()">Api</mat-slide-toggle><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<mat-slide-toggle [disabled]="data.busy || !settings.api">Cheers</mat-slide-toggle><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<mat-slide-toggle [disabled]="data.busy || !settings.api">Hype Trains</mat-slide-toggle><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<mat-slide-toggle [disabled]="data.busy || !settings.api">Subscriptions</mat-slide-toggle><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<mat-slide-toggle [disabled]="data.busy || !settings.api">Gift Subs</mat-slide-toggle><br>
+
 <mat-slide-toggle [disabled]="data.busy" [(ngModel)]="settings.chatbot" (change)="toggleChatBot()">Chatbot</mat-slide-toggle><br>
