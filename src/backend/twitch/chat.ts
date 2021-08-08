@@ -40,10 +40,10 @@ export class Chat {
     client.connect()
 
     //TODO migrate this to settings and connect/reconnect accordingly
-    new Common(iClient)
-    new Everyone(iClient)
-    new Moderators(iClient)
-    new Storeable(iClient)
+    if(settings?.chatbot?.categories?.common) new Common(iClient)
+    if(settings?.chatbot?.categories?.everyone) new Everyone(iClient)
+    if(settings?.chatbot?.categories?.moderators) new Moderators(iClient)
+    if(settings?.chatbot?.categories?.storeable) new Storeable(iClient)
   }
 
   static async disconnect(user) {

@@ -1,19 +1,26 @@
 import { EventSubChannelCheerEvent } from "@twurple/eventsub/lib"
-import { Socket } from "socket.io"
+import * as socketIO from "socket.io"
+import { Socket } from "../socket"
+import { toJSON } from "./util/toJSON"
 
 export class Cheers {
 
   static cheerEvent = (event: EventSubChannelCheerEvent) => {
-    console.log(event)
-    console.log(event.toJSON())
+    console.log(toJSON(event))
+    Socket.io.to('hypetrain').emit('hypetrain', Object.assign({eventName: 'start'}, toJSON(event)))
   }
 
 
-  static bind = (socket: Socket) => {
-
+  static bind = (socket: socketIO.Socket) => {
+    socket.on('cheers', (data) => {
+      if(socket.rooms.has('cheers'))
+        socket.leave('cheers')
+      else
+        socket.join('cheers')
+    })
   }
 
-  static unbind = (socket: Socket) => {
+  static unbind = (socket: socketIO.Socket) => {
 
   }
 }

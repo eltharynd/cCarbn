@@ -9,16 +9,7 @@ import { HypeTrain } from '../socket/events/hypetrain'
 import { Cheers } from '../socket/events/cheers'
 import { ClientCredentialsAuthProvider, RefreshingAuthProvider, TokenInfo } from '@twurple/auth'
 import { Mongo } from '../db/mongo'
-import { DefaultClientToken, UserToken } from '../db/models/tokens'
-
-process.on('SIGINT', () => {
-  for(let iClient of Twitch.clients) {
-    for(let sub of iClient.subscriptions)
-      sub.stop()
-    if(iClient.listener)
-      iClient.listener.unlisten() 
-  }
-})
+import { DefaultClientToken, DefaultUserToken, UserToken } from '../db/models/tokens'
 export class Twitch {
 
   /* userId
@@ -38,6 +29,32 @@ export class Twitch {
     return await from(Twitch.clients).pipe(filter(c => c.userId.toString() === userId.toString())).toPromise()
   }
 
+  private static async prepareClient() {
+    Twitch.client = new ApiClient({
+      authProvider: new ClientCredentialsAuthProvider(Mongo.clientId, Mongo.clientSecret)
+    })
+    let token: any = await DefaultUserToken.findOne()
+    await Twitch.client.eventSub.deleteAllSubscriptions()
+    Twitch.listener = new EventSubListener({
+      apiClient: Twitch.client,
+      adapter: new DirectConnectionAdapter({
+        hostName: ENDPOINT.hostname,
+        sslCert: {
+          cert: `${fs.readFileSync(ENDPOINT.crt)}`,
+          key: `${fs.readFileSync(ENDPOINT.key)}`,
+        },
+      }),
+      secret: token.secret,
+    })
+    await Twitch.listener.listen(3001)
+    process.on('SIGINT', () => {
+      for(let iClient of Twitch.clients) 
+        for(let sub of iClient.subscriptions)
+          sub.stop()
+    })
+  }
+
+
   static async connect(user, settings?) {
 
     if(!Twitch.client) {
@@ -46,23 +63,7 @@ export class Twitch {
       else
         Twitch.clientReady = new Subject()
 
-      Twitch.client = new ApiClient({
-        authProvider: new ClientCredentialsAuthProvider(Mongo.clientId, Mongo.clientSecret)
-      })
-      let token: any = await DefaultClientToken.findOne()
-      await Twitch.client.eventSub.deleteAllSubscriptions()
-      Twitch.listener = new EventSubListener({
-        apiClient: Twitch.client,
-        adapter: new DirectConnectionAdapter({
-          hostName: ENDPOINT.hostname,
-          sslCert: {
-            cert: `${fs.readFileSync(ENDPOINT.crt)}`,
-            key: `${fs.readFileSync(ENDPOINT.key)}`,
-          },
-        }),
-        secret: token.secret,
-      })
-      await Twitch.listener.listen(3001)
+      await this.prepareClient()
       Twitch.clientReady.complete()
     }
 
@@ -90,15 +91,12 @@ export class Twitch {
 
   
     let channel = await Twitch.client.users.getUserByName(user.twitchName)
-
     let subscriptions = []
-    try {
-      /* subscriptions.push(await listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent))
-      subscriptions.push(await listener.subscribeToChannelHypeTrainBeginEvents(channel.id, HypeTrain.hypeTrainBegin))
-      subscriptions.push(await listener.subscribeToChannelHypeTrainProgressEvents(channel.id, HypeTrain.hypeTrainProgress))
-      subscriptions.push(await listener.subscribeToChannelHypeTrainEndEvents(channel.id, HypeTrain.hypeTrainEnd)) */
-    } catch(e) {
-      console.error(e)
+    if(settings?.api?.listeners?.cheer) subscriptions.push(await Twitch.listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent))    
+    if(settings?.api?.listeners?.hypetrain) {
+      subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainBeginEvents(channel.id, HypeTrain.hypeTrainBegin))
+      subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainProgressEvents(channel.id, HypeTrain.hypeTrainProgress))
+      subscriptions.push(await Twitch.listener.subscribeToChannelHypeTrainEndEvents(channel.id, HypeTrain.hypeTrainEnd)) 
     }
 
 
@@ -118,8 +116,10 @@ export class Twitch {
   static async disconnect(user) {
     let iClient = await this.find(user._id)
     if(iClient) {
-      if(iClient.listener)
-        await iClient.listener.unlisten() 
+      for(let sub of iClient.subscriptions) {
+        sub.stop()
+      }
+      iClient.subscriptions = null
       Twitch.clients.splice(Twitch.clients.indexOf(iClient), 1)
     }
   }

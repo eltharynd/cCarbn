@@ -43,12 +43,12 @@ let startApp = async () => {
   let settings: any[] = await Settings.find()
   for(let s of settings) {
     let user: any = await User.findOne({_id: s.userId})
-    let settings = s.json
-    if(settings.api) {
-      Twitch.connect(user.toJSON(), settings)
+    let ss = s.json
+    if(ss.api.enabled) {
+      Twitch.connect(user.toJSON(), ss)
     }
-    if(settings.chatbot) {
-      Chat.connect(user.toJSON(), settings)
+    if(ss.chatbot.enabled) {
+      Chat.connect(user.toJSON(), ss)
     }
   }
 }
