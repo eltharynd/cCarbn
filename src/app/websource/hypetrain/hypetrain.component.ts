@@ -30,6 +30,17 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   now = Date.now()
   nowHandler
 
+
+  id
+  progress
+  goal
+  total
+  lastContribution
+  startDate
+  topContributors
+  endDate
+  cooldownEndDate
+
   constructor(private data: DataService, private route: ActivatedRoute) {
     this.route.parent?.params.subscribe(params => {
       this.userId = params.userId
@@ -44,40 +55,44 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       this.now = Date.now()
     }, 5)
 
+    //'startDate', 'topContributors', 'total', 'level', 'endDate', 'cooldownEndDate'
     this.data.socketIO.emit('hypetrain', {userId: this.userId})
     this.data.socketIO.on('hypetrain', (data) => {
+
+      if(data.expiryDate) this.expiryDate = data.expiryDate.getTime()
+      if(data.goal) this.goal = data.goal
+      if(data.progress) this.progress = data.progress
+      if(data.total) this.total = data.total
+      if(data.goal && data.progress) this.percentage = data.progress / (data.progress + data.goal)
+      if(data.id) this.id = data.id
+      if(data.lastContribution) this.lastContribution = data.lastContribution
+      if(data.startDate) this.startDate = data.startDate
+      if(data.topContributors) this.topContributors = data.topContributors
+      if(data.endDate) this.endDate = data.endDate
+      if(data.cooldownEndDate) this.cooldownEndDate = data.cooldownEndDate
+
       if(data.eventName === 'start') {
         this.currentLevel = 1
-        this.expiryDate = data.expiryDate.getTime()
-
-        this.percentage = data.progress / (data.progress + data.goal)
         this.onLevelChange()
 
       } else if(data.eventName === 'progress') {
-        let nextLevel = data.level !== this.currentLevel ? true : false
-        this.currentLevel = data.level
-        this.expiryDate = data.expiryDate.getTime()
-
-        this.percentage = data.progress / (data.progress + data.goal)
+        let nextLevel = data.level+1 !== this.currentLevel ? true : false
+        this.currentLevel = data.level+1
         if(nextLevel)
           this.onLevelChange()
         else
           this.onProgress()
       } else if(data.eventName === 'end') {
-        this.currentLevel = 6
-        if(data.level !== 6)
+        if(this.currentLevel<5)
           this.prematureEnd = true
-
+        this.currentLevel = 6
         this.expiryDate = 0
-        this.percentage = 0
         this.onLevelChange()
       }
       
     }) 
 
     this.loadAudio()
-
-
   }
 
   ngOnDestroy() {
