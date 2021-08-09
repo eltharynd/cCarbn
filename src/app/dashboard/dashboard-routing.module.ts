@@ -3,6 +3,7 @@ import { RouterModule, Routes } from "@angular/router"
 import { DashboardComponent } from "./dashboard.component"
 import { DashboardModule } from "./dashboard.module"
 import { MainComponent } from "./main/main.component"
+import { TwitchComponent } from "./twitch/twitch.component"
 
 
 const routes: Routes = [
@@ -13,6 +14,18 @@ const routes: Routes = [
       {
         path: '',
         component: MainComponent
+      },
+      {
+        path: 'twitch',
+        loadChildren: () => import('./twitch/twitch.module').then(
+          m => m.TwitchModule
+        ),
+      },
+      {
+        path: 'discord',
+        loadChildren: () => import('./discord/discord.module').then(
+          m => m.DiscordModule
+        ),
       },
     ]
   }

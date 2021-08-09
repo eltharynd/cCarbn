@@ -1,0 +1,25 @@
+
+<div class="header-container">
+  <div class="logo-container">
+    <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
+      <nb-icon icon="menu-2-outline"></nb-icon>
+    </a>
+    <a class="logo" href="#" (click)="navigateHome()">elthabot</a>
+  </div>
+</div>
+
+<div class="header-container">
+  <nb-actions size="small">
+    <nb-action class="control-item" icon="email-outline"></nb-action>
+    <nb-action class="control-item" icon="bell-outline"></nb-action>
+    <nb-action class="user-action">
+      <nb-user *ngIf="auth.currentUser" 
+               [nbContextMenu]="userMenu"
+               nbContextMenuTag="user-context-menu"
+               [onlyPicture]="userPictureOnly"
+               [name]="auth.currentUser!.name"
+               [picture]="auth.currentUser!.picture">
+      </nb-user>
+    </nb-action>
+  </nb-actions>
+</div>

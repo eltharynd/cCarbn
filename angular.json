@@ -35,6 +35,8 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.css",
+              "node_modules/nebular-icons/scss/nebular-icons.scss",
               "src/styles.scss"
             ],
             "scripts": []
@@ -106,6 +108,8 @@
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
+              "node_modules/@fortawesome/fontawesome-free/css/all.css",
+              "node_modules/nebular-icons/scss/nebular-icons.scss",
               "src/styles.scss"
             ],
             "scripts": []
