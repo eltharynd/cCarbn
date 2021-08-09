@@ -1,5 +1,5 @@
 {
-  "name": "cCarbn",
+  "name": "ccarbn",
   "version": "1.0.0",
   "scripts": {
     "setup": "node init",
