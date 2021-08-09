@@ -1,5 +1,6 @@
-import { Component } from "@angular/core"
-import { NbMenuItem } from "@nebular/theme"
+import { Component, OnInit } from "@angular/core"
+import { Router } from "@angular/router"
+import { NbMenuItem, NbMenuService } from "@nebular/theme"
 
 
 @Component({
@@ -18,7 +19,7 @@ export class SidebarComponent {
     {
       title: 'Twitch',
       icon: 'layers-outline',
-      expanded: true,
+      link: 'twitch',
       children: [
         {
           title: 'API',
@@ -35,6 +36,7 @@ export class SidebarComponent {
     {
       title: 'Discord',
       icon: 'layers-outline',
+      link: 'discord',
       children: [
         {
           title: 'API',
@@ -49,5 +51,12 @@ export class SidebarComponent {
       ]
     }
   ]
+
+  constructor(private menuService: NbMenuService, private router: Router) {
+    this.menuService.onSubmenuToggle().subscribe(({ item }) => {
+      if(item.expanded)
+        this.router.navigate([`/dashboard/${item.link}`])
+    })
+  }
 
 }

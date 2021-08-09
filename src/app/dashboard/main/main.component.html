@@ -1,4 +1,3 @@
-
 <div *ngIf="settings">
   <mat-slide-toggle [disabled]="data.busy" [(ngModel)]="settings.api.enabled" (change)="toggleApi()">Api</mat-slide-toggle><br>
   <div *ngFor="let k of object.keys(settings.api.listeners)" style="margin-left: 1rem;">

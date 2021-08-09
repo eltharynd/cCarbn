@@ -46,6 +46,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   toggleSidebar(): boolean {
+    console.log('toggle')
     this.sidebarService.toggle()
     return false
   }
