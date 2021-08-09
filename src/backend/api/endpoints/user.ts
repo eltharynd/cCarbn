@@ -31,55 +31,46 @@ export class User {
 
 
     Api.endpoints.get('/api/user/:userId/settings/api/:action', authMiddleware,  async (req, res) => {
-      try {
+      let settings: any = await Settings.findOne({userId: req.params.userId})
+      let json = settings.json
 
-        let settings: any = await Settings.findOne({userId: req.params.userId})
-        let json = settings.json
-
-        if(req.params.action === 'enable') {
-          json.api.enabled = true
-          await Twitch.connect(req.headers.authorization, json)
-        } else {
-          json.api.enabled = false
-          await Twitch.disconnect(req.headers.authorization, json)
-        }
-
-        settings.json = json
-        await settings.save()
-
-        res.send(settings.json)
-
-      } catch(e) {
-        console.error(e)
-        res.status(500).send('Internal server error')
+      if(req.params.action === 'enable') {
+        json.api.enabled = true
+        await Twitch.connect(req.headers.authorization, json)
+      } else {
+        json.api.enabled = false
+        await Twitch.disconnect(req.headers.authorization, json)
       }
+
+      settings.json = json
+      await settings.save()
+
+      res.send(settings.json)
     })
 
-    Api.endpoints.get('/api/user/:userId/settings/chatbot/:action', authMiddleware,  async (req, res) => {
-      try {
+    Api.endpoints.get('/api/user/:userId/settings/chatbot/:action', authMiddleware,  async (req, res, next) => {
+      let settings: any = await Settings.findOne({userId: req.params.userId})
+      let json = settings.json
 
-        let settings: any = await Settings.findOne({userId: req.params.userId})
-        let json = settings.json
-
-        if(req.params.action === 'enable') {
-          json.chatbot.enabled = true
-          await Chat.connect(req.headers.authorization, json)
-        } else {
-          json.chatbot.enabled = false
-          await Chat.disconnect(req.headers.authorization, json)
-        }
-        
-        settings.json = json
-        await settings.save()
-
-        res.send(settings.json)
-
-      } catch(e) {
-        console.error(e)
-        res.status(500).send('Internal server error')
+      if(req.params.action === 'enable') {
+        json.chatbot.enabled = true
+        await Chat.connect(req.headers.authorization, json)
+      } else {
+        json.chatbot.enabled = false
+        await Chat.disconnect(req.headers.authorization, json)
       }
+      
+      settings.json = json
+      await settings.save()
+
+      res.send(settings.json)
     })
 
+    Api.endpoints.get('/api/user/:userId/settings/chatbot/category/:category', authMiddleware, async (req, res) => {
+
+
+
+    })
   }
 
 }

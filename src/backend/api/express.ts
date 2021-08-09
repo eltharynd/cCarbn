@@ -1,4 +1,5 @@
 import * as express from 'express'
+require('express-async-errors')
 import { createServer, Server } from 'http'
 import * as cors from 'cors'
 import * as bodyParser from 'body-parser'
@@ -23,10 +24,14 @@ export class Api {
       res.header('Access-Control-Allow-Origin', '*')
       next()
     })
+
     Api.endpoints.use((err, req, res, next) => {
-      console.error(err.stack)
+      if(res.headersSent)
+        return next(err)
       res.status(500).send({message: 'Unspecified internal error', details: err.message})
+      next(err)
     })
+
     
 
     Api.server = createServer(Api.endpoints)
