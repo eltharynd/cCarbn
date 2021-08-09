@@ -6,7 +6,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "elthabot": {
+    "cCarbn": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -23,7 +23,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/elthabot",
+            "outputPath": "dist/cCarbn",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -78,11 +78,11 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "elthabot:build:production",
+              "browserTarget": "cCarbn:build:production",
               "proxyConfig": "src/proxy.conf.json"
             },
             "development": {
-              "browserTarget": "elthabot:build:development",
+              "browserTarget": "cCarbn:build:development",
               "proxyConfig": "src/proxy.conf.json"
             }
           },
@@ -91,7 +91,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "elthabot:build"
+            "browserTarget": "cCarbn:build"
           }
         },
         "test": {
@@ -118,5 +118,5 @@
       }
     }
   },
-  "defaultProject": "elthabot"
+  "defaultProject": "cCarbn"
 }

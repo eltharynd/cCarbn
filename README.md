@@ -2,9 +2,9 @@
 # This is severely outdated.. will update whenever i have time
 # ⚠⚠⚠
 
-# elthabot
+# cCarbn
 
-elthabot aims to be a powerful Twitch chatbot, Twitch API interface and Browser Source (for OBS or similar) generator.
+cCarbn aims to be a powerful Twitch chatbot, Twitch API interface and Browser Source (for OBS or similar) generator.
 
 In other words it's goal is to allow content creators to develop custom commands that are currently not possible with alternatives such as nightbot, as well as to integrate that with events not capturable via chat (hype trains and such) and to allow the creation of dynamic single page web apps (through Angular) that can be controlled based on chat and/or events and can ultimately be used as Browser Sources in OBS and such.
 
@@ -13,7 +13,7 @@ Althought a GUI Dashboard will eventually come, the coolest functionality will a
 ## ROADMAP
 
 - After the main project is ready and user friendly I will also develop an elgato Stream Deck plugin for it.
-- After that's done I will build a one-click cloud installator for non-developers to use this as well, or at least the basic functionalities. This will be hosted on elthabot's servers so that youdon't require a domain name and SSL certificate.
+- After that's done I will build a one-click cloud installator for non-developers to use this as well, or at least the basic functionalities. This will be hosted on cCarbn's servers so that youdon't require a domain name and SSL certificate.
 
 ## GETTING STARTED
 
@@ -48,7 +48,7 @@ Note that this is unavailable on most production environment, therefore during t
 After doing that you can clone the project (if you havn't done so already):
 
 ```bash
-git clone https://github.com/eltharynd/elthabot
+git clone https://github.com/eltharynd/cCarbn
 ```
 
 Then you can run the initialization script. This will guide you through a setup to create and fill some `*_credentials.json` files in your root directory where the app will store all the necessary authentication data (for Twitch and mongo) as well as your hostname and SSL certificates paths. Note that these files should **NOT** be publicly accessible and therefore are excluded from the .git and if you want to deploy this project in a different way than what suggested you should make sure they can't be access eternally.

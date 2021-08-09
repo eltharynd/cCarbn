@@ -8,7 +8,7 @@ import { DataService } from './shared/data.service'
   template: `<div><router-outlet></router-outlet></div>`
 })
 export class AppComponent {
-  title = 'elthabot'
+  title = 'cCarbn'
 
   evaIcons = [];
 

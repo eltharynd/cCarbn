@@ -135,7 +135,7 @@ let init = async () => {
     console.log('\x1b[33m%s\x1b[0m', `Enter 'quit' anytime to cancel the initialization...`)
     console.log('\x1b[33m%s\x1b[0m', `Leave a field empty to just skip it and manually configure it later...`)
     if(fs.existsSync('twitch_credentials.json') || fs.existsSync('mongo_credentials.json')) {
-        let answer: any = await questionSync(`An initialization already exists... Would you like to reinitialize elthabot's credentials? (y/n)`)
+        let answer: any = await questionSync(`An initialization already exists... Would you like to reinitialize cCarbn's credentials? (y/n)`)
         if(/y/gi.test(answer))
             await prepareCredentials()
         else

@@ -5,7 +5,7 @@ import { AuthGuard } from '../auth/auth.guard'
 import { io, Socket } from 'socket.io-client'
 
 //export const SERVER_URL = 'http://localhost:3000/api/'
-export const SERVER_URL = 'https://elthabot.eltharynd.com/api/'
+export const SERVER_URL = 'https://cCarbn.io/api/'
 
 @Injectable({
   providedIn: 'root'

@@ -23,7 +23,7 @@ export class Common extends Message {
   }
 
   private greetings = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
-    if (/@elthabot/i.test(message) && (/hi/i.test(message) || /hello/i.test(message) || /what's up/i.test(message) || /o\//i.test(message))) {
+    if (/@cCarbn/i.test(message) && (/hi/i.test(message) || /hello/i.test(message) || /what's up/i.test(message) || /o\//i.test(message))) {
       let options = [
         `@${user} What's up bud? Nice to see you, hope you're doing fine...`,
         `@${user} Hey!!`,
