@@ -13,7 +13,7 @@ export const authMiddleware = async (req, res, next) => {
     res.status(403).send('Missing Authorization Header')
     return
   } else {
-    let user: any = await User.findOne({token: token})
+    let user: any = await User.findOne({token: { $eq: token }})
     if(user) {
       req.headers.authorization = user.toJSON()
       req.headers.authorization._id = req.headers.authorization._id.toString()
@@ -112,7 +112,7 @@ export class Auth {
         return
       }
 
-      let registered: any = await User.findOne({token: req.body.token})
+      let registered: any = await User.findOne({token: { $eq: req.body.token }})
       if(!registered) 
         res.status(401).send('Could not resume session...')
       else
