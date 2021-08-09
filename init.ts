@@ -36,14 +36,14 @@ let prepareCredentials = async () => {
     try {
         twitch = JSON.parse(''+fs.readFileSync('twitch_credentials.json'))
     } catch (e) {
-        fs.copyFileSync('src/assets/twitch_template.json', 'twitch_credentials.json')
+        fs.copyFileSync('src/assets/templates/twitch_template.json', 'twitch_credentials.json')
         twitch = JSON.parse(''+fs.readFileSync('twitch_credentials.json'))
     }
     let mongo
     try {
         mongo = JSON.parse(''+fs.readFileSync('mongo_credentials.json'))
     } catch (e) {
-        fs.copyFileSync('src/assets/mongo_template.json', 'mongo_credentials.json')
+        fs.copyFileSync('src/assets/templates/mongo_template.json', 'mongo_credentials.json')
         mongo = JSON.parse(''+fs.readFileSync('mongo_credentials.json'))
     }
 
@@ -141,8 +141,8 @@ let init = async () => {
         else
             console.log('\x1b[33m%s\x1b[0m', `Using existing credentials...`)
     } else {
-        fs.copyFileSync('src/assets/twitch_template.json', 'twitch_credentials.json')
-        fs.copyFileSync('src/assets/mongo_template.json', 'mongo_credentials.json')
+        fs.copyFileSync('src/assets/templates/twitch_template.json', 'twitch_credentials.json')
+        fs.copyFileSync('src/assets/templates/mongo_template.json', 'mongo_credentials.json')
         await prepareCredentials()
     }
 
@@ -151,9 +151,9 @@ let init = async () => {
       if(fs.existsSync('endpoint_credentials.json')) {
         answer = await questionSync(`An initialization already exists... Would you like to reinitialize it? (y/n)`)
         if(/y/gi.test(answer))
-          fs.copyFileSync('src/assets/endpoint_template.json', 'endpoint_credentials.json')
+          fs.copyFileSync('src/assets/templates/endpoint_template.json', 'endpoint_credentials.json')
       } else
-        fs.copyFileSync('src/assets/endpoint_template.json', 'endpoint_credentials.json')
+        fs.copyFileSync('src/assets/templates/endpoint_template.json', 'endpoint_credentials.json')
 
       let endpoint = JSON.parse(''+fs.readFileSync('endpoint_credentials.json'))
       let hostname = await questionSync(`Enter the hostname for the client listener:`)

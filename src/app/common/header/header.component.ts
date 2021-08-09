@@ -31,7 +31,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.menuService.onItemClick().pipe(
       filter(({ tag }) => tag === 'user-context-menu'),
       map(({ item: { title } }) => title),
-    ).subscribe(title => this.auth.logout())
+    ).subscribe(title => {
+      switch(title) {
+        case 'Profile':
+          this.router.navigate(['/auth/profile'])
+          break
+        case 'Log out':
+          this.auth.logout()
+          break
+        default:
+            break
+      }
+    })
 
   }
 
@@ -46,7 +57,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   toggleSidebar(): boolean {
-    console.log('toggle')
     this.sidebarService.toggle()
     return false
   }

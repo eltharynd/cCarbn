@@ -109,12 +109,12 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     let loaded = 0
     for (let i = 1; i <= 5; i++) {
       let audio = new Audio()
-      audio.src = `assets/Level ${i} Byte.mp3`
+      audio.src = `assets/sounds/hypetrain/default/Level ${i} Byte.mp3`
       audio.load
       audio.addEventListener('loadedmetadata', () => {
         this.loops[`lvl${i}`] = new SeamlessLoop()
         this.loops[`lvl${i}`]._volume = this.currentLevel === i ? this.currentVolume : 0
-        this.loops[`lvl${i}`].addUri(`/assets/Level ${i} Byte.mp3`, audio.duration*1000, 'loop')
+        this.loops[`lvl${i}`].addUri(`/assets/sounds/hypetrain/default/Level ${i} Byte.mp3`, audio.duration*1000, 'loop')
       })
     }
   }
