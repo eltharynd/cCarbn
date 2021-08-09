@@ -183,7 +183,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
         this.transitioning = true
         await new Promise(resolve => {
           this.loops[`lvl${this.lastLevel}`].transitionCallBack = () => {
-            if(++ran === this.runsBeforeCompleted)
+            if(++ran <= this.runsBeforeCompleted)
               resolve(true)
           }
         })
