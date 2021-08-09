@@ -1,10 +1,17 @@
 
-<div *ngIf="!auth.currentUser">
-  <p *ngIf="message">{{message}}</p>
-  <button *ngIf="!message" mat-raised-button (click)="loginWithTwitch()" color="primary">LOGIN WITH TWITCH</button>
-</div>
-<div *ngIf="auth.currentUser">
-  <p>You're currently logged in as {{auth.currentUser?.name}}</p>
-  <button mat-raised-button (click)="auth.logout()" color="primary">LOGOUT</button>
-</div>
+
+<nb-card size="small">
+  <nb-card-header>Login With Twitch</nb-card-header>
+
+  <nb-card-body *ngIf="!auth.currentUser">
+    <p *ngIf="message">{{message}}</p>
+    <button [disabled]="message?true:false" [nbSpinner]="message?true:false" status="primary" nbButton (click)="loginWithTwitch()" color="primary">LOG IN</button>
+  </nb-card-body>
+
+  <nb-card-body *ngIf="auth.currentUser">
+    <p>You're currently logged in as {{auth.currentUser?.name}}</p>
+    <button nbButton status="primary" (click)="auth.logout()">LOGOUT</button>
+  </nb-card-body>
+
+</nb-card>
 

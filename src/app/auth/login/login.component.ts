@@ -38,6 +38,7 @@ const SCOPES = [
 export class LoginComponent {
 
   message: string
+
   constructor(private data: DataService, public auth: AuthGuard) {
   }
 
@@ -54,6 +55,13 @@ export class LoginComponent {
       listener.close()
     })
 
+    let width = 600, height = 800
+
+    let top = window.screen.height - height;
+    top = top > 0 ? top/2 : 0;    
+    let left = window.screen.width - width;
+    left = left > 0 ? left/2 : 0;
+
     //@ts-ignore
     window.open(`https://id.twitch.tv/oauth2/authorize
     ?client_id=${DataService.clientId}
@@ -62,8 +70,8 @@ export class LoginComponent {
     &force_verify=true
     &state=${state}
     &scope=${SCOPES.join('+')}`
-    .replace(/\s/g, '') , '_blank', 'width=600,height=800')
+    .replace(/\s/g, '') , '_blank', `width=${width},height=${height},top=${top},left=${left},resizeable=false`)
 
-    this.message = 'Waiting on a response from twitch...'
+    this.message = 'Login via the newly opened twitch window...'
   }
 }

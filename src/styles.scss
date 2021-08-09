@@ -1,17 +1,17 @@
+@import 'themes';
+
+@import '~@nebular/theme/styles/globals';
+
+@include nb-install() {
+  @include nb-theme-global();
+};
+
 /* You can add global styles to this file, and also import other style files */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
-/* #outlet {
-  position: absolute;
-  width: 1920px;
-  height: 1080px;
-
-  //TODO remove after testing
-  background-color: rgba(0, 0, 255, 0.2) !important;
-} */
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

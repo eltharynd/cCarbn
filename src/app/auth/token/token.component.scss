@@ -1,0 +1,13 @@
+
+
+nb-card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+nb-card-header, 
+p {
+  text-align: center;
+}
