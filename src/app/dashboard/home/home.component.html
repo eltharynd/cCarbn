@@ -1,15 +1,28 @@
-<!-- <div *ngIf="settings">
-  <mat-slide-toggle [disabled]="data.busy" [(ngModel)]="settings.api.enabled" (change)="toggleApi()">Api</mat-slide-toggle><br>
-  <div *ngFor="let k of object.keys(settings.api.listeners)" style="margin-left: 1rem;">
-    <mat-slide-toggle style="width:150px;" (change)="save()" [(ngModel)]="settings.api.listeners[k]" [disabled]="data.busy || !settings.api.enabled">{{k}}</mat-slide-toggle>
-    &nbsp;<a [href]="url + 'websource/' + auth.currentUser?._id +'/' + k">{{url}}websource/{{auth.currentUser?._id}}/{{k}}</a>
-    <br>
-  </div>
-  
-  <mat-slide-toggle [disabled]="data.busy" [(ngModel)]="settings.chatbot.enabled" (change)="toggleChatBot()">Chatbot</mat-slide-toggle><br>
-  <div *ngFor="let k of object.keys(settings.chatbot.categories)" style="margin-left: 1rem;">
-    <mat-slide-toggle (change)="save()" [(ngModel)]="settings.chatbot.categories[k]" [disabled]="data.busy || !settings.chatbot.enabled">{{k}}</mat-slide-toggle><br>
-  </div>
-</div>
 
- -->
+<div class="container">
+
+
+<nb-card *ngIf="settings">
+  <nb-card-header>
+    <nb-toggle [disabled]="data.busy" [(checked)]="settings.api.enabled" (change)="toggleApi()">Api</nb-toggle>
+  </nb-card-header>
+  <nb-list>
+    <nb-list-item *ngFor="let k of object.keys(settings.api.listeners)">     
+      <nb-toggle style="width:150px;" (change)="save()" [(checked)]="settings.api.listeners[k]" [disabled]="data.busy || !settings.api.enabled">{{k}}</nb-toggle>
+      <a [href]="url + 'websource/' + auth.currentUser?._id +'/' + k">Browser Source link</a>
+    </nb-list-item>
+  </nb-list>
+</nb-card>
+
+<nb-card *ngIf="settings">
+  <nb-card-header>
+    <nb-toggle [disabled]="data.busy" [(checked)]="settings.chatbot.enabled" (change)="toggleChatBot()">Chatbot</nb-toggle>
+  </nb-card-header>
+  <nb-list>
+    <nb-list-item *ngFor="let k of object.keys(settings.chatbot.categories)">
+      <nb-toggle (change)="save()" [(checked)]="settings.chatbot.categories[k]" [disabled]="data.busy || !settings.chatbot.enabled">{{k}}</nb-toggle><br>
+    </nb-list-item>
+  </nb-list>
+</nb-card>
+
+</div>
