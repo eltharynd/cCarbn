@@ -4,10 +4,10 @@ import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 
 @Component({
   selector: 'app-main',
-  templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss']
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss']
 })
-export class MainComponent implements OnInit {
+export class HomeComponent implements OnInit {
 
   url = SERVER_URL.replace('/api', '').replace(':3000', ':4200')
   object = Object

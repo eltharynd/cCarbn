@@ -23,10 +23,6 @@
     cursor: pointer;
   }
 
-  ::ng-deep nb-search button {
-    padding: 0!important;
-  }
-
   .header-container {
     display: flex;
     align-items: center;
@@ -50,8 +46,11 @@
       white-space: nowrap;
       text-decoration: none;
 
+      display: flex;
+      align-items: center;
       img {
         height: 3rem;
+        padding-right: calc(#{nb-theme(header-padding)} / 2);
       }
     }
   }
@@ -63,12 +62,6 @@
     .user-action {
       border: none;
       padding: 0;
-    }
-  }
-
-  @include media-breakpoint-down(is) {
-    nb-select {
-      display: none;
     }
   }
 }

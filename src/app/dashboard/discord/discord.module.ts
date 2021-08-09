@@ -1,7 +1,6 @@
 
 import { NgModule } from "@angular/core"
 import { CommonModule } from "../../common/common.module"
-import { SharedMaterialModule } from "../../shared/material.module"
 import { SharedNebularModule } from "../../shared/nebular.module"
 
 import { DiscordRoutingModule } from "./discord-routing.module"
@@ -15,7 +14,6 @@ import { HomeComponent } from './home/home.component'
  @NgModule({
   imports: [
     DiscordRoutingModule,
-    SharedMaterialModule,
     SharedNebularModule,
     CommonModule,
   ],

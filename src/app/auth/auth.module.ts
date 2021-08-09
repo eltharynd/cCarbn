@@ -1,5 +1,4 @@
 import { NgModule } from "@angular/core"
-import { SharedMaterialModule } from "../shared/material.module"
 import { SharedNebularModule } from "../shared/nebular.module"
 import { AuthRoutingModule } from "./auth-routing.module"
 import { AuthComponent } from "./auth.component";
@@ -12,7 +11,6 @@ import { ProfileComponent } from './profile/profile.component'
  @NgModule({
   imports: [
     AuthRoutingModule,
-    SharedMaterialModule,
     SharedNebularModule,
   ],
   declarations: [

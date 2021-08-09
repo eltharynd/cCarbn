@@ -1,7 +1,6 @@
 
 import { NgModule } from "@angular/core"
 import { CommonModule } from "../../common/common.module"
-import { SharedMaterialModule } from "../../shared/material.module"
 import { SharedNebularModule } from "../../shared/nebular.module"
 
 import { TwitchRoutingModule } from "./twitch-routing.module"
@@ -16,7 +15,6 @@ import { HomeComponent } from './home/home.component'
  @NgModule({
   imports: [
     TwitchRoutingModule,
-    SharedMaterialModule,
     SharedNebularModule,
     CommonModule,
   ],

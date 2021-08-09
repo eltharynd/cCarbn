@@ -3,7 +3,7 @@ import { NbThemeService } from "@nebular/theme"
 
 @Component({
   template: `
-    <nb-layout restoreScrollTop centered>
+    <nb-layout restoreScrollTop>
 
       <nb-layout-header fixed>
         <app-header></app-header>
