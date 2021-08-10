@@ -1,6 +1,6 @@
 import { Settings } from "../../db/models/settings"
-import { Chat } from "../../twitch/chat"
-import { Twitch } from "../../twitch/twitch"
+import { Category, Chat } from "../../twitch/chat"
+import { Listeners, Twitch } from "../../twitch/twitch"
 import { Api } from "../express"
 import { authMiddleware } from "./auth"
 
@@ -66,10 +66,52 @@ export class User {
       res.send(settings.json)
     })
 
-    Api.endpoints.get('/api/user/:userId/settings/chatbot/category/:category', authMiddleware, async (req, res) => {
+    Api.endpoints.post('/api/user/:userId/settings/chatbot/category/:category', authMiddleware, async (req, res) => {
+      //@ts-ignore
+      let settings: any = await Settings.findOne({userId: req.headers.authorization._id})
+      let json = settings.json
+      json.chatbot.categories[req.params.category] = true
+      settings.json = json
+      await Chat.toggleCategory(req.headers.authorization, Category[req.params.category], true, json) 
+      await settings.save()
+      res.send(settings.json)
+    })
+
+    Api.endpoints.delete('/api/user/:userId/settings/chatbot/category/:category', authMiddleware, async (req, res) => {
+      //@ts-ignore
+      let settings: any = await Settings.findOne({userId: req.headers.authorization._id})
+      let json = settings.json
+      json.chatbot.categories[req.params.category] = false
+      settings.json = json
+      await Chat.toggleCategory(req.headers.authorization, Category[req.params.category], false, json)
+      await settings.save()
+      res.send(settings.json)
+    })
 
 
 
+    Api.endpoints.post('/api/user/:userId/settings/api/listener/:listener', authMiddleware, async (req, res) => {
+      //@ts-ignore
+      let settings: any = await Settings.findOne({userId: req.headers.authorization._id})
+      let json = settings.json
+      json.api.listeners[req.params.listener] = true
+      settings.json = json
+      //@ts-ignore
+      await Twitch.toggleListener(await Twitch.client.users.getUserById(req.headers.authorization.twitchId), Listeners[req.params.listener], true, json) 
+      await settings.save()
+      res.send(settings.json)
+    })
+
+    Api.endpoints.delete('/api/user/:userId/settings/api/listener/:listener', authMiddleware, async (req, res) => {
+      //@ts-ignore
+      let settings: any = await Settings.findOne({userId: req.headers.authorization._id})
+      let json = settings.json
+      json.api.listeners[req.params.listener] = false
+      settings.json = json
+      //@ts-ignore
+      await Twitch.toggleListener(await Twitch.client.users.getUserById(req.headers.authorization.twitchId), Listeners[req.params.listener], false, json)
+      await settings.save()
+      res.send(settings.json)
     })
   }
 

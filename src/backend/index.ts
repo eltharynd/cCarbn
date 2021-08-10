@@ -31,7 +31,7 @@ let startApp = async () => {
       clientSecret: Mongo.clientSecret,
       onRefresh: async (token) => {
         let defaultUserToken: any = await UserToken.findOne({admin:true})
-        defaultUserToken.accesToken = token.accessToken
+        defaultUserToken.accessToken = token.accessToken
         defaultUserToken.refreshToken = token.refreshToken
         defaultUserToken.expiresIn = token.expiresIn
         defaultUserToken.obtainmentTimestamp = Date.now()

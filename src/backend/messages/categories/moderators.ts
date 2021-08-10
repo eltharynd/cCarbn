@@ -13,7 +13,7 @@ export class Moderators extends Message {
   }
 
   private async initApi() {
-    this.twitch = await Twitch.find(this.iClient.userId.toString())
+    this.twitch = await Twitch.findByUserId(this.iClient.userId.toString())
   }
 
   private shoutout = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {

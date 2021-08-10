@@ -60,7 +60,7 @@ export class Chat {
     if(settings?.chatbot?.categories?.storeable) new Storeable(iClient)
   }
 
-  static async toggleCategory(user, category: Category, enable) {
+  static async toggleCategory(user, category: Category, enable, settings) {
     let iClient = await this.find(user._id)
     if(!iClient && enable) {
       throw new Error(`User doesn't have a connected client...`)
@@ -69,24 +69,23 @@ export class Chat {
       if(enable) {
         //TODO check if already connected
         switch(category) {
-          case Category.Common:
+          case Category.common:
             new Common(iClient)
             break
-          case Category.Everyone:
+          case Category.everyone:
             new Everyone(iClient)
             break
-          case Category.Moderators:
+          case Category.moderators:
             new Moderators(iClient)
             break
-          case Category.Storeable:
+          case Category.storeable:
             new Storeable(iClient)
             break
         } 
       } else {
-        iClient.client.quit()
+        await iClient.client.quit()
         iClient.client = await this.connectToUser(user)
-        let settings: any = await Settings.findOne({userId: user._id})
-        await this.bindCategories(iClient, settings.json)
+        await this.bindCategories(iClient, settings)
       }
     }
   }
@@ -101,8 +100,8 @@ export class IChatClient {
 }
 
 export enum Category {
-  Common,
-  Everyone,
-  Moderators,
-  Storeable
+  common,
+  everyone,
+  moderators,
+  storeable
 }

@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
 
   async ngOnInit() {
     this.settings = await this.data.get(`user/${this.auth.currentUser?._id}/settings`)
+    console.log(this.settings)
   }
 
 
@@ -72,6 +73,25 @@ export class HomeComponent implements OnInit {
       this.settings.chatbot.enabled = !this.settings.chatbot.enabled
   }
 
+  async toggleListener(listener) {
+    if(this.settings.api.listeners[listener]) {
+      if(!await this.data.post(`user/${this.auth.currentUser?._id}/settings/api/listener/${listener}`))
+        this.settings.api.listeners[listener] = false
+    } else {
+      if(!await this.data.delete(`user/${this.auth.currentUser?._id}/settings/api/listener/${listener}`))
+        this.settings.api.listeners[listener] = true
+    }
+  }
+
+  async toggleCategory(category) {
+    if(this.settings.chatbot.categories[category]) {
+      if(!await this.data.post(`user/${this.auth.currentUser?._id}/settings/chatbot/category/${category}`))
+        this.settings.chatbot.categories[category] = false
+    } else {
+      if(!await this.data.delete(`user/${this.auth.currentUser?._id}/settings/chatbot/category/${category}`))
+        this.settings.chatbot.categories[category] = true
+    }
+  }
 
   async save() {
     await this.data.post(`user/${this.auth.currentUser?._id}/settings`, this.settings)

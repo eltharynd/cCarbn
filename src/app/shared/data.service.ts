@@ -82,4 +82,26 @@ export class DataService {
       })
     }) 
   }
+
+  public async delete(endpoint: string): Promise<any> {
+    this.busy = true
+    return new Promise<any>(resolve => {
+      axios({
+        method: 'delete',
+        url: `${SERVER_URL}${endpoint}`,
+        headers: this.auth.currentUser?.token ? {'Authorization': `Basic ${this.auth.currentUser.token}`} : null,
+      }).then(response => {
+        this.busy = false
+        resolve(response.data)
+      }).catch(error => {
+        console.error(error)
+        this.busy = false
+        resolve(null)
+        if(error?.response?.status === 403) {
+          //AuthGuard.lastDeniedAccess = this.router.url
+          this.router.navigate([`auth`])
+        }
+      })
+    }) 
+  }
 }
