@@ -10,6 +10,7 @@ import { ClientCredentialsAuthProvider, RefreshingAuthProvider, TokenInfo } from
 import { Mongo } from '../db/mongo'
 import { UserToken, ClientToken } from '../db/models/tokens'
 import { User } from '../db/models/user'
+import { PORT } from '../index'
 
 export const DEV_ENDPOINT = JSON.parse('' + fs.readFileSync('endpoint_credentials.json'))
 export class Twitch {
