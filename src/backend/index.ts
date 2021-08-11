@@ -23,6 +23,7 @@ let startApp = async () => {
   new Api()
   new Socket()
 
+  return
   let admin: any = await User.findOne({admin: true})
   let defaultUserToken: any = await UserToken.findOne({userId: admin._id})
   Chat.defaultUserProvider = new RefreshingAuthProvider(
@@ -30,7 +31,7 @@ let startApp = async () => {
       clientId: Mongo.clientId,
       clientSecret: Mongo.clientSecret,
       onRefresh: async (token) => {
-        let defaultUserToken: any = await UserToken.findOne({admin:true})
+        let defaultUserToken: any = await UserToken.findOne({userId: admin._id})
         defaultUserToken.accessToken = token.accessToken
         defaultUserToken.refreshToken = token.refreshToken
         defaultUserToken.expiresIn = token.expiresIn
