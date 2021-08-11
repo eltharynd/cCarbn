@@ -38,7 +38,8 @@ export class Twitch {
       adapter: process?.env?.NODE_ENV === 'production' ? 
         new ReverseProxyAdapter({
             hostName: ENDPOINT.hostname,
-            port: +PORT + 1
+            port: +PORT + 1,
+            pathPrefix: '/listener'
         }) : 
         new DirectConnectionAdapter({
           hostName: ENDPOINT.hostname,

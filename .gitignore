@@ -45,7 +45,6 @@ testem.log
 Thumbs.db
 
 
-/dist
 **/~$*
 *_credentials.json
 *.crt
