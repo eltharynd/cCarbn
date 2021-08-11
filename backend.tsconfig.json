@@ -6,7 +6,7 @@
   ],
   "compileOnSave": false,
   "compilerOptions": {
-      "outDir": "dist",
+      "outDir": "dist/backend",
       "noImplicitAny": false,
       "target": "es5",
       "moduleResolution": "node",

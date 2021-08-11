@@ -3,9 +3,9 @@ import { Router } from '@angular/router'
 import axios from 'axios'
 import { AuthGuard } from '../auth/auth.guard'
 import { io, Socket } from 'socket.io-client'
+import { environment } from 'src/environments/environment'
 
-//export const SERVER_URL = 'http://localhost:3000/api/'
-export const SERVER_URL = 'https://cCarbn.io/api/'
+export const SERVER_URL = environment?.production ? 'https://cCarbn.io/api/' : 'http://localhost:3000/api/'
 
 
 @Injectable({

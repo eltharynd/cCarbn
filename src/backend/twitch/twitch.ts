@@ -4,7 +4,7 @@ import { from, Subject } from 'rxjs'
 import * as fs from 'fs'
 import { filter, take, toArray } from 'rxjs/operators'
 
-import { ENDPOINT } from '../index'
+import { ENDPOINT, PORT } from '../index'
 import { HypeTrain } from '../socket/events/hypetrain'
 import { Cheers } from '../socket/events/cheers'
 import { ClientCredentialsAuthProvider, RefreshingAuthProvider, TokenInfo } from '@twurple/auth'
@@ -36,16 +36,20 @@ export class Twitch {
     Twitch.listener = new EventSubListener({
       apiClient: Twitch.client,
       //TODO ReverseProxyAdapter instead?
-      adapter: new DirectConnectionAdapter({
-        hostName: ENDPOINT.hostname,
-        sslCert: {
-          cert: `${fs.readFileSync(ENDPOINT.crt)}`,
-          key: `${fs.readFileSync(ENDPOINT.key)}`,
-        },
-      }),
+      adapter: process?.env?.NODE_ENV === 'production' ? 
+        new ReverseProxyAdapter({
+            hostName: ENDPOINT.hostname
+        }) : 
+        new DirectConnectionAdapter({
+          hostName: ENDPOINT.hostname,
+          sslCert: {
+            cert: `${fs.readFileSync(ENDPOINT.crt)}`,
+            key: `${fs.readFileSync(ENDPOINT.key)}`,
+          },
+        }),
       secret: token.secret,
     })
-    await Twitch.listener.listen(3001)
+    await Twitch.listener.listen(+PORT + 1)
     process.on('SIGINT', () => {
       for(let iClient of Twitch.clients) 
         for(let sub of iClient.subscriptions)

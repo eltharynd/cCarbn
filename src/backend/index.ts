@@ -7,9 +7,10 @@ import { Chat } from './twitch/chat'
 import { RefreshingAuthProvider } from '@twurple/auth'
 import { Settings } from './db/models/settings'
 import { Twitch } from './twitch/twitch'
-import { ClientToken, UserToken } from './db/models/tokens'
+import { UserToken } from './db/models/tokens'
 
-export const PORT = 3000
+//@ts-ignore
+export const PORT: number = process.env.PORT || 3000
 
 export const MONGO = JSON.parse('' + fs.readFileSync('mongo_credentials.json'))
 export const ENDPOINT = JSON.parse('' + fs.readFileSync('endpoint_credentials.json'))
