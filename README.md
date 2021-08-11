@@ -30,17 +30,17 @@ You will need to create your own Twitch app for authorization, therefore you are
 
 Note that whichever account is used to create this app is the account that will actually write to (and read from) chat, so if you want it to be different from your channel account (with which you will still need to log in at some point to authorize the app) you can create a new account with whatever name you like (and is available) and use that instead.
 
-### CREATING A TWITCH APP ⚠(needs recheck for error)
+### CREATING A TWITCH APP
 
-After enrolling in the Twitch developer program you need to create a new app, take note of its clientId.
+After enrolling in the Twitch developer program you need to create a new app, take note of its clientId and secret.
 
 For development, testing or if you are unsure what this does OAuth Redirect URL should be:
 
-`http://localhost:3000`
+`http://localhost:4200/auth/token`
 
-This is used as an endpoint to authenticate to Twitch. What this means is when you want to generate an access token you can do that via a script that will open Google Chrome (incognito to prevent authenticating with the wrong account via cookies) and listen to the response on that address.
+This is used as an endpoint to authenticate to Twitch. What this means is when you want to generate an access token you can do that via a script that will open Google Chrome and listen to the response on that address.
 
-Note that this is unavailable on most production environment, therefore during the process you can chose not to use chrome and input the accessToken yourself (A handy oauth generator link is included).
+Note that this is unavailable on most production environment, therefore during the process you can chose not to use chrome. This will mean you'll have to run the `init.ts` script from your local machine. The credentials will then be saved on the database and be accessible from the production server.
 
 ### INITIALIZATION ⚠(needs recheck for error)
 
@@ -50,7 +50,21 @@ After doing that you can clone the project (if you havn't done so already):
 git clone https://github.com/eltharynd/cCarbn
 ```
 
-Then you can run the initialization script. This will guide you through a setup to create and fill some `*_credentials.json` files in your root directory where the app will store all the necessary authentication data (for Twitch and mongo) as well as your hostname and SSL certificates paths. Note that these files should **NOT** be publicly accessible and therefore are excluded from the .git and if you want to deploy this project in a different way than what suggested you should make sure they can't be access eternally.
+Install the libraries for the project (and the initialization script)
+
+```bash
+npm install
+```
+
+Then you can run the initialization script. 
+
+```bash
+tsc init.ts && node init.js
+```
+
+This will guide you through a setup to create and fill some `*_credentials.json` files in your root directory where the app will store all the necessary authentication data (for Twitch and mongo) as well as your hostname and SSL certificates paths (for developing without a reverse proxy setup). Note that these files should **NOT** be publicly accessible and therefore are excluded from the .git and if you want to deploy this project in a different way than what suggested you should make sure they can't be access eternally.
+
+At the end of the process you'll be asked to delete the `twitch_credentials.json` file. This is because the credentials are now stored on your database.
 
 ⚠⚠⚠
 
@@ -61,22 +75,6 @@ This app will **NEVER** ask for your twitch password directly.
 **NEVER** put your Twitch password anywhere besides the official twitch link form (that's what's going to pop up).
 
 ⚠⚠⚠
-
-Install the libraries for the project (and the setup script)
-
-```bash
-npm install
-```
-
-Now you can run the aforementioned guided setup script
-
-```bash
-node init.js
-```
-
-Go through the setup project. You can then verify that everything has been saved correctly by checking the `*_credentials.json` files in the root folder.
-
-These `*_credentials.json` files are then stored in mongodb and deleted on first execution.
 
 You are now ready to start developing.
 
@@ -127,3 +125,9 @@ In order to work on the front end you can tell angular to connect to the product
 ```bash
 ng serve --prod
 ```
+
+## SETTING UP YOUR PRODUCTION ENVIRONMENT
+
+### NGINX PROXY
+
+TODO: write
