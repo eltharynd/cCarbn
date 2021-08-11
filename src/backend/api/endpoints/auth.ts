@@ -129,9 +129,7 @@ export class Auth {
       if(!registered) 
         res.status(401).send('Could not resume session...')
       else {
-
         if(!registered.twitchPic) {
-
           let userToken: any = new UserToken({userId: registered._id})
           if(userToken) {
             let userProvider = new RefreshingAuthProvider(
@@ -145,14 +143,12 @@ export class Auth {
             let twitch = new ApiClient({
               authProvider: userProvider
             })   
-            let helixUser: HelixUser = await twitch.users.getUserById(user.twitchId)
+            let helixUser: HelixUser = await twitch.users.getUserById(registered.twitchId)
             if(helixUser) {
               registered.twitchPic = helixUser.profilePictureUrl
               await registered.save()
             }
-          }
-
-          
+          }  
         }
         res.send({
           _id: registered._id,
