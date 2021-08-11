@@ -5,11 +5,10 @@ import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
-
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { SharedNebularModule } from './shared/nebular.module'
+import { SharedNebularModule } from './shared/nebular.module';
 
 
 @NgModule({

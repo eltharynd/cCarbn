@@ -6,46 +6,28 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-end;
+  color: nb-theme(text-hint-color);
 
   small {
     position: relative;
     top: -8px;
   } 
 
-  .created-by {
-    a {
-      color: nb-theme(text-hint-color);
-      transition: color ease-out 0.1s;
-      &:hover {
-        color: nb-theme(text-basic-color);
-      }
-    }
-    
-  }
-
   .socials {
     font-size: 2rem;
     
     a {
-      
-      @include nb-ltr(border-left, 1px solid nb-theme(divider-color));
-      
-      padding: 0.4rem 1rem;
+      padding: 0.4rem;
       color: nb-theme(text-hint-color);
       transition: color ease-out 0.1s;
 
       text-decoration: none;
-      font-size: 14px;
-
       &:hover {
         color: nb-theme(text-basic-color);
       }
     }
 
-    a:first-child {
-      border: 0;
-    }
   }
 
   @include media-breakpoint-down(is) {

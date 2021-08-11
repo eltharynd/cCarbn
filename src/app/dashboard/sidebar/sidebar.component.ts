@@ -12,40 +12,40 @@ export class SidebarComponent {
   menu: NbMenuItem[]  = [
     {
       title: 'Home',
-      icon: 'home-outline',
+      icon: {icon: 'home', pack:'fa'},
       link: '/dashboard',
       home: true,
     },
     {
       title: 'Twitch',
-      icon: 'layers-outline',
+      icon: {icon: 'twitch', pack:'fab'},
       link: 'twitch',
       children: [
         {
           title: 'API',
-          icon: 'layers-outline',
+          icon: {icon: 'link', pack: 'fa'},
           link: 'twitch/api',
         },
         {
           title: 'Chatbot',
-          icon: 'layers-outline',
+          icon: {icon: 'swatchbook', pack: 'fa'},
           link: 'twitch/chatbot',
         }
       ]
     },
     {
       title: 'Discord',
-      icon: 'layers-outline',
+      icon: {icon: 'discord', pack:'fab'},
       link: 'discord',
       children: [
         {
           title: 'API',
-          icon: 'layers-outline',
+          icon: {icon: 'link', pack: 'fa'},
           link: 'discord/api',
         },
         {
           title: 'Functions',
-          icon: 'layers-outline',
+          icon: {icon: 'swatchbook', pack: 'fa'},
           link: 'discord/functions',
         },
       ]

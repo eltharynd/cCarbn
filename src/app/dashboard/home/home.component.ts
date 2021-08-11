@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthGuard } from 'src/app/auth/auth.guard'
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
-
 @Component({
   selector: 'app-main',
   templateUrl: './home.component.html',

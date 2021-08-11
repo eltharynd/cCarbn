@@ -1,4 +1,4 @@
-import { ApiClient } from "@twurple/api"
+import { ApiClient, HelixUser } from "@twurple/api"
 import { RefreshingAuthProvider } from "@twurple/auth"
 import axios from "axios"
 import { UserToken } from "../../db/models/tokens"
@@ -66,19 +66,31 @@ export class Auth {
           authProvider: userProvider
         })    
         let tokenInfo = await twitch.getTokenInfo()
-
         let user: any = {
           twitchId: tokenInfo.userId,
           twitchName: tokenInfo.userName
         }
         let registered: any = await User.findOne({ twitchId: user.twitchId })
         if(!registered) {
+
+          let helixUser: HelixUser = await twitch.users.getUserById(user.twitchId)
+          if(helixUser)
+            user.twitchPic = helixUser.profilePictureUrl
+
           registered = new User(user)
           await registered.save()
           token.userId = registered._id
           let userToken = new UserToken(token)
           await userToken.save()
         } else {
+          if(!registered.twitchPic) {
+            let helixUser: HelixUser = await twitch.users.getUserById(user.twitchId)
+            if(helixUser) {
+              registered.twitchPic = helixUser.profilePictureUrl
+              await registered.save()
+            }
+          }
+
           let found = await UserToken.findOne({userId: registered._id})
           if(found) {
             token.userId = registered._id
@@ -95,7 +107,8 @@ export class Auth {
         Socket.io.emit(req.body.state, {
           _id: registered._id,
           name: registered.twitchName,
-          token: registered.token
+          token: registered.token,
+          picture: registered.twitchPic
         })
         res.send('token saved')
       } catch (err) {
@@ -115,12 +128,39 @@ export class Auth {
       let registered: any = await User.findOne({token: { $eq: req.body.token }})
       if(!registered) 
         res.status(401).send('Could not resume session...')
-      else
+      else {
+
+        if(!registered.twitchPic) {
+
+          let userToken: any = new UserToken({userId: registered._id})
+          if(userToken) {
+            let userProvider = new RefreshingAuthProvider(
+              {
+                clientId: Mongo.clientId,
+                clientSecret: Mongo.clientSecret,
+                onRefresh: (token) => {},
+              },
+              userToken
+            )
+            let twitch = new ApiClient({
+              authProvider: userProvider
+            })   
+            let helixUser: HelixUser = await twitch.users.getUserById(user.twitchId)
+            if(helixUser) {
+              registered.twitchPic = helixUser.profilePictureUrl
+              await registered.save()
+            }
+          }
+
+          
+        }
         res.send({
           _id: registered._id,
           name: registered.twitchName,
           token: registered.token,
+          picture: registered.twitchPic
         })
+      }
     })
   }
 

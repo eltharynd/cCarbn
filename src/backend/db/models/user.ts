@@ -9,6 +9,7 @@ export const userSchema: Schema = new Schema({
   admin: Boolean,
   twitchId: String,
   twitchName: String,
+  twitchPic: String,
   created: {
     type: Date,
     default: Date.now()

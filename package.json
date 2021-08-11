@@ -21,7 +21,6 @@
     "@angular/platform-browser-dynamic": "~12.1.2",
     "@angular/router": "~12.1.2",
     "@d-fischer/logger": "^4.0.0",
-    "@fortawesome/fontawesome-free": "^5.15.4",
     "@nebular/eva-icons": "8.0.0",
     "@nebular/theme": "^8.0.0",
     "@twurple/api": "^5.0.0-pre.14",
