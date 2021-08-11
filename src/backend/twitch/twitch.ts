@@ -52,7 +52,7 @@ export class Twitch {
         }),
       secret: token.secret,
     })
-    await Twitch.listener.listen(+PORT + 1)
+    await Twitch.listener.listen(process?.env?.NODE_ENV === 'production' ? null : +PORT + 1)
     process.on('SIGINT', () => {
       for(let iClient of Twitch.clients) 
         for(let sub of iClient.subscriptions)
