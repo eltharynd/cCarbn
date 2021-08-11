@@ -1,6 +1,6 @@
 # cCarbn
 
-cCarbn aims to be a powerful Twitch chatbot, Twitch API interface and Browser Source (for OBS or similar) generator.
+cCarbn aims to be a powerful all-in-one Twitch tool to connect **EVERYTHING** a streamer needs. This includes discord live notifications, a chatbot, configurable Browser Sources, etc...
 
 In other words it's goal is to allow content creators to develop custom commands that are currently not possible with alternatives such as nightbot, as well as to integrate that with events not capturable via chat (hype trains and such) and to allow the creation of dynamic single page web apps (through Angular) that can be controlled based on chat and/or events and can ultimately be used as Browser Sources in OBS and such.
 
