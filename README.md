@@ -1,5 +1,6 @@
 # cCarbn
 
+##
 cCarbn aims to be a powerful all-in-one Twitch tool to connect **EVERYTHING** a streamer needs. This includes discord live notifications, a chatbot, configurable Browser Sources, etc...
 
 In other words it's goal is to allow content creators to develop custom commands that are currently not possible with alternatives such as nightbot, as well as to integrate that with events not capturable via chat (hype trains and such) and to allow the creation of dynamic single page web apps (through Angular) that can be controlled based on chat and/or events and can ultimately be used as Browser Sources in OBS and such.
@@ -14,9 +15,10 @@ Althought a GUI Dashboard will eventually come, the coolest functionality will a
 - After the main project is ready and user friendly I will also develop an elgato Stream Deck plugin for it.
 - After that's done I will build a one-click cloud installator for non-developers to use this as well, or at least the basic functionalities. This will be hosted on cCarbn's servers so that youdon't require a domain name and SSL certificate.
 
-## GETTING STARTED
 
-### PREREQUISITES
+# DEVELOPMENT / DEPLOYMENT
+
+## PREREQUISITES
 
 Here's a list of prerequisites that you need to have in order to deploy this project. A more detailed eplaination might be included in the future but it does not really concern the scope of this file.
 
@@ -24,13 +26,13 @@ Here's a list of prerequisites that you need to have in order to deploy this pro
 - A mongodb instance installed and running (you can create a free one on <https://www.mongodb.com/cloud/atlas/>)
 - Having the twitch 2FA enabled is a Twitch developer prerequisite (I believe, if it's not: you should still use that...)
 
-### SETTING UP A TWITCH DEVELOPER ACCOUNT
+## SETTING UP A TWITCH DEVELOPER ACCOUNT
 
 You will need to create your own Twitch app for authorization, therefore you are required to enroll (freely) in the Twitch dev program (<https://dev.twitch.tv/>).
 
 Note that whichever account is used to create this app is the account that will actually write to (and read from) chat, so if you want it to be different from your channel account (with which you will still need to log in at some point to authorize the app) you can create a new account with whatever name you like (and is available) and use that instead.
 
-### CREATING A TWITCH APP
+## CREATING A TWITCH APP
 
 After enrolling in the Twitch developer program you need to create a new app, take note of its clientId and secret.
 
@@ -42,7 +44,7 @@ This is used as an endpoint to authenticate to Twitch. What this means is when y
 
 Note that this is unavailable on most production environment, therefore during the process you can chose not to use chrome. This will mean you'll have to run the `init.ts` script from your local machine. The credentials will then be saved on the database and be accessible from the production server.
 
-### INITIALIZATION
+## INITIALIZATION
 
 After doing that you can clone the project (if you havn't done so already):
 
@@ -78,9 +80,9 @@ This app will **NEVER** ask for your twitch password directly.
 
 You are now ready to start developing.
 
-## DEVELOPING ON YOUR LOCAL ENVIRONMENT
+# DEVELOPING ON YOUR LOCAL ENVIRONMENT
 
-### GETTING STARTED
+## GETTING STARTED
 
 There's two main components to run:
 
@@ -118,7 +120,7 @@ You're gonna need to put that in the `enpoint_credentials.json`.
 
 You can use the `init.ts` script to simplify that.
 
-### FRONT-END ONLY DEVELOPMENT
+## FRONT-END ONLY DEVELOPMENT
 
 In order to work on the front end you can tell angular to connect to the production backend by using the command
 
@@ -126,7 +128,7 @@ In order to work on the front end you can tell angular to connect to the product
 ng serve --prod
 ```
 
-## SETTING UP YOUR PRODUCTION ENVIRONMENT
+# SETTING UP YOUR PRODUCTION ENVIRONMENT
 
 ### NGINX PROXY
 
