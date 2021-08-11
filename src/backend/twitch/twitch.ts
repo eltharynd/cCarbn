@@ -35,7 +35,6 @@ export class Twitch {
     await Twitch.client.eventSub.deleteAllSubscriptions()
     Twitch.listener = new EventSubListener({
       apiClient: Twitch.client,
-      //TODO ReverseProxyAdapter instead?
       adapter: process?.env?.NODE_ENV === 'production' ? 
         new ReverseProxyAdapter({
             hostName: ENDPOINT.hostname
