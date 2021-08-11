@@ -1,11 +1,16 @@
 # cCarbn
 
-##
+## DESCRIPTION
+
 cCarbn aims to be a powerful all-in-one Twitch tool to connect **EVERYTHING** a streamer needs. This includes discord live notifications, a chatbot, configurable Browser Sources, etc...
 
 In other words it's goal is to allow content creators to develop custom commands that are currently not possible with alternatives such as nightbot, as well as to integrate that with events not capturable via chat (hype trains and such) and to allow the creation of dynamic single page web apps (through Angular) that can be controlled based on chat and/or events and can ultimately be used as Browser Sources in OBS and such.
 
 Althought a GUI Dashboard will eventually come, the coolest functionality will always have to be coded ad-hoc so at least some software development skills are necessary.
+
+## GETTING STARTED
+
+Just go to [ccarbn.io](https://ccarbn.io) and login with your twitch account.
 
 ## PLANNED ROADMAP
 
@@ -14,7 +19,6 @@ Althought a GUI Dashboard will eventually come, the coolest functionality will a
 - Discord Chatbot integration
 - After the main project is ready and user friendly I will also develop an elgato Stream Deck plugin for it.
 - After that's done I will build a one-click cloud installator for non-developers to use this as well, or at least the basic functionalities. This will be hosted on cCarbn's servers so that youdon't require a domain name and SSL certificate.
-
 
 # DEVELOPMENT / DEPLOYMENT
 
