@@ -42,7 +42,7 @@ This is used as an endpoint to authenticate to Twitch. What this means is when y
 
 Note that this is unavailable on most production environment, therefore during the process you can chose not to use chrome. This will mean you'll have to run the `init.ts` script from your local machine. The credentials will then be saved on the database and be accessible from the production server.
 
-### INITIALIZATION ⚠(needs recheck for error)
+### INITIALIZATION
 
 After doing that you can clone the project (if you havn't done so already):
 
