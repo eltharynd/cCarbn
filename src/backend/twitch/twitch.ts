@@ -4,13 +4,14 @@ import { from, Subject } from 'rxjs'
 import * as fs from 'fs'
 import { filter, take, toArray } from 'rxjs/operators'
 
-import { ENDPOINT, PORT } from '../index'
 import { HypeTrain } from '../socket/events/hypetrain'
 import { Cheers } from '../socket/events/cheers'
 import { ClientCredentialsAuthProvider, RefreshingAuthProvider, TokenInfo } from '@twurple/auth'
 import { Mongo } from '../db/mongo'
 import { UserToken, ClientToken } from '../db/models/tokens'
 import { User } from '../db/models/user'
+
+export const DEV_ENDPOINT = JSON.parse('' + fs.readFileSync('endpoint_credentials.json'))
 export class Twitch {
   
   static client: ApiClient
@@ -37,15 +38,15 @@ export class Twitch {
       apiClient: Twitch.client,
       adapter: process?.env?.NODE_ENV === 'production' ? 
         new ReverseProxyAdapter({
-            hostName: ENDPOINT.hostname,
+            hostName: DEV_ENDPOINT.hostname,
             port: +PORT + 1,
             pathPrefix: '/listener'
         }) : 
         new DirectConnectionAdapter({
-          hostName: ENDPOINT.hostname,
+          hostName: DEV_ENDPOINT.hostname,
           sslCert: {
-            cert: `${fs.readFileSync(ENDPOINT.crt)}`,
-            key: `${fs.readFileSync(ENDPOINT.key)}`,
+            cert: `${fs.readFileSync(DEV_ENDPOINT.crt)}`,
+            key: `${fs.readFileSync(DEV_ENDPOINT.key)}`,
           },
         }),
       secret: token.secret,

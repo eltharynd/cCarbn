@@ -146,7 +146,7 @@ let init = async () => {
         await prepareCredentials()
     }
 
-    let answer: any = await questionSync(`Would you like to setup domain and certificates? (y/n)`)
+    let answer: any = await questionSync(`Would you like to setup a development domain and certificates? (y/n)`)
     if(/y/gi.test(answer)) {
       if(fs.existsSync('endpoint_credentials.json')) {
         answer = await questionSync(`An initialization already exists... Would you like to reinitialize it? (y/n)`)
@@ -246,7 +246,7 @@ let init = async () => {
             } else 
                 console.log('\x1b[31m%s\x1b[0m','Could not retrieve a token... Please check your credentials...')
         } else {
-            console.log('\x1b[33m%s\x1b[0m', `Unfortunately there is no way to get a chat user token without confirming from the browser... You will have to upload your token manually... `)
+            console.log('\x1b[33m%s\x1b[0m', `Unfortunately there is no way to get a chat user token without confirming from the browser... You will have to do this on your local machine, after that the token will be saved to the database...`)
             /* let token = await questionSync(`Go to this website (http://twitchapps.com/tmi/), then copy paste the token you get in here:`)
             if(!token || !/^oauth\:/.test(token)) {
                 console.log('\x1b[31m%s\x1b[0m','Token provided is invalid... Shutting down...')

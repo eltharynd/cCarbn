@@ -13,7 +13,6 @@ import { UserToken } from './db/models/tokens'
 export const PORT: number = process.env.PORT || 3000
 
 export const MONGO = JSON.parse('' + fs.readFileSync('mongo_credentials.json'))
-export const ENDPOINT = JSON.parse('' + fs.readFileSync('endpoint_credentials.json'))
 
 export var channelID
 
