@@ -53,7 +53,7 @@ export class Storeable extends Message {
         name = name[0].replace(' ', '')
         buffer = buffer.replace(/^\!*\w+ /i, '')
 
-        let exists: any = await Command.findOne({userId: this.iClient.userId, command: name})
+        let exists: any = await Command.findOne({userId: Mongo.ObjectId(this.iClient.userId), command: name})
         if (!edit && exists) {
           this.client.say(
             channel,
@@ -110,7 +110,7 @@ export class Storeable extends Message {
         let listener = this.generateListener(exists)
         result.listener = this.client.onMessage(listener)
 
-        this.client.say(channel, `/me Successfully ${exists ? 'edited' : 'added new'} command...`)
+        this.client.say(channel, `/me Successfully ${edit ? 'edited' : 'added new'} command...`)
       } else if (buffer.startsWith('delete')) {
         buffer = buffer.replace('delete ', '')
 
