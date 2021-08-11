@@ -23,7 +23,6 @@ let startApp = async () => {
   new Api()
   new Socket()
 
-  return
   let admin: any = await User.findOne({admin: true})
   let defaultUserToken: any = await UserToken.findOne({userId: admin._id})
   Chat.defaultUserProvider = new RefreshingAuthProvider(

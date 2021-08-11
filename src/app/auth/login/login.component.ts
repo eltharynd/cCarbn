@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router'
 import { DataService } from 'src/app/shared/data.service'
 
 import * as uuid from 'uuid'
@@ -39,10 +40,18 @@ export class LoginComponent {
 
   message: string
 
-  constructor(private data: DataService, public auth: AuthGuard) {
+  constructor(public data: DataService, public auth: AuthGuard, private router: Router) {
   }
 
   async loginWithTwitch() {
+
+    if(localStorage.currentUser) {
+      await this.auth.resume()
+      if(this.auth.currentUser) {
+        this.router.navigate(['/'])
+        return
+      }
+    }
 
     let state = uuid.v4()
 

@@ -16,6 +16,7 @@ export class DataService {
   socketIO: Socket
 
   static clientId
+  _clientId
   
   constructor(private router: Router, private auth: AuthGuard) {
     
@@ -24,18 +25,16 @@ export class DataService {
       transports: ['websocket']
     })
 
-
-
     this.socketIO.on('connect', () => {
       this.socketIO.on('test', (data) => {console.log('test', data)})
 
     })
     this.socketIO.on('clientId', (data) => {
       DataService.clientId = data.clientId
+      this._clientId = data.clientId
     })
 
     this.socketIO.connect()
-
   }
 
   public async get(endpoint: string): Promise<any> {

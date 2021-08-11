@@ -50,19 +50,19 @@ export class AuthGuard implements CanActivate {
   }
 
   public async resume() {
-    try {
-      this.currentUser = JSON.parse(localStorage.currentUser)
-      await axios.post(`${SERVER_URL}auth/resume`, this.currentUser).then(response => {
-        this.currentUser = response.data
-        localStorage.currentUser = JSON.stringify(response.data)
-      }).catch(error => {
-        this.currentUser = null
-        if(error?.response?.status === 401)
-          this.logout()
-      })
-    } catch {
-      this.logout()
-    }
+    try { this.currentUser = JSON.parse(localStorage.currentUser) }
+    catch (error) { this.logout() }
+
+    await axios.post(`${SERVER_URL}auth/resume`, this.currentUser).then(response => {
+      this.currentUser = response.data
+      localStorage.currentUser = JSON.stringify(response.data)
+    }).catch(error => {
+      this.currentUser = null
+      if(!error.response) {
+        console.error(error)
+      } else if(error?.response?.status === 401)
+        this.logout()
+    })
 
     AuthGuard.resumed.complete()
   }

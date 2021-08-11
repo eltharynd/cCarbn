@@ -26,11 +26,6 @@ export class Mongo {
     })
   }
 
-  static async clear() {
-    await Mongo.database.dropDatabase()
-    console.log(await Settings.find())
-  }
-
   static ObjectId(id: string): Mongoose.Types.ObjectId
   static ObjectId(id: Mongoose.Types.ObjectId): Mongoose.Types.ObjectId
   static ObjectId(id: string|Mongoose.Types.ObjectId): Mongoose.Types.ObjectId {

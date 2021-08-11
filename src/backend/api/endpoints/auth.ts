@@ -5,6 +5,7 @@ import { UserToken } from "../../db/models/tokens"
 import { User } from "../../db/models/user"
 import { Mongo } from "../../db/mongo"
 import { Socket } from "../../socket/socket"
+import { Chat } from "../../twitch/chat"
 import { Api } from "../express"
 
 export const authMiddleware = async (req, res, next) => {
@@ -83,12 +84,10 @@ export class Auth {
           let userToken = new UserToken(token)
           await userToken.save()
         } else {
-          if(!registered.twitchPic) {
-            let helixUser: HelixUser = await twitch.users.getUserById(user.twitchId)
-            if(helixUser) {
-              registered.twitchPic = helixUser.profilePictureUrl
-              await registered.save()
-            }
+          let helixUser: HelixUser = await twitch.users.getUserById(user.twitchId)
+          if(helixUser) {
+            registered.twitchPic = helixUser.profilePictureUrl
+            await registered.save()
           }
 
           let found = await UserToken.findOne({userId: registered._id})
@@ -129,27 +128,14 @@ export class Auth {
       if(!registered) 
         res.status(401).send('Could not resume session...')
       else {
-        if(!registered.twitchPic) {
-          let userToken: any = new UserToken({userId: registered._id})
-          if(userToken) {
-            let userProvider = new RefreshingAuthProvider(
-              {
-                clientId: Mongo.clientId,
-                clientSecret: Mongo.clientSecret,
-                onRefresh: (token) => {},
-              },
-              userToken
-            )
-            let twitch = new ApiClient({
-              authProvider: userProvider
-            })   
-            let helixUser: HelixUser = await twitch.users.getUserById(registered.twitchId)
-            if(helixUser) {
-              registered.twitchPic = helixUser.profilePictureUrl
-              await registered.save()
-            }
-          }  
-        }
+        let twitch = new ApiClient({
+          authProvider: Chat.defaultUserProvider
+        })   
+        let helixUser: HelixUser = await twitch.users.getUserById(registered.twitchId)
+        if(helixUser) {
+          registered.twitchPic = helixUser.profilePictureUrl
+          await registered.save()
+        }    
         res.send({
           _id: registered._id,
           name: registered.twitchName,

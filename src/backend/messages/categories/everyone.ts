@@ -434,7 +434,6 @@ export class Everyone extends Message {
         return
       }
 
-      //console.log(ability)
       if (!data || !data.flavor_text_entries) {
         this.client.say(channel, `/me Sorry I couldn't find that ability... check your spelling bitch!`)
         return
