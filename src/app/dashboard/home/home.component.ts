@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthGuard } from 'src/app/auth/auth.guard'
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
+import { environment } from 'src/environments/environment'
 @Component({
   selector: 'app-main',
   templateUrl: './home.component.html',
@@ -8,7 +9,7 @@ import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 })
 export class HomeComponent implements OnInit {
 
-  url = SERVER_URL.replace('/api', '').replace(':3000', ':4200')
+  url = environment?.production ? 'https://cCarbn.io/api/' : 'http://localhost:3000/api/'
   object = Object
 
 

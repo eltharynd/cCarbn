@@ -21,6 +21,9 @@
 
   nb-list-item {
     padding-left: 3rem;
+    padding-right: 2rem;
+    display: flex;
+    justify-content: space-between;
   }
 
   @include media-breakpoint-down(lg) {

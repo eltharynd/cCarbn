@@ -4,17 +4,10 @@ import { NbThemeModule, NbLayoutModule, NbIconModule, NbCardModule, NbButtonModu
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { CommonModule } from '@angular/common'
 import { FormsModule } from '@angular/forms'
-import { MatSliderModule } from '@angular/material/slider'
-
 
 @NgModule({
   imports: [
     CommonModule,
-
-    //Find an alternative to mat-slider
-    FormsModule,
-    MatSliderModule,
-
     NbThemeModule.forRoot({ name: 'dark' }),
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
@@ -32,11 +25,6 @@ import { MatSliderModule } from '@angular/material/slider'
   ],
   exports: [
     CommonModule,
-
-    //Find an alternative to mat-slider
-    FormsModule,
-    MatSliderModule,
-
     NbThemeModule,
     NbSidebarModule,
     NbMenuModule,
