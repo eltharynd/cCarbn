@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment'
 })
 export class HomeComponent implements OnInit {
 
-  url = environment?.production ? 'https://cCarbn.io/api/' : 'http://localhost:3000/api/'
+  url = environment?.production ? 'https://cCarbn.io/' : 'http://localhost:4200/'
   object = Object
 
 
