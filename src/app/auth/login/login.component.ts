@@ -65,7 +65,7 @@ export class LoginComponent {
     //@ts-ignore
     window.open(`https://id.twitch.tv/oauth2/authorize
     ?client_id=${DataService.clientId}
-    &redirect_uri=${window.location.origin}/auth/token
+    &redirect_uri=${window.location.origin.replace('www.', '')}/auth/token
     &response_type=code
     &force_verify=true
     &state=${state}
