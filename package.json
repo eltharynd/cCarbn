@@ -2,7 +2,7 @@
   "name": "ccarbn",
   "version": "1.0.0",
   "scripts": {
-    "build": "rm -rf dist && echo n | npm install && ng build && tsc --project backend.tsconfig.json",
+    "build": "echo n| npm install && ng build && rm -rd fist/backend && tsc --project backend.tsconfig.json",
     "start": "NODE_ENV='production' node dist/backend/index.js",
     "start-win": "SET NODE_ENV='production' && node dist/backend/index.js",
     "angular": "ng serve --host=0.0.0.0 --disable-host-check",
