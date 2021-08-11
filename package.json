@@ -5,8 +5,9 @@
     "build": "echo n| npm install && ng build && rm -rf dist/backend && tsc --project backend.tsconfig.json",
     "start": "NODE_ENV='production' node dist/backend/index.js",
     "start-win": "SET NODE_ENV='production' && node dist/backend/index.js",
-    "angular": "ng serve",
-    "backend": "nodemon dist/backend/index.js"
+    "angular-dev": "ng serve",
+    "backend-dev1": "tsc -w -project backend.tsconfig.json",
+    "backend-dev2": "nodemon dist/backend/index.js"
   },
   "private": true,
   "dependencies": {
