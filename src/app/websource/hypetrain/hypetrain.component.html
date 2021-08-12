@@ -1,9 +1,14 @@
 
-<div class="container">
-  &nbsp;
+<div class="container" [ngStyle]="{width: viewPort.width+'px', height: viewPort.height+'px'}">
+
+    <hypetrain-locomotive [coordinates]="{x: 200, y: 150}" 
+                          [user]="{name: 'eltharynd', picture:'https://static-cdn.jtvnw.net/jtv_user_pictures/1148a899-e070-4a33-8d06-9cb84b9d2a38-profile_image-300x300.png'}">
+    </hypetrain-locomotive>
+
 </div>
-<div style="display: flex; flex-direction: column; width: 500px; justify-content: center; align-items: center;">
-  
+
+
+<div class="controls"  [ngStyle]="{width: viewPort.width}">
   <div>
     volume: {{currentVolume}}&nbsp;
     <mat-slider min="0.1" max="1" step="0.1" (change)="onVolumeChange()" [(ngModel)]="currentVolume"></mat-slider>

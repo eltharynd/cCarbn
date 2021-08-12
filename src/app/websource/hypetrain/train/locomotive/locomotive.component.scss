@@ -1,0 +1,15 @@
+.container {
+    position: relative;
+    background-image: url("../assets/locomotive-outer.png");
+    background-size: cover;
+
+    .picture {
+        position: absolute;
+    }
+
+    .top {
+        position: absolute;
+        background-image: url("../assets/locomotive-inner.png");
+        background-size: cover;
+    }
+}

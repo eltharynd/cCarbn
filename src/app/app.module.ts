@@ -16,7 +16,7 @@ import { SharedNebularModule } from './shared/nebular.module';
     CommonModule,
     BrowserModule,
     BrowserAnimationsModule,
-    NoopAnimationsModule,
+    //NoopAnimationsModule,
 
     FormsModule,
     ReactiveFormsModule,

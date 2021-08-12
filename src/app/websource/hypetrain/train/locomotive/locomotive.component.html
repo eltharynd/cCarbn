@@ -1,0 +1,5 @@
+
+<div class="container" [@shake]="animState" (@shake.done)="animState = animState+1 === keyFrames ? 0 : animState+1" [ngStyle]="{top: coordinates.y+'px', left: coordinates.x+'px', width: size.width+'px', height: size.height+'px'}">
+    <img class="picture" [src]="user.picture" [ngStyle]="{top: _pictureBounds.top+'px', width: _pictureBounds.width+'px', left: _pictureBounds.left+'px', height: _pictureBounds.height+'px'}">
+    <div class="top" [ngStyle]="{top: pictureBounds.top+'px', width: pictureBounds.width+'px', left: pictureBounds.left+'px', height: pictureBounds.height+'px'}"></div>
+</div>

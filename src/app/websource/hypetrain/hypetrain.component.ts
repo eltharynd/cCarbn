@@ -9,9 +9,15 @@ import { SeamlessLoop } from 'src/app/shared/seamlessloop'
 @Component({
   selector: 'app-hypetrain',
   templateUrl: './hypetrain.component.html',
-  styleUrls: ['./hypetrain.component.scss'],
+  styleUrls: ['./hypetrain.component.scss']
 })
 export class HypetrainComponent implements OnInit, OnDestroy {
+
+
+  viewPort = {
+    width: 1280,
+    height: 720
+  }
 
   userId: string
 
