@@ -1,9 +1,29 @@
-.overlay {
+
+.container-v {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: 100%;
+    min-height: 100vh;
+}
+
+.overlay-bottom {
     background-color: #222b45;
-    z-index: -1;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    flex-grow: 1;
+    flex-shrink: 0;
+    z-index: 1;
+}
+
+.container-h {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    min-width: 100vw;
+}
+
+.overlay-right {
+    background-color: #222b45;
+    flex-grow: 1;
+    flex-shrink: 0;
+    z-index: 1;
 }

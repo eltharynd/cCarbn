@@ -1,5 +1,19 @@
 
-<div class="container" [@shake]="animState" (@shake.done)="animState = animState+1 === keyFrames ? 0 : animState+1" [ngStyle]="{top: coordinates.y+'px', left: coordinates.x+'px', width: size.width+'px', height: size.height+'px'}">
-    <img class="picture" [src]="user.picture" [ngStyle]="{top: _pictureBounds.top+'px', width: _pictureBounds.width+'px', left: _pictureBounds.left+'px', height: _pictureBounds.height+'px'}">
-    <div class="top" [ngStyle]="{top: pictureBounds.top+'px', width: pictureBounds.width+'px', left: pictureBounds.left+'px', height: pictureBounds.height+'px'}"></div>
+<div class="anchor" [@entry]="entryState" (@entry.done)="animationProgress()" [ngStyle]="{top: coordinates.y+'px', left: coordinates.x+'px'}">
+
+    <div class="container" [ngStyle]="{width: (viewport.width - coordinates.x)+'px'}">
+        <div class="train" [@shake]="shakeState" (@shake.done)="shakeState = +shakeState + 1 === shakeKeyframes ? 0 : +shakeState + 1" [ngStyle]="{width: (size.width * (scale||1))+'px', height: (size.height * (scale||1))+'px'}">
+            <img class="picture" [src]="user.picture" [ngStyle]="{top: _pictureBounds.top+'px', width: _pictureBounds.width+'px', left: _pictureBounds.left+'px', height: _pictureBounds.height+'px'}">
+            <div class="top" [ngStyle]="{top: (pictureBounds.top! * scale)+'px', width: (pictureBounds.width! * scale)+'px', left: (pictureBounds.left! * scale)+'px', height: (pictureBounds.height! * scale)+'px'}"></div>
+        </div>
+        <hypetrain-carriage *ngFor="let c of carriages; let i = index;"
+                        [viewport]="viewport"
+                        [size]="c.size"
+                        [scale]="c.scale"
+                        [index]="i"
+                        [pictureBounds]="c.pictureBounds"
+                        [user]="c.user">
+        </hypetrain-carriage>
+    </div>
+    
 </div>

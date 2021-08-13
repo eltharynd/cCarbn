@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core'
+import { Component, OnInit, OnDestroy, Input } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { from } from 'rxjs'
 import { filter, take } from 'rxjs/operators'
@@ -14,10 +14,38 @@ import { SeamlessLoop } from 'src/app/shared/seamlessloop'
 export class HypetrainComponent implements OnInit, OnDestroy {
 
 
-  viewPort = {
+  viewport = {
     width: 1280,
-    height: 720
+    height: 720,
+    background: false,
+    dark: false
   }
+  train = {
+    start: {
+      x: 25, 
+      y: 25
+    },
+    locomotive: {
+      size: {
+        width: 128, 
+        height: 128,
+      },
+      scale: .8,
+      pictureBounds: {top: 0, left: 64, width: 64, height: 64, scale: .75}
+    },
+    carriage: {
+      size: {
+        width: 128, 
+        height: 128,
+      },
+      scale: .8,
+      pictureBounds: {top: 32, left: 32, width: 64, height: 64, scale: .75}
+    }
+  }
+
+  scaleLinked = true
+  
+  carriages: any[] = []
 
   userId: string
 
@@ -51,6 +79,9 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     this.route.parent?.params.subscribe(params => {
       this.userId = params.userId
     })
+
+    sessionStorage.viewportWidth = this.viewport.width
+
   }
 
   async ngOnInit() {
@@ -220,6 +251,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     this.lastLevel = 0
     this.expiryDate = 0 
     this.prematureEnd = false
+    this.carriages = []
   }
 
   endNow() {
@@ -231,4 +263,30 @@ export class HypetrainComponent implements OnInit, OnDestroy {
 
     this.reset()
   }
+
+  addCarriage() {
+    this.carriages.push({
+      viewport: this.viewport,
+      size: this.train.carriage.size,
+      scale: this.train.carriage.scale,
+      pictureBounds: this.train.carriage.pictureBounds,
+      user: {name: 'eltharynd', picture: 'https://static-cdn.jtvnw.net/jtv_user_pictures/1148a899-e070-4a33-8d06-9cb84b9d2a38-profile_image-300x300.png'}
+    })
+  }
+
+  async scaleChange(carriage?: boolean) {
+    if(this.scaleLinked) {
+      if(carriage) 
+        this.train.locomotive.scale = this.train.carriage.scale
+      else 
+        this.train.carriage.scale = this.train.locomotive.scale
+    }
+    
+    this.carriages.forEach((c) => {
+      c.scale = this.train.carriage.scale
+      c = c
+    })
+  }
+
+
 }

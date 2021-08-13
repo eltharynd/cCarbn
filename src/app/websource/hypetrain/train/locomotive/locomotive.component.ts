@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core"
+import { Component, Input, OnChanges, OnInit } from "@angular/core"
 import { TrainComponent } from "../train.component"
 
 
@@ -7,10 +7,15 @@ import { TrainComponent } from "../train.component"
     templateUrl: './locomotive.component.html',
     styleUrls: ['./locomotive.component.scss']
 })
-export class LocomotiveComponent extends TrainComponent implements OnInit {
+export class LocomotiveComponent extends TrainComponent implements OnInit, OnChanges {
     
+    @Input() carriages: any[] = []
 
     async ngOnInit() {
-        await super.ngOnInit()
+        await super.ngOnInit()      
+    }
+
+    async ngOnChanges() {
+        await super.ngOnChanges()      
     }
 }

@@ -1,17 +1,12 @@
 .anchor {
-    position: absolute;
+    //position: relative;
 }
 
 .container {
     position: absolute;
     top: 0;
     left: 0;
-    display: flex;
-    width: 1000px;
-    flex-wrap: wrap;
-}
-.train {
-    background-image: url("../assets/locomotive-outer.png");
+    background-image: url("../assets/carriage-outer.png");
     background-size: cover;
 
     .picture {
@@ -20,7 +15,7 @@
 
     .top {
         position: absolute;
-        background-image: url("../assets/locomotive-inner.png");
+        background-image: url("../assets/carriage-inner.png");
         background-size: cover;
     }
 }

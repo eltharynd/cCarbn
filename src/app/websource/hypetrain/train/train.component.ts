@@ -1,36 +1,34 @@
 import { Component, Input, OnChanges, OnInit } from "@angular/core"
-import { animate, animation, AnimationReferenceMetadata, AnimationStateMetadata, keyframes, state, style, transition, trigger } from '@angular/animations'
-import { from } from "rxjs"
-import { toArray } from "rxjs/operators"
+import { animate, animateChild, AnimationStateMetadata, group, query, state, style, transition, trigger } from '@angular/animations'
 
-let _keyframes = 60
+
+let _shakeKeyframes = 60
 
 let _dScaleX = .02
 let _rndScaleX: number[] = []
-for (let i=0;i<_keyframes;i++) _rndScaleX.push(Math.random()*_dScaleX*2 - _dScaleX + 1)
+for (let i=0;i<_shakeKeyframes;i++) _rndScaleX.push(Math.random()*_dScaleX*2 - _dScaleX + 1)
 
 let _dScaleY = .05
 let _rndScaleY: number[] = []
-for (let i=0;i<_keyframes;i++) _rndScaleY.push(Math.random()*_dScaleY*2 - _dScaleY + 1)
+for (let i=0;i<_shakeKeyframes;i++) _rndScaleY.push(Math.random()*_dScaleY*2 - _dScaleY + 1)
 
 let _dTranslateX = 3
 let _rndTranslateX: string[] = []
-for (let i=0;i<_keyframes;i++) _rndTranslateX.push(`${Math.floor(Math.random()*_dTranslateX*2 - _dTranslateX)}%`)
+for (let i=0;i<_shakeKeyframes;i++) _rndTranslateX.push(`${Math.floor(Math.random()*_dTranslateX*2 - _dTranslateX)}%`)
 let _dTranslateY = 5
 let _rndTranslateY: string[] = []
-for (let i=0;i<_keyframes;i++) _rndTranslateY.push(`${Math.floor(Math.random()*_dTranslateY*2 - _dTranslateY)}%`)
+for (let i=0;i<_shakeKeyframes;i++) _rndTranslateY.push(`${Math.floor(Math.random()*_dTranslateY*2 - _dTranslateY)}%`)
 
 let _dRotate = 3
 let _rndRotate: string[] = []
-for (let i=0;i<_keyframes;i++) _rndRotate.push(`${Math.random()*_dRotate*2 - _dRotate}deg`)
+for (let i=0;i<_shakeKeyframes;i++) _rndRotate.push(`${Math.random()*_dRotate*2 - _dRotate}deg`)
 
 let _dSkew = 3
 let _rndSkew: string[] = []
-for (let i=0;i<2*_keyframes;i++) _rndSkew.push(`${Math.random()*_dSkew*2 - _dSkew}deg`)
-
+for (let i=0;i<2*_shakeKeyframes;i++) _rndSkew.push(`${Math.random()*_dSkew*2 - _dSkew}deg`)
 
 let states: AnimationStateMetadata[] = []
-for(let i=0;i<_keyframes;i++) states.push(
+for(let i=0;i<_shakeKeyframes;i++) states.push(
     state(`${i}`, style({
         transform: `
             scaleX(${_rndScaleX[i]}) scaleY(${_rndScaleY[i]})
@@ -50,37 +48,74 @@ for(let i=0;i<_keyframes;i++) states.push(
             transition('* <=> *', [
                 animate(160)
             ])
+        ]),
+        trigger('entry', [
+            state('void', style({
+                transform: 'translateX(calc({{viewportWidth}}px + 100%))'
+            }), {params: {viewportWidth: 100}}),
+            state('entering', style({
+                transform: 'translateX(calc({{viewportWidth}}px + 100%))'
+            }), {params: {viewportWidth: 100}}),
+            state('entered', style({
+                transform: 'translateX(0)'
+            })),
+            transition('entering <=> entered', [
+                animate('3s ease-out')
+            ]),
+            transition('entered <=> *', [
+                animate(10),
+                group([
+                    animate(2000), style({}),
+                    query('@shake', [
+                        animateChild()
+                    ])
+                ])
+            ])
+
         ])
+
     ]
 })
 export class TrainComponent implements OnInit, OnChanges {
+    @Input() viewport: {width: number, height: number} = {width: 1280, height: 720}
     @Input() coordinates: {x: number, y: number}
     @Input() size: {width: number, height: number} = {width: 128, height: 128}
+    @Input() scale: number = 1
     @Input() pictureBounds: {top?: number, left?: number, width?: number, height?: number, scale?: number} = {top: 0, left: 64, width: 64, height: 64, scale: .75}
     @Input() user: {name: string, picture: string}
 
     _pictureBounds: {top: number, left: number, width: number, height: number}
 
-    animState: number = 0
-    keyFrames: number = _keyframes
+    entryState: any = {value: 'void', params: {viewportWidth: 100}}
+    shakeState: number = 0
+    shakeKeyframes: number = _shakeKeyframes
 
     async ngOnInit() {
         await this.resizePicture()
     }
     async ngOnChanges() {
+        console.log('onChanges')
         await this.resizePicture()
     }
 
     async resizePicture() {
         let newPicSide = {
-            width: (this.pictureBounds.width||this.size.width) * (this.pictureBounds.scale||1),
-            height: (this.pictureBounds.height||this.size.height) * (this.pictureBounds.scale||1)
+            width: (this.pictureBounds.width||this.size.width) * (this.scale||1) * (this.pictureBounds.scale||1),
+            height: (this.pictureBounds.height||this.size.height) * (this.scale||1) * (this.pictureBounds.scale||1)
         }
+
         this._pictureBounds = {
-            top: (this.pictureBounds.top||0) + ((this.pictureBounds.height||this.size.height) - newPicSide.height)/2,
-            left: (this.pictureBounds.left||0) + ((this.pictureBounds.height||this.size.width) - newPicSide.width)/2,
+            top: this.pictureBounds.top! * this.scale + (this.pictureBounds.height! * this.scale - newPicSide.height) / 2,
+            left: this.pictureBounds.left! * this.scale + (this.pictureBounds.width! * this.scale - newPicSide.width) / 2,
             width: newPicSide.width,
             height: newPicSide.height
         }
+        
     }
+
+    async animationProgress() {
+        if(this.entryState.value !== 'entered') 
+            this.entryState = this.entryState.value === 'void' ? {value:'entering', params: {viewportWidth: this.viewport.width - this.coordinates.x - this.size.width}} : this.entryState.value === 'entering' ? {value:'entered'} : this.entryState
+    }
+
 }
