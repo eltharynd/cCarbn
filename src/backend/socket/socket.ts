@@ -12,7 +12,7 @@ export class Socket {
 
   constructor() {
     Socket.io = new socketIO.Server(Api.server, {
-      path: '/api/socket.io',
+      path: '/socket.io',
       transports: ['websocket']
     })
 
