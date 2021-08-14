@@ -31,7 +31,7 @@ export class Auth {
 
   static bind() {
 
-    Api.endpoints.post('/auth/token', async (req, res) => {
+    Api.endpoints.post('/api/auth/token', async (req, res) => {
       if(!req.body.code || !req.body.redirect || !req.body.state) {
         res.status(400).send('Invalid Request')
         return
@@ -117,7 +117,7 @@ export class Auth {
       }
     })
 
-    Api.endpoints.post('/auth/resume', async (req, res) => {
+    Api.endpoints.post('/api/auth/resume', async (req, res) => {
       let user = req.body
       if(!user) {
         res.status(400).send('Bad Request')
