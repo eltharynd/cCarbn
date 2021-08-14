@@ -1,5 +1,6 @@
 import { EventSubChannelHypeTrainBeginEvent, EventSubChannelHypeTrainEndEvent, EventSubChannelHypeTrainProgressEvent } from "@twurple/eventsub/lib"
 import * as socketIO from "socket.io"
+import { Api } from "../../api/express"
 import { User } from "../../db/models/user"
 import { Socket } from "../socket"
 import { toJSON } from "./util/toJSON"
@@ -7,6 +8,11 @@ import { toJSON } from "./util/toJSON"
 export class HypeTrain {
 
   static hypeTrainBegin = async (event: EventSubChannelHypeTrainBeginEvent) => {
+    Api.eventsCollection.push({
+      type: 'Hype Train Begin',
+      time: Date.now(),
+      event: toJSON(event)
+    })
     console.log(toJSON(event))
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
@@ -14,6 +20,11 @@ export class HypeTrain {
   }
 
   static hypeTrainProgress = async (event: EventSubChannelHypeTrainProgressEvent) => {
+    Api.eventsCollection.push({
+      type: 'Hype Train Progress',
+      time: Date.now(),
+      event: toJSON(event)
+    })
     console.log(toJSON(event))
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
@@ -21,6 +32,11 @@ export class HypeTrain {
   }
 
   static hypeTrainEnd = async (event: EventSubChannelHypeTrainEndEvent) => {
+    Api.eventsCollection.push({
+      type: 'Hype Train End',
+      time: Date.now(),
+      event: toJSON(event)
+    })
     console.log(toJSON(event))
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)

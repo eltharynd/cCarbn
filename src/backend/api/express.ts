@@ -11,6 +11,7 @@ export class Api {
   static endpoints: express.Express
   static server: Server
 
+  static eventsCollection: any[] = []
   constructor() {
     Api.endpoints = express()
     Api.endpoints.use(
@@ -39,13 +40,17 @@ export class Api {
     Auth.bind()
     User.bind()
 
+    Api.endpoints.get('/logger', async (req,res) => {
+      res.json(Api.eventsCollection)
+    })
+
 
     Api.endpoints.get('/status', async (req, res) => {
-      res.status(200).json({ status: 'UP', test: 'working' })
+      res.json({ status: 'UP', test: 'working' })
     })
 
     Api.endpoints.get('*', async (req, res) => {
-      res.status(200).send(`No route specified... but, HEY!!! I'm working!!`)
+      res.send(`No route specified... but, HEY!!! I'm working!!`)
     })
 
 
