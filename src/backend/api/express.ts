@@ -40,12 +40,14 @@ export class Api {
     Auth.bind()
     User.bind()
 
-    Api.endpoints.get('/logger', async (req,res) => {
+
+    Api.endpoints.get('/api/logger', async (req,res) => {
       res.json(Api.eventsCollection)
     })
 
 
-    Api.endpoints.get('/status', async (req, res) => {
+
+    Api.endpoints.get('/api/status', async (req, res) => {
       res.json({ status: 'UP', test: 'working' })
     })
 
