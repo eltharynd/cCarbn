@@ -32,8 +32,6 @@ export class Api {
       next(err)
     })
 
-    
-
     Api.server = createServer(Api.endpoints)
     Api.server.listen(PORT)
 
@@ -42,7 +40,7 @@ export class Api {
     User.bind()
 
 
-    Api.endpoints.get('/api/status', async (req, res) => {
+    Api.endpoints.get('/status', async (req, res) => {
       res.status(200).json({ status: 'UP', test: 'working' })
     })
 

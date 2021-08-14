@@ -8,7 +8,7 @@ export class User {
 
   static bind() {
 
-    Api.endpoints.get('/api/user/:userId/settings', authMiddleware,  async (req, res) => {
+    Api.endpoints.get('/user/:userId/settings', authMiddleware,  async (req, res) => {
       let found: any = await Settings.findOne({userId: req.params.userId})
       if(!found) {
         found = new Settings({userId: req.params.userId})
@@ -17,7 +17,7 @@ export class User {
       res.send(found.json)
     })
 
-    Api.endpoints.post('/api/user/:userId/settings', authMiddleware,  async (req, res) => {
+    Api.endpoints.post('/user/:userId/settings', authMiddleware,  async (req, res) => {
       let found: any = await Settings.findOne({userId: req.params.userId}) 
       if(!found) {
         found = new Settings({userId: req.params.userId, json: req.body})
@@ -30,7 +30,7 @@ export class User {
     })
 
 
-    Api.endpoints.get('/api/user/:userId/settings/api/:action', authMiddleware,  async (req, res) => {
+    Api.endpoints.get('/user/:userId/settings/api/:action', authMiddleware,  async (req, res) => {
       let settings: any = await Settings.findOne({userId: req.params.userId})
       let json = settings.json
 
@@ -48,7 +48,7 @@ export class User {
       res.send(settings.json)
     })
 
-    Api.endpoints.get('/api/user/:userId/settings/chatbot/:action', authMiddleware,  async (req, res, next) => {
+    Api.endpoints.get('/user/:userId/settings/chatbot/:action', authMiddleware,  async (req, res, next) => {
       let settings: any = await Settings.findOne({userId: req.params.userId})
       let json = settings.json
 
@@ -66,7 +66,7 @@ export class User {
       res.send(settings.json)
     })
 
-    Api.endpoints.post('/api/user/:userId/settings/chatbot/category/:category', authMiddleware, async (req, res) => {
+    Api.endpoints.post('/user/:userId/settings/chatbot/category/:category', authMiddleware, async (req, res) => {
       //@ts-ignore
       let settings: any = await Settings.findOne({userId: req.headers.authorization._id})
       let json = settings.json
@@ -77,7 +77,7 @@ export class User {
       res.send(settings.json)
     })
 
-    Api.endpoints.delete('/api/user/:userId/settings/chatbot/category/:category', authMiddleware, async (req, res) => {
+    Api.endpoints.delete('/user/:userId/settings/chatbot/category/:category', authMiddleware, async (req, res) => {
       //@ts-ignore
       let settings: any = await Settings.findOne({userId: req.headers.authorization._id})
       let json = settings.json
@@ -90,7 +90,7 @@ export class User {
 
 
 
-    Api.endpoints.post('/api/user/:userId/settings/api/listener/:listener', authMiddleware, async (req, res) => {
+    Api.endpoints.post('/user/:userId/settings/api/listener/:listener', authMiddleware, async (req, res) => {
       //@ts-ignore
       let settings: any = await Settings.findOne({userId: req.headers.authorization._id})
       let json = settings.json
@@ -102,7 +102,7 @@ export class User {
       res.send(settings.json)
     })
 
-    Api.endpoints.delete('/api/user/:userId/settings/api/listener/:listener', authMiddleware, async (req, res) => {
+    Api.endpoints.delete('/user/:userId/settings/api/listener/:listener', authMiddleware, async (req, res) => {
       //@ts-ignore
       let settings: any = await Settings.findOne({userId: req.headers.authorization._id})
       let json = settings.json

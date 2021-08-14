@@ -41,7 +41,7 @@ export class Twitch {
         new ReverseProxyAdapter({
             hostName: DEV_ENDPOINT.hostname,
             port: +PORT + 1,
-            pathPrefix: '/listener'
+            pathPrefix: 'listener'
         }) : 
         new DirectConnectionAdapter({
           hostName: DEV_ENDPOINT.hostname,
