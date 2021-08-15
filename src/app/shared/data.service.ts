@@ -50,11 +50,11 @@ export class DataService {
       }).catch(error => {
         console.error(error)
         this.busy = false
-        resolve(null)
         if(error?.response?.status === 403) {
           //AuthGuard.lastDeniedAccess = this.router.url
           this.router.navigate([`auth`])
         }
+        resolve(null)
       })
     })
   }
@@ -73,11 +73,11 @@ export class DataService {
       }).catch(error => {
         console.error(error)
         this.busy = false
-        resolve(null)
         if(error?.response?.status === 403) {
           //AuthGuard.lastDeniedAccess = this.router.url
           this.router.navigate([`auth`])
         }
+        resolve(null)
       })
     }) 
   }
@@ -95,11 +95,11 @@ export class DataService {
       }).catch(error => {
         console.error(error)
         this.busy = false
-        resolve(null)
         if(error?.response?.status === 403) {
           //AuthGuard.lastDeniedAccess = this.router.url
           this.router.navigate([`auth`])
         }
+        resolve(null)
       })
     }) 
   }

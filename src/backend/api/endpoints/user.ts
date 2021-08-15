@@ -1,3 +1,5 @@
+import { HelixUser } from "@twurple/api/lib"
+import { User as MongoUser } from "../../db/models/user"
 import { Settings } from "../../db/models/settings"
 import { Category, Chat } from "../../twitch/chat"
 import { Listeners, Twitch } from "../../twitch/twitch"
@@ -7,6 +9,18 @@ import { authMiddleware } from "./auth"
 export class User {
 
   static bind() {
+
+    Api.endpoints.get('/api/user/:userId/picture', async (req, res) => {
+      let found: any = await MongoUser.findById(req.params.userId)
+      if(found) {
+        let helixUser: HelixUser = await Twitch.client.users.getUserById(req.params.userId)
+        if(helixUser) {
+          res.send(helixUser.profilePictureUrl)
+          return
+        }          
+      }
+      res.status(404).send({})
+    })
 
     Api.endpoints.get('/api/user/:userId/settings', authMiddleware,  async (req, res) => {
       let found: any = await Settings.findOne({userId: req.params.userId})

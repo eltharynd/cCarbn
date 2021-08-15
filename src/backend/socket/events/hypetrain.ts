@@ -1,7 +1,9 @@
+import { HelixUser } from "@twurple/api/lib"
 import { EventSubChannelHypeTrainBeginEvent, EventSubChannelHypeTrainEndEvent, EventSubChannelHypeTrainProgressEvent } from "@twurple/eventsub/lib"
 import * as socketIO from "socket.io"
 import { Api } from "../../api/express"
 import { User } from "../../db/models/user"
+import { Twitch } from "../../twitch/twitch"
 import { Socket } from "../socket"
 import { toJSON } from "./util/toJSON"
 
@@ -14,9 +16,15 @@ export class HypeTrain {
       event: toJSON(event)
     })
     console.log(toJSON(event))
+    let data = toJSON(event)
+    if(data.last_contribution) {
+      let helixUser: HelixUser = await Twitch.client.users.getUserById(data.last_contribution.user_id)
+      if(helixUser) 
+        data.last_contribution.picture = helixUser.profilePictureUrl
+    }
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
-      Socket.io.to(found._id.toString()).emit(found._id.toString(), Object.assign({eventName: 'start'}, toJSON(event)))
+      Socket.io.to(found._id.toString()).emit(found._id.toString(), Object.assign({eventName: 'start'}, data))
   }
 
   static hypeTrainProgress = async (event: EventSubChannelHypeTrainProgressEvent) => {
@@ -26,9 +34,15 @@ export class HypeTrain {
       event: toJSON(event)
     })
     console.log(toJSON(event))
+    let data = toJSON(event)
+    if(data.last_contribution) {
+      let helixUser: HelixUser = await Twitch.client.users.getUserById(data.last_contribution.user_id)
+      if(helixUser) 
+        data.last_contribution.picture = helixUser.profilePictureUrl
+    }
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
-      Socket.io.to(found._id.toString()).emit(found._id.toString(), Object.assign({eventName: 'progress'}, toJSON(event)))
+      Socket.io.to(found._id.toString()).emit(found._id.toString(), Object.assign({eventName: 'progress'}, data))
   }
 
   static hypeTrainEnd = async (event: EventSubChannelHypeTrainEndEvent) => {
@@ -38,9 +52,15 @@ export class HypeTrain {
       event: toJSON(event)
     })
     console.log(toJSON(event))
+    let data = toJSON(event)
+    if(data.last_contribution) {
+      let helixUser: HelixUser = await Twitch.client.users.getUserById(data.last_contribution.user_id)
+      if(helixUser) 
+        data.last_contribution.picture = helixUser.profilePictureUrl
+    }
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
-      Socket.io.to(found._id.toString()).emit(found._id.toString(), Object.assign({eventName: 'end'}, toJSON(event)))
+      Socket.io.to(found._id.toString()).emit(found._id.toString(), Object.assign({eventName: 'end'}, data))
   }
 
 

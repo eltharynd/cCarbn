@@ -64,6 +64,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   now = Date.now()
   nowHandler
 
+  channelPic
 
   id
   progress
@@ -88,25 +89,34 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     if(!this.userId) 
       return
 
+    this.channelPic = await this.data.get(`user/${this.userId}/picture`)
+    console.log(this.channelPic)
+    if(!this.channelPic)
+      this.channelPic = 'https://static-cdn.jtvnw.net/jtv_user_pictures/1148a899-e070-4a33-8d06-9cb84b9d2a38-profile_image-300x300.png'
+    console.log(this.channelPic)
+
     this.nowHandler = setInterval(() => {
       this.now = Date.now()
     }, 5)
 
     //'startDate', 'topContributors', 'total', 'level', 'endDate', 'cooldownEndDate'
     this.data.socketIO.emit('hypetrain', {userId: this.userId})
-    this.data.socketIO.on('hypetrain', (data) => {
+    this.data.socketIO.on('hypetrain', async (data) => {
 
-      if(data.expiryDate) this.expiryDate = data.expiryDate.getTime()
+      if(data.expiryDate) this.expiryDate = new Date(data.expires_at).getTime()
       if(data.goal) this.goal = data.goal
       if(data.progress) this.progress = data.progress
       if(data.total) this.total = data.total
       if(data.goal && data.progress) this.percentage = data.progress / (data.progress + data.goal)
       if(data.id) this.id = data.id
-      if(data.lastContribution) this.lastContribution = data.lastContribution
+      if(data.lastContribution) {
+        this.lastContribution = data.last_contribution
+        await this.addCarriage(data.last_contribution)
+      }
       if(data.startDate) this.startDate = data.startDate
-      if(data.topContributors) this.topContributors = data.topContributors
-      if(data.endDate) this.endDate = data.endDate
-      if(data.cooldownEndDate) this.cooldownEndDate = data.cooldownEndDate
+      if(data.topContributors) this.topContributors = data.top_contributors
+      if(data.endDate) this.endDate = data.ended_at //END ONLY
+      if(data.cooldownEndDate) this.cooldownEndDate = data.cooldown_ends_at //END ONLY
 
       if(data.eventName === 'start') {
         this.currentLevel = 1
@@ -264,14 +274,36 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     this.reset()
   }
 
-  addCarriage() {
-    this.carriages.push({
-      viewport: this.viewport,
-      size: this.train.carriage.size,
-      scale: this.train.carriage.scale,
-      pictureBounds: this.train.carriage.pictureBounds,
-      user: {name: 'eltharynd', picture: 'https://static-cdn.jtvnw.net/jtv_user_pictures/1148a899-e070-4a33-8d06-9cb84b9d2a38-profile_image-300x300.png'}
-    })
+  async addCarriage(lastContribution?) {
+    if(this.lastContribution) {
+
+      let found = await from(this.carriages).pipe(
+        filter(c => c.user.name === lastContribution.user_name),
+        take(1)
+      ).toPromise()
+      if(found) {
+        found.lastContribution.total
+      } else {
+        this.carriages.push({
+          viewport: this.viewport,
+          size: this.train.carriage.size,
+          scale: this.train.carriage.scale,
+          user: {
+            name: lastContribution.user_name, 
+            picture: lastContribution.picture,
+            total: lastContribution.total
+          }
+        })
+      }
+    } else {
+      this.carriages.push({
+        viewport: this.viewport,
+        size: this.train.carriage.size,
+        scale: this.train.carriage.scale,
+        pictureBounds: this.train.carriage.pictureBounds,
+        user: {name: 'eltharynd', picture: this.channelPic, total: Math.floor(Math.random()*6000)}
+      })
+    }
   }
 
   async scaleChange(carriage?: boolean) {
