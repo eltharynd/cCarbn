@@ -94,7 +94,6 @@ export class TrainComponent implements OnInit, OnChanges {
         await this.resizePicture()
     }
     async ngOnChanges() {
-        console.log('onChanges')
         await this.resizePicture()
     }
 

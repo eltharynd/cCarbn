@@ -130,7 +130,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       return
 
     let settings = await this.data.get(`user/${this.userId}/settings/api/listener/hypetrain`)
-    console.log(settings)
     if(!settings)
       return
     await this.prepareSettings(settings)
@@ -450,7 +449,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   }
   
   async saveSettings() {
-    console.log('save')
     let viewport = JSON.parse(JSON.stringify(this.viewport))
     delete viewport.background
     delete viewport.dark
