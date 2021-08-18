@@ -403,14 +403,14 @@ export class HypetrainComponent implements OnInit, OnDestroy {
         size: this.train.carriage.size,
         scale: this.train.carriage.scale,
         pictureBounds: this.train.carriage.pictureBounds,
-        user: {name: 'eltharynd', picture: this.channelPic, total: Math.floor(Math.random()*6000)}
+        user: {name: 'eltharynd', picture: this.channelPic, total: Math.floor((Math.random()*100+1)*100)}
       })
 
       let type = Math.random()>=.5 ? 'sub' : 'cheer'
       let message = this.infoText.messages[type]
       let names = ['beastMaster69', 'xXbussyMasterXx', 'cCarbn', 'eltharynd', 'julia', 'Frank', 'Bezos', 'PewDiePie', 'CinnamonToastKen']
       let name = names[Math.floor(Math.random()*names.length)]
-      let contribution = Math.floor(Math.random()*10) * (type==='cheer' ? 100 : 5000)
+      let contribution = Math.floor(Math.random()*10+1) * (type==='cheer' ? 100 : 5000)
       message = message.replace(/\@user/g, name).replace(/\$x/g, contribution)
       this.messages.push(message)
       if(this.messages.length===1) {
