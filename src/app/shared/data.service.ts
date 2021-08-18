@@ -37,9 +37,7 @@ export class DataService {
     })
 
     this.userId.subscribe((userId) => {
-      console.log('sub', userId)
       this._userId = userId
-      console.log(this.socketIO.connected)
       if(this.socketIO.connected)
         this.socketIO.emit('bind', {
           userId: this._userId

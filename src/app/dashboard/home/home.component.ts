@@ -18,8 +18,6 @@ export class HomeComponent implements OnInit {
 
   async ngOnInit() {
     this.settings = await this.data.get(`user/${this.auth.currentUser?._id}/settings`)
-    console.log(this.settings)
-
   }
 
 

@@ -11,7 +11,6 @@ export class Common extends Message {
 
   private hug = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!hug [\@a-zA-Z0-9][a-zA-Z0-9]*/i.test(message)) {
-      console.log(message, filterParameters(message))
       this.client.say(channel, `/me @${user} hugs @${filterParameters(message)[0].replace('@', '')} then lowkey licks their cheek!`)
     }
   }
