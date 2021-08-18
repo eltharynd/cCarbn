@@ -83,12 +83,12 @@ export class HomeComponent implements OnInit {
   }
 
   async toggleCategory(category) {
-    if(this.settings.chatbot.categories[category]) {
+    if(this.settings.chatbot.categories[category].enabled) {
       if(!await this.data.post(`user/${this.auth.currentUser?._id}/settings/chatbot/category/${category}/enable`))
-        this.settings.chatbot.categories[category] = false
+        this.settings.chatbot.categories[category].enabled = false
     } else {
       if(!await this.data.delete(`user/${this.auth.currentUser?._id}/settings/chatbot/category/${category}/disable`))
-        this.settings.chatbot.categories[category] = true
+        this.settings.chatbot.categories[category].enabled = true
     }
   }
 
