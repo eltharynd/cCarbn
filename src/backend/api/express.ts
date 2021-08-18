@@ -47,13 +47,13 @@ export class Api {
 
 
 
-    Api.endpoints.get('/api/status', async (req, res) => {
+/*     Api.endpoints.get('/api/status', async (req, res) => {
       res.json({ status: 'UP', test: 'working' })
-    })
+    }) */
 
-    Api.endpoints.get('*', async (req, res) => {
+/*     Api.endpoints.get('*', async (req, res) => {
       res.send(`No route specified... but, HEY!!! I'm working!!`)
-    })
+    }) */
 
 
   

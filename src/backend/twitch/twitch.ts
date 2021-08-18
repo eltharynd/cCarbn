@@ -29,7 +29,7 @@ export class Twitch {
     return await from(Twitch.clients).pipe(filter(c => c.userId.toString() === user._id.toString())).toPromise()
   }
 
-  private static async prepareClient() {
+  static async prepareClient() {
     Twitch.client = new ApiClient({
       authProvider: new ClientCredentialsAuthProvider(Mongo.clientId, Mongo.clientSecret)
     })
@@ -53,16 +53,9 @@ export class Twitch {
       secret: token.secret,
     })
     await Twitch.listener.listen(process?.env?.NODE_ENV === 'production' ? null : +PORT + 1)
-    process.on('SIGINT', () => {
-      for(let iClient of Twitch.clients) 
-        for(let sub of iClient.subscriptions)
-          sub.subscription.stop()
-    })
   }
 
-
-  static async connect(user, settings?) {
-
+  static async init() {
     if(!Twitch.client) {
       if(Twitch.clientReady)
         await Twitch.clientReady.toPromise()
@@ -72,6 +65,11 @@ export class Twitch {
       await this.prepareClient()
       Twitch.clientReady.complete()
     }
+  }
+
+  static async connect(user, settings?) {
+
+    await Twitch.init()
 
     if(await this.findByUserId(user._id))
       throw new Error()

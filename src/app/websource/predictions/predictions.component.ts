@@ -22,10 +22,18 @@ export class PredictionsComponent implements OnInit, OnDestroy {
     if(!this.userId) 
       return
 
-    this.data.socketIO.emit('prediction', {userId: this.userId})
+    this.data.socketIO.send('bind', {
+      userId: this.userId
+    })
+    this.data.socketIO.on('connect', () => {
+      this.data.socketIO.send('bind', {
+        userId: this.userId
+      })
+    })
+    /* this.data.socketIO.emit('prediction', {userId: this.userId})
     this.data.socketIO.on('prediction', (data) => {
       console.log(data)
-    })
+    }) */
   }
 
   async ngOnDestroy() {

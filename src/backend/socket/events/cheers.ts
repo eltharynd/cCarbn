@@ -15,11 +15,11 @@ export class Cheers {
 
 
   static bind = (socket: socketIO.Socket) => {
-    socket.on('cheer', (data) => {
+/*     socket.on('cheer', (data) => {
       if(data.userId) {
         socket.join(data.userId)
       }
-    })
+    }) */
   }
 
   static unbind = (socket: socketIO.Socket) => {

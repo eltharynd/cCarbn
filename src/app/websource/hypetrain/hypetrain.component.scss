@@ -23,6 +23,15 @@
   background-position:0 0, 12.5px 0, 12.5px -12.5px, 0px 12.5px; /* Must be half of one side of the square */
 }
 
+.info-text {
+  position: absolute;
+  > div {
+    position: absolute;
+    white-space: nowrap;
+  }
+}
+
+
 .settings {
   display: flex;
   justify-content: space-between;
@@ -31,6 +40,7 @@
   background-color: #222b45;
   z-index: 1;
 }
+
 
 .settings > div {
   display: flex; 
@@ -52,39 +62,48 @@
   }
 
   > h3:not(:first-child) {
-    margin-top: 1rem;
+    margin-top: 2.5rem;
   }
 }
 
 
-.audio {
-  
-  .lvl-indicator-container {
-    width: 45%;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .lvl-indicator-container > * {
-    margin: 2px;
-    pointer-events: none;
-  }
 
+.lvl-indicator-container {
+  width: 45%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.lvl-indicator-container > * {
+  margin: 2px;
+  pointer-events: none;
 }
 
 
 
-.picture-outer {
+.table-outer {
   display: flex;
   justify-content: space-between;
   padding: 0 0.5rem;
 
-  .picture-inner {
+  .table-inner {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 0.5rem;
   }
+}
+
+
+.save-button {
+  margin-top: 2rem;
+}
+
+.message-hint {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: nb-theme(text-hint-color);
+  text-align: center;
 }

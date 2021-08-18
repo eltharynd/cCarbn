@@ -1,7 +1,7 @@
 
 <div class="viewport" [ngStyle]="{width: viewport.width+'px', height: viewport.height+'px'}" [class.background]="viewport.background" [class.dark]="viewport.dark">
 
-    <hypetrain-locomotive *ngIf="currentLevel>0"
+    <hypetrain-locomotive *ngIf="train.enabled && currentLevel>0"
                           [viewport]="viewport"
                           [coordinates]="train.start" 
                           [size]="train.locomotive.size"
@@ -11,60 +11,36 @@
                           [user]="{name: 'eltharynd', picture: channelPic}">
     </hypetrain-locomotive>
 
+    <div class="info-text" *ngIf="infoText.enabled && currentMessage" [ngStyle]="{top: infoText.position === 'bottom' ? viewport.height+'px' : infoText.margin}">
+      <div *ngIf="currentMessage" [@scrolling] (@scrolling.done)="popMessage()" [ngStyle]="{
+        minWidth: viewport.width+'px', 
+        fontSize: infoText.fontSize, 
+        fontWeight: infoText.fontWeight, 
+        color: infoText.color, 
+        bottom: infoText.position === 'bottom' ? 'calc(' + infoText.margin + ' + ' + infoText.fontSize + ')' : '',
+        '-webkit-text-stroke': infoText.fontStroke,
+        '-webkit-text-stroke-width': infoText.fontStrokeWidth
+      }">{{currentMessage}}</div>>
+    </div>
     <div class="viewport-anchor" [ngStyle]="{width: viewport.width+'px', height: viewport.height+'px'}"></div>
 </div>
 
 <div class="settings"  [ngStyle]="{width: viewport.width+'px'}">
 
-  <div class="window">
-    <h3>VIEWPORT</h3>
-    <mat-form-field>
-      <input matInput type="number" placeholder="Width" [(ngModel)]="viewport.width">
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="number" placeholder="Height" [(ngModel)]="viewport.height">
-    </mat-form-field>
+  <div class="test">
 
-    <h3>COORDINATES</h3>
-    <mat-form-field>
-      <input matInput type="number" placeholder="Left (px)" [(ngModel)]="train.start.x">
-    </mat-form-field>
-    <mat-form-field>
-      <input matInput type="number" placeholder="Top (px)" [(ngModel)]="train.start.y">
-    </mat-form-field>
-
-
-    <h3>PREVIEW ONLY<br><small>(won't show in OBS)</small></h3>
-    <div>Background&nbsp;&nbsp;&nbsp;<mat-slide-toggle [(ngModel)]="viewport.background">{{viewport.background ? 'ON' : 'OFF'}}</mat-slide-toggle></div>
-    <div>Mode: <mat-slide-toggle [(ngModel)]="viewport.dark">{{viewport.dark ? 'Dark' : 'Light'}}</mat-slide-toggle></div>
-  </div>
-
-  <div class="audio">
-    <h3>AUDIO</h3>
-    <div>
-      volume: {{currentVolume}}&nbsp;
-      <mat-slider min="0.1" max="1" step="0.1" (change)="onVolumeChange()" [(ngModel)]="currentVolume"></mat-slider>
-    </div>
+    <h3>TEST</h3>
   
-    <div>
-      runs of 4 before 5: {{runsBeforeCompleted}}&nbsp;
-      <mat-slider min="1" max="10" step="1" [disabled]="currentLevel>=6" [(ngModel)]="runsBeforeCompleted"></mat-slider>
-    </div>
-    <div>
-      <b>failed</b> fading duration: {{fadingLength}} secs&nbsp;
-      <mat-slider min="10" max="180" step="10" [disabled]="fader" [(ngModel)]="fadingLength"></mat-slider>
-    </div>
-  
-    <div class="lvl-indicator-container">
+    <div class="lvl-indicator-container test">
       <button mat-raised-button color="accent" [disabled]="loops['lvl1']?._volume<=0">lvl1</button>
       <button mat-raised-button color="accent" [disabled]="loops['lvl2']?._volume<=0">lvl2</button>
       <button mat-raised-button color="accent" [disabled]="loops['lvl3']?._volume<=0">lvl3</button>
-      <button mat-raised-button color="accent" [disabled]="loops['lvl4']?._volume<=0">lvl4{{transitioning ? '->' : ''}}</button>
-      <button mat-raised-button color="accent" [disabled]="loops['lvl5']?._volume<=0">{{transitioning ? '->' : ''}}lvl5</button>
+      <button mat-raised-button color="accent" [disabled]="loops['lvl4']?._volume<=0">lvl4{{transitioning && lastLevel===4 ? '->' : ''}}</button>
+      <button mat-raised-button color="accent" [disabled]="loops['lvl5']?._volume<=0">{{transitioning && lastLevel===4 ? '->' : ''}}lvl5</button>
       <button mat-raised-button color="accent" [disabled]="!(fader || timeout)">fade</button>
     </div>
     <div>
-      level: {{currentLevel>0 ? currentLevel<6 ? currentLevel : 'ending' : 'none'}}&nbsp;
+      Level: {{currentLevel>0 ? currentLevel<6 ? currentLevel : 'ending' : 'none'}}&nbsp;
       <mat-slider [disabled]="transitioning || currentLevel===6 || now - changedAt <= 500" [min]="0" max="6" step="1" (change)="prematureEnd = lastLevel!==5; onLevelChange()" [(ngModel)]="currentLevel"></mat-slider>
     </div>
     <div>
@@ -72,25 +48,145 @@
       &nbsp;&nbsp;
       <button mat-raised-button color="accent" [disabled]="currentLevel<6" (click)="endNow()">stop fade</button>
     </div>
-  
     <br>
-  
+    <button mat-raised-button color="accent" (click)="addCarriage()" [disabled]="currentLevel<1">ADD CARRIAGE</button>
+    
+
+    <br>
     <div>
       percentage: {{percentage}}
     </div>
     <div>
       expiry: {{ expiryDate>0 ? ((expiryDate - now) | date: 'm.ss.SSS') : '---'}}
     </div>
+
+
+    <h3>PREVIEW ONLY<br><small>(won't show in OBS)</small></h3>
+    <div>Background&nbsp;&nbsp;&nbsp;<mat-slide-toggle [(ngModel)]="viewport.background" (change)="background()">{{viewport.background ? 'ON' : 'OFF'}}</mat-slide-toggle></div>
+    <div>Mode: <mat-slide-toggle [(ngModel)]="viewport.dark" (change)="background()">{{viewport.dark ? 'Dark' : 'Light'}}</mat-slide-toggle></div>
+  
+  </div>
+
+  <div class="viewport-audio-text">
+
+    <h3>VIEWPORT</h3>
+    <div class="table-outer">
+      <div class="table-inner">
+        <mat-form-field>
+          <input matInput type="number" placeholder="Width" [(ngModel)]="viewport.width">
+        </mat-form-field>
+      </div>
+      <div class="table-inner">
+        <mat-form-field>
+          <input matInput type="number" placeholder="Height" [(ngModel)]="viewport.height">
+        </mat-form-field>
+      </div>
+    </div>
+    
+
+    <h3>AUDIO</h3>
+    <div>Enabled&nbsp;&nbsp;&nbsp;<mat-slide-toggle [(ngModel)]="audio.enabled">{{audio.enabled ? 'ON' : 'OFF'}}</mat-slide-toggle></div>
+
+    <div>
+      Volume: {{currentVolume}}&nbsp;
+      <mat-slider min="0.1" max="1" step="0.1" (change)="onVolumeChange()" [(ngModel)]="currentVolume"></mat-slider>
+    </div>
+  
+    <div>
+      Runs of 4 before 5: {{runsBeforeCompleted}}&nbsp;
+      <mat-slider min="1" max="10" step="1" [disabled]="currentLevel>=6" [(ngModel)]="runsBeforeCompleted"></mat-slider>
+    </div>
+    <div>
+      <b>Failed</b> fading duration: {{fadingLength}} secs&nbsp;
+      <mat-slider min="10" max="180" step="10" [disabled]="fader" [(ngModel)]="fadingLength"></mat-slider>
+    </div>
+
+
+    <h3>TEXT</h3>
+    <div>Enabled&nbsp;&nbsp;&nbsp;<mat-slide-toggle [(ngModel)]="infoText.enabled">{{infoText.enabled ? 'ON' : 'OFF'}}</mat-slide-toggle></div>
+
+    <div class="message-hint">
+      Messages<br>
+      (use <strong>@user</strong> and <strong>$x</strong> as placeholders)
+    </div>
+    <mat-form-field style="width: 80%">
+      <input matInput type="text" placeholder="Subs" [(ngModel)]="infoText.messages.sub">
+    </mat-form-field>
+<!--     <mat-form-field style="width: 80%">
+      <input matInput type="text" placeholder="Gifted Subs" [(ngModel)]="infoText.messages.gift">
+    </mat-form-field> -->
+    <mat-form-field style="width: 80%">
+      <input matInput type="text" placeholder="Cheers" [(ngModel)]="infoText.messages.cheer">
+    </mat-form-field>
+
+    <div>
+      Delay between messages: {{infoText.delay/1000}}s&nbsp;
+      <mat-slider min="0" max="5000" step="500" [(ngModel)]="infoText.delay"></mat-slider>
+    </div>
+
+    <div>Position&nbsp;&nbsp;&nbsp;
+      <mat-slide-toggle [checked]="infoText.position === 'top'" (change)="infoText.position = $event.checked ? 'top' : 'bottom'">{{infoText.position === 'bottom' ? 'BOTTOM' : 'TOP'}}</mat-slide-toggle>
+    </div>
+
+    <br>
+
+
+    <div class="table-outer">
+      <div class="table-inner">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Font color" [(ngModel)]="infoText.color">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Font size" [(ngModel)]="infoText.fontSize">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Font stroke color" [(ngModel)]="infoText.fontStroke">
+        </mat-form-field>
+      </div>
+      <div class="table-inner">
+        <mat-form-field>
+          <input matInput type="text" placeholder="Text Margin" [(ngModel)]="infoText.margin">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Font weight" [(ngModel)]="infoText.fontWeight">
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="text" placeholder="Font stroke width" [(ngModel)]="infoText.fontStrokeWidth">
+        </mat-form-field>
+      </div>
+    </div>
+
+
+
+
+
+
+    
+
+    <button class="save-button" mat-raised-button color="primary" [disabled]="data.busy" (click)="saveSettings()">SAVE</button>
   </div>
   
   <div class="train">
     <h3>TRAIN</h3>
-    <button mat-raised-button color="accent" (click)="addCarriage()" [disabled]="currentLevel<1">ADD CARRIAGE</button><br>
+
+    <div class="table-outer">
+      <div class="table-inner">
+        <mat-form-field>
+          <input matInput type="number" placeholder="Left anchor(px)" [(ngModel)]="train.start.x">
+        </mat-form-field>
+      </div>
+      <div class="table-inner">
+        <mat-form-field>
+          <input matInput type="number" placeholder="Top anchor(px)" [(ngModel)]="train.start.y">
+        </mat-form-field>
+      </div>
+    </div>
+
     <div>Linked scale: <mat-slide-toggle [(ngModel)]="scaleLinked"></mat-slide-toggle></div>
 
     <h3>LOCOMOTIVE</h3>
-      <div class="picture-outer">
-        <div class="picture-inner">
+      <div class="table-outer">
+        <div class="table-inner">
           <mat-form-field>
             <input matInput type="number" placeholder="Original Width (px)" [disabled]="true" [(ngModel)]="train.locomotive.size.width">
           </mat-form-field>
@@ -101,7 +197,7 @@
             <input matInput type="number" placeholder="Picture Left (px)" [disabled]="true" [(ngModel)]="train.locomotive.pictureBounds.left">
           </mat-form-field>
         </div>
-        <div class="picture-inner">
+        <div class="table-inner">
           <mat-form-field>
             <input matInput type="number" placeholder="Original Height (px)" [disabled]="true" [(ngModel)]="train.locomotive.size.height">
           </mat-form-field>
@@ -119,8 +215,8 @@
       </div>
 
     <h3>CARRIAGE</h3>
-    <div class="picture-outer">
-      <div class="picture-inner">
+    <div class="table-outer">
+      <div class="table-inner">
         <mat-form-field>
           <input matInput type="number" placeholder="Original Width (px)" [disabled]="true" [(ngModel)]="train.carriage.size.width">
         </mat-form-field>
@@ -131,7 +227,7 @@
           <input matInput type="number" placeholder="Picture Left (px)" [disabled]="true" [(ngModel)]="train.carriage.pictureBounds.left">
         </mat-form-field>
       </div>
-      <div class="picture-inner">
+      <div class="table-inner">
         <mat-form-field>
           <input matInput type="number" placeholder="Original Height (px)" [disabled]="true" [(ngModel)]="train.carriage.size.height">
         </mat-form-field>
@@ -147,6 +243,7 @@
       Carriage scale: {{train.carriage.scale}}&nbsp;
       <mat-slider min=".1" max="2" step=".1" (change)="scaleChange(true)" [(ngModel)]="train.carriage.scale"></mat-slider>
     </div>
-  </div>
 
+    <button class="save-button" mat-raised-button color="primary" [disabled]="data.busy" (click)="saveSettings()">SAVE</button>
+  </div>
 </div>

@@ -43,11 +43,11 @@ export class Predictions {
   }
 
   static bind = (socket: socketIO.Socket) => {
-    socket.on('prediction', (data) => {
+/*     socket.on('prediction', (data) => {
       if(data.userId) {
         socket.join(data.userId)
       }
-    })
+    }) */
   }
 
   static unbind = (socket: socketIO.Socket) => {

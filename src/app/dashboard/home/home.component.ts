@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
 
   async ngOnInit() {
     this.settings = await this.data.get(`user/${this.auth.currentUser?._id}/settings`)
+    console.log(this.settings)
 
   }
 
@@ -74,21 +75,21 @@ export class HomeComponent implements OnInit {
   }
 
   async toggleListener(listener) {
-    if(this.settings.api.listeners[listener]) {
-      if(!await this.data.post(`user/${this.auth.currentUser?._id}/settings/api/listener/${listener}`))
-        this.settings.api.listeners[listener] = false
+    if(this.settings.api.listeners[listener].enabled) {
+      if(!await this.data.post(`user/${this.auth.currentUser?._id}/settings/api/listener/${listener}/enable`, {enabled: true}))
+        this.settings.api.listeners[listener].enabled = false
     } else {
-      if(!await this.data.delete(`user/${this.auth.currentUser?._id}/settings/api/listener/${listener}`))
-        this.settings.api.listeners[listener] = true
+      if(!await this.data.delete(`user/${this.auth.currentUser?._id}/settings/api/listener/${listener}/disable`))
+        this.settings.api.listeners[listener].enabled = true
     }
   }
 
   async toggleCategory(category) {
     if(this.settings.chatbot.categories[category]) {
-      if(!await this.data.post(`user/${this.auth.currentUser?._id}/settings/chatbot/category/${category}`))
+      if(!await this.data.post(`user/${this.auth.currentUser?._id}/settings/chatbot/category/${category}/enable`))
         this.settings.chatbot.categories[category] = false
     } else {
-      if(!await this.data.delete(`user/${this.auth.currentUser?._id}/settings/chatbot/category/${category}`))
+      if(!await this.data.delete(`user/${this.auth.currentUser?._id}/settings/chatbot/category/${category}/disable`))
         this.settings.chatbot.categories[category] = true
     }
   }

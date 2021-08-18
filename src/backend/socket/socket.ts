@@ -23,6 +23,12 @@ export class Socket {
         clientId: Mongo.clientId,
       })
 
+      socket.on('bind', (data) => {
+        if(data.userId) {
+          socket.join(data.userId)
+        }
+      })
+
       Cheers.bind(socket)
       HypeTrain.bind(socket)
       Predictions.bind(socket)

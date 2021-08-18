@@ -8,7 +8,7 @@
     </nb-card-header>
     <nb-list>
       <nb-list-item *ngFor="let k of object.keys(settings.api.listeners)">     
-        <nb-toggle (change)="toggleListener(k)" [(checked)]="settings.api.listeners[k]" [disabled]="data.busy || !settings.api.enabled">{{k}}</nb-toggle>
+        <nb-toggle (change)="toggleListener(k)" [(checked)]="settings.api.listeners[k].enabled" [disabled]="data.busy || !settings.api.enabled">{{k}}</nb-toggle>
         <a [href]="url + 'websource/' + auth.currentUser?._id +'/' + k">Browser Source link</a>
       </nb-list-item>
     </nb-list>
@@ -20,7 +20,7 @@
     </nb-card-header>
     <nb-list>
       <nb-list-item *ngFor="let k of object.keys(settings.chatbot.categories)">
-        <nb-toggle (change)="toggleCategory(k)" [(checked)]="settings.chatbot.categories[k]" [disabled]="data.busy || !settings.chatbot.enabled">{{k}}</nb-toggle><br>
+        <nb-toggle (change)="toggleCategory(k)" [(checked)]="settings.chatbot.categories[k].enabled" [disabled]="data.busy || !settings.chatbot.enabled">{{k}}</nb-toggle><br>
       </nb-list-item>
     </nb-list>
   </nb-card>

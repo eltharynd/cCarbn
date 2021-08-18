@@ -26,15 +26,25 @@ export class DataService {
     })
 
     this.socketIO.on('connect', () => {
-      this.socketIO.on('test', (data) => {console.log('test', data)})
-
+/*       this.socketIO.send('bind', {
+        userId: this.auth.currentUser?._id
+      }) */
     })
+
     this.socketIO.on('clientId', (data) => {
       DataService.clientId = data.clientId
       this._clientId = data.clientId
     })
 
     this.socketIO.connect()
+  }
+
+  public async join(room) {
+
+  }
+
+  public async leave(room) {
+
   }
 
   public async get(endpoint: string): Promise<any> {

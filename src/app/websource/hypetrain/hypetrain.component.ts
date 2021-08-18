@@ -1,17 +1,27 @@
+import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Component, OnInit, OnDestroy, Input } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
 import { from } from 'rxjs'
 import { filter, take } from 'rxjs/operators'
 import { DataService } from 'src/app/shared/data.service'
 import { SeamlessLoop } from 'src/app/shared/seamlessloop'
+import * as merge from 'deepmerge'
 
 
 @Component({
   selector: 'app-hypetrain',
   templateUrl: './hypetrain.component.html',
-  styleUrls: ['./hypetrain.component.scss']
+  styleUrls: ['./hypetrain.component.scss'],
+  animations: [
+    trigger('scrolling', [
+      state('void', style({transform: 'translateX(100%)'})),
+      state('*', style({transform: 'translateX(-100%)'})),
+      transition('void=>*', animate(5000))
+    ])
+  ]
 })
 export class HypetrainComponent implements OnInit, OnDestroy {
+
 
 
   viewport = {
@@ -20,7 +30,26 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     background: false,
     dark: false
   }
+
+  infoText = {
+    enabled: true,
+    messages: {
+      sub: '@user JUST SUBSCRIBED!! WHAT A LEGEND!',
+      gift: '@user JUST GIFTED $x SUBS!! WHAT A LEGEND!',
+      cheer: '@user JUST CHEERED $x BITS!! WHAT A LEGEND!'
+    },
+    delay: 500,
+    position: 'bottom',
+    fontSize: '4rem',
+    fontWeight: 'bold',
+    fontStroke: '#d6d6d6',
+    fontStrokeWidth: '.1rem',
+    color: '#4a4444',
+    margin: '2rem'
+  }
+
   train = {
+    enabled: true,
     start: {
       x: 25, 
       y: 25
@@ -43,15 +72,26 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     }
   }
 
+  audio = {
+    enabled: true,
+    volume: 1,
+    runsBeforeCompleted: 3,
+    fadingLength: 30
+  }
+
   scaleLinked = true
   
   carriages: any[] = []
+  messages: string[] = []
+  currentMessage
 
   userId: string
 
   currentLevel: number = 0
   prematureEnd: boolean
   currentVolume: number = 1
+
+
 
   runsBeforeCompleted = 3
   fadingLength: number = 30
@@ -76,7 +116,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   endDate
   cooldownEndDate
 
-  constructor(private data: DataService, private route: ActivatedRoute) {
+  constructor(public data: DataService, private route: ActivatedRoute) {
     this.route.parent?.params.subscribe(params => {
       this.userId = params.userId
     })
@@ -89,18 +129,31 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     if(!this.userId) 
       return
 
+    let settings = await this.data.get(`user/${this.userId}/settings/api/listener/hypetrain`)
+    console.log(settings)
+    if(!settings)
+      return
+    await this.prepareSettings(settings)
+    
+
     this.channelPic = await this.data.get(`user/${this.userId}/picture`)
-    console.log(this.channelPic)
     if(!this.channelPic)
       this.channelPic = 'https://static-cdn.jtvnw.net/jtv_user_pictures/1148a899-e070-4a33-8d06-9cb84b9d2a38-profile_image-300x300.png'
-    console.log(this.channelPic)
 
     this.nowHandler = setInterval(() => {
       this.now = Date.now()
     }, 5)
 
     //'startDate', 'topContributors', 'total', 'level', 'endDate', 'cooldownEndDate'
-    this.data.socketIO.emit('hypetrain', {userId: this.userId})
+    this.data.socketIO.send('bind', {
+      userId: this.userId
+    })
+    this.data.socketIO.on('connect', () => {
+      this.data.socketIO.send('bind', {
+        userId: this.userId
+      })
+    })
+
     this.data.socketIO.on('hypetrain', async (data) => {
 
       if(data.expiryDate) this.expiryDate = new Date(data.expires_at).getTime()
@@ -123,8 +176,8 @@ export class HypetrainComponent implements OnInit, OnDestroy {
         this.onLevelChange()
 
       } else if(data.eventName === 'progress') {
-        let nextLevel = data.level+1 !== this.currentLevel ? true : false
-        this.currentLevel = data.level+1
+        let nextLevel = data.level !== this.currentLevel ? true : false
+        this.currentLevel = data.level
         if(nextLevel)
           this.onLevelChange()
         else
@@ -224,7 +277,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       }
       
     } else if(this.currentLevel>0) {
-      this.expiryDate = Date.now() + 5*60*1000
+      //this.expiryDate = Date.now() + 5*60*1000
       if(this.currentLevel === 5) {
         let ran = 0
         this.transitioning = true
@@ -236,6 +289,14 @@ export class HypetrainComponent implements OnInit, OnDestroy {
         })
         this.transitioning = false
         this.loops[`lvl${this.currentLevel}`].start('loop')
+      } else if(this.lastLevel>0) {
+        this.transitioning = true
+        await new Promise(resolve => {
+          this.loops[`lvl${this.lastLevel}`].transitionCallBack = () => {
+            resolve(true)
+          }
+        })
+        this.transitioning = false
       }
       this.lastLevel = this.currentLevel
       
@@ -245,6 +306,20 @@ export class HypetrainComponent implements OnInit, OnDestroy {
           this.loops[`lvl${i}`].volume(0)
     } else {
       this.reset()
+    }
+  }
+
+  popMessage() {
+    if(this.messages.length>0) {
+      if(this.currentMessage) {
+        this.messages.shift()
+        this.currentMessage = null
+        setTimeout(() => {
+          if(this.messages.length>0)  {
+            this.currentMessage = this.messages[0]
+          }
+        }, this.infoText.delay);
+      }
     }
   }
 
@@ -262,6 +337,18 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     this.expiryDate = 0 
     this.prematureEnd = false
     this.carriages = []
+    this.messages = []
+    this.currentMessage = null
+    this.lastContribution = null
+    this.id = null
+    this.progress = null
+    this.goal = null
+    this.total = null
+    this.lastContribution = null
+    this.startDate = null
+    this.topContributors = null
+    //this.endDate = null
+    //this.cooldownEndDate = null
   }
 
   endNow() {
@@ -275,6 +362,9 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   }
 
   async addCarriage(lastContribution?) {
+
+
+
     if(this.lastContribution) {
 
       let found = await from(this.carriages).pipe(
@@ -282,7 +372,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
         take(1)
       ).toPromise()
       if(found) {
-        found.lastContribution.total
+        found.user.total = lastContribution.total
       } else {
         this.carriages.push({
           viewport: this.viewport,
@@ -295,6 +385,26 @@ export class HypetrainComponent implements OnInit, OnDestroy {
           }
         })
       }
+
+      let message = this.infoText.messages[lastContribution.type === 'bits' ? 'cheer' : 'sub']
+      let contribution = lastContribution.type === 'bits' ? lastContribution.total : lastContribution.total / 500 
+      message = message
+                  .replace(/\@user/g, lastContribution.user_name)
+                  .replace(/\$x/g, lastContribution.total)
+      if(contribution<1) contribution = 1
+      if(contribution === 1) {
+        message = message 
+                  .replace(/subscriptions/g, 'subscription')
+                  .replace(/Subscriptions/g, 'Subscription')
+                  .replace(/subs/g, 'sub')
+                  .replace(/Subs/g, 'Sub')
+                  .replace(/SUBSCRIPTIONS/g, 'SUBSCRIPTION')
+                  .replace(/SUBS/g, 'SUB')
+      }
+      this.messages.push(message)
+      if(this.messages.length===1) {
+        this.currentMessage = this.messages[0]
+      }
     } else {
       this.carriages.push({
         viewport: this.viewport,
@@ -303,6 +413,17 @@ export class HypetrainComponent implements OnInit, OnDestroy {
         pictureBounds: this.train.carriage.pictureBounds,
         user: {name: 'eltharynd', picture: this.channelPic, total: Math.floor(Math.random()*6000)}
       })
+
+      let type = Math.random()>=.5 ? 'sub' : 'cheer'
+      let message = this.infoText.messages[type]
+      let names = ['beastMaster69', 'xXbussyMasterXx', 'cCarbn', 'eltharynd', 'julia', 'Frank', 'Bezos', 'PewDiePie', 'CinnamonToastKen']
+      let name = names[Math.floor(Math.random()*names.length)]
+      let contribution = Math.floor(Math.random()*10) * (type==='cheer' ? 100 : 5000)
+      message = message.replace(/\@user/g, name).replace(/\$x/g, contribution)
+      this.messages.push(message)
+      if(this.messages.length===1) {
+        this.currentMessage = this.messages[0]
+      }
     }
   }
 
@@ -320,5 +441,38 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     })
   }
 
+
+  background() {
+    localStorage.background = this.viewport.background
+    localStorage.dark = this.viewport.dark
+  }
+
+  async prepareSettings(settings) {
+    this.infoText = settings.infoText
+    this.train = settings.train
+    this.viewport = merge(this.viewport, settings.viewport)
+    if(localStorage.background) this.viewport.background = localStorage.background === 'true'
+    if(localStorage.dark) this.viewport.dark = localStorage.dark === 'true'
+    this.audio = settings.audio
+  }
+  
+  async saveSettings() {
+    console.log('save')
+    let viewport = JSON.parse(JSON.stringify(this.viewport))
+    delete viewport.background
+    delete viewport.dark
+
+    let settings = {
+      audio: this.audio,
+      infoText: this.infoText,
+      train: this.train,
+      viewport: viewport
+    }
+
+    let response = await this.data.post(`user/${this.userId}/settings/api/listener/hypetrain`, settings)
+    if(response)
+      await this.prepareSettings(response)
+
+  }
 
 }
