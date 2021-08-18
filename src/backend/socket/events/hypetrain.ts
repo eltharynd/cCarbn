@@ -24,7 +24,7 @@ export class HypeTrain {
     }
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
-      Socket.io.to(found._id.toString()).emit(found._id.toString(), Object.assign({eventName: 'start'}, data))
+      Socket.io.to(found._id.toString()).emit(found._id.toString(), data)
   }
 
   static hypeTrainProgress = async (event: EventSubChannelHypeTrainProgressEvent) => {
@@ -42,7 +42,7 @@ export class HypeTrain {
     }
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
-      Socket.io.to(found._id.toString()).emit(found._id.toString(), Object.assign({eventName: 'progress'}, data))
+      Socket.io.to(found._id.toString()).emit(found._id.toString(), data)
   }
 
   static hypeTrainEnd = async (event: EventSubChannelHypeTrainEndEvent) => {
@@ -60,7 +60,7 @@ export class HypeTrain {
     }
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
-      Socket.io.to(found._id.toString()).emit(found._id.toString(), Object.assign({eventName: 'end'}, data))
+      Socket.io.to(found._id.toString()).emit(found._id.toString(), data)
   }
 
 

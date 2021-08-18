@@ -21,19 +21,10 @@ export class CheersComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     if(!this.userId) 
       return
-
-    this.data.socketIO.send('bind', {
-      userId: this.userId
-    })
-    this.data.socketIO.on('connect', () => {
-      this.data.socketIO.send('bind', {
-        userId: this.userId
-      })
-    })
-/*     this.data.socketIO.emit('cheer', {userId: this.userId})
+    this.data.userId.next(this.userId)
     this.data.socketIO.on('cheer', (data) => {
       console.log(data)
-    }) */
+    })
   }
 
   async ngOnDestroy() {

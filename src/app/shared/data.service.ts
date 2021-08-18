@@ -4,6 +4,7 @@ import axios from 'axios'
 import { AuthGuard } from '../auth/auth.guard'
 import { io, Socket } from 'socket.io-client'
 import { environment } from 'src/environments/environment'
+import { Subject } from 'rxjs'
 
 export const SERVER_URL = environment?.production ? 'https://cCarbn.io/api/' : 'http://localhost:3000/api/'
 
@@ -17,7 +18,10 @@ export class DataService {
 
   static clientId
   _clientId
-  
+
+  userId: Subject<string> = new Subject()
+  private _userId: string
+
   constructor(private router: Router, private auth: AuthGuard) {
     
     this.socketIO = io(SERVER_URL.replace('api/', ''), {
@@ -26,9 +30,20 @@ export class DataService {
     })
 
     this.socketIO.on('connect', () => {
-/*       this.socketIO.send('bind', {
-        userId: this.auth.currentUser?._id
-      }) */
+      if(this._userId)
+        this.socketIO.emit('bind', {
+          userId: this._userId
+        })
+    })
+
+    this.userId.subscribe((userId) => {
+      console.log('sub', userId)
+      this._userId = userId
+      console.log(this.socketIO.connected)
+      if(this.socketIO.connected)
+        this.socketIO.emit('bind', {
+          userId: this._userId
+        })
     })
 
     this.socketIO.on('clientId', (data) => {

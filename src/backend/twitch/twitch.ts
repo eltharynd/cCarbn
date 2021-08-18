@@ -13,6 +13,7 @@ import { User } from '../db/models/user'
 import { PORT } from '../index'
 
 export const DEV_ENDPOINT = JSON.parse('' + fs.readFileSync('endpoint_credentials.json'))
+const FORCE_REVERSE_PROXY = true
 export class Twitch {
   
   static client: ApiClient
@@ -37,7 +38,7 @@ export class Twitch {
     await Twitch.client.eventSub.deleteAllSubscriptions()
     Twitch.listener = new EventSubListener({
       apiClient: Twitch.client,
-      adapter: process?.env?.NODE_ENV === 'production' ? 
+      adapter: FORCE_REVERSE_PROXY || process?.env?.NODE_ENV === 'production' ? 
         new ReverseProxyAdapter({
             hostName: DEV_ENDPOINT.hostname,
             port: +PORT + 1,
@@ -52,7 +53,7 @@ export class Twitch {
         }),
       secret: token.secret,
     })
-    await Twitch.listener.listen(process?.env?.NODE_ENV === 'production' ? null : +PORT + 1)
+    await Twitch.listener.listen(FORCE_REVERSE_PROXY || process?.env?.NODE_ENV === 'production' ? null : +PORT + 1)
   }
 
   static async init() {

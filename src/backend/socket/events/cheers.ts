@@ -9,8 +9,9 @@ export class Cheers {
   static cheerEvent = async (event: EventSubChannelCheerEvent) => {
     console.log(toJSON(event))
     let found: any = await User.findOne({twitchId: event.broadcasterId})
+    console.log(found._id.toString())
     if(found)
-      Socket.io.to(found._id.toString()).emit('cheer', Object.assign({eventName: 'start'}, toJSON(event)))
+      Socket.io.to(found._id.toString()).emit('cheer', toJSON(event))
   }
 
 

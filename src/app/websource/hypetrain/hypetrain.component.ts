@@ -145,14 +145,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     }, 5)
 
     //'startDate', 'topContributors', 'total', 'level', 'endDate', 'cooldownEndDate'
-    this.data.socketIO.send('bind', {
-      userId: this.userId
-    })
-    this.data.socketIO.on('connect', () => {
-      this.data.socketIO.send('bind', {
-        userId: this.userId
-      })
-    })
+    this.data.userId.next(this.userId)
 
     this.data.socketIO.on('hypetrain', async (data) => {
 
@@ -171,18 +164,18 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       if(data.endDate) this.endDate = data.ended_at //END ONLY
       if(data.cooldownEndDate) this.cooldownEndDate = data.cooldown_ends_at //END ONLY
 
-      if(data.eventName === 'start') {
+      if(data.type === 'Hype Train Begin') {
         this.currentLevel = 1
         this.onLevelChange()
 
-      } else if(data.eventName === 'progress') {
+      } else if(data.eventName === 'Hype Train Progress') {
         let nextLevel = data.level !== this.currentLevel ? true : false
         this.currentLevel = data.level
         if(nextLevel)
           this.onLevelChange()
         else
           this.onProgress()
-      } else if(data.eventName === 'end') {
+      } else if(data.eventName === 'Hype Train End') {
         if(this.currentLevel<5)
           this.prematureEnd = true
         this.currentLevel = 6
