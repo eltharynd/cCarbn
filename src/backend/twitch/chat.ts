@@ -54,10 +54,10 @@ export class Chat {
   }
 
   static async bindCategories(iClient, settings) {
-    if(settings?.chatbot?.categories?.common) new Common(iClient)
-    if(settings?.chatbot?.categories?.everyone) new Everyone(iClient)
-    if(settings?.chatbot?.categories?.moderators) new Moderators(iClient)
-    if(settings?.chatbot?.categories?.storeable) new Storeable(iClient)
+    if(settings?.chatbot?.categories?.common?.enabled) new Common(iClient)
+    if(settings?.chatbot?.categories?.everyone?.enabled) new Everyone(iClient)
+    if(settings?.chatbot?.categories?.moderators?.enabled) new Moderators(iClient)
+    if(settings?.chatbot?.categories?.storeable?.enabled) new Storeable(iClient)
   }
 
   static async toggleCategory(user, category: Category, enable, settings) {

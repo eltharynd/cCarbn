@@ -123,8 +123,8 @@ export class Twitch {
 
   static async bindListeners(channel: HelixUser, settings) {
     let subscriptions: {listener: Listeners, subscription: EventSubSubscription}[] = []
-    if(settings?.api?.listeners?.cheer) subscriptions.push({listener: Listeners.cheer, subscription: await Twitch.listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent)})    
-    if(settings?.api?.listeners?.hypetrain) {
+    if(settings?.api?.listeners?.cheer?.enabled) subscriptions.push({listener: Listeners.cheer, subscription: await Twitch.listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent)})    
+    if(settings?.api?.listeners?.hypetrain?.enabled) {
       subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainBeginEvents(channel.id, HypeTrain.hypeTrainBegin)})
       subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainProgressEvents(channel.id, HypeTrain.hypeTrainProgress)})
       subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainEndEvents(channel.id, HypeTrain.hypeTrainEnd)}) 
