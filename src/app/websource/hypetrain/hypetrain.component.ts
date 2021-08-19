@@ -250,14 +250,14 @@ export class HypetrainComponent implements OnInit, OnDestroy {
         this.currentLevel = 1
         this.onLevelChange()
 
-      } else if(data.eventName === 'Hype Train Progress') {
+      } else if(data.type === 'Hype Train Progress') {
         let nextLevel = data.level !== this.currentLevel ? true : false
         this.currentLevel = data.level
         if(nextLevel)
           this.onLevelChange()
         else
           this.onProgress()
-      } else if(data.eventName === 'Hype Train End') {
+      } else if(data.type === 'Hype Train End') {
         if(this.currentLevel<5)
           this.prematureEnd = true
         this.currentLevel = 6
