@@ -45,6 +45,10 @@ const SETTINGS_TEMPLATE = {
             y: 25
           },
           locomotive: {
+            pictures: {
+              background: null,
+              foreground: null
+            },
             size: {
               width: 128, 
               height: 128,
@@ -53,6 +57,10 @@ const SETTINGS_TEMPLATE = {
             pictureBounds: {top: 0, left: 64, width: 64, height: 64, scale: .75}
           },
           carriage: {
+            pictures: {
+              background: null,
+              foreground: null
+            },
             size: {
               width: 128, 
               height: 128,

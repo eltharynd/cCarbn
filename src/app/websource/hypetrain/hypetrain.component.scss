@@ -39,6 +39,7 @@
   padding: 0.5rem;
   background-color: #222b45;
   z-index: 1;
+  min-width: 720px;
 }
 
 
@@ -106,4 +107,10 @@
   margin-bottom: 1rem;
   color: nb-theme(text-hint-color);
   text-align: center;
+}
+
+.label {
+  color: nb-theme(text-hint-color);
+  font-size: 0.7rem;
+  font-weight: bold;
 }

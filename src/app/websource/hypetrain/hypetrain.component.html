@@ -8,7 +8,9 @@
                           [scale]="train.locomotive.scale"
                           [pictureBounds]="train.locomotive.pictureBounds"
                           [carriages]="carriages"
-                          [user]="{name: 'eltharynd', picture: channelPic}">
+                          [user]="{name: 'eltharynd', picture: channelPic}"
+                          [backgroundPic]="train.locomotive.pictures.background"
+                          [foregroundPic]="train.locomotive.pictures.foreground">
     </hypetrain-locomotive>
 
     <div class="info-text" *ngIf="infoText.enabled && currentMessage" [ngStyle]="{top: infoText.position === 'bottom' ? viewport.height+'px' : infoText.margin}">
@@ -20,7 +22,7 @@
         bottom: infoText.position === 'bottom' ? 'calc(' + infoText.margin + ' + ' + infoText.fontSize + ')' : '',
         '-webkit-text-stroke': infoText.fontStroke,
         '-webkit-text-stroke-width': infoText.fontStrokeWidth
-      }">{{currentMessage}}</div>>
+      }">{{currentMessage}}</div>
     </div>
     <div class="viewport-anchor" [ngStyle]="{width: viewport.width+'px', height: viewport.height+'px'}"></div>
 </div>
@@ -187,25 +189,31 @@
     <h3>LOCOMOTIVE</h3>
       <div class="table-outer">
         <div class="table-inner">
+          <span class="label">Background</span>
+          <app-uploader [name]="'locomotive-background'" [url]="train.locomotive.pictures.background" [uploaded]="pictureChangeSubject" [height]="'4rem'" [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
+          <button mat-raised-button color="accent" (click)="defaultPicture('locomotive-background')" [disabled]="!train.locomotive.pictures.background" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
           <mat-form-field>
-            <input matInput type="number" placeholder="Original Width (px)" [disabled]="true" [(ngModel)]="train.locomotive.size.width">
+            <input matInput type="number" placeholder="Background Width (px)" [disabled]="true" [(ngModel)]="train.locomotive.size.width">
           </mat-form-field>
           <mat-form-field>
-            <input matInput type="number" placeholder="Picture Width (px)" [disabled]="true" [(ngModel)]="train.locomotive.pictureBounds.width">
+            <input matInput type="number" placeholder="Foreground Width (px)" [disabled]="true" [(ngModel)]="train.locomotive.pictureBounds.width">
           </mat-form-field>
           <mat-form-field>
-            <input matInput type="number" placeholder="Picture Left (px)" [disabled]="true" [(ngModel)]="train.locomotive.pictureBounds.left">
+            <input matInput type="number" placeholder="Foreground Left (px)" [(ngModel)]="train.locomotive.pictureBounds.left">
           </mat-form-field>
         </div>
         <div class="table-inner">
+          <span class="label">Foreground</span>
+          <app-uploader [name]="'locomotive-foreground'" [url]="train.locomotive.pictures.foreground" [uploaded]="pictureChangeSubject" [height]="'4rem'" [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
+          <button mat-raised-button color="accent" (click)="defaultPicture('locomotive-foreground')" [disabled]="!train.locomotive.pictures.foreground" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
           <mat-form-field>
-            <input matInput type="number" placeholder="Original Height (px)" [disabled]="true" [(ngModel)]="train.locomotive.size.height">
+            <input matInput type="number" placeholder="Background Height (px)" [disabled]="true" [(ngModel)]="train.locomotive.size.height">
           </mat-form-field>
           <mat-form-field>
-            <input matInput type="number" placeholder="Picture Height (px)" [disabled]="true" [(ngModel)]="train.locomotive.pictureBounds.height">
+            <input matInput type="number" placeholder="Foreground Height (px)" [disabled]="true" [(ngModel)]="train.locomotive.pictureBounds.height">
           </mat-form-field>
           <mat-form-field>
-            <input matInput type="number" placeholder="Picture Top (px)" [disabled]="true" [(ngModel)]="train.locomotive.pictureBounds.top">
+            <input matInput type="number" placeholder="Foreground Top (px)" [(ngModel)]="train.locomotive.pictureBounds.top">
           </mat-form-field>
         </div>
       </div>
@@ -217,6 +225,9 @@
     <h3>CARRIAGE</h3>
     <div class="table-outer">
       <div class="table-inner">
+        <span class="label">Background</span>
+        <app-uploader [name]="'carriage-background'" [url]="train.carriage.pictures.background" [uploaded]="pictureChangeSubject" [height]="'4rem'" [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
+        <button mat-raised-button color="accent" (click)="defaultPicture('carriage-background')" [disabled]="!train.carriage.pictures.background" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
         <mat-form-field>
           <input matInput type="number" placeholder="Original Width (px)" [disabled]="true" [(ngModel)]="train.carriage.size.width">
         </mat-form-field>
@@ -228,6 +239,9 @@
         </mat-form-field>
       </div>
       <div class="table-inner">
+        <span class="label">Foreground</span>
+        <app-uploader [name]="'carriage-foreground'" [url]="train.carriage.pictures.foreground" [uploaded]="pictureChangeSubject" [height]="'4rem'" [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
+        <button mat-raised-button color="accent" (click)="defaultPicture('carriage-foreground')" [disabled]="!train.carriage.pictures.foreground" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
         <mat-form-field>
           <input matInput type="number" placeholder="Original Height (px)" [disabled]="true" [(ngModel)]="train.carriage.size.height">
         </mat-form-field>

@@ -1,9 +1,12 @@
 import * as Mongoose from 'mongoose'
 import { MONGO } from '../index'
-import { Settings } from './models/settings'
 import { ClientToken } from './models/tokens'
+import { createModel } from 'mongoose-gridfs'
+
 export class Mongo {
   private static database: Mongoose.Connection
+
+  static Upload
   
   static clientId
   static clientSecret
@@ -20,6 +23,12 @@ export class Mongo {
         let defClientToken: any = await ClientToken.findOne()
         Mongo.clientId = defClientToken.clientId
         Mongo.clientSecret = defClientToken.clientSecret
+
+        Mongo.Upload = createModel({
+          modelName: 'Upload',
+          connection: Mongo.database,
+          metadata: { userId: Mongoose.Types.ObjectId }
+        })
 
         resolve(true)
       })

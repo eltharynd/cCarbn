@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AuthGuard } from 'src/app/auth/auth.guard'
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 import { environment } from 'src/environments/environment'

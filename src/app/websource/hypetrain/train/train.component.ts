@@ -83,6 +83,8 @@ export class TrainComponent implements OnInit, OnChanges {
     @Input() scale: number = 1
     @Input() pictureBounds: {top?: number, left?: number, width?: number, height?: number, scale?: number} = {top: 0, left: 64, width: 64, height: 64, scale: .75}
     @Input() user: {name: string, picture: string, total?: number}
+    @Input() backgroundPic: string|null
+    @Input() foregroundPic: string|null
 
     _pictureBounds: {top: number, left: number, width: number, height: number}
 

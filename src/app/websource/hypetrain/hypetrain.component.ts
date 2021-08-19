@@ -1,9 +1,9 @@
 import { animate, state, style, transition, trigger } from '@angular/animations'
-import { Component, OnInit, OnDestroy, Input } from '@angular/core'
+import { Component, OnInit, OnDestroy } from '@angular/core'
 import { ActivatedRoute } from '@angular/router'
-import { from } from 'rxjs'
+import { from, Subject } from 'rxjs'
 import { filter, take } from 'rxjs/operators'
-import { DataService } from 'src/app/shared/data.service'
+import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 import { SeamlessLoop } from 'src/app/shared/seamlessloop'
 import * as merge from 'deepmerge'
 
@@ -55,6 +55,10 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       y: 25
     },
     locomotive: {
+      pictures: {
+        background: null,
+        foreground: null
+      },
       size: {
         width: 128, 
         height: 128,
@@ -63,6 +67,10 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       pictureBounds: {top: 0, left: 64, width: 64, height: 64, scale: .75}
     },
     carriage: {
+      pictures: {
+        background: null,
+        foreground: null
+      },
       size: {
         width: 128, 
         height: 128,
@@ -116,6 +124,8 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   endDate
   cooldownEndDate
 
+  pictureChangeSubject = new Subject<any>() 
+
   constructor(public data: DataService, private route: ActivatedRoute) {
     this.route.parent?.params.subscribe(params => {
       this.userId = params.userId
@@ -123,6 +133,78 @@ export class HypetrainComponent implements OnInit, OnDestroy {
 
     sessionStorage.viewportWidth = this.viewport.width
 
+    this.pictureChangeSubject.subscribe(async response => {
+      if(!response.url) return
+      let name = response.url.replace(/^.*\//,'').replace(/\..*$/, '')
+      let picture
+      switch(name) {
+        case 'locomotive-background':
+          //@ts-ignore
+          this.train.locomotive.pictures.background = `${SERVER_URL}${response.url}#`
+          
+          picture = new Image()
+          //@ts-ignore
+          picture.onload = () => {
+            this.train.locomotive.size.width = picture.width
+            this.train.locomotive.size.height = picture.height
+          }
+          //@ts-ignore
+          picture.src = this.train.locomotive.pictures.background 
+          break
+        case 'locomotive-foreground':
+          console.log('HERE', response.url)
+          //@ts-ignore
+          this.train.locomotive.pictures.foreground = `${SERVER_URL}${response.url}#`
+          picture = new Image()
+          //@ts-ignore
+          picture.onload = () => {
+            this.train.locomotive.pictureBounds.width = picture.width
+            this.train.locomotive.pictureBounds.height = picture.height
+            this.train.locomotive.pictureBounds.left = Math.floor((this.train.locomotive.size.width - picture.width) / 2)
+            this.train.locomotive.pictureBounds.top = Math.floor((this.train.locomotive.size.height - picture.height) / 2)
+          }
+          //@ts-ignore
+          picture.src = this.train.locomotive.pictures.foreground 
+          break
+        case 'carriage-background':
+          //@ts-ignore
+          this.train.carriage.pictures.background = `${SERVER_URL}${response.url}#`
+          picture = new Image()
+          //@ts-ignore
+          picture.onload = () => {
+            this.train.carriage.size.width = picture.width
+            this.train.carriage.size.height = picture.height
+            this.carriages.forEach((c) => {
+              c.backgroundPic = this.train.carriage.pictures.background
+              c.size = this.train.carriage.size
+              c = c
+            })
+          }
+          //@ts-ignore
+          picture.src = this.train.carriage.pictures.background 
+          break
+        case 'carriage-foreground':
+          //@ts-ignore
+          this.train.carriage.pictures.foreground = `${SERVER_URL}${response.url}#`
+          picture = new Image()
+          //@ts-ignore
+          picture.onload = () => {
+            this.train.locomotive.pictureBounds.width = picture.width
+            this.train.locomotive.pictureBounds.height = picture.height
+            this.train.locomotive.pictureBounds.left = Math.floor((this.train.locomotive.size.width - picture.width) / 2)
+            this.train.locomotive.pictureBounds.top = Math.floor((this.train.locomotive.size.height - picture.height) / 2)
+            this.carriages.forEach((c) => {
+              c.foregroundPic = this.train.carriage.pictures.foreground
+              c.pictureBounds = this.train.carriage.pictureBounds
+              c = c
+            })
+          }
+          //@ts-ignore
+          picture.src = this.train.carriage.pictures.foreground  
+          break
+        default: return
+      }
+    })
   }
 
   async ngOnInit() {
@@ -354,9 +436,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   }
 
   async addCarriage(lastContribution?) {
-
-
-
     if(this.lastContribution) {
 
       let found = await from(this.carriages).pipe(
@@ -370,6 +449,8 @@ export class HypetrainComponent implements OnInit, OnDestroy {
           viewport: this.viewport,
           size: this.train.carriage.size,
           scale: this.train.carriage.scale,
+          backgroundPic: this.train.carriage.pictures.background,
+          foregroundPic: this.train.carriage.pictures.foreground,
           user: {
             name: lastContribution.user_name, 
             picture: lastContribution.picture,
@@ -403,6 +484,8 @@ export class HypetrainComponent implements OnInit, OnDestroy {
         size: this.train.carriage.size,
         scale: this.train.carriage.scale,
         pictureBounds: this.train.carriage.pictureBounds,
+        backgroundPic: this.train.carriage.pictures.background,
+        foregroundPic: this.train.carriage.pictures.foreground,
         user: {name: 'eltharynd', picture: this.channelPic, total: Math.floor((Math.random()*100+1)*100)}
       })
 
@@ -466,4 +549,48 @@ export class HypetrainComponent implements OnInit, OnDestroy {
 
   }
 
+  async defaultPicture(name) {
+    switch(name) {
+      case 'locomotive-background':
+        //@ts-ignore
+        await this.data.delete(this.train.locomotive.pictures.background.replace(/^.*\/api\//, ''))
+        //@ts-ignore
+        this.train.locomotive.pictures.background = null
+        this.train.locomotive.size = {width: 128, height: 128}
+        
+        break
+      case 'locomotive-foreground':
+        //@ts-ignore
+        await this.data.delete(this.train.locomotive.pictures.foreground.replace(/^.*\/api\//, ''))
+        //@ts-ignore
+        this.train.locomotive.pictures.foreground = null
+        this.train.locomotive.pictureBounds = {top: 0, left: 64, width: 64, height: 64, scale: .75}
+        break
+      case 'carriage-background':
+        //@ts-ignore
+        await this.data.delete(this.train.carriage.pictures.background.replace(/^.*\/api\//, ''))
+        //@ts-ignore
+        this.train.carriage.pictures.background = null
+        this.train.carriage.size = {width: 128, height: 128}
+        this.carriages.forEach((c) => {
+          c.backgroundPic = this.train.carriage.pictures.background
+          c = c
+        })
+        break
+      case 'carriage-foreground':
+        //@ts-ignore
+        await this.data.delete(this.train.carriage.pictures.foreground.replace(/^.*\/api\//, ''))
+        //@ts-ignore
+        this.train.carriage.pictures.foreground = null
+        this.train.carriage.pictureBounds = {top: 32, left: 32, width: 64, height: 64, scale: .75}
+        this.carriages.forEach((c) => {
+          c.foregroundPic = this.train.carriage.pictures.foreground
+          c.pictureBounds = this.train.carriage.pictureBounds
+          c = c
+        })
+        break
+      default: return
+    }
+
+  }
 }

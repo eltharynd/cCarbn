@@ -1,8 +1,29 @@
 
 
 <div class="anchor" [@entry]="entryState" (@entry.done)="animationProgress()" [ngStyle]="{width: (size.width * (scale||1))+'px', height: (size.height * (scale||1))+'px'}">
-    <div class="container" [@shake]="shakeState" (@shake.done)="shakeState = +shakeState + 1 === shakeKeyframes ? 0 : +shakeState + 1" [ngStyle]="{width: (size.width * (scale||1))+'px', height: (size.height * (scale||1))+'px'}">
-        <img class="picture" [src]="user.picture" [ngStyle]="{top: _pictureBounds.top+'px', width: _pictureBounds.width+'px', left: _pictureBounds.left+'px', height: _pictureBounds.height+'px'}">
-        <div class="top" [ngStyle]="{top: (pictureBounds.top! * scale)+'px', width: (pictureBounds.width! * scale)+'px', left: (pictureBounds.left! * scale)+'px', height: (pictureBounds.height! * scale)+'px'}"></div>
+    <div class="container" 
+         [@shake]="shakeState" 
+         (@shake.done)="shakeState = +shakeState + 1 === shakeKeyframes ? 0 : +shakeState + 1" 
+         [ngStyle]="{
+             width: (size.width * (scale||1))+'px', 
+             height: (size.height * (scale||1))+'px',
+             'background-image': backgroundPic ? 'url(' + backgroundPic + ')' : ''
+            }">
+        <img class="picture" 
+             [src]="user.picture" 
+             [ngStyle]="{
+                 top: _pictureBounds.top+'px', 
+                 width: _pictureBounds.width+'px', 
+                 left: _pictureBounds.left+'px', 
+                 height: _pictureBounds.height+'px'
+                }">
+        <div class="top" 
+             [ngStyle]="{
+                 top: (pictureBounds.top! * scale)+'px', 
+                 width: (pictureBounds.width! * scale)+'px', 
+                 left: (pictureBounds.left! * scale)+'px', 
+                 height: (pictureBounds.height! * scale)+'px',
+                 'background-image': foregroundPic ? 'url(' + foregroundPic + ')' : ''
+                }"></div>
     </div>
 </div>
