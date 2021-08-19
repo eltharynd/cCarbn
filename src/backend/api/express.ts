@@ -59,9 +59,11 @@ export class Api {
       setTimeout(() => {
         let train = JSON.parse('' + fs.readFileSync('hypetrain.json'))
         let start
+        let delta 
         for(let e of train) {
           if(!start) {
             start = e.time
+            delta = Date.now() - start
           }
           setTimeout(async () => {
             
@@ -80,6 +82,11 @@ export class Api {
                   u.picture = helixUser.profilePictureUrl
               }  
             }
+            buffer.time = Date.now()
+            if(buffer.started_at) buffer.started_at = new Date(new Date(buffer.started_at).getTime() + delta)
+            if(buffer.ended_at) buffer.ended_at = new Date(new Date(buffer.ended_at).getTime() + delta)
+            if(buffer.expires_at) buffer.expires_at = new Date(new Date(buffer.expires_at).getTime() + delta)
+            if(buffer.cooldown_ends_at) buffer.cooldown_ends_at = new Date(new Date(buffer.cooldown_ends_at).getTime() + delta)
             console.log('emitting', e.type)
             Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)
           }, e.time - start);
