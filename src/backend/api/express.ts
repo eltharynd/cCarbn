@@ -68,7 +68,7 @@ export class Api {
           setTimeout(async () => {
             
             let buffer = JSON.parse(JSON.stringify(e.event))
-            buffer.broadcaster_id = '611180bbda7c789038a04a1b'
+            buffer.broadcaster_id = '6111a02594ce3e08c3274c5f'
             buffer.type = e.type
             if(buffer.last_contribution) {
               let helixUser: HelixUser = await Twitch.client.users.getUserById(buffer.last_contribution.user_id)
@@ -88,7 +88,7 @@ export class Api {
             if(buffer.expires_at) buffer.expires_at = new Date(new Date(buffer.expires_at).getTime() + delta)
             if(buffer.cooldown_ends_at) buffer.cooldown_ends_at = new Date(new Date(buffer.cooldown_ends_at).getTime() + delta)
             console.log('emitting', e.type)
-            Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)
+            Socket.io.to('6111a02594ce3e08c3274c5f').emit('hypetrain', buffer)
           }, e.time - start);
         }
       }, 5000)
