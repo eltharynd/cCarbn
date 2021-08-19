@@ -9,6 +9,9 @@ import { User } from './endpoints/user'
 import { Mongo } from '../db/mongo'
 import * as multer from 'multer'
 import * as fs from 'fs'
+import { HelixUser } from '@twurple/api/lib'
+import { Twitch } from '../twitch/twitch'
+import { Socket } from '../socket/socket'
 const { Readable } = require('stream');
 
 export class Api {
@@ -51,6 +54,38 @@ export class Api {
 
     Api.endpoints.get('/api/logger', async (req,res) => {
       res.json(Api.eventsCollection)
+    })
+    Api.endpoints.get('/api/hypetrain', async (req,res) => {
+      setTimeout(() => {
+        let train = JSON.parse('' + fs.readFileSync('hypetrain.json'))
+        let start
+        for(let e of train) {
+          if(!start) {
+            start = e.time
+          }
+          setTimeout(async () => {
+            
+            let buffer = JSON.parse(JSON.stringify(e.event))
+            buffer.broadcaster_id = '611180bbda7c789038a04a1b'
+            buffer.type = e.type
+            if(buffer.last_contribution) {
+              let helixUser: HelixUser = await Twitch.client.users.getUserById(buffer.last_contribution.user_id)
+              if(helixUser) 
+              buffer.last_contribution.picture = helixUser.profilePictureUrl
+            }
+            if(buffer.top_contributions) {
+              for(let u of buffer.top_contributions) {
+                let helixUser: HelixUser = await Twitch.client.users.getUserById(u.user_id)
+                if(helixUser) 
+                  u.picture = helixUser.profilePictureUrl
+              }  
+            }
+            console.log('emitting', e.type)
+            Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)
+          }, e.time - start);
+        }
+      }, 5000)
+      res.json('Starting test to cakeums (lvl 3 hype train')
     })
 
     Api.endpoints.route('/api/uploads/:userId/:filename')

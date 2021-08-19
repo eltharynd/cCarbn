@@ -23,6 +23,13 @@ export class HypeTrain {
       if(helixUser) 
         data.last_contribution.picture = helixUser.profilePictureUrl
     }
+    if(data.top_contributions) {
+      for(let u of data.top_contributions) {
+        let helixUser: HelixUser = await Twitch.client.users.getUserById(u.user_id)
+        if(helixUser) 
+          u.picture = helixUser.profilePictureUrl
+      }  
+    }
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
       Socket.io.to(found._id.toString()).emit('hypetrain', data)

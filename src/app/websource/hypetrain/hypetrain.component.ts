@@ -231,20 +231,29 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     this.data.socketIO.on('hypetrain', async (data) => {
       console.log(data)
 
-      if(data.expiryDate) this.expiryDate = new Date(data.expires_at).getTime()
+      if(data.expires_at) this.expiryDate = new Date(data.expires_at).getTime()
       if(data.goal) this.goal = data.goal
       if(data.progress) this.progress = data.progress
       if(data.total) this.total = data.total
       if(data.goal && data.progress) this.percentage = data.progress / (data.progress + data.goal)
       if(data.id) this.id = data.id
-      if(data.lastContribution) {
-        this.lastContribution = data.last_contribution
-        await this.addCarriage(data.last_contribution)
+      if(data.last_contribution) {
+          this.lastContribution = data.last_contribution
+          let i = 1
+          if(data.top_contributions) {
+            for(let c of data.top_contributions)  
+              setTimeout(() => {
+                this.addCarriage(c)
+              }, 500 * i++);
+          }
+          setTimeout(() => {
+            this.addCarriage(data.last_contribution)
+          }, 500 * i++);
       }
-      if(data.startDate) this.startDate = data.startDate
-      if(data.topContributors) this.topContributors = data.top_contributors
-      if(data.endDate) this.endDate = data.ended_at //END ONLY
-      if(data.cooldownEndDate) this.cooldownEndDate = data.cooldown_ends_at //END ONLY
+      if(data.started_at) this.startDate = data.started_at
+      if(data.top_contributors) this.topContributors = data.top_contributors
+      if(data.ended_at) this.endDate = data.ended_at //END ONLY
+      if(data.cooldown_ends_at) this.cooldownEndDate = data.cooldown_ends_at //END ONLY
 
       if(data.type === 'Hype Train Begin') {
         this.currentLevel = 1
@@ -414,7 +423,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     this.carriages = []
     this.messages = []
     this.currentMessage = null
-    this.lastContribution = null
     this.id = null
     this.progress = null
     this.goal = null
@@ -437,19 +445,22 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   }
 
   async addCarriage(lastContribution?) {
-    if(this.lastContribution) {
+    if(lastContribution) {
 
       let found = await from(this.carriages).pipe(
         filter(c => c.user.name === lastContribution.user_name),
         take(1)
       ).toPromise()
+      let skipMessage: boolean = false
       if(found) {
+        skipMessage = found.user.total === lastContribution.total
         found.user.total = lastContribution.total
       } else {
         this.carriages.push({
           viewport: this.viewport,
           size: this.train.carriage.size,
           scale: this.train.carriage.scale,
+          pictureBounds: this.train.carriage.pictureBounds,
           backgroundPic: this.train.carriage.pictures.background,
           foregroundPic: this.train.carriage.pictures.foreground,
           user: {
@@ -475,9 +486,11 @@ export class HypetrainComponent implements OnInit, OnDestroy {
                   .replace(/SUBSCRIPTIONS/g, 'SUBSCRIPTION')
                   .replace(/SUBS/g, 'SUB')
       }
-      this.messages.push(message)
-      if(this.messages.length===1) {
-        this.currentMessage = this.messages[0]
+      if(!skipMessage) {
+        this.messages.push(message)
+        if(this.messages.length===1) {
+          this.currentMessage = this.messages[0]
+        } 
       }
     } else {
       this.carriages.push({
