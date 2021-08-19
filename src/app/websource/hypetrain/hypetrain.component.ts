@@ -229,6 +229,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     this.data.userId.next(this.userId)
 
     this.data.socketIO.on('hypetrain', async (data) => {
+      console.log(data)
 
       if(data.expiryDate) this.expiryDate = new Date(data.expires_at).getTime()
       if(data.goal) this.goal = data.goal
