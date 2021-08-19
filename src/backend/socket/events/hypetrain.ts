@@ -17,6 +17,7 @@ export class HypeTrain {
     })
     console.log(toJSON(event))
     let data = toJSON(event)
+    data.type = 'Hype Train Begin'
     if(data.last_contribution) {
       let helixUser: HelixUser = await Twitch.client.users.getUserById(data.last_contribution.user_id)
       if(helixUser) 
@@ -35,6 +36,7 @@ export class HypeTrain {
     })
     console.log(toJSON(event))
     let data = toJSON(event)
+    data.type = 'Hype Train Progress'
     if(data.last_contribution) {
       let helixUser: HelixUser = await Twitch.client.users.getUserById(data.last_contribution.user_id)
       if(helixUser) 
@@ -53,6 +55,7 @@ export class HypeTrain {
     })
     console.log(toJSON(event))
     let data = toJSON(event)
+    data.type = 'Hype Train End'
     if(data.last_contribution) {
       let helixUser: HelixUser = await Twitch.client.users.getUserById(data.last_contribution.user_id)
       if(helixUser) 
