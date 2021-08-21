@@ -100,10 +100,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   currentVolume: number = 1
 
 
-
-  runsBeforeCompleted = 3
-  fadingLength: number = 30
-
   percentage: number = 0
   expiryDate: number //Date.now()
 
@@ -333,7 +329,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       let currentLevel = await from(Object.keys(this.loops)).pipe(filter((k) => this.loops[k]._volume>0), take(1)).toPromise()
       let i = 0
       if(this.prematureEnd) {
-        this.expiryDate = Date.now() + this.fadingLength*1000
+        this.expiryDate = Date.now() + this.audio.fadingLength*1000
       }
 
       this.fader = setInterval(() => {
@@ -347,13 +343,13 @@ export class HypetrainComponent implements OnInit, OnDestroy {
           clearInterval(this.fader)
           this.fader = null
         }
-      }, (this.prematureEnd ? this.fadingLength*1000 : (this.expiryDate - Date.now())) / 100)
+      }, (this.prematureEnd ? this.audio.fadingLength*1000 : (this.expiryDate - Date.now())) / 100)
 
       if(this.prematureEnd) {
         this.timeout = setTimeout(() => {
           this.timeout=null
           this.reset()
-        }, this.fadingLength*1000);
+        }, this.audio.fadingLength*1000);
       } else {
         this.loops[currentLevel].transitionCallBack = () => {
           this.reset()
@@ -367,7 +363,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
         this.transitioning = true
         await new Promise(resolve => {
           this.loops[`lvl${this.lastLevel}`].transitionCallBack = () => {
-            if(++ran <= this.runsBeforeCompleted)
+            if(++ran <= this.audio.runsBeforeCompleted)
               resolve(true)
           }
         })
@@ -543,6 +539,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     if(localStorage.background) this.viewport.background = localStorage.background === 'true'
     if(localStorage.dark) this.viewport.dark = localStorage.dark === 'true'
     this.audio = settings.audio
+    this.currentVolume = this.audio.volume
   }
   
   async saveSettings() {
@@ -550,6 +547,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     delete viewport.background
     delete viewport.dark
 
+    this.audio.volume = this.currentLevel
     let settings = {
       audio: this.audio,
       infoText: this.infoText,

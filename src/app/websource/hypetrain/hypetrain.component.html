@@ -95,12 +95,12 @@
     </div>
   
     <div>
-      Runs of 4 before 5: {{runsBeforeCompleted}}&nbsp;
-      <mat-slider min="1" max="10" step="1" [disabled]="currentLevel>=6" [(ngModel)]="runsBeforeCompleted"></mat-slider>
+      Runs of 4 before 5: {{audio.runsBeforeCompleted}}&nbsp;
+      <mat-slider min="1" max="10" step="1" [disabled]="currentLevel>=6" [(ngModel)]="audio.runsBeforeCompleted"></mat-slider>
     </div>
     <div>
-      <b>Failed</b> fading duration: {{fadingLength}} secs&nbsp;
-      <mat-slider min="10" max="180" step="10" [disabled]="fader" [(ngModel)]="fadingLength"></mat-slider>
+      <b>Failed</b> fading duration: {{audio.fadingLength}} secs&nbsp;
+      <mat-slider min="10" max="180" step="10" [disabled]="fader" [(ngModel)]="audio.fadingLength"></mat-slider>
     </div>
 
 
