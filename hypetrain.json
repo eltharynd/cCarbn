@@ -1,322 +1,837 @@
 [
-  {
-    "type": "Hype Train Begin",
-    "time": 1629399865612,
-    "event": {
-      "id": "3cbd0d2d-9fbd-4da7-948a-fb1081be0ec3",
-      "broadcaster_user_id": "267451666",
-      "broadcaster_user_login": "cakeums",
-      "broadcaster_user_name": "cakeums",
-      "total": 1500,
-      "top_contributions": [
-        {
-          "user_id": "481658392",
-          "user_login": "gabriel_c97",
-          "user_name": "gabriel_c97",
-          "type": "bits",
-          "total": 500
+    {
+        "type": "Hype Train Begin",
+        "time": 1629580218159,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 800,
+            "top_contributions": [
+                {
+                    "user_id": "126741027",
+                    "user_login": "sp_kay",
+                    "user_name": "sp_kay",
+                    "type": "bits",
+                    "total": 200
+                },
+                {
+                    "user_id": "40099381",
+                    "user_login": "endingtag",
+                    "user_name": "EndingTag",
+                    "type": "subscription",
+                    "total": 500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "76541564",
+                "user_login": "eltharynd",
+                "user_name": "eltharynd",
+                "type": "bits",
+                "total": 100
+            },
+            "goal": 2000,
+            "progress": 800,
+            "expires_at": "2021-08-21T21:15:17.475636968Z"
         }
-      ],
-      "started_at": "2021-08-19T19:04:24.96041324Z",
-      "last_contribution": {
-        "user_id": "66198133",
-        "user_login": "hansitmeagain",
-        "user_name": "Hansitmeagain",
-        "type": "bits",
-        "total": 500
-      },
-      "level": 1,
-      "goal": 2000,
-      "progress": 1500,
-      "expires_at": "2021-08-19T19:09:24.96041324Z"
-    }
-  },{
-    "type": "Hype Train Progress",
-    "time": 1629399865612,
-    "event": {
-      "id": "3cbd0d2d-9fbd-4da7-948a-fb1081be0ec3",
-      "broadcaster_user_id": "267451666",
-      "broadcaster_user_login": "cakeums",
-      "broadcaster_user_name": "cakeums",
-      "total": 1500,
-      "top_contributions": [
-        {
-          "user_id": "526282450",
-          "user_login": "trey_goon",
-          "user_name": "trey_goon",
-          "type": "subscription",
-          "total": 500
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580286411,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 1300,
+            "top_contributions": [
+                {
+                    "user_id": "151390067",
+                    "user_login": "jk_tre",
+                    "user_name": "JK_Tre",
+                    "type": "bits",
+                    "total": 500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "151390067",
+                "user_login": "jk_tre",
+                "user_name": "JK_Tre",
+                "type": "bits",
+                "total": 500
+            },
+            "level": 1,
+            "goal": 2000,
+            "progress": 1300,
+            "expires_at": "2021-08-21T21:15:17.475636968Z"
         }
-      ],
-      "started_at": "2021-08-19T19:04:24.96041324Z",
-      "last_contribution": {
-        "user_id": "66198133",
-        "user_login": "hansitmeagain",
-        "user_name": "Hansitmeagain",
-        "type": "bits",
-        "total": 500
-      },
-      "level": 1,
-      "goal": 2000,
-      "progress": 1500,
-      "expires_at": "2021-08-19T19:09:24.96041324Z"
-    }
-  },
-  {
-    "type": "Hype Train Begin",
-    "time": 1629399865623,
-    "event": {
-      "id": "3cbd0d2d-9fbd-4da7-948a-fb1081be0ec3",
-      "broadcaster_user_id": "267451666",
-      "broadcaster_user_login": "cakeums",
-      "broadcaster_user_name": "cakeums",
-      "total": 1500,
-      "top_contributions": [
-        {
-          "user_id": "526282450",
-          "user_login": "trey_goon",
-          "user_name": "trey_goon",
-          "type": "subscription",
-          "total": 500
-        },
-        {
-          "user_id": "66198133",
-          "user_login": "hansitmeagain",
-          "user_name": "Hansitmeagain",
-          "type": "bits",
-          "total": 500
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580299332,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 1400,
+            "top_contributions": [
+                {
+                    "user_id": "151390067",
+                    "user_login": "jk_tre",
+                    "user_name": "JK_Tre",
+                    "type": "bits",
+                    "total": 500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "642858183",
+                "user_login": "brainsocks",
+                "user_name": "brainsocks",
+                "type": "bits",
+                "total": 100
+            },
+            "level": 1,
+            "goal": 2000,
+            "progress": 1400,
+            "expires_at": "2021-08-21T21:15:17.475636968Z"
         }
-      ],
-      "started_at": "2021-08-19T19:04:24.96041324Z",
-      "last_contribution": {
-        "user_id": "66198133",
-        "user_login": "hansitmeagain",
-        "user_name": "Hansitmeagain",
-        "type": "bits",
-        "total": 500
-      },
-      "goal": 2000,
-      "progress": 1500,
-      "expires_at": "2021-08-19T19:09:24.96041324Z"
-    }
-  },
-  {
-    "type": "Hype Train Progress",
-    "time": 1629399886080,
-    "event": {
-      "id": "3cbd0d2d-9fbd-4da7-948a-fb1081be0ec3",
-      "broadcaster_user_id": "267451666",
-      "broadcaster_user_login": "cakeums",
-      "broadcaster_user_name": "cakeums",
-      "total": 2000,
-      "top_contributions": [
-        {
-          "user_id": "526282450",
-          "user_login": "trey_goon",
-          "user_name": "trey_goon",
-          "type": "subscription",
-          "total": 500
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580300188,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 1900,
+            "top_contributions": [
+                {
+                    "user_id": "151390067",
+                    "user_login": "jk_tre",
+                    "user_name": "JK_Tre",
+                    "type": "bits",
+                    "total": 500
+                },
+                {
+                    "user_id": "40099381",
+                    "user_login": "endingtag",
+                    "user_name": "EndingTag",
+                    "type": "subscription",
+                    "total": 500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "126741027",
+                "user_login": "sp_kay",
+                "user_name": "sp_kay",
+                "type": "subscription",
+                "total": 500
+            },
+            "level": 1,
+            "goal": 2000,
+            "progress": 1900,
+            "expires_at": "2021-08-21T21:15:17.475636968Z"
         }
-      ],
-      "started_at": "2021-08-19T19:04:24.96041324Z",
-      "last_contribution": {
-        "user_id": "415305074",
-        "user_login": "oranday20",
-        "user_name": "oranday20",
-        "type": "subscription",
-        "total": 500
-      },
-      "level": 2,
-      "goal": 2500,
-      "progress": 0,
-      "expires_at": "2021-08-19T19:09:45.447821685Z"
-    }
-  },
-  {
-    "type": "Hype Train Progress",
-    "time": 1629399925387,
-    "event": {
-      "id": "3cbd0d2d-9fbd-4da7-948a-fb1081be0ec3",
-      "broadcaster_user_id": "267451666",
-      "broadcaster_user_login": "cakeums",
-      "broadcaster_user_name": "cakeums",
-      "total": 2100,
-      "top_contributions": [
-        {
-          "user_id": "526282450",
-          "user_login": "trey_goon",
-          "user_name": "trey_goon",
-          "type": "subscription",
-          "total": 500
-        },
-        {
-          "user_id": "66198133",
-          "user_login": "hansitmeagain",
-          "user_name": "Hansitmeagain",
-          "type": "bits",
-          "total": 500
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580322386,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 2000,
+            "top_contributions": [
+                {
+                    "user_id": "151390067",
+                    "user_login": "jk_tre",
+                    "user_name": "JK_Tre",
+                    "type": "bits",
+                    "total": 500
+                },
+                {
+                    "user_id": "40099381",
+                    "user_login": "endingtag",
+                    "user_name": "EndingTag",
+                    "type": "subscription",
+                    "total": 500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "126741027",
+                "user_login": "sp_kay",
+                "user_name": "sp_kay",
+                "type": "bits",
+                "total": 100
+            },
+            "level": 2,
+            "goal": 2500,
+            "progress": 0,
+            "expires_at": "2021-08-21T21:17:01.639554444Z"
         }
-      ],
-      "started_at": "2021-08-19T19:04:24.96041324Z",
-      "last_contribution": {
-        "user_id": "40427136",
-        "user_login": "lifthrasil",
-        "user_name": "lifthrasil",
-        "type": "bits",
-        "total": 100
-      },
-      "level": 2,
-      "goal": 2500,
-      "progress": 100,
-      "expires_at": "2021-08-19T19:09:45.447821685Z"
-    }
-  },
-  {
-    "type": "Hype Train Progress",
-    "time": 1629400061747,
-    "event": {
-      "id": "3cbd0d2d-9fbd-4da7-948a-fb1081be0ec3",
-      "broadcaster_user_id": "267451666",
-      "broadcaster_user_login": "cakeums",
-      "broadcaster_user_name": "cakeums",
-      "total": 2200,
-      "top_contributions": [
-        {
-          "user_id": "526282450",
-          "user_login": "trey_goon",
-          "user_name": "trey_goon",
-          "type": "subscription",
-          "total": 500
-        },
-        {
-          "user_id": "66198133",
-          "user_login": "hansitmeagain",
-          "user_name": "Hansitmeagain",
-          "type": "bits",
-          "total": 500
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580359735,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 3000,
+            "top_contributions": [
+                {
+                    "user_id": "151390067",
+                    "user_login": "jk_tre",
+                    "user_name": "JK_Tre",
+                    "type": "bits",
+                    "total": 500
+                },
+                {
+                    "user_id": "151390067",
+                    "user_login": "jk_tre",
+                    "user_name": "JK_Tre",
+                    "type": "subscription",
+                    "total": 1000
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "151390067",
+                "user_login": "jk_tre",
+                "user_name": "JK_Tre",
+                "type": "subscription",
+                "total": 1000
+            },
+            "level": 2,
+            "goal": 2500,
+            "progress": 1000,
+            "expires_at": "2021-08-21T21:17:01.639554444Z"
         }
-      ],
-      "started_at": "2021-08-19T19:04:24.96041324Z",
-      "last_contribution": {
-        "user_id": "76541564",
-        "user_login": "eltharynd",
-        "user_name": "eltharynd",
-        "type": "bits",
-        "total": 100
-      },
-      "level": 2,
-      "goal": 2500,
-      "progress": 200,
-      "expires_at": "2021-08-19T19:09:45.447821685Z"
-    }
-  },
-  {
-    "type": "Hype Train Progress",
-    "time": 1629400098484,
-    "event": {
-      "id": "3cbd0d2d-9fbd-4da7-948a-fb1081be0ec3",
-      "broadcaster_user_id": "267451666",
-      "broadcaster_user_login": "cakeums",
-      "broadcaster_user_name": "cakeums",
-      "total": 3200,
-      "top_contributions": [
-        {
-          "user_id": "66198133",
-          "user_login": "hansitmeagain",
-          "user_name": "Hansitmeagain",
-          "type": "bits",
-          "total": 500
-        },
-        {
-          "user_id": "526282450",
-          "user_login": "trey_goon",
-          "user_name": "trey_goon",
-          "type": "subscription",
-          "total": 1500
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580388428,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 3100,
+            "top_contributions": [
+                {
+                    "user_id": "151390067",
+                    "user_login": "jk_tre",
+                    "user_name": "JK_Tre",
+                    "type": "subscription",
+                    "total": 1000
+                },
+                {
+                    "user_id": "151390067",
+                    "user_login": "jk_tre",
+                    "user_name": "JK_Tre",
+                    "type": "bits",
+                    "total": 500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "126741027",
+                "user_login": "sp_kay",
+                "user_name": "sp_kay",
+                "type": "bits",
+                "total": 100
+            },
+            "level": 2,
+            "goal": 2500,
+            "progress": 1100,
+            "expires_at": "2021-08-21T21:17:01.639554444Z"
         }
-      ],
-      "started_at": "2021-08-19T19:04:24.96041324Z",
-      "last_contribution": {
-        "user_id": "526282450",
-        "user_login": "trey_goon",
-        "user_name": "trey_goon",
-        "type": "subscription",
-        "total": 1000
-      },
-      "level": 2,
-      "goal": 2500,
-      "progress": 1200,
-      "expires_at": "2021-08-19T19:09:45.447821685Z"
-    }
-  },
-  {
-    "type": "Hype Train Progress",
-    "time": 1629400100884,
-    "event": {
-      "id": "3cbd0d2d-9fbd-4da7-948a-fb1081be0ec3",
-      "broadcaster_user_id": "267451666",
-      "broadcaster_user_login": "cakeums",
-      "broadcaster_user_name": "cakeums",
-      "total": 5700,
-      "top_contributions": [
-        {
-          "user_id": "66198133",
-          "user_login": "hansitmeagain",
-          "user_name": "Hansitmeagain",
-          "type": "bits",
-          "total": 500
-        },
-        {
-          "user_id": "53566449",
-          "user_login": "degeneratedd",
-          "user_name": "DegenerateDD",
-          "type": "subscription",
-          "total": 2500
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580417743,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 4600,
+            "top_contributions": [
+                {
+                    "user_id": "151390067",
+                    "user_login": "jk_tre",
+                    "user_name": "JK_Tre",
+                    "type": "bits",
+                    "total": 500
+                },
+                {
+                    "user_id": "164879832",
+                    "user_login": "littletheif91",
+                    "user_name": "littletheif91",
+                    "type": "subscription",
+                    "total": 1500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "164879832",
+                "user_login": "littletheif91",
+                "user_name": "littletheif91",
+                "type": "subscription",
+                "total": 1500
+            },
+            "level": 3,
+            "goal": 3100,
+            "progress": 100,
+            "expires_at": "2021-08-21T21:18:37.162158046Z"
         }
-      ],
-      "started_at": "2021-08-19T19:04:24.96041324Z",
-      "last_contribution": {
-        "user_id": "53566449",
-        "user_login": "degeneratedd",
-        "user_name": "DegenerateDD",
-        "type": "subscription",
-        "total": 2500
-      },
-      "level": 3,
-      "goal": 3100,
-      "progress": 1200,
-      "expires_at": "2021-08-19T19:13:20.22736539Z"
-    }
-  },
-  {
-    "type": "Hype Train End",
-    "time": 1629408613884,
-    "event": {
-      "id": "3cbd0d2d-9fbd-4da7-948a-fb1081be0ec3",
-      "broadcaster_user_id": "267451666",
-      "broadcaster_user_login": "cakeums",
-      "broadcaster_user_name": "cakeums",
-      "total": 5700,
-      "top_contributions": [
-        {
-          "user_id": "66198133",
-          "user_login": "hansitmeagain",
-          "user_name": "Hansitmeagain",
-          "type": "bits",
-          "total": 500
-        },
-        {
-          "user_id": "53566449",
-          "user_login": "degeneratedd",
-          "user_name": "DegenerateDD",
-          "type": "subscription",
-          "total": 2500
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580431747,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 4700,
+            "top_contributions": [
+                {
+                    "user_id": "151390067",
+                    "user_login": "jk_tre",
+                    "user_name": "JK_Tre",
+                    "type": "bits",
+                    "total": 500
+                },
+                {
+                    "user_id": "164879832",
+                    "user_login": "littletheif91",
+                    "user_name": "littletheif91",
+                    "type": "subscription",
+                    "total": 1500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "126741027",
+                "user_login": "sp_kay",
+                "user_name": "sp_kay",
+                "type": "bits",
+                "total": 100
+            },
+            "level": 3,
+            "goal": 3100,
+            "progress": 200,
+            "expires_at": "2021-08-21T21:18:37.162158046Z"
         }
-      ],
-      "started_at": "2021-08-19T19:04:24.96041324Z",
-      "level": 3,
-      "ended_at": "2021-08-19T19:13:20.22736539Z",
-      "cooldown_ends_at": "2021-08-19T21:13:20.22736539Z"
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580512060,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 7200,
+            "top_contributions": [
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "subscription",
+                    "total": 2500
+                },
+                {
+                    "user_id": "151390067",
+                    "user_login": "jk_tre",
+                    "user_name": "JK_Tre",
+                    "type": "bits",
+                    "total": 500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "76541564",
+                "user_login": "eltharynd",
+                "user_name": "eltharynd",
+                "type": "subscription",
+                "total": 2500
+            },
+            "level": 3,
+            "goal": 3100,
+            "progress": 2700,
+            "expires_at": "2021-08-21T21:18:37.162158046Z"
+        }
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580534354,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 7700,
+            "top_contributions": [
+                {
+                    "user_id": "126741027",
+                    "user_login": "sp_kay",
+                    "user_name": "sp_kay",
+                    "type": "bits",
+                    "total": 1000
+                },
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "subscription",
+                    "total": 2500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "126741027",
+                "user_login": "sp_kay",
+                "user_name": "sp_kay",
+                "type": "bits",
+                "total": 500
+            },
+            "level": 4,
+            "goal": 3900,
+            "progress": 100,
+            "expires_at": "2021-08-21T21:20:33.775106111Z"
+        }
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580579299,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 8700,
+            "top_contributions": [
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "bits",
+                    "total": 1100
+                },
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "subscription",
+                    "total": 2500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "76541564",
+                "user_login": "eltharynd",
+                "user_name": "eltharynd",
+                "type": "bits",
+                "total": 1000
+            },
+            "level": 4,
+            "goal": 3900,
+            "progress": 1100,
+            "expires_at": "2021-08-21T21:20:33.775106111Z"
+        }
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580581414,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 8800,
+            "top_contributions": [
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "bits",
+                    "total": 1100
+                },
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "subscription",
+                    "total": 2500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "526282450",
+                "user_login": "trey_goon",
+                "user_name": "trey_goon",
+                "type": "bits",
+                "total": 100
+            },
+            "level": 4,
+            "goal": 3900,
+            "progress": 1200,
+            "expires_at": "2021-08-21T21:20:33.775106111Z"
+        }
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580598882,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 9300,
+            "top_contributions": [
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "bits",
+                    "total": 1100
+                },
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "subscription",
+                    "total": 2500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "642858183",
+                "user_login": "brainsocks",
+                "user_name": "brainsocks",
+                "type": "subscription",
+                "total": 500
+            },
+            "level": 4,
+            "goal": 3900,
+            "progress": 1700,
+            "expires_at": "2021-08-21T21:20:33.775106111Z"
+        }
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580617240,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 15300,
+            "top_contributions": [
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "bits",
+                    "total": 2100
+                },
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "subscription",
+                    "total": 2500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "76541564",
+                "user_login": "eltharynd",
+                "user_name": "eltharynd",
+                "type": "bits",
+                "total": 1000
+            },
+            "level": 5,
+            "goal": 5500,
+            "progress": 3800,
+            "expires_at": "2021-08-21T21:21:53.876723617Z"
+        }
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580637431,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 15800,
+            "top_contributions": [
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "subscription",
+                    "total": 2500
+                },
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "bits",
+                    "total": 2100
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "126741027",
+                "user_login": "sp_kay",
+                "user_name": "sp_kay",
+                "type": "bits",
+                "total": 500
+            },
+            "level": 5,
+            "goal": 5500,
+            "progress": 4300,
+            "expires_at": "2021-08-21T21:21:53.876723617Z"
+        }
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580685528,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 17000,
+            "top_contributions": [
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "bits",
+                    "total": 3300
+                },
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "subscription",
+                    "total": 2500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "76541564",
+                "user_login": "eltharynd",
+                "user_name": "eltharynd",
+                "type": "bits",
+                "total": 1200
+            },
+            "level": 5,
+            "goal": 5500,
+            "progress": 5500,
+            "expires_at": "2021-08-21T21:21:53.876723617Z"
+        }
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580760908,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 17500,
+            "top_contributions": [
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "bits",
+                    "total": 3300
+                },
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "subscription",
+                    "total": 2500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "512657954",
+                "user_login": "coedredd",
+                "user_name": "CoedRedd",
+                "type": "subscription",
+                "total": 500
+            },
+            "level": 5,
+            "goal": 5500,
+            "progress": 6000,
+            "expires_at": "2021-08-21T21:21:53.876723617Z"
+        }
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580797659,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 17600,
+            "top_contributions": [
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "bits",
+                    "total": 3300
+                },
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "subscription",
+                    "total": 2500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "151390067",
+                "user_login": "jk_tre",
+                "user_name": "JK_Tre",
+                "type": "bits",
+                "total": 100
+            },
+            "level": 5,
+            "goal": 5500,
+            "progress": 6100,
+            "expires_at": "2021-08-21T21:21:53.876723617Z"
+        }
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580820202,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 18100,
+            "top_contributions": [
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "bits",
+                    "total": 3300
+                },
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "subscription",
+                    "total": 2500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "229704466",
+                "user_login": "underdoq64",
+                "user_name": "underdoq64",
+                "type": "subscription",
+                "total": 500
+            },
+            "level": 5,
+            "goal": 5500,
+            "progress": 6600,
+            "expires_at": "2021-08-21T21:21:53.876723617Z"
+        }
+    },
+    {
+        "type": "Hype Train Progress",
+        "time": 1629580821284,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 19100,
+            "top_contributions": [
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "bits",
+                    "total": 4300
+                },
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "subscription",
+                    "total": 2500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "last_contribution": {
+                "user_id": "76541564",
+                "user_login": "eltharynd",
+                "user_name": "eltharynd",
+                "type": "bits",
+                "total": 1000
+            },
+            "level": 5,
+            "goal": 5500,
+            "progress": 7600,
+            "expires_at": "2021-08-21T21:21:53.876723617Z"
+        }
+    },
+    {
+        "type": "Hype Train End",
+        "time": 1629580914809,
+        "event": {
+            "id": "aca356b1-b315-4043-8c0b-a9855abbbc53",
+            "broadcaster_user_id": "267451666",
+            "broadcaster_user_login": "cakeums",
+            "broadcaster_user_name": "cakeums",
+            "total": 19100,
+            "top_contributions": [
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "bits",
+                    "total": 4300
+                },
+                {
+                    "user_id": "76541564",
+                    "user_login": "eltharynd",
+                    "user_name": "eltharynd",
+                    "type": "subscription",
+                    "total": 2500
+                }
+            ],
+            "started_at": "2021-08-21T21:10:17.475636968Z",
+            "level": 5,
+            "ended_at": "2021-08-21T21:21:54.271612088Z",
+            "cooldown_ends_at": "2021-08-21T23:21:54.271612088Z"
+        }
     }
-  }
 ]
