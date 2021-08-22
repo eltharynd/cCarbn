@@ -551,7 +551,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     delete viewport.background
     delete viewport.dark
 
-    this.audio.volume = this.currentLevel
+    this.audio.volume = this.currentVolume
     let settings = {
       audio: this.audio,
       infoText: this.infoText,
