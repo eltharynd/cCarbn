@@ -256,7 +256,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
         this.onLevelChange()
 
       } else if(data.type === 'Hype Train Progress') {
-        let nextLevel = data.level !== this.currentLevel ? true : false
+        let nextLevel = data.level !== this.currentLevel && this.currentLevel!==6 ? true : false
         this.currentLevel = data.level
         if(nextLevel)
           this.onLevelChange()
@@ -289,12 +289,14 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     let loaded = 0
     for (let i = 1; i <= 5; i++) {
       let audio = new Audio()
-      audio.src = `assets/sounds/hypetrain/default/Level ${i} Byte.mp3`
+      //audio.src = `assets/sounds/hypetrain/default/Level ${i} Byte.mp3`
+      audio.src = `assets/sounds/hypetrain/Level ${i}.mp3`
       audio.load
       audio.addEventListener('loadedmetadata', () => {
         this.loops[`lvl${i}`] = new SeamlessLoop()
         this.loops[`lvl${i}`]._volume = this.currentLevel === i ? this.currentVolume : 0
-        this.loops[`lvl${i}`].addUri(`/assets/sounds/hypetrain/default/Level ${i} Byte.mp3`, audio.duration*1000, 'loop')
+        //this.loops[`lvl${i}`].addUri(`/assets/sounds/hypetrain/default/Level ${i} Byte.mp3`, audio.duration*1000, 'loop')
+        this.loops[`lvl${i}`].addUri(`/assets/sounds/hypetrain/Level ${i}.mp3`, audio.duration*1000, 'loop')
       })
     }
   }
