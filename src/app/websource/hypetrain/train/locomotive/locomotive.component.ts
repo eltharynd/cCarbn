@@ -11,6 +11,9 @@ export class LocomotiveComponent extends TrainComponent implements OnInit, OnCha
     
     @Input() carriages: any[] = []
 
+    @Input() reverseDirection: boolean = false
+    @Input() reverseWrap: boolean = false
+
     async ngOnInit() {
         await super.ngOnInit()      
     }

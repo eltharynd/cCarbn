@@ -1,7 +1,7 @@
 
 <div class="anchor" [@entry]="entryState" (@entry.done)="animationProgress()" [ngStyle]="{top: coordinates.y+'px', left: coordinates.x+'px'}">
 
-    <div class="container" [ngStyle]="{width: (viewport.width - coordinates.x)+'px'}">
+    <div class="container" [ngStyle]="{width: (viewport.width - coordinates.x)+'px', 'flex-direction': reverseDirection ? 'row-reverse' : 'row', 'flex-wrap': reverseWrap ? 'wrap-reverse' : 'wrap'}">
         <div class="train" 
              [@shake]="shakeState" (@shake.done)="shakeState = +shakeState + 1 === shakeKeyframes ? 0 : +shakeState + 1" 
              [ngStyle]="{

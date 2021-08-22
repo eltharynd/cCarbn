@@ -50,6 +50,9 @@ export class HypetrainComponent implements OnInit, OnDestroy {
 
   train = {
     enabled: true,
+    reverseDirection: false,
+    maxRows: 2,
+    reverseWrap: false,
     start: {
       x: 25, 
       y: 25
@@ -88,6 +91,8 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   }
 
   scaleLinked = true
+  currentLocomotiveScale = this.train.locomotive.scale
+  currentCarriageScale = this.train.carriage.scale
   
   carriages: any[] = []
   messages: string[] = []
@@ -513,6 +518,8 @@ export class HypetrainComponent implements OnInit, OnDestroy {
         this.currentMessage = this.messages[0]
       }
     }
+
+    this.resizeToFit()
   }
 
   async scaleChange(carriage?: boolean) {
@@ -522,13 +529,39 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       else 
         this.train.carriage.scale = this.train.locomotive.scale
     }
+
+    this.resizeToFit()
+
+  }
+
+  async resizeToFit() {
+    let locomotiveWidth = +this.train.locomotive.size.width * +this.train.locomotive.scale
+    let carriageWidth = +this.train.carriage.size.width * +this.train.carriage.scale
     
+
+    let viewportWidth = +this.viewport.width - +this.train.start.x
+    //let rowWidth = locomotiveWidth + carriageWidth * this.carriages.length
+
+    let carriagesThatFit = Math.floor((viewportWidth - locomotiveWidth) / carriageWidth)
+
+    if(this.carriages.length > carriagesThatFit + (carriagesThatFit + 1) * (this.train.maxRows - 1)) {
+      let marginRight = viewportWidth - locomotiveWidth - carriagesThatFit * carriageWidth
+      let totalWidth = locomotiveWidth + carriageWidth * this.carriages.length + this.train.maxRows *  marginRight
+      let availableWidth = viewportWidth * this.train.maxRows
+      let newScale = availableWidth / totalWidth
+
+      this.currentLocomotiveScale = newScale
+      this.currentCarriageScale = newScale
+    } else {
+      this.currentLocomotiveScale = this.train.locomotive.scale
+      this.currentCarriageScale = this.train.carriage.scale
+    }
+
     this.carriages.forEach((c) => {
-      c.scale = this.train.carriage.scale
+      c.scale = this.currentCarriageScale
       c = c
     })
   }
-
 
   background() {
     localStorage.background = this.viewport.background
@@ -537,13 +570,14 @@ export class HypetrainComponent implements OnInit, OnDestroy {
 
   async prepareSettings(settings) {
     this.infoText = settings.infoText
-    this.train = settings.train
+    this.train = merge(this.train, settings.train)
     this.viewport = merge(this.viewport, settings.viewport)
     if(localStorage.background) this.viewport.background = localStorage.background === 'true'
     if(localStorage.dark) this.viewport.dark = localStorage.dark === 'true'
     this.audio = settings.audio
     this.audio.volume = Math.max(0.1, this.audio.volume)
     this.currentVolume = this.audio.volume
+    this.resizeToFit()
   }
   
   async saveSettings() {
