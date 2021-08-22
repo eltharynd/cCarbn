@@ -185,10 +185,10 @@ export class HypetrainComponent implements OnInit, OnDestroy {
           picture = new Image()
           //@ts-ignore
           picture.onload = () => {
-            this.train.locomotive.pictureBounds.width = picture.width
-            this.train.locomotive.pictureBounds.height = picture.height
-            this.train.locomotive.pictureBounds.left = Math.floor((this.train.locomotive.size.width - picture.width) / 2)
-            this.train.locomotive.pictureBounds.top = Math.floor((this.train.locomotive.size.height - picture.height) / 2)
+            this.train.carriage.pictureBounds.width = picture.width
+            this.train.carriage.pictureBounds.height = picture.height
+            this.train.carriage.pictureBounds.left = Math.floor((this.train.locomotive.size.width - picture.width) / 2)
+            this.train.carriage.pictureBounds.top = Math.floor((this.train.locomotive.size.height - picture.height) / 2)
             this.carriages.forEach((c) => {
               c.foregroundPic = this.train.carriage.pictures.foreground
               c.pictureBounds = this.train.carriage.pictureBounds
@@ -541,6 +541,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     if(localStorage.background) this.viewport.background = localStorage.background === 'true'
     if(localStorage.dark) this.viewport.dark = localStorage.dark === 'true'
     this.audio = settings.audio
+    this.audio.volume = Math.max(0.1, this.audio.volume)
     this.currentVolume = this.audio.volume
   }
   
