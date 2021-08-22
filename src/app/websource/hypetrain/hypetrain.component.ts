@@ -307,6 +307,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
 
   onVolumeChange() {
     for (let i = 1; i <= 5; i++) this.loops[`lvl${i}`].volume(this.loops[`lvl${i}`]._volume > 0 ? this.currentVolume : 0)
+    this.audio.volume = this.currentVolume
   }
 
   timeout
