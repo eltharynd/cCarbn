@@ -6,6 +6,7 @@ import { Settings } from '../db/models/settings'
 import { Common } from '../messages/categories/common'
 import { Everyone } from '../messages/categories/everyone'
 import { Moderators } from '../messages/categories/moderators'
+import { Pokemon } from '../messages/categories/pokemon'
 import { Storeable } from '../messages/categories/storeable'
  
 export class Chat {
@@ -24,7 +25,9 @@ export class Chat {
     let client = await this.connectToUser(user)
     let iClient = {
       userId: user._id.toString(),
-      client: client
+      client: client,
+      //@ts-ignore
+      settings: settings? settings : (await Settings.findOne({userId: user._id}).json)
     }
     Chat.clients.push(iClient)
     await this.bindCategories(iClient, settings)
@@ -57,6 +60,7 @@ export class Chat {
     if(settings?.chatbot?.categories?.common?.enabled) new Common(iClient)
     if(settings?.chatbot?.categories?.everyone?.enabled) new Everyone(iClient)
     if(settings?.chatbot?.categories?.moderators?.enabled) new Moderators(iClient)
+    if(settings?.chatbot?.categories?.pokemon?.enabled) new Pokemon(iClient)
     if(settings?.chatbot?.categories?.storeable?.enabled) new Storeable(iClient)
   }
 
@@ -77,6 +81,9 @@ export class Chat {
             break
           case Category.moderators:
             new Moderators(iClient)
+            break
+          case Category.pokemon:
+            new Pokemon(iClient)
             break
           case Category.storeable:
             new Storeable(iClient)
@@ -103,5 +110,6 @@ export enum Category {
   common,
   everyone,
   moderators,
+  pokemon,
   storeable
 }

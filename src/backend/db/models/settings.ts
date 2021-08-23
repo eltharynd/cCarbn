@@ -40,6 +40,9 @@ const SETTINGS_TEMPLATE = {
         },
         train: {
           enabled: true,
+          reverseDirection: false,
+          maxRows: 2,
+          reverseWrap: false,
           start: {
             x: 25, 
             y: 25
@@ -114,6 +117,25 @@ const SETTINGS_TEMPLATE = {
         enabled: false
       },
       everyone: {
+        enabled: false,
+        timeout: {
+          enabled: true,
+          command: 'poof',
+          streamer: {
+            reply: true,
+            message: `/me @user Sure! Like I'm gonna timeout the streamer...`
+          },
+          self: {
+            reply: true,
+            message: `/me @user Sure! Like I'm gonna timeout myself...`
+          },
+          mod: {
+            reply: true,
+            message: `/me @user You're a mod ffs... What'd you expect?`
+          }
+        }
+      },
+      pokemon: {
         enabled: false
       },
       moderators: {

@@ -1,4 +1,5 @@
-import { Chat } from '../twitch/chat'
+import { ChatClient } from '@twurple/chat/lib'
+import { Chat, IChatClient } from '../twitch/chat'
 
 export const filterParameters = (message) => {
   let parameters = message.split(' ')
@@ -8,26 +9,28 @@ export const filterParameters = (message) => {
 
 export class Message {
 
-  iClient
-  client
+  iClient: IChatClient
+  client: ChatClient
+  settings
   constructor(iClient) {
     this.iClient = iClient
     this.client = iClient.client
+    this.settings = iClient.settings.chatbot.categories
   }
 
   private cooldowns = {}
 
-  protected init = () => {
+  protected _init = () => {
     let keys = []
     for (let key of Object.keys(this))
-      if (typeof this[key] === 'function' && key !== 'init' && key !== 'timeout' && key !== 'fetch' && key !== 'exists' && key !== 'mod' && key !== 'generateListener')
+      if (typeof this[key] === 'function' && !key.startsWith('_'))
         keys.push(key)
       this.client.onMessage((channel, user, message, msg) => {
       for (let key of keys) this[key](channel, user, message, msg)
     })
   }
 
-  protected timeout = (timeInSeconds?: number, identifier?: string): boolean => {
+  protected _timeout = (timeInSeconds?: number, identifier?: string): boolean => {
     let caller = identifier
       ? identifier
       : new Error().stack
@@ -41,4 +44,8 @@ export class Message {
       return false
     }
   } 
+
+  protected _replace = (message, user): string => {
+    return message.replace(/\@user/, `@${user}`)
+  }
 }

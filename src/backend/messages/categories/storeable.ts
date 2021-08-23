@@ -18,15 +18,15 @@ export class Storeable extends Message {
 
   public constructor(client) {
     super(client)
-    this.fetch()
-    this.init()
+    this._fetch()
+    this._init()
   }
 
-  private fetch = async (): Promise<any> => {
+  private _fetch = async (): Promise<any> => {
     let buffer: any = await Command.find({userId: this.iClient.userId})
     for (let c of buffer) {
       let command = c.toJSON()
-      command.listener = this.client.onMessage(await this.generateListener(command))
+      command.listener = this.client.onMessage(await this._generateListener(command))
       this.commands.push(command)
     }
   }
@@ -107,7 +107,7 @@ export class Storeable extends Message {
 
         let result = exists.toJSON()
         this.commands.push(result)
-        let listener = this.generateListener(exists)
+        let listener = this._generateListener(exists)
         result.listener = this.client.onMessage(listener)
 
         this.client.say(channel, `/me Successfully ${edit ? 'edited' : 'added new'} command...`)
@@ -165,11 +165,11 @@ export class Storeable extends Message {
     }
   }
 
-  private generateListener = (command) => {
+  private _generateListener = (command) => {
     return (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
       let tester = command.command
       if (new RegExp('^' + tester, 'i').test(message) && (!command.mods || msg.userInfo.isMod || msg.userInfo.isBroadcaster)) {
-        if (this.timeout(10, tester === '!pp' ? tester + user : tester)) return
+        if (this._timeout(10, tester === '!pp' ? tester + user : tester)) return
         let answer = command.answer
         let inputs: string[] = message.replace(`${command.command} `, '').split(' ')
         let shift = () => {

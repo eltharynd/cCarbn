@@ -76,11 +76,12 @@ startApp()
 
 
 process.on('SIGINT', async () => {
+  console.info('SAFELY QUITTING APPLICATION...')
   for(let iClient of Twitch.clients) 
     for(let sub of iClient.subscriptions)
       try { await sub.subscription.stop() } catch (e) { console.error(e) }
   try { await Twitch.listener.unlisten() } catch (e) { console.error(e) }
   try { await Mongoose.disconnect() } catch (e) { console.error(e) }
-  console.info('SAFELY QUITTING APPLICATION...')
+  console.info('SAFELY CLOSED APPLICATION...')
   process.exit(0)
 })

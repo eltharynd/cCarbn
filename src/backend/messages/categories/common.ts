@@ -6,7 +6,7 @@ import { filterParameters, Message } from '../message'
 export class Common extends Message {
   public constructor(iClient) {
     super(iClient)
-    this.init()
+    this._init()
   }
 
   private hug = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
@@ -22,8 +22,8 @@ export class Common extends Message {
   }
 
   private greetings = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
-    if (/@cCarbn/i.test(message) && (/hi/i.test(message) || /hello/i.test(message) || /what's up/i.test(message) || /o\//i.test(message))) {
-      let options = [
+    if (/cCarbn/i.test(message) && (/hi/i.test(message) || /hey/i.test(message) || /hello/i.test(message) || /what's up/i.test(message) || /o\//i.test(message))) {
+      let custom = [
         `@${user} What's up bud? Nice to see you, hope you're doing fine...`,
         `@${user} Hey!!`,
         `@${user} Heya bud`,
@@ -34,6 +34,20 @@ export class Common extends Message {
         `Oh look, it's @${user} again... great`,
         `@${user} sup? here to chill a bit as well?`,
         `I was just thinking about you @${user}!!! D: D: D:`,
+      ]
+      let options = [
+        `@${user} this is ACTUALLY funny cause my server just got a 0 on a Math.random which is pretty fucking incredible if you ask me... I didn't even think this was ever gonna happen ngl...`,
+
+        ...custom,
+        ...custom,
+        ...custom,
+        ...custom,
+        ...custom,
+        ...custom,
+        ...custom,
+        ...custom,
+        ...custom,
+        ...custom,
 
         `@${user} this is ACTUALLY funny cause my server just got a 1 on a Math.random which is pretty fucking incredible if you ask me... I didn't even think this was ever gonna happen ngl...`,
       ]
@@ -43,28 +57,28 @@ export class Common extends Message {
 
   private simp = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/ simp /i.test(message) || / simp[\?\!]/.test(message) || / simp$/.test(message) || / simping /.test(message) || / simping$/.test(message)) {
-      if (this.timeout(10)) return
+      if (this._timeout(10)) return
       this.client.say(channel, `/me @${user} We don't use that language over here...`)
     }
   }
 
   private F = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
-    if (/^F$/.test(message)) {
-      if (this.timeout(20 * 60)) return
+    if (/^F$/i.test(message)) {
+      if (this._timeout(20 * 60)) return
       this.client.say(channel, `/me F`)
     }
   }
 
   private quote = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
-    if (/^F$/.test(message)) {
-      if (this.timeout(20 * 60)) return
+    if (/^\^$/.test(message)) {
+      if (this._timeout(20 * 60)) return
       this.client.say(channel, `/me ^^`)
     }
   }
 
   private cats = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/!cat/i.test(message)) {
-      if (this.timeout(5)) return
+      if (this._timeout(5)) return
       let facts = (await axios.get(`https://cat-fact.herokuapp.com/facts`)).data
       if (facts && facts.length > 0) 
         this.client.say(channel, `/me ${facts[Math.floor(Math.random() * facts.length)].text}`)
@@ -75,7 +89,7 @@ export class Common extends Message {
 
   private dogs = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/!dog/i.test(message)) {
-      if (this.timeout(5)) return
+      if (this._timeout(5)) return
       let facts = (await axios.get(`https://dog-facts-api.herokuapp.com/api/v1/resources/dogs/all`)).data
       if (facts && facts.length > 0) this.client.say(channel, `/me ${facts[Math.floor(Math.random() * facts.length)].fact}`)
       else this.client.say(channel, `/me I'm trying to get some cool dog facts but this dudes aren't answering... I suppose that's what you get with free APIs`)

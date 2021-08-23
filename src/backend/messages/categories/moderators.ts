@@ -8,11 +8,11 @@ export class Moderators extends Message {
   twitch
   public constructor(iClient) {
     super(iClient)
-    this.init()
-    this.initApi()
+    this._init()
+    this._initApi()
   }
 
-  private async initApi() {
+  private async _initApi() {
     this.twitch = await Twitch.findByUserId(this.iClient.userId.toString())
   }
 
