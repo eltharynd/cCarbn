@@ -538,20 +538,22 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     let locomotiveWidth = +this.train.locomotive.size.width * +this.train.locomotive.scale
     let carriageWidth = +this.train.carriage.size.width * +this.train.carriage.scale
     
-
     let viewportWidth = +this.viewport.width - +this.train.start.x
-    //let rowWidth = locomotiveWidth + carriageWidth * this.carriages.length
 
     let carriagesThatFit = Math.floor((viewportWidth - locomotiveWidth) / carriageWidth)
 
     if(this.carriages.length > carriagesThatFit + (carriagesThatFit + 1) * (this.train.maxRows - 1)) {
-      let marginRight = viewportWidth - locomotiveWidth - carriagesThatFit * carriageWidth
-      let totalWidth = locomotiveWidth + carriageWidth * this.carriages.length + this.train.maxRows *  marginRight
-      let availableWidth = viewportWidth * this.train.maxRows
-      let newScale = availableWidth / totalWidth
 
-      this.currentLocomotiveScale = newScale
-      this.currentCarriageScale = newScale
+      let a = this.train.maxRows * carriageWidth
+      let b = locomotiveWidth + carriageWidth * this.carriages.length
+      let c = -(viewportWidth * this.train.maxRows)
+      let delta = (b * b) - (4 * a * c)
+      let newScale = ((-b) + Math.sqrt(delta)) / (2 * a)
+
+      newScale = newScale * .95
+
+      this.currentLocomotiveScale = newScale * this.train.locomotive.scale
+      this.currentCarriageScale = newScale * this.train.carriage.scale
     } else {
       this.currentLocomotiveScale = this.train.locomotive.scale
       this.currentCarriageScale = this.train.carriage.scale
