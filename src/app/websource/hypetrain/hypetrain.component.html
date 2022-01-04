@@ -27,6 +27,11 @@
       }">{{currentMessage}}</div>
     </div>
     <div class="viewport-anchor" [ngStyle]="{width: viewport.width+'px', height: viewport.height+'px'}"></div>
+    <div id="cover" [ngStyle]="{
+      left: viewport.width + 'px',
+      width: (1280 - viewport.width)+'px',
+      height: viewport.height+'px'
+    }"></div>
 </div>
 
 <div class="settings"  [ngStyle]="{width: viewport.width+'px'}">
@@ -45,7 +50,7 @@
     </div>
     <div>
       Level: 
-      <mat-slider [disabled]="transitioning || currentLevel===6 || now - changedAt <= 500" [min]="0" max="6" step="1" (change)="prematureEnd = lastLevel!==5; onLevelChange()" [(ngModel)]="currentLevel"></mat-slider>
+      <mat-slider [disabled]="!audioLoaded || transitioning || currentLevel===6 || now - changedAt <= 500" [min]="0" max="6" step="1" (change)="prematureEnd = lastLevel!==5; onLevelChange()" [(ngModel)]="currentLevel"></mat-slider>
       {{currentLevel>0 ? currentLevel<6 ? currentLevel : 'ending' : 'none'}}
     </div>
     <div>
@@ -70,6 +75,48 @@
     <div>Background&nbsp;&nbsp;&nbsp;<mat-slide-toggle [(ngModel)]="viewport.background" (change)="background()">{{viewport.background ? 'ON' : 'OFF'}}</mat-slide-toggle></div>
     <div>Mode: <mat-slide-toggle [(ngModel)]="viewport.dark" (change)="background()">{{viewport.dark ? 'Dark' : 'Light'}}</mat-slide-toggle></div>
   
+    <h3>HYPE TRAIN TRACKS</h3>
+    <app-uploader [name]="'hypetrain-track-1'" 
+                  [displayTextOverride] = "'LVL 0->1 TRACK'"
+                  [disabled]="!audioLoaded"
+                  [uploaded]="trackChangeSubject" 
+                  [height]="'4rem'" 
+                  [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
+    <button mat-raised-button color="accent" (click)="defaultButton('hypetrain-track-1')" [disabled]="!audio.tracks[1] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+    
+    <app-uploader [name]="'hypetrain-track-2'" 
+                  [displayTextOverride] = "'LVL 1->2 TRACK'"
+                  [disabled]="!audioLoaded"
+                  [uploaded]="trackChangeSubject" 
+                  [height]="'4rem'" 
+                  [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
+    <button mat-raised-button color="accent" (click)="defaultButton('hypetrain-track-2')" [disabled]="!audio.tracks[2] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+    
+    <app-uploader [name]="'hypetrain-track-3'" 
+                  [displayTextOverride] = "'LVL 2->3 TRACK'"
+                  [disabled]="!audioLoaded"
+                  [uploaded]="trackChangeSubject" 
+                  [height]="'4rem'" 
+                  [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
+    <button mat-raised-button color="accent" (click)="defaultButton('hypetrain-track-3')" [disabled]="!audio.tracks[3] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+
+    <app-uploader [name]="'hypetrain-track-4'" 
+                  [displayTextOverride] = "'LVL 3->4 TRACK'"
+                  [disabled]="!audioLoaded"
+                  [uploaded]="trackChangeSubject" 
+                  [height]="'4rem'" 
+                  [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
+    <button mat-raised-button color="accent" (click)="defaultButton('hypetrain-track-4')" [disabled]="!audio.tracks[4] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+    
+    <app-uploader [name]="'hypetrain-track-5'" 
+                  [displayTextOverride] = "'LVL 4->5(END) TRACK'"
+                  [disabled]="!audioLoaded"
+                  [uploaded]="trackChangeSubject" 
+                  [height]="'4rem'" 
+                  [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
+    <button mat-raised-button color="accent" (click)="defaultButton('hypetrain-track-5')" [disabled]="!audio.tracks[5] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+    
+    <button class="save-button" mat-raised-button color="primary" [disabled]="data.busy" (click)="saveSettings()">SAVE</button>
   </div>
 
   <div class="viewport-audio-text">

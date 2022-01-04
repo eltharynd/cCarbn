@@ -84,3 +84,9 @@
         background-color: #b71c1c;
     }
 }
+
+
+.disabled {
+    filter: grayscale(.9);
+    position: none;
+}

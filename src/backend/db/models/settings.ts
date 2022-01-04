@@ -76,7 +76,14 @@ const SETTINGS_TEMPLATE = {
           enabled: true,
           volume: 1,
           runsBeforeCompleted: 3,
-          fadingLength: 30
+          fadingLength: 30,
+          tracks: {
+            '1': null,
+            '2': null,
+            '3': null,
+            '4': null,
+            '5': null
+          }
         }
       },
       moderator: {

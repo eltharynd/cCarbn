@@ -31,6 +31,13 @@
   }
 }
 
+#cover {
+  position: fixed;
+  top: 0;
+  margin: 0;
+  padding: 0;
+  background-color: #222b45;
+}
 
 .settings {
   display: flex;
@@ -39,7 +46,7 @@
   padding: 0.5rem;
   background-color: #222b45;
   z-index: 1;
-  min-width: 720px;
+  min-width: 1280px;
 }
 
 

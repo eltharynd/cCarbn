@@ -87,7 +87,14 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     enabled: true,
     volume: 1,
     runsBeforeCompleted: 3,
-    fadingLength: 30
+    fadingLength: 30,
+    tracks: {
+      '1': null,
+      '2': null,
+      '3': null,
+      '4': null,
+      '5': null
+    }
   }
 
   scaleLinked = true
@@ -126,6 +133,8 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   cooldownEndDate
 
   pictureChangeSubject = new Subject<any>() 
+  trackChangeSubject = new Subject<any>() 
+  audioLoaded = false
 
   constructor(public data: DataService, private route: ActivatedRoute) {
     this.route.parent?.params.subscribe(params => {
@@ -153,7 +162,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
           picture.src = this.train.locomotive.pictures.background 
           break
         case 'locomotive-foreground':
-          console.log('HERE', response.url)
           //@ts-ignore
           this.train.locomotive.pictures.foreground = `${SERVER_URL}${response.url}#`
           picture = new Image()
@@ -205,6 +213,15 @@ export class HypetrainComponent implements OnInit, OnDestroy {
           break
         default: return
       }
+    })
+
+    this.trackChangeSubject.subscribe(async response => {
+      if(!response.url) return
+      let name: string = response.url.replace(/^.*\//,'').replace(/\..*$/, '')
+      let level = name.charAt(name.length-1)
+      this.audio.tracks[level] = `${SERVER_URL}${response.url}#`
+
+      this.loadAudio()
     })
   }
 
@@ -291,23 +308,26 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   }
 
   loadAudio() {
-    let loaded = 0
+    this.audioLoaded = false
+    this.stopAudio()
+    this.loops = {}
+    let done = 0
     for (let i = 1; i <= 5; i++) {
+      let url = this.audio.tracks[i+''] ? this.audio.tracks[i+''] : `assets/sounds/hypetrain/Level ${i}.mp3`
       let audio = new Audio()
-      //audio.src = `assets/sounds/hypetrain/default/Level ${i} Byte.mp3`
-      audio.src = `assets/sounds/hypetrain/Level ${i}.mp3`
+      audio.src = url
       audio.load
       audio.addEventListener('loadedmetadata', () => {
         this.loops[`lvl${i}`] = new SeamlessLoop()
         this.loops[`lvl${i}`]._volume = this.currentLevel === i ? this.currentVolume : 0
-        //this.loops[`lvl${i}`].addUri(`/assets/sounds/hypetrain/default/Level ${i} Byte.mp3`, audio.duration*1000, 'loop')
-        this.loops[`lvl${i}`].addUri(`/assets/sounds/hypetrain/Level ${i}.mp3`, audio.duration*1000, 'loop')
+        this.loops[`lvl${i}`].addUri(url, audio.duration*1000, 'loop')
+        this.audioLoaded = ++done >= 5
       })
     }
   }
 
   stopAudio() {
-    for (let i = 1; i <= 5; i++) this.loops[`lvl${i}`].stop()
+    for (let i = 1; i <= 5; i++) if(this.loops[`lvl${i}`]) this.loops[`lvl${i}`].stop()
   }
 
   onVolumeChange() {
@@ -644,5 +664,16 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       default: return
     }
 
+  }
+
+  async defaultButton(name: string) {
+
+    let level = name.charAt(name.length-1)
+
+    //@ts-ignore
+    await this.data.delete(this.audio.tracks[level].replace(/^.*\/api\//, ''))
+    this.audio.tracks[level] = null
+
+    this.loadAudio()
   }
 }

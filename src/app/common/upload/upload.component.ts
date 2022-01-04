@@ -15,10 +15,13 @@ export class UploadComponent {
     @Input() height: string
 
     @Input() name: string
+    @Input() displayTextOverride: string
 
     @Input() uploaded: Subject<any>
     @Input() url: string|null
 
+    @Input() disabled: boolean = false
+    
     rnd = uuid.v4()
     busy
     success

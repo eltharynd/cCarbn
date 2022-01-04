@@ -1,6 +1,8 @@
 import { ChatClient } from '@twurple/chat/lib'
 import { Chat, IChatClient } from '../twitch/chat'
 
+export const MAX_CHAT_MESSAGE_LENGTH: number = 500;
+
 export const filterParameters = (message) => {
   let parameters = message.split(' ')
   parameters.shift()

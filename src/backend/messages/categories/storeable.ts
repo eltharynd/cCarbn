@@ -4,7 +4,7 @@ import { filter, map, take, toArray } from 'rxjs/operators'
 import { Command } from '../../db/models/command'
 import { Mongo } from '../../db/mongo'
 import { Chat } from '../../twitch/chat'
-import { Message } from '../message'
+import { MAX_CHAT_MESSAGE_LENGTH, Message } from '../message'
 
 const RGX_USER = /\@\w+(\s|$)/gi
 //@user replaces with user sending the message
@@ -161,7 +161,29 @@ export class Storeable extends Message {
 
       //TODO check if message length > 500
       if (!printables || printables.length < 1) this.client.say(channel, `/me No commands saved yet...`)
-      else this.client.say(channel, `/me There's the current commands: '${printables.join(`', '`)}'.`)
+      else {
+        let buffer = `/me There's the current commands: '${printables.join(`', '`)}'.`
+        if(buffer.length <= MAX_CHAT_MESSAGE_LENGTH) {
+          this.client.say(channel, buffer)
+        } else {
+          let strings: string[] = [`/me There's the current commands: `]
+          
+          for(let i=0; i<printables.length; i++) {
+            if(strings[strings.length-1].length + printables[i].length + 3 > MAX_CHAT_MESSAGE_LENGTH) {
+              strings.push(`'${printables[i]}'`)
+            } else {
+              strings[strings.length-1] = strings[strings.length-1] + ` '${printables[i]}'` 
+            }
+          }
+          
+          for(let i=0; i<strings.length; i++) {
+            setTimeout(() => {
+              this.client.say(channel, strings[i])
+            }, 500 * (i+1));
+          }
+        }
+        
+      }
     }
   }
 
