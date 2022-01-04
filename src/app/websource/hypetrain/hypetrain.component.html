@@ -27,6 +27,11 @@
       }">{{currentMessage}}</div>
     </div>
     <div class="viewport-anchor" [ngStyle]="{width: viewport.width+'px', height: viewport.height+'px'}"></div>
+    <div id="cover" [ngStyle]="{
+      left: viewport.width + 'px',
+      width: (1280 - viewport.width)+'px',
+      height: viewport.height+'px'
+    }"></div>
 </div>
 
 <div class="settings"  [ngStyle]="{width: viewport.width+'px'}">
