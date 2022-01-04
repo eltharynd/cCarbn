@@ -313,7 +313,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     this.loops = {}
     let done = 0
     for (let i = 1; i <= 5; i++) {
-      let url = this.audio.tracks[i+''] ? this.audio.tracks[i+''] : `assets/sounds/hypetrain/Level ${i}.mp3`
+      let url = this.audio.tracks[i+''] ? this.audio.tracks[i+''] : `assets/sounds/Level ${i}.mp3`
       let audio = new Audio()
       audio.src = url
       audio.load
@@ -334,6 +334,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     for (let i = 1; i <= 5; i++) this.loops[`lvl${i}`].volume(this.loops[`lvl${i}`]._volume > 0 ? this.currentVolume : 0)
     this.audio.volume = this.currentVolume
   }
+
 
   timeout
   fader
