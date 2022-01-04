@@ -162,7 +162,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
           picture.src = this.train.locomotive.pictures.background 
           break
         case 'locomotive-foreground':
-          console.log('HERE', response.url)
           //@ts-ignore
           this.train.locomotive.pictures.foreground = `${SERVER_URL}${response.url}#`
           picture = new Image()
@@ -323,7 +322,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
         this.loops[`lvl${i}`]._volume = this.currentLevel === i ? this.currentVolume : 0
         this.loops[`lvl${i}`].addUri(url, audio.duration*1000, 'loop')
         this.audioLoaded = ++done >= 5
-        console.log(done)
       })
     }
   }
