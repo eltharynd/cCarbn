@@ -123,14 +123,37 @@ export class Api {
         let found: any = await Mongo.Upload.findOne({ filename: req.params.filename, metadata: { userId: Mongo.ObjectId(req.params.userId) } })
         if(!found) return res.status(404).send()
 
-        Mongo.Upload.read({filename: req.params.filename, metadata: { userId: Mongo.ObjectId(req.params.userId) } }, (error, buffer) => {
+        try{
+          const readStream = await Mongo.Upload.read({filename: req.params.filename, metadata: { userId: Mongo.ObjectId(req.params.userId) } })
+          if(!readStream) return res.status(404).send()
+          res.set({
+            'content-type': found.contentType,
+            'Last-modified': found.updatedAt.toUTCString()
+          })
+          readStream.on("data", (chunk) => {
+            res.write(chunk);
+          });
+          readStream.on("end", () => {
+            res.status(200).end();
+          });
+          readStream.on("error", (err) => {
+            console.log(err);
+            res.status(500).send(err);
+          });
+
+
+        } catch (e) {
+          console.error(e)
+          return res.status(500).send()
+        }
+        /* Mongo.Upload.read({filename: req.params.filename, metadata: { userId: Mongo.ObjectId(req.params.userId) } }, async (error, buffer) => {
           if(error) return res.status(500).send()
           res.set({
             'content-type': found.contentType,
             'Last-modified': found.updatedAt.toUTCString()
           })
-          res.send(Buffer.from(buffer))
-        })
+          res.send(await Buffer.from(buffer))
+        }) */
       })
       .delete(authMiddleware, async (req, res) => {
         let found: any = await Mongo.Upload.findOne({ filename: req.params.filename, metadata: { userId: Mongo.ObjectId(req.params.userId) } })
