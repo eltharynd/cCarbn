@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'
+import { Subject } from 'rxjs'
 import { DataService } from 'src/app/shared/data.service'
 
 @Component({
@@ -9,9 +10,18 @@ import { DataService } from 'src/app/shared/data.service'
 })
 export class CheersComponent implements OnInit, OnDestroy {
 
+  viewport = {
+    width: 1280,
+    height: 720,
+    background: false,
+    dark: false
+  }
+
   userId: string
 
-  constructor(private data: DataService, private route: ActivatedRoute) {
+  testController: Subject<any> = new Subject()
+
+  constructor(public data: DataService, private route: ActivatedRoute) {
     this.route.parent?.params.subscribe(params => {
       this.userId = params.userId
     })
@@ -29,6 +39,10 @@ export class CheersComponent implements OnInit, OnDestroy {
 
   async ngOnDestroy() {
     this.data.socketIO.emit('cheer', {userId: this.userId})
+  }
+
+  async saveSettings() {
+    
   }
 
 }

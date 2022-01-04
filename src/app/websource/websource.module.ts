@@ -4,7 +4,8 @@ import { CheersComponent } from "./cheers/cheers.component"
 import { HypetrainModule } from "./hypetrain/hypetrain.module"
 import { PredictionsComponent } from "./predictions/predictions.component"
 import { WebSourceRoutingModule } from "./websource-routing.module"
-import { WebSourceComponent } from "./websource.component"
+import { WebSourceComponent } from "./websource.component";
+import { ClipComponent } from './common/clip/clip.component'
 
 
 
@@ -12,12 +13,14 @@ import { WebSourceComponent } from "./websource.component"
  @NgModule({
   imports: [
     WebSourceRoutingModule,
+    SharedMaterialModule,
     HypetrainModule,
   ],
   declarations: [
     WebSourceComponent,
     PredictionsComponent,
     CheersComponent,
+    ClipComponent,
   ],
  })
  export class WebSourceModule {}
