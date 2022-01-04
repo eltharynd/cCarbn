@@ -122,9 +122,8 @@ export class Api {
       .get(async (req, res) => {
         let found: any = await Mongo.Upload.findOne({ filename: req.params.filename, 'metadata.userId': Mongo.ObjectId(req.params.userId) })
         if(!found) return res.status(404).send()
-
         try{
-          const readStream = await Mongo.Upload.read({filename: req.params.filename, 'metadata.userId': Mongo.ObjectId(req.params.userId) })
+          const readStream = await Mongo.Upload.read({_id: found._id })
           if(!readStream) return res.status(404).send()
           res.set({
             'content-type': found.contentType,
