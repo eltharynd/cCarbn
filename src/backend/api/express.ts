@@ -114,7 +114,8 @@ export class Api {
         }, readStream, (error, f) => {
           if(error) return res.status(500).send()
           res.send({
-            url: /image\//.test(file.mimetype) ? `uploads/${req.params.userId}/${file.originalname}` : null
+            //url: /image\//.test(file.mimetype) ? `uploads/${req.params.userId}/${file.originalname}` : null
+            url: `uploads/${req.params.userId}/${file.originalname}`
           })
         })
       })
