@@ -1,0 +1,65 @@
+.viewport.background {
+    background-color: white;
+    background-image:
+        linear-gradient(45deg, #ccc 25%, transparent 25%), 
+        linear-gradient(135deg, #ccc 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #ccc 75%),
+        linear-gradient(135deg, transparent 75%, #ccc 75%);
+    background-size:25px 25px; /* Must be a square */
+    background-position:0 0, 12.5px 0, 12.5px -12.5px, 0px 12.5px; /* Must be half of one side of the square */
+}
+
+.viewport.background.dark {
+    background-color: dimgray;
+    background-image:
+    linear-gradient(45deg, #292929 25%, transparent 25%), 
+    linear-gradient(135deg, #292929 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #292929 75%),
+    linear-gradient(135deg, transparent 75%, #292929 75%);
+    background-size:25px 25px; /* Must be a square */
+    background-position:0 0, 12.5px 0, 12.5px -12.5px, 0px 12.5px; /* Must be half of one side of the square */
+}
+
+#cover {
+    position: fixed;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    background-color: #222b45;
+}
+
+
+.settings {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    padding: 0.5rem;
+    background-color: #222b45;
+    z-index: 1;
+    min-width: 1280px;
+}
+  
+  
+.settings > div {
+    display: flex; 
+    flex-direction: column; 
+    justify-content: flex-start; 
+    align-items: center;
+    width: 33%;
+  
+    padding: 1rem 0;
+    border: 1px solid nb-theme(text-hint-color);
+    border-radius: 5px;
+  
+    color: nb-theme(text-basic-color);
+  
+    > h3 {
+      text-align: center;
+      color: nb-theme(text-hint-color);
+      font-weight: bold;
+    }
+  
+    > h3:not(:first-child) {
+      margin-top: 2.5rem;
+    }
+}
