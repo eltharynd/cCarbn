@@ -100,7 +100,7 @@ export class Api {
         //@ts-ignore
         let file = req.file
         let readStream = Readable.from(file.buffer)
-        let found: any = await Mongo.Upload.findOne({ filename: req.params.filename, metadata: { userId: Mongo.ObjectId(req.params.userId) } })
+        let found: any = await Mongo.Upload.findOne({ filename: req.params.filename, 'metadata.userId': Mongo.ObjectId(req.params.userId) })
         if(found) await new Promise((resolve, reject) => {
           Mongo.Upload.unlink({ _id: found._id}, (error, unlink) => {
             if(error) reject(error)
@@ -120,11 +120,11 @@ export class Api {
         })
       })
       .get(async (req, res) => {
-        let found: any = await Mongo.Upload.findOne({ filename: req.params.filename, metadata: { userId: Mongo.ObjectId(req.params.userId) } })
+        let found: any = await Mongo.Upload.findOne({ filename: req.params.filename, 'metadata.userId': Mongo.ObjectId(req.params.userId) })
         if(!found) return res.status(404).send()
 
         try{
-          const readStream = await Mongo.Upload.read({filename: req.params.filename, metadata: { userId: Mongo.ObjectId(req.params.userId) } })
+          const readStream = await Mongo.Upload.read({filename: req.params.filename, 'metadata.userId': Mongo.ObjectId(req.params.userId) })
           if(!readStream) return res.status(404).send()
           res.set({
             'content-type': found.contentType,
