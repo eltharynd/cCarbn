@@ -313,7 +313,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     this.loops = {}
     let done = 0
     for (let i = 1; i <= 5; i++) {
-      let url = this.audio.tracks[i+''] ? this.audio.tracks[i+''] : `assets/sounds/hypetrain/Level ${i}.mp3`
+      let url = this.audio.tracks[i+''] ? this.audio.tracks[i+''] : `assets/sounds/hypetrain/level ${i}.mp3`
       let audio = new Audio()
       audio.src = url
       audio.load
