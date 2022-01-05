@@ -7,7 +7,7 @@
          [ngStyle]="{
              width: (size.width * (scale||1))+'px', 
              height: (size.height * (scale||1))+'px',
-             'background-image': backgroundPic ? 'url(' + backgroundPic + ')' : ''
+             'background-image': backgroundPic ? 'url(' + backgroundPic + '#)' : ''
             }">
         <img class="picture" 
              [src]="user.picture" 
@@ -23,7 +23,7 @@
                  width: (pictureBounds.width! * scale)+'px', 
                  left: (pictureBounds.left! * scale)+'px', 
                  height: (pictureBounds.height! * scale)+'px',
-                 'background-image': foregroundPic ? 'url(' + foregroundPic + ')' : ''
+                 'background-image': foregroundPic ? 'url(' + foregroundPic + '#)' : ''
                 }"></div>
     </div>
 </div>

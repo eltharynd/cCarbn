@@ -150,7 +150,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       switch(name) {
         case 'locomotive-background':
           //@ts-ignore
-          this.train.locomotive.pictures.background = `${SERVER_URL}${response.url}#`
+          this.train.locomotive.pictures.background = `${SERVER_URL}${response.url}`
           
           picture = new Image()
           //@ts-ignore
@@ -163,7 +163,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
           break
         case 'locomotive-foreground':
           //@ts-ignore
-          this.train.locomotive.pictures.foreground = `${SERVER_URL}${response.url}#`
+          this.train.locomotive.pictures.foreground = `${SERVER_URL}${response.url}`
           picture = new Image()
           //@ts-ignore
           picture.onload = () => {
@@ -177,7 +177,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
           break
         case 'carriage-background':
           //@ts-ignore
-          this.train.carriage.pictures.background = `${SERVER_URL}${response.url}#`
+          this.train.carriage.pictures.background = `${SERVER_URL}${response.url}`
           picture = new Image()
           //@ts-ignore
           picture.onload = () => {
@@ -194,7 +194,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
           break
         case 'carriage-foreground':
           //@ts-ignore
-          this.train.carriage.pictures.foreground = `${SERVER_URL}${response.url}#`
+          this.train.carriage.pictures.foreground = `${SERVER_URL}${response.url}`
           picture = new Image()
           //@ts-ignore
           picture.onload = () => {
@@ -219,7 +219,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       if(!response.url) return
       let name: string = response.url.replace(/^.*\//,'').replace(/\..*$/, '')
       let level = name.charAt(name.length-1)
-      this.audio.tracks[level] = `${SERVER_URL}${response.url}#`
+      this.audio.tracks[level] = `${SERVER_URL}${response.url}`
 
       this.loadAudio()
     })
