@@ -79,6 +79,7 @@
     <app-uploader [name]="'hypetrain-track-1'" 
                   [displayTextOverride] = "'LVL 0->1 TRACK'"
                   [disabled]="!audioLoaded || data.busy"
+                  [uploading]="trackUploadingSubject"
                   [uploaded]="trackChangeSubject" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
@@ -87,6 +88,7 @@
     <app-uploader [name]="'hypetrain-track-2'" 
                   [displayTextOverride] = "'LVL 1->2 TRACK'"
                   [disabled]="!audioLoaded || data.busy"
+                  [uploading]="trackUploadingSubject"
                   [uploaded]="trackChangeSubject" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
@@ -95,6 +97,7 @@
     <app-uploader [name]="'hypetrain-track-3'" 
                   [displayTextOverride] = "'LVL 2->3 TRACK'"
                   [disabled]="!audioLoaded || data.busy"
+                  [uploading]="trackUploadingSubject"
                   [uploaded]="trackChangeSubject" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
@@ -103,6 +106,7 @@
     <app-uploader [name]="'hypetrain-track-4'" 
                   [displayTextOverride] = "'LVL 3->4 TRACK'"
                   [disabled]="!audioLoaded || data.busy"
+                  [uploading]="trackUploadingSubject"
                   [uploaded]="trackChangeSubject" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
@@ -111,6 +115,7 @@
     <app-uploader [name]="'hypetrain-track-5'" 
                   [displayTextOverride] = "'LVL 4->5(END) TRACK'"
                   [disabled]="!audioLoaded || data.busy"
+                  [uploading]="trackUploadingSubject"
                   [uploaded]="trackChangeSubject" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>

@@ -133,6 +133,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   cooldownEndDate
 
   pictureChangeSubject = new Subject<any>() 
+  trackUploadingSubject = new Subject<any>() 
   trackChangeSubject = new Subject<any>() 
   audioLoaded = false
 
@@ -215,6 +216,9 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       }
     })
 
+    this.trackUploadingSubject.subscribe(() => {
+      this.audioLoaded = false
+    })
     this.trackChangeSubject.subscribe(async response => {
       if(!response.url) return
       let name: string = response.url.replace(/^.*\//,'').replace(/\..*$/, '')
@@ -233,7 +237,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     if(!settings)
       return
     await this.prepareSettings(settings)
-    
 
     this.channelPic = await this.data.get(`user/${this.userId}/picture`)
     if(!this.channelPic)

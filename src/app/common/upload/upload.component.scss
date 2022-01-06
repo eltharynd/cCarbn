@@ -86,7 +86,9 @@
 }
 
 
-.disabled {
+.disabled,
+.disabled > *,
+.disabled > * > * {
     filter: grayscale(.9);
-    position: none;
+    pointer-events: none;
 }

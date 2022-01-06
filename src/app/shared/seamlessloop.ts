@@ -79,6 +79,7 @@ export class SeamlessLoop {
       audMute.pause();
       try {
         audMute.currentTime = 0;
+        //@ts-ignore
       } catch (e){console.debug(e.message);};
     }, this.stopDelay);
     
@@ -89,6 +90,7 @@ export class SeamlessLoop {
           t.old.pause();
           try {
             t.old.currentTime = 0;
+            //@ts-ignore
           } catch (e){console.debug(e.message);};
         }
       }, this.stopDelay);

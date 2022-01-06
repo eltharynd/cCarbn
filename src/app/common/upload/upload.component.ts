@@ -17,6 +17,7 @@ export class UploadComponent {
     @Input() name: string
     @Input() displayTextOverride: string
 
+    @Input() uploading: Subject<any>
     @Input() uploaded: Subject<any>
     @Input() url: string|null
 
@@ -27,11 +28,13 @@ export class UploadComponent {
     success
     failure
 
+
     constructor(private auth: AuthGuard) { }
 
     async handleFileInput(eventTarget?: any) {
         if(!eventTarget.files )
         return
+        if(this.uploading) this.uploading.next(true)
         let file = eventTarget.files[0]
 
         this.busy = true
