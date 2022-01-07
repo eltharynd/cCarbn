@@ -83,7 +83,7 @@
                   [uploaded]="trackChangeSubject" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-1')" [disabled]="!audio.tracks[1] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-1')" [disabled]="!audio.tracks[1] || !audioLoaded || currentLevel>0" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
     
     <app-uploader [name]="'hypetrain-track-2'" 
                   [displayTextOverride] = "'LVL 1->2 TRACK'"
@@ -92,7 +92,7 @@
                   [uploaded]="trackChangeSubject" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-2')" [disabled]="!audio.tracks[2] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-2')" [disabled]="!audio.tracks[2] || !audioLoaded || currentLevel>0" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
     
     <app-uploader [name]="'hypetrain-track-3'" 
                   [displayTextOverride] = "'LVL 2->3 TRACK'"
@@ -101,7 +101,7 @@
                   [uploaded]="trackChangeSubject" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-3')" [disabled]="!audio.tracks[3] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-3')" [disabled]="!audio.tracks[3] || !audioLoaded || currentLevel>0" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
 
     <app-uploader [name]="'hypetrain-track-4'" 
                   [displayTextOverride] = "'LVL 3->4 TRACK'"
@@ -110,7 +110,7 @@
                   [uploaded]="trackChangeSubject" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-4')" [disabled]="!audio.tracks[4] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-4')" [disabled]="!audio.tracks[4] || !audioLoaded || currentLevel>0" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
     
     <app-uploader [name]="'hypetrain-track-5'" 
                   [displayTextOverride] = "'LVL 4->5(END) TRACK'"
@@ -119,7 +119,7 @@
                   [uploaded]="trackChangeSubject" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-5')" [disabled]="!audio.tracks[5] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-5')" [disabled]="!audio.tracks[5] || !audioLoaded || currentLevel>0" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
     
     <button class="save-button" mat-raised-button color="primary" [disabled]="data.busy" (click)="saveSettings()">SAVE</button>
   </div>
