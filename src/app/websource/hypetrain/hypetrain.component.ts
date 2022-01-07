@@ -360,6 +360,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   fader
   changedAt
   async onLevelChange() {
+    if(this.currentLevel === 0) return this.endNow()
     this.changedAt = Date.now()
     console.info(`${this.lastLevel} -> ${this.currentLevel}`)
 
