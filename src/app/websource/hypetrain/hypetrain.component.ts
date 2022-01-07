@@ -641,6 +641,8 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     this.resizeToFit()
   }
   
+
+  
   async saveSettings() {
     let viewport = JSON.parse(JSON.stringify(this.viewport))
     delete viewport.background
