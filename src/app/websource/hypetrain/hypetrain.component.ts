@@ -86,8 +86,8 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   audio = {
     enabled: true,
     volume: 1,
-    runsBeforeCompleted: 3,
     fadingLength: 30,
+    fadeOnCompletion: true,
     tracks: {
       '1': null,
       '2': null,
@@ -108,7 +108,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   userId: string
 
   currentLevel: number = 0
-  prematureEnd: boolean
   currentVolume: number = 1
 
 
@@ -224,7 +223,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       let name: string = response.url.replace(/^.*\//,'').replace(/\..*$/, '')
       let level = name.charAt(name.length-1)
       this.audio.tracks[level] = `${SERVER_URL}${response.url}`
-
+      this.loops[`lvl${level}`] = null
       this.loadAudio()
     })
   }
@@ -250,7 +249,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     this.data.userId.next(this.userId)
 
     this.data.socketIO.on('hypetrain', async (data) => {
-      console.log(data)
+      console.info(data)
 
       if(data.expires_at) this.expiryDate = new Date(data.expires_at).getTime()
       if(data.goal) this.goal = data.goal
@@ -310,22 +309,34 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     }
   }
 
-  loadAudio() {
+  async loadAudio() {
     this.audioLoaded = false
     this.stopAudio()
-    this.loops = {}
     let done = 0
+
     for (let i = 1; i <= 5; i++) {
-      let url = this.audio.tracks[i+''] ? this.audio.tracks[i+''] : `assets/sounds/hypetrain/level ${i}.mp3`
-      let audio = new Audio()
-      audio.src = url
-      audio.load
-      audio.addEventListener('loadedmetadata', () => {
-        this.loops[`lvl${i}`] = new SeamlessLoop()
-        this.loops[`lvl${i}`]._volume = this.currentLevel === i ? this.currentVolume : 0
-        this.loops[`lvl${i}`].addUri(url, audio.duration*1000, 'loop')
-        this.audioLoaded = ++done >= 5
-      })
+      if(!this.loops[`lvl${i}`]) {
+        let track: Track = new Track()
+        track.audioContext = new AudioContext()
+        track.gainNode = track.audioContext.createGain()
+        track.gainNode.gain.value = this.currentVolume
+        track.gainNode.connect(track.audioContext.destination)
+  
+        let url = this.audio.tracks[i+''] ? this.audio.tracks[i+''] : `assets/sounds/hypetrain/level ${i}.mp3`
+  
+        let response = await fetch(url, {mode: 'cors'})
+        if(response)
+          track.buffer = await track.audioContext.decodeAudioData(await response.arrayBuffer())
+        else return console.error('Could not decode track')
+        
+        track.source = track.audioContext.createBufferSource()
+        track.source.buffer = track.buffer
+        track.source.loop = true
+        track.source.connect(track.gainNode)
+  
+        this.loops[`lvl${i}`] = track
+      }
+      this.audioLoaded = ++done >= 5
     }
   }
 
@@ -333,91 +344,119 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     for (let i = 1; i <= 5; i++) if(this.loops[`lvl${i}`]) this.loops[`lvl${i}`].stop()
   }
 
-  onVolumeChange() {
-    for (let i = 1; i <= 5; i++) this.loops[`lvl${i}`].volume(this.loops[`lvl${i}`]._volume > 0 ? this.currentVolume : 0)
+  onVolumeChange() {  
+    for(let i=1; i<=5; i++) {
+      let track: Track = this.loops[`lvl${i}`]
+      track.gainNode.gain.value = this.currentVolume
+    }
     this.audio.volume = this.currentVolume
   }
 
 
-  timeout
+  lastLevel: number = 0
+  transitioning: boolean
+  prematureEnd: boolean
+
   fader
-  transitioning
-  lastLevel = 0
   changedAt
   async onLevelChange() {
     this.changedAt = Date.now()
+    console.info(`${this.lastLevel} -> ${this.currentLevel}`)
 
-    console.log(`${this.lastLevel} -> ${this.currentLevel}`)
+    if(!this.expiryDate) this.expiryDate = Date.now() + 5*60*1000
 
-    if(this.lastLevel<1) {
-      for (let j=1; j<=4; j++)
-        this.loops[`lvl${j}`].start('loop')
-    } else if(this.lastLevel === 5 && this.currentLevel<6) {
-      this.loops[`lvl5`].volume(0)
-      this.loops[`lvl5`].stop()
-    }
+    let last: Track = this.lastLevel>0 ? this.loops[`lvl${this.lastLevel}`] : null
+    let current: Track = this.lastLevel>5 ? null : this.loops[`lvl${this.currentLevel}`]
+
     if(this.currentLevel === 6) {
-      this.lastLevel = this.currentLevel
-      let currentLevel = await from(Object.keys(this.loops)).pipe(filter((k) => this.loops[k]._volume>0), take(1)).toPromise()
-      let i = 0
       if(this.prematureEnd) {
+
         this.expiryDate = Date.now() + this.audio.fadingLength*1000
-      }
-
-      this.fader = setInterval(() => {
-        let x = ++i / 100
-        let f_x = Math.sin((Math.PI/2 * x) + (Math.PI/2))
-
-        if(this.prematureEnd)
-          this.loops[currentLevel].volume(Math.max(0, Math.min(f_x * this.currentVolume, 1)))
-
-        if(f_x * this.currentVolume<=0) {
-          clearInterval(this.fader)
-          this.fader = null
-        }
-      }, (this.prematureEnd ? this.audio.fadingLength*1000 : (this.expiryDate - Date.now())) / 100)
-
-      if(this.prematureEnd) {
-        this.timeout = setTimeout(() => {
-          this.timeout=null
-          this.reset()
-        }, this.audio.fadingLength*1000);
-      } else {
-        this.loops[currentLevel].transitionCallBack = () => {
-          this.reset()
-        }
-      }
-      
-    } else if(this.currentLevel>0) {
-      //this.expiryDate = Date.now() + 5*60*1000
-      if(this.currentLevel === 5) {
-        let ran = 0
-        this.transitioning = true
-        await new Promise(resolve => {
-          this.loops[`lvl${this.lastLevel}`].transitionCallBack = () => {
-            if(++ran <= this.audio.runsBeforeCompleted)
-              resolve(true)
+        
+        let i = 0
+        this.fader = setInterval(() => {
+          let x = ++i / 100
+          let f_x = Math.sin((Math.PI/2 * x) + (Math.PI/2))
+  
+          last.gainNode.gain.value = Math.max(0, Math.min(f_x * this.currentVolume, 1))
+          if(f_x * this.currentVolume<=0) {
+            clearInterval(this.fader)
+            this.fader = null
+            last.stop()
           }
+        }, this.audio.fadingLength*1000 / 100)
+
+      } else {
+
+      }
+    } else if(this.currentLevel === 5) {
+      this.transitioning = true
+
+      await new Promise(resolve => {
+        let sub = last.ended.subscribe(() => {
+          sub.unsubscribe()
+          resolve(true)
         })
-        this.transitioning = false
-        this.loops[`lvl${this.currentLevel}`].start('loop')
-      } else if(this.lastLevel>0) {
-        this.transitioning = true
-        await new Promise(resolve => {
-          this.loops[`lvl${this.lastLevel}`].transitionCallBack = () => {
+      })
+    
+      let timeLeft = this.changedAt + 5*60*1000 - Date.now()
+      //@ts-ignore
+      let timeInLevel5 = current.source.buffer?.duration * 1000
+      //@ts-ignore
+      let runsBeforeCompleted = Math.floor((timeLeft-timeInLevel5) / (last.source.buffer?.duration*1000))
+      let runs = 0
+
+      await new Promise(resolve => {
+        let sub = last.ended.subscribe(() => {
+          if(++runs >= runsBeforeCompleted) {
+            sub.unsubscribe()
             resolve(true)
           }
-        })
-        this.transitioning = false
+        })  
+      })
+
+      last.stop()
+      current.start()
+      this.expiryDate = Date.now() + timeInLevel5
+      if(this.audio.fadeOnCompletion) {
+        let fadingStart = this.expiryDate - this.audio.fadingLength*1000
+
+        setTimeout(() => {
+          let i = 0
+          this.fader = setInterval(() => {
+            let x = ++i / 100
+            let f_x = Math.sin((Math.PI/2 * x) + (Math.PI/2))
+    
+            current.gainNode.gain.value = Math.max(0, Math.min(f_x * this.currentVolume, 1))
+
+            if(f_x * this.currentVolume<=0) {
+              clearInterval(this.fader)
+              this.fader = null
+            }
+          }, this.audio.fadingLength*1000 / 100)
+        }, fadingStart - Date.now());
       }
-      this.lastLevel = this.currentLevel
-      
-      this.loops[`lvl${this.currentLevel}`].volume(this.currentVolume)
-      for (let i = 1; i <= 4; i++) 
-        if(i!==this.currentLevel) 
-          this.loops[`lvl${i}`].volume(0)
+     
+      let sub = current.ended.subscribe(() => {
+        current.stop()
+        this.transitioning = false
+        this.reset()
+        sub.unsubscribe()
+      }) 
+     
     } else {
-      this.reset()
+      
+      if(last) {
+        this.transitioning = true
+        await new Promise(resolve => {
+          let sub = last.ended.subscribe(() => {sub.unsubscribe(); resolve(true)})  
+        })
+        last.stop()
+      }
+      if(current) current.start()
+     
+      this.transitioning = false
+      this.lastLevel = this.currentLevel
     }
   }
 
@@ -440,10 +479,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   }
 
   reset() {
-    for (let i = 1; i<=5; i++) {
-      this.loops[`lvl${i}`].volume(0)
-      this.loops[`lvl${i}`].stop()
-    }
     this.currentLevel = 0
     this.lastLevel = 0
     this.expiryDate = 0 
@@ -463,12 +498,11 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   }
 
   endNow() {
-    if(this.timeout) clearTimeout(this.timeout)
     if(this.fader) clearInterval(this.fader)
-
-    this.timeout = null
     this.fader = null
+    this.transitioning = false
 
+    this.stopAudio()
     this.reset()
   }
 
@@ -670,7 +704,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
 
   }
 
-  async defaultButton(name: string) {
+  async defaultTrack(name: string) {
 
     let level = name.charAt(name.length-1)
 
@@ -679,5 +713,36 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     this.audio.tracks[level] = null
 
     this.loadAudio()
+  }
+}
+
+
+
+
+class Track {
+  audioContext: AudioContext
+  gainNode: GainNode
+  buffer: any
+  source: AudioBufferSourceNode
+  ended: Subject<any>
+  private interval
+
+  start() {
+    //@ts-ignore
+    this.interval = setInterval(() => this.ended.next(true), this.source.buffer?.duration * 1000)
+    this.ended = new Subject()
+    this.source.start()
+  }
+
+  stop() {
+    try { this.source.stop() } catch(e) {}
+    this.source = this.audioContext.createBufferSource()
+    this.source.buffer = this.buffer
+    this.source.loop = true
+    this.source.connect(this.gainNode)
+    if(this.interval) {
+      clearInterval(this.interval)
+      this.interval = null
+    }
   }
 }

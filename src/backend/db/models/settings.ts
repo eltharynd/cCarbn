@@ -75,8 +75,8 @@ const SETTINGS_TEMPLATE = {
         audio: {
           enabled: true,
           volume: 1,
-          runsBeforeCompleted: 3,
           fadingLength: 30,
+          fadeOnCompletion: true,
           tracks: {
             '1': null,
             '2': null,

@@ -39,14 +39,14 @@
   <div class="test">
 
     <h3>TEST</h3>
-  
+
     <div class="lvl-indicator-container test">
-      <button mat-raised-button color="accent" [disabled]="loops['lvl1']?._volume<=0">lvl1</button>
-      <button mat-raised-button color="accent" [disabled]="loops['lvl2']?._volume<=0">lvl2</button>
-      <button mat-raised-button color="accent" [disabled]="loops['lvl3']?._volume<=0">lvl3</button>
-      <button mat-raised-button color="accent" [disabled]="loops['lvl4']?._volume<=0">lvl4{{transitioning && lastLevel===4 ? '->' : ''}}</button>
-      <button mat-raised-button color="accent" [disabled]="loops['lvl5']?._volume<=0">{{transitioning && lastLevel===4 ? '->' : ''}}lvl5</button>
-      <button mat-raised-button color="accent" [disabled]="!(fader || timeout)">fade</button>
+      <button mat-raised-button color="accent" [disabled]="currentLevel!==1 && !(currentLevel===6 && lastLevel===1)">lvl1</button>
+      <button mat-raised-button color="accent" [disabled]="currentLevel!==2 && !(currentLevel===6 && lastLevel===2)">lvl2</button>
+      <button mat-raised-button color="accent" [disabled]="currentLevel!==3 && !(currentLevel===6 && lastLevel===3)">lvl3</button>
+      <button mat-raised-button color="accent" [disabled]="currentLevel!==4 && !(currentLevel===6 && lastLevel===4)">lvl4{{transitioning && lastLevel===4 ? '->' : ''}}</button>
+      <button mat-raised-button color="accent" [disabled]="currentLevel!==5 && !(currentLevel===6 && lastLevel===5)">{{transitioning && lastLevel===4 ? '->' : ''}}lvl5</button>
+      <button mat-raised-button color="accent" [disabled]="!(fader)">fade</button>
     </div>
     <div>
       Level: 
@@ -54,9 +54,9 @@
       {{currentLevel>0 ? currentLevel<6 ? currentLevel : 'ending' : 'none'}}
     </div>
     <div>
-      <button mat-raised-button color="accent" [disabled]="currentLevel>=6 ||currentLevel===0" (click)="currentLevel = 6; prematureEnd = true; onLevelChange()">fail (end)</button>
+      <button mat-raised-button color="accent" [disabled]="currentLevel>=5 ||currentLevel===0" (click)="currentLevel = 6; prematureEnd = true; onLevelChange()">fail (end)</button>
       &nbsp;&nbsp;
-      <button mat-raised-button color="accent" [disabled]="currentLevel<6" (click)="endNow()">stop fade</button>
+      <button mat-raised-button color="accent" [disabled]="currentLevel<5" (click)="endNow()">stop fade</button>
     </div>
     <br>
     <button mat-raised-button color="accent" (click)="addCarriage()" [disabled]="currentLevel<1">ADD CARRIAGE</button>
@@ -78,48 +78,48 @@
     <h3>HYPE TRAIN TRACKS</h3>
     <app-uploader [name]="'hypetrain-track-1'" 
                   [displayTextOverride] = "'LVL 0->1 TRACK'"
-                  [disabled]="!audioLoaded || data.busy"
+                  [disabled]="!audioLoaded || data.busy || currentLevel>0"
                   [uploading]="trackUploadingSubject"
                   [uploaded]="trackChangeSubject" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-    <button mat-raised-button color="accent" (click)="defaultButton('hypetrain-track-1')" [disabled]="!audio.tracks[1] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-1')" [disabled]="!audio.tracks[1] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
     
     <app-uploader [name]="'hypetrain-track-2'" 
                   [displayTextOverride] = "'LVL 1->2 TRACK'"
-                  [disabled]="!audioLoaded || data.busy"
+                  [disabled]="!audioLoaded || data.busy || currentLevel>0"
                   [uploading]="trackUploadingSubject"
                   [uploaded]="trackChangeSubject" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-    <button mat-raised-button color="accent" (click)="defaultButton('hypetrain-track-2')" [disabled]="!audio.tracks[2] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-2')" [disabled]="!audio.tracks[2] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
     
     <app-uploader [name]="'hypetrain-track-3'" 
                   [displayTextOverride] = "'LVL 2->3 TRACK'"
-                  [disabled]="!audioLoaded || data.busy"
+                  [disabled]="!audioLoaded || data.busy || currentLevel>0"
                   [uploading]="trackUploadingSubject"
                   [uploaded]="trackChangeSubject" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-    <button mat-raised-button color="accent" (click)="defaultButton('hypetrain-track-3')" [disabled]="!audio.tracks[3] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-3')" [disabled]="!audio.tracks[3] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
 
     <app-uploader [name]="'hypetrain-track-4'" 
                   [displayTextOverride] = "'LVL 3->4 TRACK'"
-                  [disabled]="!audioLoaded || data.busy"
+                  [disabled]="!audioLoaded || data.busy || currentLevel>0"
                   [uploading]="trackUploadingSubject"
                   [uploaded]="trackChangeSubject" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-    <button mat-raised-button color="accent" (click)="defaultButton('hypetrain-track-4')" [disabled]="!audio.tracks[4] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-4')" [disabled]="!audio.tracks[4] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
     
     <app-uploader [name]="'hypetrain-track-5'" 
                   [displayTextOverride] = "'LVL 4->5(END) TRACK'"
-                  [disabled]="!audioLoaded || data.busy"
+                  [disabled]="!audioLoaded || data.busy || currentLevel>0"
                   [uploading]="trackUploadingSubject"
                   [uploaded]="trackChangeSubject" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-    <button mat-raised-button color="accent" (click)="defaultButton('hypetrain-track-5')" [disabled]="!audio.tracks[5] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-5')" [disabled]="!audio.tracks[5] || !audioLoaded" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
     
     <button class="save-button" mat-raised-button color="primary" [disabled]="data.busy" (click)="saveSettings()">SAVE</button>
   </div>
@@ -151,16 +151,14 @@
     </div>
   
     <div>
-      Runs of 4 before 5: 
-      <mat-slider min="1" max="10" step="1" [disabled]="currentLevel>=6" [(ngModel)]="audio.runsBeforeCompleted"></mat-slider>
-      {{audio.runsBeforeCompleted}}
-    </div>
-    <div>
-      <b>Failed</b> fading duration: 
+      Fading duration: 
       <mat-slider min="10" max="180" step="10" [disabled]="fader" [(ngModel)]="audio.fadingLength"></mat-slider>
       {{audio.fadingLength}} secs
     </div>
-
+    <div>
+      Fade on completion:
+      &nbsp;&nbsp;&nbsp;<mat-slide-toggle [(ngModel)]="audio.fadeOnCompletion">{{audio.enabled ? 'ON' : 'OFF'}}</mat-slide-toggle>
+    </div>
 
     <h3>TEXT</h3>
     <div>Enabled&nbsp;&nbsp;&nbsp;<mat-slide-toggle [(ngModel)]="infoText.enabled">{{infoText.enabled ? 'ON' : 'OFF'}}</mat-slide-toggle></div>
