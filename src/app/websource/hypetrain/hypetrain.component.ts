@@ -628,6 +628,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     localStorage.dark = this.viewport.dark
   }
 
+  
   async prepareSettings(settings) {
     this.infoText = settings.infoText
     this.train = merge(this.train, settings.train)
