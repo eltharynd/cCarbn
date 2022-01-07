@@ -29,7 +29,7 @@
     "@twurple/chat": "^5.0.0-pre.14",
     "@twurple/eventsub": "^5.0.0-pre.14",
     "@twurple/pubsub": "^5.0.0-pre.14",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "body-parser": "^1.19.0",
     "bootstrap": "^5.1.0",
     "cors": "^2.8.5",
