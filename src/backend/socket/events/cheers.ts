@@ -4,6 +4,8 @@ import { User } from "../../db/models/user"
 import { Socket } from "../socket"
 import { toJSON } from "./util/toJSON"
 
+
+
 export class Cheers {
 
   static cheerEvent = async (event: EventSubChannelCheerEvent) => {
