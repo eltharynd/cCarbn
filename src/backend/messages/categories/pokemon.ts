@@ -59,6 +59,8 @@ export class Pokemon extends Message {
           text += ` only during the ${details.time_of_day}`
         if(details.known_move)
           text += ` whilst knowing ${details.known_move.name.toUpperCase()}`
+        if(details.location)
+          text += ` when in the ${details.location.name.toUpperCase()}`
         if(details.known_move_type)
           text += ` whilst knowing a ${details.known_move_type.name.toUpperCase()} move`
         if(details.relative_physical_stats !== null)
