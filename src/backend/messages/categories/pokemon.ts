@@ -12,7 +12,7 @@ export class Pokemon extends Message {
     if (/^!evo [\w\s]+/i.test(message) || /^!evol [\w\s]+/i.test(message) || /^!evolution [\w\s]+/i.test(message) || /^!evolve [\w\s]+/i.test(message)) {
       let pokemon = message.replace(/^!\w+ /, '')
       let data
-      console.log(pokemon)
+
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${pokemon.replace(' ', '-')}`)).data
       } catch (error) {
@@ -23,8 +23,6 @@ export class Pokemon extends Message {
         this.client.say(channel, `/me Sorry I couldn't find that pokemon... check your spelling bitch!`)
         return
       }
-
-      //console.log(data)
 
       let chain = (await axios.get(`${data.evolution_chain.url}`)).data.chain
 
