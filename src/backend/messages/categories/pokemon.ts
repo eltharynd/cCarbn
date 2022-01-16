@@ -2,11 +2,98 @@ import { TwitchPrivateMessage } from '@twurple/chat/lib/commands/TwitchPrivateMe
 import axios from 'axios'
 import { Chat } from '../../twitch/chat'
 import { filterParameters, Message } from '../message'
-
 export class Pokemon extends Message {
   public constructor(iClient) {
     super(iClient)
     this._init()
+  }
+
+  private evolution = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
+    if (/^!evo [\w\s]+/i.test(message) || /^!evol [\w\s]+/i.test(message) || /^!evolution [\w\s]+/i.test(message) || /^!evolve [\w\s]+/i.test(message)) {
+      let pokemon = message.replace(/^!\w+ /, '')
+      let data
+      console.log(pokemon)
+      try {
+        data = (await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${pokemon.replace(' ', '-')}`)).data
+      } catch (error) {
+        this.client.say(channel, `/me Sorry I couldn't find that pokemon... check your spelling bitch!`)
+        return
+      }
+      if (!data || !data.id) {
+        this.client.say(channel, `/me Sorry I couldn't find that pokemon... check your spelling bitch!`)
+        return
+      }
+
+      //console.log(data)
+
+      let chain = (await axios.get(`${data.evolution_chain.url}`)).data.chain
+
+      let process = (pokemon) => {
+        let text = ''
+        let details = pokemon.evolution_details[pokemon.evolution_details.length-1]
+        text += ` evolves into ${pokemon.species.name.toUpperCase()}`
+        if(details.min_level>0)
+          text += ` at lvl ${details.min_level}`
+        if(details.item)
+          text += ` by using ${details.item.name.toUpperCase()}`
+        if(details.trigger.name === 'trade')
+          text += ` from trading`
+        if(details.trade_species)
+          text += ` with a ${details.trade_species.name.toUpperCase()}` 
+        if(details.held_item)
+          text += ` while holding ${details.held_item.name.toUpperCase()}`
+        if(details.min_happiness)
+          text += ` from high happiness`
+        if(details.min_affection)
+          text += ` from high affection`
+        if(details.turn_upside_down)
+          text += ` while holding your console upside down`
+        if(details.min_beauty)
+          text += ` from high beauty`
+        if(details.needs_overworld_rain)
+          text += ` only when raining`
+        if(details.known_move)
+          text += ` whilst knowing ${details.known_move.name.toUpperCase()}`
+        if(details.known_move_type)
+          text += ` whilst knowing a ${details.known_move_type.name.toUpperCase()} move`
+        if(details.relative_physical_stats !== null)
+          text += ` only when ${details.relative_physical_stats>0 ? 'ATT>SPA' : details.relative_physical_stats<0 ? 'SPA>ATT' : 'ATT=SPA'}`
+        return text
+      }
+
+      let text = chain.species.name.toUpperCase()
+      if(chain.evolves_to.length>0) {
+        for(let i=0; i<chain.evolves_to.length; i++) {
+          
+          let pokemon = chain.evolves_to[i] 
+          text += process(pokemon)
+          for(let j=0; j<pokemon.evolves_to.length; j++) {
+              let pokemon2 = pokemon.evolves_to[j]
+              text += process(pokemon2)
+              for(let k=0; k<pokemon2.evolves_to.length; k++) {
+                let pokemon3 = pokemon2.evolves_to[k]
+                text += process(pokemon3)
+                for(let l=0; l<pokemon3.evolves_to.length; l++) {
+                  let pokemon4 = pokemon3.evolves_to[l]
+                  text += process(pokemon4)
+              }
+            }
+          }
+          if(i>=0 && i<chain.evolves_to.length-1)
+            text += ' or it'
+        }
+
+      } else 
+        text += ` does not evolve.`
+
+     
+      this.client.say(
+        channel,
+        `/me ${text}`.replace(/\n/g, '')
+      )
+    } else if (/^!evo/i.test(message)) {
+      this.client.say(channel, `/me You didn't specify a pokemon to look up for... You piece of shit...`)
+    }
   }
 
   private weakness = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
