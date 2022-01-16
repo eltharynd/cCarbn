@@ -1,6 +1,8 @@
 import { HelixUser } from "@twurple/api/lib"
 import { User as MongoUser } from "../../db/models/user"
+import { UserToken, ClientToken } from "../../db/models/tokens"
 import { Settings } from "../../db/models/settings"
+import { Command } from "../../db/models/command"
 import { Category, Chat } from "../../twitch/chat"
 import { Listeners, Twitch } from "../../twitch/twitch"
 import { Api } from "../express"
@@ -11,6 +13,27 @@ import * as merge from 'deepmerge'
 export class User {
 
   static bind() {
+
+    Api.endpoints.delete('/api/user/:userId', authMiddleware, async (req, res) => {
+      if(req.params.userId.length>10) {
+        let userId = req.params.userId
+        let user: any = await MongoUser.findOne({_id: userId})
+        let userTokem: any = await UserToken.deleteMany({userId: userId})
+        let clientToken: any = await ClientToken.deleteMany({userId: userId})
+        let settings: any = await Settings.deleteMany({userId: userId})
+        let commands: any = await Command.deleteMany({userId: userId})
+        let files: any = await Mongo.Upload.find({ metadata: { userId: Mongo.ObjectId(req.params.userId) } })
+
+        for(let i of userTokem) {
+          await Mongo.Upload.unlink({ _id: i._id}, (error, unlink) => {})
+        }
+        await MongoUser.deleteOne({_id: req.params.userId})
+        res.send({})
+
+      } else {
+        res.status(404).send({})
+      }
+    })
 
     Api.endpoints.get('/api/user/:userId/picture', async (req, res) => {
       if(req.params.userId.length>10) {

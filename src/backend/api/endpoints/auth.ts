@@ -7,6 +7,7 @@ import { Mongo } from "../../db/mongo"
 import { Socket } from "../../socket/socket"
 import { Chat } from "../../twitch/chat"
 import { Api } from "../express"
+import * as uuid from 'uuid'
 
 export const authMiddleware = async (req, res, next) => {
   let token = req?.headers?.authorization ? req.headers.authorization.replace(/^Basic\s/, '') : null
@@ -79,6 +80,7 @@ export class Auth {
             user.twitchPic = helixUser.profilePictureUrl
 
           registered = new User(user)
+          registered.token = `${uuid.v4()}`
           await registered.save()
           token.userId = registered._id
           let userToken = new UserToken(token)
