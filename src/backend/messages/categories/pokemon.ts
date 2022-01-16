@@ -10,7 +10,7 @@ export class Pokemon extends Message {
 
   private evolution = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!evo [\w\s]+/i.test(message) || /^!evol [\w\s]+/i.test(message) || /^!evolution [\w\s]+/i.test(message) || /^!evolve [\w\s]+/i.test(message)) {
-      let pokemon = message.replace(/^!\w+ /, '')
+      let pokemon = message.replace(/^!\w+ /, '').toLowerCase()
       let data
 
       try {
