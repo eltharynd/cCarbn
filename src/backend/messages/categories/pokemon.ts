@@ -13,6 +13,11 @@ export class Pokemon extends Message {
       let pokemon = message.replace(/^!\w+ /, '').toLowerCase()
       let data
 
+      if(pokemon === 'rockruff' || pokemon === ' lycanroc'){
+        this.client.say(channel, `/me listen, it's compilcated... just check this shit out https://bulbapedia.bulbagarden.net/wiki/Rockruff_(Pok%C3%A9mon)#Evolution`)
+        return
+      }
+
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${pokemon.replace(' ', '-')}`)).data
       } catch (error) {
