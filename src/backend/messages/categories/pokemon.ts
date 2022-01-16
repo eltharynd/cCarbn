@@ -50,6 +50,8 @@ export class Pokemon extends Message {
           text += ` from high beauty`
         if(details.needs_overworld_rain)
           text += ` only when raining`
+        if(details.time_of_day)
+          text += ` only during the ${details.time_of_day}`
         if(details.known_move)
           text += ` whilst knowing ${details.known_move.name.toUpperCase()}`
         if(details.known_move_type)
