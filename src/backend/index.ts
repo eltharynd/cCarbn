@@ -11,6 +11,8 @@ import { UserToken } from './db/models/tokens'
 import * as Mongoose from 'mongoose'
 import { HelixUser } from '@twurple/api/lib'
 
+import { toJSON } from "./socket/events/util/toJSON"
+
 //@ts-ignore
 export const PORT: number = process.env.PORT || 3000
 
@@ -51,7 +53,6 @@ let startApp = async () => {
   new Socket()
 
   console.info('SERVER INITIALIZED. ACTIVATING USER SERVICES...')
-
 
   let settings: any[] = await Settings.find()
   for(let s of settings) {

@@ -127,7 +127,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
   total
   lastContribution
   startDate
-  topContributors
   endDate
   cooldownEndDate
 
@@ -271,29 +270,25 @@ export class HypetrainComponent implements OnInit, OnDestroy {
           }, 500 * i++);
       }
       if(data.started_at) this.startDate = data.started_at
-      if(data.top_contributors) this.topContributors = data.top_contributors
       if(data.ended_at) this.endDate = data.ended_at //END ONLY
       if(data.cooldown_ends_at) this.cooldownEndDate = data.cooldown_ends_at //END ONLY
 
       if(data.type === 'Hype Train Begin') {
         this.currentLevel = 1
-        this.onLevelChange()
+        await this.onLevelChange()
 
       } else if(data.type === 'Hype Train Progress') {
         let nextLevel = data.level !== this.currentLevel && this.currentLevel!==6 ? true : false
         this.currentLevel = data.level
         if(nextLevel)
-          this.onLevelChange()
-        else
-          this.onProgress()
+          await this.onLevelChange()
       } else if(data.type === 'Hype Train End') {
         if(this.currentLevel<5)
           this.prematureEnd = true
         this.currentLevel = 6
         this.expiryDate = 0
-        this.onLevelChange()
+        await this.onLevelChange()
       }
-      
     }) 
 
     this.loadAudio()
@@ -384,6 +379,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
             clearInterval(this.fader)
             this.fader = null
             last.stop()
+            this.reset()
           }
         }, this.audio.fadingLength*1000 / 100)
 
@@ -475,10 +471,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     }
   }
 
-  onProgress() {
-
-  }
-
   reset() {
     this.currentLevel = 0
     this.lastLevel = 0
@@ -493,7 +485,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     this.total = null
     this.lastContribution = null
     this.startDate = null
-    this.topContributors = null
     //this.endDate = null
     //this.cooldownEndDate = null
   }

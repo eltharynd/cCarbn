@@ -24,11 +24,14 @@ export class HypeTrain {
         data.last_contribution.picture = helixUser.profilePictureUrl
     }
     if(data.top_contributions) {
+      let top_contributions = []
       for(let u of data.top_contributions) {
         let helixUser: HelixUser = await Twitch.client.users.getUserById(u.user_id)
         if(helixUser) 
           u.picture = helixUser.profilePictureUrl
+        top_contributions.push(u)
       }  
+      data.top_contributions = top_contributions
     }
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
@@ -51,7 +54,9 @@ export class HypeTrain {
     }
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
-      Socket.io.to(found._id.toString()).emit('hypetrain', data)
+      setTimeout(() => {
+        Socket.io.to(found._id.toString()).emit('hypetrain', data)
+      }, 1000); 
   }
 
   static hypeTrainEnd = async (event: EventSubChannelHypeTrainEndEvent) => {
@@ -70,7 +75,10 @@ export class HypeTrain {
     }
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
-      Socket.io.to(found._id.toString()).emit('hypetrain', data)
+      setTimeout(() => {
+        Socket.io.to(found._id.toString()).emit('hypetrain', data)
+      }, 1000);
+      
   }
 
 

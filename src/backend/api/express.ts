@@ -89,11 +89,16 @@ export class Api {
             if(buffer.cooldown_ends_at) buffer.cooldown_ends_at = new Date(new Date(buffer.cooldown_ends_at).getTime() + delta)
             console.log('emitting', e.type)
             //Socket.io.to('6111a02594ce3e08c3274c5f').emit('hypetrain', buffer)
-            Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)
+            if(buffer.type === 'Hype Train Begin')
+              Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)
+            else
+              setTimeout(() => {
+                Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)
+              }, 1000);
           }, e.time - start);
         }
-      }, 5000)
-      res.json('Starting test to cakeums (lvl 5 hype train')
+      }, 2000)
+      res.json('Starting test to cakeums (lvl 5 hype train)')
     })
 
     Api.endpoints.route('/api/uploads/:userId/:filename')
