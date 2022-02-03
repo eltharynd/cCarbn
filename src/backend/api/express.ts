@@ -65,6 +65,9 @@ export class Api {
         let broadcasterId = train[0].event.broadcaster_user_id
         let user: any =  await MongoUser.findOne({ twitchId: broadcasterId })
 
+
+        console.log(user._id)
+
         for(let e of train) {
           if(!start) {
             start = e.time
@@ -91,18 +94,21 @@ export class Api {
             if(buffer.ended_at) buffer.ended_at = new Date(new Date(buffer.ended_at).getTime() + delta)
             if(buffer.expires_at) buffer.expires_at = new Date(new Date(buffer.expires_at).getTime() + delta)
             if(buffer.cooldown_ends_at) buffer.cooldown_ends_at = new Date(new Date(buffer.cooldown_ends_at).getTime() + delta)
-            console.log('emitting', e.type)
+            
             //Socket.io.to('6111a02594ce3e08c3274c5f').emit('hypetrain', buffer)
-            if(buffer.type === 'Hype Train Begin')
-              Socket.io.to(user.token).emit('hypetrain', buffer)  //real
+            if(buffer.type === 'Hype Train Begin') {
+              console.log('emitting', e.type)
+              Socket.io.to(user._id).emit('hypetrain', buffer)  //real
               //Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)  //dev
               //Socket.io.to('61118f4ce72d0103d112f005').emit('hypetrain', buffer)    //prod
-            else
+            } else {
               setTimeout(() => {
-                Socket.io.to(user.token).emit('hypetrain', buffer)  //real
+                console.log('emitting', e.type)
+                Socket.io.to(user._id).emit('hypetrain', buffer)  //real
                 //Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)  //dev
                 //Socket.io.to('61118f4ce72d0103d112f005').emit('hypetrain', buffer)    //prod
               }, 1000);
+            }
           }, e.time - start);
         }
       }, 2000)
