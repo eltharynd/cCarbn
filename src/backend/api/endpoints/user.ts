@@ -25,14 +25,14 @@ export class User {
       if(req.params.userId.length>10) {
         let found: any = await MongoUser.findById(Mongo.ObjectId(req.params.userId))
         if(found) {
-          let helixUser: HelixUser = await Twitch.client.users.getUserById(found.twitchId)
+          let helixUser: HelixUser|null = await Twitch.client.users.getUserById(found.twitchId)
           if(helixUser) {
             res.send(helixUser.profilePictureUrl)
             return
           }          
         }
       } else {
-        let helixUser: HelixUser = await Twitch.client.users.getUserById(req.params.userId)
+        let helixUser: HelixUser|null = await Twitch.client.users.getUserById(req.params.userId)
         if(helixUser) {
           res.send(helixUser.profilePictureUrl)
           return
