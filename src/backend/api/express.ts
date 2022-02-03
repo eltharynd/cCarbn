@@ -57,7 +57,7 @@ export class Api {
     })
     Api.endpoints.get('/api/hypetrain', async (req,res) => {
       setTimeout(() => {
-        let train = JSON.parse('' + fs.readFileSync('hypetrain.json'))
+        let train = JSON.parse('' + fs.readFileSync('tag.json'))
         let start
         let delta 
         for(let e of train) {
@@ -68,7 +68,7 @@ export class Api {
           setTimeout(async () => {
             
             let buffer = JSON.parse(JSON.stringify(e.event))
-            buffer.broadcaster_id = '6111a02594ce3e08c3274c5f'
+            //buffer.broadcaster_id = '6111a02594ce3e08c3274c5f'
             buffer.type = e.type
             if(buffer.last_contribution) {
               let helixUser: HelixUser = await Twitch.client.users.getUserById(buffer.last_contribution.user_id)
@@ -90,10 +90,12 @@ export class Api {
             console.log('emitting', e.type)
             //Socket.io.to('6111a02594ce3e08c3274c5f').emit('hypetrain', buffer)
             if(buffer.type === 'Hype Train Begin')
-              Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)
+              //Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)  //dev
+              Socket.io.to('61118f4ce72d0103d112f005').emit('hypetrain', buffer)    //prod
             else
               setTimeout(() => {
-                Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)
+                //Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)  //dev
+                Socket.io.to('61118f4ce72d0103d112f005').emit('hypetrain', buffer)    //prod
               }, 1000);
           }, e.time - start);
         }
