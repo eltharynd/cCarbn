@@ -19,15 +19,13 @@ export class HypeTrain {
     let data = toJSON(event)
     data.type = 'Hype Train Begin'
     if(data.last_contribution) {
-      let helixUser: HelixUser = await Twitch.client.users.getUserById(data.last_contribution.user_id)
-      if(helixUser) {
+      let helixUser: HelixUser|null = await Twitch.client.users.getUserById(data.last_contribution.user_id)
+      if(helixUser)
         data.last_contribution.picture = helixUser.profilePictureUrl
-        Api.eventsCollection.push({ last_contribution_picture: helixUser.profilePictureUrl })
-      }
     }
     if(data.top_contributions) {
       for(let u of data.top_contributions) {
-        let helixUser: HelixUser = await Twitch.client.users.getUserById(u.user_id)
+        let helixUser: HelixUser|null = await Twitch.client.users.getUserById(u.user_id)
         if(helixUser) {
           u.picture = helixUser.profilePictureUrl
           Api.eventsCollection.push({ top_contributions_picture: u.picture })
@@ -49,11 +47,16 @@ export class HypeTrain {
     let data = toJSON(event)
     data.type = 'Hype Train Progress'
     if(data.last_contribution) {
-      let helixUser: HelixUser = await Twitch.client.users.getUserById(data.last_contribution.user_id)
-      if(helixUser) {
+      let helixUser: HelixUser|null = await Twitch.client.users.getUserById(data.last_contribution.user_id)
+      if(helixUser)
         data.last_contribution.picture = helixUser.profilePictureUrl
-        Api.eventsCollection.push({ last_contribution_picture: helixUser.profilePictureUrl })
-      }
+    }
+    if(data.top_contributions) {
+      for(let u of data.top_contributions) {
+        let helixUser: HelixUser|null = await Twitch.client.users.getUserById(u.user_id)
+        if(helixUser)
+          u.picture = helixUser.profilePictureUrl
+      }  
     }
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
@@ -72,11 +75,16 @@ export class HypeTrain {
     let data = toJSON(event)
     data.type = 'Hype Train End'
     if(data.last_contribution) {
-      let helixUser: HelixUser = await Twitch.client.users.getUserById(data.last_contribution.user_id)
-      if(helixUser) {
+      let helixUser: HelixUser|null = await Twitch.client.users.getUserById(data.last_contribution.user_id)
+      if(helixUser)
         data.last_contribution.picture = helixUser.profilePictureUrl
-        Api.eventsCollection.push({ last_contribution_picture: helixUser.profilePictureUrl })
-      }
+    }
+    if(data.top_contributions) {
+      for(let u of data.top_contributions) {
+        let helixUser: HelixUser|null = await Twitch.client.users.getUserById(u.user_id)
+        if(helixUser)
+          u.picture = helixUser.profilePictureUrl
+      }  
     }
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
