@@ -12,6 +12,7 @@
       "moduleResolution": "node",
       "noStrictGenericChecks": false,
       "rootDir": "src/backend",
+      "sourceMap": true,
       "strictPropertyInitialization": false
   }
 }

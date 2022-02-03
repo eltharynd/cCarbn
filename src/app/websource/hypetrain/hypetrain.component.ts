@@ -259,7 +259,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       if(data.last_contribution) {
           this.lastContribution = data.last_contribution
           let i = 1
-          if(data.top_contributions) {
+          if(data.top_contributions && data.top_contributions.length > 0) {
             for(let c of data.top_contributions)  
               setTimeout(() => {
                 this.addCarriage(c)

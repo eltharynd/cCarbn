@@ -2,16 +2,13 @@ import * as fs from 'fs'
 import { Mongo } from './db/mongo'
 import { Api } from './api/express'
 import { Socket } from './socket/socket'
-import { User } from './db/models/user'
+import { deleteUser, User } from './db/models/user'
 import { Chat } from './twitch/chat'
 import { RefreshingAuthProvider } from '@twurple/auth'
 import { Settings } from './db/models/settings'
 import { Twitch } from './twitch/twitch'
 import { UserToken } from './db/models/tokens'
 import * as Mongoose from 'mongoose'
-import { HelixUser } from '@twurple/api/lib'
-
-import { toJSON } from "./socket/events/util/toJSON"
 
 //@ts-ignore
 export const PORT: number = process.env.PORT || 3000
@@ -56,17 +53,32 @@ let startApp = async () => {
 
   let settings: any[] = await Settings.find()
   for(let s of settings) {
-    let user: any = await User.findOne({_id: s.userId})
+    let user = await User.findOne({_id: s.userId})
+
     if(!user) {
       await Settings.deleteOne({_id: s._id})
       continue
     }
     let ss = s.json
     if(ss.api.enabled) {
-      await Twitch.connect(user.toJSON(), ss)
+      try {
+        await Twitch.connect(user.toJSON(), ss)
+      } catch (e: any) {
+        if(e._statusCode === 403) {
+          console.error('User appears to have manually removed permissions, deleting...', user)
+          await deleteUser(s.userId)
+          continue
+        }
+      }
     }
     if(ss.chatbot.enabled) {
-      await Chat.connect(user.toJSON(), ss)
+      try {
+        await Chat.connect(user.toJSON(), ss)
+      } catch (e) {
+        console.error('User appears to have manually removed permissions, deleting...', user)
+        await deleteUser(s.userId)
+        continue
+      }
     }
   }
 

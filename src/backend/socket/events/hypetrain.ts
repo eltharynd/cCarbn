@@ -20,18 +20,19 @@ export class HypeTrain {
     data.type = 'Hype Train Begin'
     if(data.last_contribution) {
       let helixUser: HelixUser = await Twitch.client.users.getUserById(data.last_contribution.user_id)
-      if(helixUser) 
+      if(helixUser) {
         data.last_contribution.picture = helixUser.profilePictureUrl
+        Api.eventsCollection.push({ last_contribution_picture: helixUser.profilePictureUrl })
+      }
     }
     if(data.top_contributions) {
-      let top_contributions = []
       for(let u of data.top_contributions) {
         let helixUser: HelixUser = await Twitch.client.users.getUserById(u.user_id)
-        if(helixUser) 
+        if(helixUser) {
           u.picture = helixUser.profilePictureUrl
-        top_contributions.push(u)
+          Api.eventsCollection.push({ top_contributions_picture: u.picture })
+        }
       }  
-      data.top_contributions = top_contributions
     }
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
@@ -49,8 +50,10 @@ export class HypeTrain {
     data.type = 'Hype Train Progress'
     if(data.last_contribution) {
       let helixUser: HelixUser = await Twitch.client.users.getUserById(data.last_contribution.user_id)
-      if(helixUser) 
+      if(helixUser) {
         data.last_contribution.picture = helixUser.profilePictureUrl
+        Api.eventsCollection.push({ last_contribution_picture: helixUser.profilePictureUrl })
+      }
     }
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
@@ -70,8 +73,10 @@ export class HypeTrain {
     data.type = 'Hype Train End'
     if(data.last_contribution) {
       let helixUser: HelixUser = await Twitch.client.users.getUserById(data.last_contribution.user_id)
-      if(helixUser) 
+      if(helixUser) {
         data.last_contribution.picture = helixUser.profilePictureUrl
+        Api.eventsCollection.push({ last_contribution_picture: helixUser.profilePictureUrl })
+      }
     }
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
