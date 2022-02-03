@@ -54,7 +54,7 @@ let startApp = async () => {
 
   console.info('SERVER INITIALIZED. ACTIVATING USER SERVICES...')
 
-  let settings: any[] = await Settings.find()
+/*   let settings: any[] = await Settings.find()
   for(let s of settings) {
     let user: any = await User.findOne({_id: s.userId})
     if(!user) {
@@ -68,7 +68,7 @@ let startApp = async () => {
     if(ss.chatbot.enabled) {
       await Chat.connect(user.toJSON(), ss)
     }
-  }
+  } */
 
   console.info('SERVER STARTED SUCCESSFULLY...')
 
