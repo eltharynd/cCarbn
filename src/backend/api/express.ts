@@ -98,13 +98,13 @@ export class Api {
             //Socket.io.to('6111a02594ce3e08c3274c5f').emit('hypetrain', buffer)
             if(buffer.type === 'Hype Train Begin') {
               console.log('emitting', e.type)
-              Socket.io.to(user._id).emit('hypetrain', buffer)  //real
+              Socket.io.to(user._id.toString()).emit('hypetrain', buffer)  //real
               //Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)  //dev
               //Socket.io.to('61118f4ce72d0103d112f005').emit('hypetrain', buffer)    //prod
             } else {
               setTimeout(() => {
                 console.log('emitting', e.type)
-                Socket.io.to(user._id).emit('hypetrain', buffer)  //real
+                Socket.io.to(user._id.toString()).emit('hypetrain', buffer)  //real
                 //Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)  //dev
                 //Socket.io.to('61118f4ce72d0103d112f005').emit('hypetrain', buffer)    //prod
               }, 1000);
