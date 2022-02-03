@@ -7,6 +7,7 @@ import { PORT } from '..'
 import { Auth, authMiddleware } from './endpoints/auth'
 import { User } from './endpoints/user'
 import { Mongo } from '../db/mongo'
+import { User as MongoUser } from '../db/models/user'
 import * as multer from 'multer'
 import * as fs from 'fs'
 import { HelixUser } from '@twurple/api/lib'
@@ -68,7 +69,7 @@ export class Api {
           setTimeout(async () => {
             
             let buffer = JSON.parse(JSON.stringify(e.event))
-            //buffer.broadcaster_id = '6111a02594ce3e08c3274c5f'
+            buffer.broadcaster_id = await MongoUser.findOne({ twitchId: buffer.broadcaster_user_id })
             buffer.type = e.type
             if(buffer.last_contribution) {
               let helixUser: HelixUser = await Twitch.client.users.getUserById(buffer.last_contribution.user_id)
@@ -90,12 +91,14 @@ export class Api {
             console.log('emitting', e.type)
             //Socket.io.to('6111a02594ce3e08c3274c5f').emit('hypetrain', buffer)
             if(buffer.type === 'Hype Train Begin')
+              Socket.io.to(buffer.broadcaster_id).emit('hypetrain', buffer)  //real
               //Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)  //dev
-              Socket.io.to('61118f4ce72d0103d112f005').emit('hypetrain', buffer)    //prod
+              //Socket.io.to('61118f4ce72d0103d112f005').emit('hypetrain', buffer)    //prod
             else
               setTimeout(() => {
+                Socket.io.to(buffer.broadcaster_id).emit('hypetrain', buffer)  //real
                 //Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)  //dev
-                Socket.io.to('61118f4ce72d0103d112f005').emit('hypetrain', buffer)    //prod
+                //Socket.io.to('61118f4ce72d0103d112f005').emit('hypetrain', buffer)    //prod
               }, 1000);
           }, e.time - start);
         }
