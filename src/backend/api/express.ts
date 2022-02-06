@@ -75,13 +75,13 @@ export class Api {
             let buffer = JSON.parse(JSON.stringify(e.event))
             buffer.type = e.type
             if(buffer.last_contribution) {
-              let helixUser: HelixUser = await Twitch.client.users.getUserById(buffer.last_contribution.user_id)
+              let helixUser: HelixUser|null = await Twitch.client.users.getUserById(buffer.last_contribution.user_id)
               if(helixUser) 
               buffer.last_contribution.picture = helixUser.profilePictureUrl
             }
             if(buffer.top_contributions) {
               for(let u of buffer.top_contributions) {
-                let helixUser: HelixUser = await Twitch.client.users.getUserById(u.user_id)
+                let helixUser: HelixUser|null = await Twitch.client.users.getUserById(u.user_id)
                 if(helixUser) 
                   u.picture = helixUser.profilePictureUrl
               }  
@@ -128,7 +128,7 @@ export class Api {
           filename: file.originalname,
           metadata: { userId: Mongo.ObjectId(req.params.userId) },
           contentType: file.mimetype
-        }, readStream, (error, f) => {
+        }, readStream, (error, f): any => {
           if(error) return res.status(500).send()
           res.send({
             //url: /image\//.test(file.mimetype) ? `uploads/${req.params.userId}/${file.originalname}` : null
@@ -136,7 +136,7 @@ export class Api {
           })
         })
       })
-      .get(async (req, res) => {
+      .get(async (req, res): Promise<any> => {
         let found: any = await Mongo.Upload.findOne({ filename: req.params.filename, 'metadata.userId': Mongo.ObjectId(req.params.userId) })
         if(!found) return res.status(404).send()
         try{
@@ -171,7 +171,7 @@ export class Api {
           res.send(await Buffer.from(buffer))
         }) */
       })
-      .delete(authMiddleware, async (req, res) => {
+      .delete(authMiddleware, async (req, res): Promise<any> => {
         let found: any = await Mongo.Upload.findOne({ filename: req.params.filename, metadata: { userId: Mongo.ObjectId(req.params.userId) } })
         if(!found) return res.status(404).send()
         await new Promise((resolve, reject) => {

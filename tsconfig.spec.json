@@ -15,5 +15,10 @@
   "include": [
     "src/**/*.spec.ts",
     "src/**/*.d.ts"
+  ],
+  "exclude": [
+    "src/backend/*.ts",
+    "src/backend/**/*.ts",
+    "src/backend/**/*.json"
   ]
 }

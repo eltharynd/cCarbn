@@ -14,16 +14,14 @@ export class Mongo {
   static connect = async (): Promise<boolean> => {
     if (Mongo.database) return true
 
-    return new Promise<boolean>((resolve, reject) => {
-      Mongoose.connect(MONGO.connection, { useNewUrlParser: true, useUnifiedTopology: true })
+    return new Promise<boolean>(async (resolve, reject) => {
+      Mongoose.connect(MONGO.connection)
       Mongo.database = Mongoose.connection
       Mongo.database.on('error', console.error.bind(console, 'connection error'))
       Mongo.database.once('open', async () => {
-
         let defClientToken: any = await ClientToken.findOne()
         Mongo.clientId = defClientToken.clientId
         Mongo.clientSecret = defClientToken.clientSecret
-
         Mongo.Upload = createModel({
           modelName: 'Upload',
           connection: Mongo.database,
@@ -39,7 +37,7 @@ export class Mongo {
   static ObjectId(id: Mongoose.Types.ObjectId): Mongoose.Types.ObjectId
   static ObjectId(id: string|Mongoose.Types.ObjectId): Mongoose.Types.ObjectId {
     if(typeof id === 'string')
-      return Mongoose.Types.ObjectId(id)
+      return new Mongoose.Types.ObjectId(id)
     else
       return id
   }

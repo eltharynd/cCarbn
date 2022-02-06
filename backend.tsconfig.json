@@ -6,13 +6,14 @@
   ],
   "compileOnSave": false,
   "compilerOptions": {
-      "outDir": "dist/backend",
-      "noImplicitAny": false,
-      "target": "es5",
       "moduleResolution": "node",
-      "noStrictGenericChecks": false,
+      "noImplicitAny": false,
+      "noStrictGenericChecks": true,
+      "outDir": "dist/backend",
       "rootDir": "src/backend",
       "sourceMap": true,
-      "strictPropertyInitialization": false
+      "strictNullChecks": false,
+      "strictPropertyInitialization": false,
+      "target": "es5"
   }
 }
