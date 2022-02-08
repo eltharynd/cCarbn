@@ -8,13 +8,21 @@ In other words it's goal is to allow content creators to develop custom commands
 
 Just go to [ccarbn.io](https://ccarbn.io) and login with your twitch account.
 
-## PLANNED ROADMAP
+<br>
+<br>
+<br>
+
+# PLANNED ROADMAP
 
 - Finish the Twitch <-> BrowserSources integration
 - Finish the Twitch Chatbot integration
 - Discord Chatbot integration
 - After the main project is ready and user friendly I will also develop an elgato Stream Deck plugin for it.
 - After that's done I will build a one-click cloud installator for non-developers to use this as well, or at least the basic functionalities. This will be hosted on cCarbn's servers so that youdon't require a domain name and SSL certificate.
+
+<br>
+<br>
+<br>
 
 # DEVELOPMENT / DEPLOYMENT
 
