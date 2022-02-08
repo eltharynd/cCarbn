@@ -283,6 +283,9 @@
           </mat-form-field>
         </div>
       </div>
+      <mat-form-field>
+        <input matInput type="number" placeholder="Profile Pic Scale" [(ngModel)]="train.locomotive.pictureBounds.scale">
+      </mat-form-field>
       <div>
         Locomotive scale: 
         <mat-slider min=".1" max="2" step=".1" (change)="scaleChange()" [(ngModel)]="train.locomotive.scale"></mat-slider>
@@ -320,6 +323,9 @@
         </mat-form-field>
       </div>
     </div>
+    <mat-form-field>
+      <input matInput type="number" placeholder="Profile Pic Scale" [(ngModel)]="train.carriage.pictureBounds.scale">
+    </mat-form-field>
     <div>
       Carriage scale: 
       <mat-slider min=".1" max="2" step=".1" (change)="scaleChange(true)" [(ngModel)]="train.carriage.scale"></mat-slider>
