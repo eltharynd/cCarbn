@@ -18,11 +18,6 @@ export class Pokemon extends Message {
         return
       }
 
-      if(pokemon === 'joe') {
-        this.client.say(channel, `/me joe mama is weak to [PHYSICAL_EXERCISE] unless it's also [SLEEPING_WITH_CHAT]. Awkward`)
-        return
-      }
-
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${pokemon.replace(' ', '-')}`)).data
       } catch (error) {
@@ -110,9 +105,15 @@ export class Pokemon extends Message {
 
   private weakness = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!weak [\w\s]+/i.test(message)) {
+
       let pokemon = message.replace(/^!weak /, '')
       let data
 
+      if(pokemon === 'joe') {
+        this.client.say(channel, `/me joe mama is weak to [PHYSICAL_EXERCISE] unless it's also [SLEEPING_WITH_CHAT]. Awkward`)
+        return
+      }
+      
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.replace(' ', '-')}`)).data
       } catch (error) {
