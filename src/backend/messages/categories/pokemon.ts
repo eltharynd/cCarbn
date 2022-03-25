@@ -18,6 +18,11 @@ export class Pokemon extends Message {
         return
       }
 
+      if(pokemon === 'joe') {
+        this.client.say(channel, `/me joe mama is weak to [PHYSICAL_EXERCISE] unless it's also [SLEEPING_WITH_CHAT]. Awkward`)
+        return
+      }
+
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${pokemon.replace(' ', '-')}`)).data
       } catch (error) {
