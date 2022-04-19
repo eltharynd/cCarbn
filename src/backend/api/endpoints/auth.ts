@@ -91,6 +91,10 @@ export class Auth {
             registered.twitchPic = helixUser.profilePictureUrl
             await registered.save()
           }
+          if(registered.twitchName !== helixUser.displayName) {
+            registered.twitchName = helixUser.displayName
+            await registered.save()
+          }
 
           let found = await UserToken.findOne({userId: registered._id})
           if(found) {
