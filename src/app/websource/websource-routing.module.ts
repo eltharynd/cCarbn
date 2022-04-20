@@ -18,10 +18,6 @@ const routes: Routes = [
     component: WebSourceComponent,
     children: [
       {
-        path: '**',
-        component: EventsComponent
-      },
-      {
         path: 'cheer',
         component: CheersComponent
       },
