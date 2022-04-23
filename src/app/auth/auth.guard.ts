@@ -10,6 +10,7 @@ import { SERVER_URL } from '../shared/data.service'
 export class AuthGuard implements CanActivate {
 
   public currentUser: User|null
+  public userChanged: Subject<User|null> = new Subject()
 
   public static resumed: Subject<boolean> = new Subject<boolean>()
 
@@ -40,12 +41,14 @@ export class AuthGuard implements CanActivate {
   public login(user: User) {
     this.currentUser = user
     localStorage.currentUser = JSON.stringify(user)
+    this.userChanged.next(this.currentUser)
     this.router.navigate([''])
   }
 
   public logout() {
     this.currentUser = null
     delete localStorage.currentUser
+    this.userChanged.next(null)
     this.router.navigate(['auth'])
   }
 
@@ -55,9 +58,11 @@ export class AuthGuard implements CanActivate {
 
     await axios.post(`${SERVER_URL}auth/resume`, this.currentUser).then(response => {
       this.currentUser = response.data
+      this.userChanged.next(this.currentUser)
       localStorage.currentUser = JSON.stringify(response.data)
     }).catch(error => {
       this.currentUser = null
+      this.userChanged.next(null)
       if(!error.response) {
         console.error(error)
       } else if(error?.response?.status === 401)

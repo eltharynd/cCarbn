@@ -52,6 +52,10 @@ export class DataService {
     this.socketIO.connect()
   }
 
+  public async send(name, data) {
+    this.socketIO.emit(name, data)
+  }
+
   public async join(room) {
 
   }
@@ -66,7 +70,8 @@ export class DataService {
       axios({
         method: 'get',
         url: `${SERVER_URL}${endpoint}`,
-        headers: this.auth.currentUser?.token ? {'Authorization': `Basic ${this.auth.currentUser.token}`} : null
+    
+        headers: this.auth.currentUser?.token ? {'Authorization': `Basic ${this.auth.currentUser.token}`} : {}
       }).then(response => {
         this.busy = false
         resolve(response.data)
@@ -88,7 +93,7 @@ export class DataService {
       axios({
         method: 'post',
         url: `${SERVER_URL}${endpoint}`,
-        headers: this.auth.currentUser?.token ? {'Authorization': `Basic ${this.auth.currentUser.token}`} : null,
+        headers: this.auth.currentUser?.token ? {'Authorization': `Basic ${this.auth.currentUser.token}`} : {},
         data: data
       }).then(response => {
         this.busy = false
@@ -111,7 +116,7 @@ export class DataService {
       axios({
         method: 'delete',
         url: `${SERVER_URL}${endpoint}`,
-        headers: this.auth.currentUser?.token ? {'Authorization': `Basic ${this.auth.currentUser.token}`} : null,
+        headers: this.auth.currentUser?.token ? {'Authorization': `Basic ${this.auth.currentUser.token}`} : {},
       }).then(response => {
         this.busy = false
         resolve(response.data)

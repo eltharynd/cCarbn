@@ -1,0 +1,25 @@
+<div class="container" [ngStyle]="{
+    position: 'absolute',
+    display: 'flex',
+    width: viewport.width+'px',
+    height: viewport.height+'px',
+    paddingTop: viewport.paddingTop ? viewport.paddingTop+'px' : null,
+    paddingRight: viewport.paddingRight ? viewport.paddingRight+'px' : null,
+    paddingBottom: viewport.paddingBottom ? viewport.paddingBottom+'px' : null,
+    paddingLeft: viewport.paddingLeft ? viewport.paddingLeft+'px' : null,
+    padding: viewport.padding ? viewport.padding+'px' : null,
+    alignItems: alignItems ? alignItems : 'center',
+    justifyContent: justifyContent ? justifyContent : 'center'
+}">
+    <video *ngIf="video" #videoPlayer (loadeddata)="onLoadedData()" (ended)="onPlaybackEnded()" [ngStyle]="{
+        width: video.width ? video.width+'px' : 'fit-content',
+        height: video.height ? video.height+'px' : 'fit-content',
+        marginTop: video.marginTop ? video.marginTop+'px' : null,
+        marginRight: video.marginRight ? video.marginRight+'px' : null,
+        marginBottom: video.marginBottom ? video.marginBottom+'px' : null,
+        marginLeft: video.marginLeft ? video.marginLeft+'px' : null,
+        margin: video.margin ? video.margin+'px' : null
+    }">
+        <source *ngIf="video.src" [src]="video.src">
+    </video>  
+</div>

@@ -1,1 +1,78 @@
-<p>twitch api works!</p>
+<nb-layout>
+    <nb-layout-column>
+
+        <nb-accordion>
+            <nb-accordion-item *ngFor="let e of events">
+                <nb-accordion-item-header>
+                    <button nbButton status="primary" (click)="sendTestEvent($event, e.event)"><nb-icon icon="cast"></nb-icon></button>
+                    <div class="header-name">
+                        {{e.event.name}}
+                    </div>
+                    <div class="header-conditions">
+                        <div *ngFor="let c of e.conditions; let i = index" style="white-space: pre-line;">
+                            <strong>{{c.type}}</strong> {{c.operator}} {{c.compared}}
+                            <strong *ngIf="i+1 < e.conditions.length">&nbsp;AND&nbsp;</strong>
+                        </div>
+                    </div>
+                </nb-accordion-item-header>
+                <nb-accordion-item-body>
+                    
+                    <nb-select placeholder="Select type of event" [(selected)]="e.event.type">
+                        <nb-option *ngFor="let type of eventTypes" [value]="type">{{type}}</nb-option>
+                    </nb-select>
+
+                    <button nbButton status="success" style="margin-left: 2rem;" [disabled]="!changes">SAVE</button>
+
+                    <nb-tabset fullWidth>
+                        <nb-tab tabTitle="Conditions">
+                            <nb-card class="conditions-card">
+                                <nb-card-header class="conditions-header">
+                                    The conditions under which this events will trigger
+                                </nb-card-header>
+                                <nb-list>
+                                    <nb-list-item *ngFor="let c of e.conditions" class="condition-item">
+                                        <nb-select [(selected)]="c.type">
+                                            <nb-option *ngFor="let type of conditionTypes" [value]=type>{{type}}</nb-option>
+                                        </nb-select>
+
+                                        <nb-select *ngIf="c.type!=='User'" [(selected)]="c.operator" class="operator-select">
+                                            <nb-option *ngFor="let op of comparisonOperators" [value]=op>{{op}}</nb-option>
+                                        </nb-select>
+                                        <nb-select *ngIf="c.type==='User'" [(selected)]="c.operator" class="operator-select">
+                                            <nb-option *ngFor="let op of userOperators;" [value]=op>{{op}}</nb-option>
+                                        </nb-select>
+
+                                        <input *ngIf="!c.operator.startsWith('type')" nbInput [type]="c.type==='User' ? 'text' : 'number'" [value]="c.compared" style="width:100px">
+                                        <nb-select *ngIf="c.operator.startsWith('type')" [(selected)]="c.compared">
+                                            <nb-option *ngFor="let ut of userTypes;" [value]=ut>{{ut}}</nb-option>
+                                        </nb-select>
+
+                                        <button nbButton status="danger" [disabled]="e.conditions.length<2" (click)="deleteCondition(e, c)"><nb-icon icon="trash-2"></nb-icon></button>
+                                    </nb-list-item>
+                               
+                                    <nb-list-item>
+                                        <button nbButton status="primary" (click)="addCondition(e)">ADD CONDITION</button>
+                                    </nb-list-item>
+                                </nb-list>
+                            </nb-card>
+                            
+                        </nb-tab>
+                        <nb-tab tabTitle="General">
+                            name
+                            upload file
+                        </nb-tab>
+                        <nb-tab tabTitle="Settings">
+                            width
+                            height
+                            margin
+                            delayStart
+                            delayEnd
+                        </nb-tab>
+                    </nb-tabset>
+
+                </nb-accordion-item-body>
+            </nb-accordion-item>
+        </nb-accordion>
+
+    </nb-layout-column>
+</nb-layout>

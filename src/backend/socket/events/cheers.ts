@@ -14,17 +14,4 @@ export class Cheers {
     if(found)
       Socket.io.to(found._id.toString()).emit('cheer', toJSON(event))
   }
-
-
-  static bind = (socket: socketIO.Socket) => {
-/*     socket.on('cheer', (data) => {
-      if(data.userId) {
-        socket.join(data.userId)
-      }
-    }) */
-  }
-
-  static unbind = (socket: socketIO.Socket) => {
-
-  }
 }

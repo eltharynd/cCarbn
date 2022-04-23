@@ -1,10 +1,13 @@
 <div class="viewport" [ngStyle]="{width: viewport.width+'px', height: viewport.height+'px'}" [class.background]="viewport.background" [class.dark]="viewport.dark">
+  
+  <app-video *ngIf="currentEvent?.type === 'video'" [video]=currentEvent [viewport]="viewport"></app-video>
+  
+  <div class="viewport-anchor" [ngStyle]="{width: viewport.width+'px', height: viewport.height+'px'}"></div>
+  <div id="cover" [ngStyle]="{
+    left: viewport.width + 'px',
+    width: (1280 - viewport.width)+'px',
+    height: viewport.height+'px'
+  }"></div>
 
-    <div class="viewport-anchor" [ngStyle]="{width: viewport.width+'px', height: viewport.height+'px'}"></div>
-    <div id="cover" [ngStyle]="{
-      left: viewport.width + 'px',
-      width: (1280 - viewport.width)+'px',
-      height: viewport.height+'px'
-    }"></div>
-
+    
 </div>

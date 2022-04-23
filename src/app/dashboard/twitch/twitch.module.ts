@@ -8,6 +8,8 @@ import { TwitchComponent } from "./twitch.component"
 import { ApiComponent } from "./api/api.component"
 import { ChatbotComponent } from "./chatbot/chatbot.component";
 import { HomeComponent } from './home/home.component'
+import { SharedMaterialModule } from "src/app/shared/material.module"
+import { FormsModule } from "@angular/forms"
 
 
 

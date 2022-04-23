@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router'
 import { from, Subject } from 'rxjs'
 import { filter, take } from 'rxjs/operators'
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
-import { SeamlessLoop } from 'src/app/shared/seamlessloop'
 import * as merge from 'deepmerge'
 
 

@@ -6,7 +6,8 @@ import { PredictionsComponent } from "./predictions/predictions.component"
 import { WebSourceRoutingModule } from "./websource-routing.module"
 import { WebSourceComponent } from "./websource.component";
 import { ClipComponent } from './common/clip/clip.component';
-import { EventsComponent } from './events/events.component'
+import { EventsComponent } from './events/events.component';
+import { VideoComponent } from './events/video/video.component'
 
 
 
@@ -23,6 +24,7 @@ import { EventsComponent } from './events/events.component'
     CheersComponent,
     ClipComponent,
     EventsComponent,
+    VideoComponent,
   ],
  })
  export class WebSourceModule {}

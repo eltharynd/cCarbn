@@ -29,6 +29,10 @@ const routes: Routes = [
         path: 'prediction',
         component: PredictionsComponent
       },
+      {
+        path: '**',
+        component: EventsComponent
+      },
     ]
   }
 ]

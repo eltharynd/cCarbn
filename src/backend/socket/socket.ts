@@ -24,11 +24,20 @@ export class Socket {
       })
 
       socket.on('bind', (data) => {
-        if(data.userId) {
+        if(data.userId) 
           socket.join(data.userId)
-        }
       })
 
+      socket.on('unbind', (data) => {
+        if(data.userId) 
+          socket.leave(data.userId)
+      })
+
+      socket.on('test', (data) => {
+        if(data.userId) 
+          Socket.io.to(data.userId).emit('event', data)
+      })
+      
       Cheers.bind(socket)
       HypeTrain.bind(socket)
       Predictions.bind(socket)
@@ -36,12 +45,6 @@ export class Socket {
 
       socket.on('disconnect', () => {
         Socket.connections.splice(Socket.connections.indexOf(socket), 1)
-
-        Cheers.unbind(socket)
-        HypeTrain.unbind(socket)
-        Predictions.unbind(socket)
-        Subscriptions.unbind(socket)
-        
       })
     })
   }
