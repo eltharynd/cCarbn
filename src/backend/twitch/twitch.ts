@@ -126,7 +126,10 @@ export class Twitch {
   static async bindListeners(channel: HelixUser|null, settings) {
     let subscriptions: {listener: Listeners, subscription: EventSubSubscription}[] = []
     //@ts-ignore
-    if(settings?.api?.listeners?.cheer?.enabled) subscriptions.push({listener: Listeners.cheer, subscription: await Twitch.listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent)})    
+    if(settings?.api?.listeners?.cheer?.enabled) {
+      //@ts-ignore
+      subscriptions.push({listener: Listeners.cheer, subscription: await Twitch.listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent)})    
+    }
     if(settings?.api?.listeners?.hypetrain?.enabled) {
       //@ts-ignore
       subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainBeginEvents(channel.id, HypeTrain.hypeTrainBegin)})
@@ -154,6 +157,7 @@ export class Twitch {
             break
            */
           case Listeners.cheer:
+            console.log('toggling cheers')
             iClient.subscriptions.push({listener: Listeners.cheer, subscription: await Twitch.listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent)})
             break
           case Listeners.hypetrain:
