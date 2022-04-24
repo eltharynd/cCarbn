@@ -35,7 +35,7 @@ export class Events {
 
         if(found) {
           event._id = found._id ? found._id : uuid.v4()
-          found = event
+          events[events.indexOf(found)] = event
         } else {
           event._id = uuid.v4()
           events.push(event)

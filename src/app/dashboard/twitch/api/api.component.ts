@@ -215,9 +215,14 @@ export class ApiComponent implements OnInit {
   async videoUploaded(e, ee, url) {
     ee.src = `${SERVER_URL}${url}`
     ee.upload = false
+    let fileName = ee.src.replace(/^.+\//g, '')
+
+    if(e.name === 'An event') {
+      e.name = fileName
+      e.changes = true
+    }
 
     if(!await this.save(e)) {
-      let fileName = ee.src.replace(/^.+\//g, '')
       await this.data.get(`uploads/${this.auth.currentUser?._id}/unlink/${fileName}`)
       ee.src = null
     }  

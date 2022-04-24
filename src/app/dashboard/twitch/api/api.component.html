@@ -67,6 +67,7 @@
                         
                                 <nb-list-item>
                                     <button nbButton status="primary" (click)="addCondition(e)">ADD CONDITION</button>
+                                    <input nbInput [(ngModel)]="e.name" fullWidth style="margin-left:1rem">
                                 </nb-list-item>
                             </nb-list>
                         </nb-card-header>

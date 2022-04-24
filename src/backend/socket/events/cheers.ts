@@ -12,6 +12,7 @@ export class Cheers {
     console.log(toJSON(event))
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found) {
+      console.log('sending')
       Socket.io.to(found._id.toString()).emit('events', toJSON(event))
     }
   }

@@ -12,6 +12,8 @@ export class Redemptions {
     console.log(toJSON(event))
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
-      Socket.io.to(found._id.toString()).emit('redemption', toJSON(event))
+      Socket.io.to(found._id.toString()).emit('events', Object.assign({
+        eventType: 'redeem'
+      }, toJSON(event)))
   }
 }
