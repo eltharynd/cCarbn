@@ -110,6 +110,29 @@ export class DataService {
     }) 
   }
 
+  public async patch(endpoint: string, data?: any): Promise<any> {
+    this.busy = true
+    return new Promise<any>(resolve => {
+      axios({
+        method: 'patch',
+        url: `${SERVER_URL}${endpoint}`,
+        headers: this.auth.currentUser?.token ? {'Authorization': `Basic ${this.auth.currentUser.token}`} : {},
+        data: data
+      }).then(response => {
+        this.busy = false
+        resolve(response.data)
+      }).catch(error => {
+        console.error(error)
+        this.busy = false
+        if(error?.response?.status === 403) {
+          //AuthGuard.lastDeniedAccess = this.router.url
+          this.router.navigate([`auth`])
+        }
+        resolve(null)
+      })
+    }) 
+  }
+
   public async delete(endpoint: string): Promise<any> {
     this.busy = true
     return new Promise<any>(resolve => {

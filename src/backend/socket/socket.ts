@@ -24,6 +24,7 @@ export class Socket {
       })
 
       socket.on('bind', (data) => {
+        console.log('binding', data)
         if(data.userId) 
           socket.join(data.userId)
       })
@@ -35,13 +36,13 @@ export class Socket {
 
       socket.on('test', (data) => {
         if(data.userId) 
-          Socket.io.to(data.userId).emit('event', data)
+          Socket.io.to(data.userId).emit('test', data)
       })
-      
-      Cheers.bind(socket)
+
+      /* Cheers.bind(socket)
       HypeTrain.bind(socket)
       Predictions.bind(socket)
-      Subscriptions.bind(socket)
+      Subscriptions.bind(socket) */
 
       socket.on('disconnect', () => {
         Socket.connections.splice(Socket.connections.indexOf(socket), 1)

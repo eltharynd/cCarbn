@@ -38,7 +38,7 @@ export class CheersComponent implements OnInit, OnDestroy {
   }
 
   async ngOnDestroy() {
-    this.data.socketIO.emit('cheer', {userId: this.userId})
+    //this.data.socketIO.emit('cheer', {userId: this.userId})
   }
 
   async saveSettings() {

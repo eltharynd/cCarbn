@@ -6,6 +6,7 @@ import { filter, take, toArray } from 'rxjs/operators'
 
 import { HypeTrain } from '../socket/events/hypetrain'
 import { Cheers } from '../socket/events/cheers'
+import { Redemptions } from '../socket/events/redemptions'
 import { ClientCredentialsAuthProvider, RefreshingAuthProvider, TokenInfo } from '@twurple/auth'
 import { Mongo } from '../db/mongo'
 import { UserToken, ClientToken } from '../db/models/tokens'
@@ -53,6 +54,7 @@ export class Twitch {
         }),
       secret: token.secret,
     })
+    //@ts-ignore
     await Twitch.listener.listen(FORCE_REVERSE_PROXY || process?.env?.NODE_ENV === 'production' ? null : +PORT + 1)
   }
 
@@ -108,12 +110,11 @@ export class Twitch {
     })
     Twitch.clients.push(iClient)
 
-    //await userClient.hypeTrain.getHypeTrainEventsForBroadcaster(channel.id)
   }
 
   static async disconnect(user, settings?) {
     let iClient = await this.findByUserId(user._id)
-    if(iClient) {
+    if(iClient?.subscriptions) {
       for(let sub of iClient.subscriptions) {
         sub.subscription.stop()
       }
@@ -122,12 +123,16 @@ export class Twitch {
     }
   }
 
-  static async bindListeners(channel: HelixUser, settings) {
+  static async bindListeners(channel: HelixUser|null, settings) {
     let subscriptions: {listener: Listeners, subscription: EventSubSubscription}[] = []
+    //@ts-ignore
     if(settings?.api?.listeners?.cheer?.enabled) subscriptions.push({listener: Listeners.cheer, subscription: await Twitch.listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent)})    
     if(settings?.api?.listeners?.hypetrain?.enabled) {
+      //@ts-ignore
       subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainBeginEvents(channel.id, HypeTrain.hypeTrainBegin)})
+      //@ts-ignore
       subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainProgressEvents(channel.id, HypeTrain.hypeTrainProgress)})
+      //@ts-ignore
       subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainEndEvents(channel.id, HypeTrain.hypeTrainEnd)}) 
     }
     return subscriptions
@@ -139,8 +144,15 @@ export class Twitch {
       throw new Error(`User doesn't have a connected client...`)
 
     } else  {
-      if(enable) {
+      if(enable && iClient?.subscriptions) {
         switch(listener) {
+          /* 
+          case Listeners.redemption:
+            let rewards = await iClient.userClient.channelPoints.getCustomRewards(iClient.user.id)
+            for(let r of rewards)
+              iClient.subscriptions.push({listener: Listeners.redemption, subscription: await Twitch.listener.subscribeToChannelRedemptionAddEventsForReward(channel.id, r.id, Redemptions.redemptionEvent)})
+            break
+           */
           case Listeners.cheer:
             iClient.subscriptions.push({listener: Listeners.cheer, subscription: await Twitch.listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent)})
             break
@@ -151,12 +163,14 @@ export class Twitch {
             break
         } 
       } else {
+        //@ts-ignore
         let toRemove: {listener: Listeners, subscription: EventSubSubscription}[] = await from(iClient.subscriptions).pipe(
           filter(s => s.listener === listener),
           toArray()
         ).toPromise()
         for(let sub of toRemove) {
           await sub.subscription.stop()
+          //@ts-ignore
           iClient.subscriptions.splice(iClient.subscriptions.indexOf(sub), 1)
         }
       }
@@ -174,9 +188,10 @@ export class IApiClient {
   userClient: ApiClient
 
   listener: EventSubListener
-  subscriptions: {listener: Listeners, subscription: EventSubSubscription}[]
+  subscriptions: {listener: Listeners, subscription: EventSubSubscription}[]|null
 
   searchChannel = async (name): Promise<HelixChannelSearchResult> => {
+    //@ts-ignore
     return await from((await this.client.search.searchChannels(name)).data)
     .pipe(
       filter((channel) => channel.name === name),
@@ -186,6 +201,7 @@ export class IApiClient {
   }
 
   getStream = async (userId): Promise<HelixStream> => {
+    //@ts-ignore
     return await this.client.streams.getStreamByUserId(userId)
   }
 }

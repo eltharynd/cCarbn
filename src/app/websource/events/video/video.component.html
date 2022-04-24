@@ -7,7 +7,6 @@
     paddingRight: viewport.paddingRight ? viewport.paddingRight+'px' : null,
     paddingBottom: viewport.paddingBottom ? viewport.paddingBottom+'px' : null,
     paddingLeft: viewport.paddingLeft ? viewport.paddingLeft+'px' : null,
-    padding: viewport.padding ? viewport.padding+'px' : null,
     alignItems: alignItems ? alignItems : 'center',
     justifyContent: justifyContent ? justifyContent : 'center'
 }">
@@ -17,8 +16,7 @@
         marginTop: video.marginTop ? video.marginTop+'px' : null,
         marginRight: video.marginRight ? video.marginRight+'px' : null,
         marginBottom: video.marginBottom ? video.marginBottom+'px' : null,
-        marginLeft: video.marginLeft ? video.marginLeft+'px' : null,
-        margin: video.margin ? video.margin+'px' : null
+        marginLeft: video.marginLeft ? video.marginLeft+'px' : null
     }">
         <source *ngIf="video.src" [src]="video.src">
     </video>  

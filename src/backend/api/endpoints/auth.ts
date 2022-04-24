@@ -10,9 +10,7 @@ import { Api } from "../express"
 import * as uuid from 'uuid'
 
 export const authMiddleware = async (req, res, next) => {
-  console.log('req', req.headers)
   let token = req?.headers?.authorization ? req.headers.authorization.replace(/^Basic\s/, '') : null
-  console.log(token)
   if(!token) {
     res.status(403).send('Missing Authorization Header')
     return

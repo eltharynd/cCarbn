@@ -14,9 +14,19 @@ $nb-themes: nb-register-theme((
   // color-primary-700: #1a34b8,
   // color-primary-800: #102694,
   // color-primary-900: #091c7a,
+
+  select-outline-small-padding: 0.4375rem 1rem,
+  select-min-width: 100px,
+  select-small-max-width: 100px,
+  select-medium-max-width: 180px,
+  //input-medium-max-width: 10rem,
   
 
 ), dark, dark);
+
+nb-select.size-medium:not(.full-width) {
+  min-width: 180px;
+}
 
 
 //Workaround until they fix https://github.com/akveo/nebular/issues/2119

@@ -28,8 +28,8 @@ export class WebSourceComponent implements OnInit {
     if(!this.userId) 
       return
     this.data.userId.next(this.userId)
-    this.data.socketIO.emit('bind', {
+    /* this.data.socketIO.emit('bind', {
       userId: this.userId
-    })
+    }) */
   }
 }

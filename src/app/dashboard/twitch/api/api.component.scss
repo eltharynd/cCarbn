@@ -1,4 +1,15 @@
 
+.global-card > nb-card-body {
+    padding: 0;
+}
+
+.add-event-card {
+    margin-top: 2rem;
+    nb-card-body {
+        padding: 0;
+    }
+}
+
 .header-name {
     margin-left: 1rem;
 }
@@ -18,9 +29,123 @@
 
 .conditions-header {
     text-align: center;
+    background-color: rgba(914, 201, 231, 0.08);
+    padding: 0;
 }
 .condition-item {
     display: flex;
     width: 100%;
     justify-content: space-between;
+}
+
+.events-body {
+    background-color: rgba(white, 0.1);
+    padding: 0;
+}
+
+.event-error {
+    background-color: var(--card-header-danger-background-color);
+    text-align: center;
+    font-weight: bold;
+}
+
+.event-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.event-footer > *:nth-child(2) {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    flex-grow: 1;
+}
+
+nb-list-item:first-child {
+    border-top: 0;
+}
+nb-list-item:last-child {
+    border-bottom: 0;
+}
+
+input {
+    width: 180px;
+}
+
+.video-container {
+    display: flex;
+    align-items: center;
+
+    .video-preview,
+    .video-uploader {
+        width: 240px;
+        height: 240px;
+        margin-right: 1rem;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }   
+    .video-details {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        div {
+            border-left: 1px solid rgba(white, 0.1);
+            padding-left: 1rem;
+        }
+        div:first-child {
+            padding-top: 1rem;
+        }
+        div:last-child {
+            padding-bottom: 1rem;
+        }
+    }
+    .video-settings {
+        flex-grow: 1;
+        padding-left: 2rem;
+        nb-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .key {
+                flex-grow: 0;
+                width: 30%;
+                min-width: 110px;
+            }
+            .value {
+                flex-grow: 1;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .unit {
+                    padding-left: .5em;
+                }
+            }
+        }
+        
+    }
+
+    .video-delete {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+    }
+    .file-upload,
+    .file-select {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        z-index: 5;
+    }
+    .file-select {
+        right: 4rem;
+    }
+}
+
+.message-container {
+
+}
+
+.gif-container {
+
 }

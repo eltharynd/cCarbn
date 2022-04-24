@@ -93,4 +93,16 @@ export class HypeTrain {
       }, 1000);
       
   }
+
+/*   static bind = (socket: socketIO.Socket) => {
+    socket.on('hypetrain', (data) => {
+      if(data.userId) {
+        socket.join(data.userId)
+      }
+    })
+  }
+    
+  static unbind = (socket: socketIO.Socket) => {
+
+  } */
 }

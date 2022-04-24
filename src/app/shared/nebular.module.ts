@@ -1,8 +1,9 @@
 
 import { NgModule } from '@angular/core'
-import { NbThemeModule, NbLayoutModule, NbIconModule, NbCardModule, NbButtonModule, NbSpinnerModule, NbSidebarModule, NbUserModule, NbActionsModule, NbContextMenuModule, NbMediaBreakpointsService, NbMenuService, NbContextMenuDirective, NbMenuModule, NbToggleModule, NbListModule, NbAccordionModule, NbSelectModule, NbTabsetModule, NbInputModule } from '@nebular/theme';
+import { NbThemeModule, NbLayoutModule, NbIconModule, NbCardModule, NbButtonModule, NbSpinnerModule, NbSidebarModule, NbUserModule, NbActionsModule, NbContextMenuModule, NbMediaBreakpointsService, NbMenuService, NbContextMenuDirective, NbMenuModule, NbToggleModule, NbListModule, NbAccordionModule, NbSelectModule, NbTabsetModule, NbInputModule, NbTooltipModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { CommonModule } from '@angular/common'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
 @NgModule({
   imports: [
@@ -14,27 +15,8 @@ import { CommonModule } from '@angular/common'
     NbIconModule,
     NbEvaIconsModule,
 
-    NbAccordionModule,
-    NbActionsModule,
-    NbButtonModule,
-    NbCardModule,
-    NbContextMenuModule,
-    NbInputModule,
-    NbListModule,
-    NbSelectModule,
-    NbSpinnerModule,
-    NbTabsetModule,
-    NbToggleModule,
-    NbUserModule,
-  ],
-  exports: [
-    CommonModule,
-    NbThemeModule,
-    NbSidebarModule,
-    NbMenuModule,
-    NbLayoutModule,
-    NbIconModule,
-    NbEvaIconsModule,
+    FormsModule,
+    ReactiveFormsModule,
 
     NbAccordionModule,
     NbActionsModule,
@@ -47,6 +29,33 @@ import { CommonModule } from '@angular/common'
     NbSpinnerModule,
     NbTabsetModule,
     NbToggleModule,
+    NbTooltipModule,
+    NbUserModule,
+  ],
+  exports: [
+    CommonModule,
+    NbThemeModule,
+    NbSidebarModule,
+    NbMenuModule,
+    NbLayoutModule,
+    NbIconModule,
+    NbEvaIconsModule,
+
+    FormsModule,
+    ReactiveFormsModule,
+    
+    NbAccordionModule,
+    NbActionsModule,
+    NbButtonModule,
+    NbCardModule,
+    NbContextMenuModule,
+    NbInputModule,
+    NbListModule,
+    NbSelectModule,
+    NbSpinnerModule,
+    NbTabsetModule,
+    NbToggleModule,
+    NbTooltipModule,
     NbUserModule,
   ],
   providers: []

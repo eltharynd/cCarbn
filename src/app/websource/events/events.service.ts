@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'
 import { Subject } from 'rxjs'
 import { AuthGuard } from 'src/app/auth/auth.guard'
+import { _event } from 'src/app/dashboard/twitch/api/api.component'
 import { DataService } from 'src/app/shared/data.service'
 
 @Injectable({
@@ -9,6 +10,7 @@ import { DataService } from 'src/app/shared/data.service'
 })
 export class EventsService {
 
+  events: _event[] = []
   private eventsQueue: any[] = []
   eventsSubject: Subject<any> = new Subject()
 
@@ -25,7 +27,29 @@ export class EventsService {
       }
     }) 
 
-    this.data.socketIO.on('event', data => {
+    this.data.userId.subscribe(async user => {
+      this.events = await this.data.get(`events/${user}`)
+      this.data.socketIO.emit('cheer', { userId: user })
+    })
+
+    this.data.socketIO.on('events', data => {
+      console.log(data)
+      for(let e of this.events) {
+        let relative = false
+        let checks = false
+
+        for(let c of e.conditions) {
+          if(c.type === 'bit') {
+            
+          } else if(c.type === 'user') {
+            //TODO implement
+          }
+
+
+        }
+      }
+    })
+    this.data.socketIO.on('test', data => {
       this.queueUp(data)
     })
   }
@@ -60,5 +84,7 @@ export enum POSITION {
 }
 
 export enum EVENT_TYPES {
-  video = 'video'
+  video = 'Video',
+  gif = 'GIF',
+  message = 'Chat Message'
 }

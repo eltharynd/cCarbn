@@ -7,6 +7,8 @@ import { Api } from "../express"
 import { authMiddleware } from "./auth"
 import { Mongo } from "../../db/mongo"
 import * as merge from 'deepmerge'
+import { toJSON } from "../../socket/events/util/toJSON"
+import { from, map, toArray } from "rxjs"
 
 export class User {
 
@@ -39,6 +41,23 @@ export class User {
         }       
       }
       res.status(404).send({})
+    })
+
+    Api.endpoints.get('/api/user/:userId/uploads', authMiddleware, async (req, res) => {
+      let uploads: any = await Mongo.Upload.find({ 'metadata.userId': Mongo.ObjectId(req.params.userId) })
+      
+      uploads = await from(uploads).pipe(
+        map((u: any) => {
+          return {
+            _id: u._id.toString(),
+            filename: u.filename,
+            contentType: u.contentType
+          }
+        }),
+        toArray()
+      ).toPromise()
+
+      res.send(uploads)
     })
 
 
@@ -169,6 +188,22 @@ export class User {
       res.send(settings.json)
     })
 
+    Api.endpoints.get('/api/user/:userId/redemptions', authMiddleware, async (req, res) => {
+      let user = await Twitch.findByUserId(req.params.userId)
+      if(!user || !user.userClient) return res.status(405).send(`Your twitch API doesn't seem to be enabled`)
+      let rewards: any = await user.userClient.channelPoints.getCustomRewards(user.user.id)
+      rewards = await from(rewards).pipe(
+        map(r => {
+          let buffer = toJSON(r)
+          return {
+            id: buffer.id,
+            title: buffer.title
+          }
+        }),
+        toArray()
+      ).toPromise()
+      res.send(rewards)
+    })
 
 
   }

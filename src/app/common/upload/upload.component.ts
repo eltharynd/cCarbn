@@ -15,11 +15,13 @@ export class UploadComponent {
     @Input() height: string
 
     @Input() name: string
+    @Input() autoIndexing: boolean = false
     @Input() displayTextOverride: string
 
     @Input() uploading: Subject<any>
     @Input() uploaded: Subject<any>
     @Input() url: string|null
+    @Input() reference: any
 
     @Input() disabled: boolean = false
     
@@ -55,6 +57,7 @@ export class UploadComponent {
         
         xhr.open('POST', `${SERVER_URL}uploads/${this.auth.currentUser?._id}/${newName}`)
         xhr.setRequestHeader('Authorization', this.auth?.currentUser?.token ? `Basic ${this.auth.currentUser.token}` : '')
+        xhr.setRequestHeader('AutoIndexing', `${this.autoIndexing}`)
         let contentType
         xhr.onreadystatechange = () => {
             if(xhr.HEADERS_RECEIVED) contentType = xhr.getResponseHeader('Content-Type')
@@ -62,8 +65,15 @@ export class UploadComponent {
         xhr.onload = () => {
             //if(/image\//.test(contentType!))
                 this.url = `${SERVER_URL}${JSON.parse(xhr.response).url}`
-
-            if(this.uploaded) this.uploaded.next(JSON.parse(xhr.response))
+            if(this.uploaded) {
+                if(this.reference) {
+                    this.uploaded.next({
+                        reference: this.reference,
+                        url: JSON.parse(xhr.response)
+                    })
+                } else
+                    this.uploaded.next(JSON.parse(xhr.response))
+            }
             this.success = true
             this.busy = false
         }
