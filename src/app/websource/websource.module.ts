@@ -7,7 +7,8 @@ import { WebSourceRoutingModule } from "./websource-routing.module"
 import { WebSourceComponent } from "./websource.component";
 import { ClipComponent } from './common/clip/clip.component';
 import { EventsComponent } from './events/events.component';
-import { VideoComponent } from './events/video/video.component'
+import { VideoComponent } from './events/video/video.component';
+import { AudioComponent } from './events/audio/audio.component'
 
 
 
@@ -25,6 +26,7 @@ import { VideoComponent } from './events/video/video.component'
     ClipComponent,
     EventsComponent,
     VideoComponent,
+    AudioComponent,
   ],
  })
  export class WebSourceModule {}

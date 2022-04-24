@@ -76,7 +76,6 @@ export class EventsService {
           }
         }
 
-        console.log('ignoring?: ', ignore)
         if(ignore) continue
 
         for(let ee of e.events) {
@@ -121,6 +120,7 @@ export enum POSITION {
 
 export enum EVENT_TYPES {
   video = 'Video',
-  gif = 'GIF',
-  message = 'Chat Message'
+  audio = 'Audio',
+/*   gif = 'GIF',
+  message = 'Chat Message' */
 }

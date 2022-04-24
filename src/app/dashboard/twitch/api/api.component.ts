@@ -176,10 +176,22 @@ export class ApiComponent implements OnInit {
 
 
   userVideos: any[]
-  async getUserSelectableVideos(ee) {
+  userAudios: any[]
+  async getUserSelectableFiles(ee) {
+    let files = await this.data.get(`user/${this.auth.currentUser?._id}/uploads`)
     //@ts-ignore
-    this.userVideos = await from(await this.data.get(`user/${this.auth.currentUser?._id}/uploads`)).pipe(
+    this.userVideos = await from(files).pipe(
       filter((u: any) => /^video/i.test(u.contentType)),
+      map((u: any) => {
+        return Object.assign(u, {
+          src: `${SERVER_URL}uploads/${this.auth.currentUser?._id}/${encodeURI(u.filename)}`
+        })
+      }),
+      toArray()
+    ).toPromise()
+    //@ts-ignore
+    this.userAudios = await from(files).pipe(
+      filter((u: any) => /^audio/i.test(u.contentType)),
       map((u: any) => {
         return Object.assign(u, {
           src: `${SERVER_URL}uploads/${this.auth.currentUser?._id}/${encodeURI(u.filename)}`
@@ -282,6 +294,8 @@ export class ApiComponent implements OnInit {
     marginRight: 'number',
     marginBottom: 'number',
     marginLeft: 'number',
+  }
+  _audioSettings = {
   }
 }
 

@@ -1,6 +1,7 @@
 <div class="viewport" [ngStyle]="{width: viewport.width+'px', height: viewport.height+'px'}" [class.background]="viewport.background" [class.dark]="viewport.dark">
   
   <app-video *ngIf="currentEvent?.type === 'video'" [video]=currentEvent [viewport]="viewport"></app-video>
+  <app-audio *ngIf="currentEvent?.type === 'audio'" [audio]=currentEvent></app-audio>
   
   <div class="viewport-anchor" [ngStyle]="{width: viewport.width+'px', height: viewport.height+'px'}"></div>
   <div id="cover" [ngStyle]="{
