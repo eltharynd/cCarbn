@@ -24,7 +24,6 @@ export class Socket {
       })
 
       socket.on('bind', (data) => {
-        console.log('binding', data)
         if(data.userId) 
           socket.join(data.userId)
       })
