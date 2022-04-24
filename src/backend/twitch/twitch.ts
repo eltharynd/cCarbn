@@ -126,6 +126,13 @@ export class Twitch {
   static async bindListeners(channel: HelixUser|null, settings) {
     let subscriptions: {listener: Listeners, subscription: EventSubSubscription}[] = []
     //@ts-ignore
+   /*  if(settings?.api?.listeners?.redemption?.enabled) {
+      let rewards = await this.user .userClient.channelPoints.getCustomRewards(.user.id)
+            for(let r of rewards)
+              subscriptions.push({listener: Listeners.redemption, subscription: await Twitch.listener.subscribeToChannelRedemptionAddEventsForReward(channel.id, r.id, Redemptions.redemptionEvent)})
+      //@ts-ignore
+      subscriptions.push({listener: Redemptions.cheer, subscription: await Twitch.listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent)})    
+    } */
     if(settings?.api?.listeners?.cheer?.enabled) {
       //@ts-ignore
       subscriptions.push({listener: Listeners.cheer, subscription: await Twitch.listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent)})    
@@ -149,13 +156,11 @@ export class Twitch {
     } else  {
       if(enable && iClient?.subscriptions) {
         switch(listener) {
-          /* 
           case Listeners.redemption:
             let rewards = await iClient.userClient.channelPoints.getCustomRewards(iClient.user.id)
             for(let r of rewards)
               iClient.subscriptions.push({listener: Listeners.redemption, subscription: await Twitch.listener.subscribeToChannelRedemptionAddEventsForReward(channel.id, r.id, Redemptions.redemptionEvent)})
             break
-           */
           case Listeners.cheer:
             console.log('toggling cheers')
             iClient.subscriptions.push({listener: Listeners.cheer, subscription: await Twitch.listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent)})

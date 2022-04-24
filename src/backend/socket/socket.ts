@@ -38,20 +38,6 @@ export class Socket {
           Socket.io.to(data.userId).emit('test', data)
       })
 
-
-
-      try {
-        console.log('binding')
-        Cheers.bind(socket)
-      } catch (e) {
-        console.error('---------------', e)
-      }
-      console.log('success')
-      
-     /*  HypeTrain.attach(socket)
-      Predictions.attach(socket)
-      Subscriptions.attach(socket)
- */
       socket.on('disconnect', () => {
         Socket.connections.splice(Socket.connections.indexOf(socket), 1)
       })
