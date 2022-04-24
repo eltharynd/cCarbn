@@ -1,5 +1,6 @@
 import { EventSubChannelCheerEvent } from "@twurple/eventsub/lib"
 import { User } from "../../db/models/user"
+import * as socketIO from "socket.io"
 import { Socket } from "../socket"
 import { toJSON } from "./util/toJSON"
 
@@ -15,7 +16,7 @@ export class Cheers {
     }
   }
 
-/*   static bind = (socket: socketIO.Socket) => {
+  static bind = (socket: socketIO.Socket) => {
     socket.on('cheer', (data) => {
       console.log('bind', data)
       if(data.userId) {
@@ -26,5 +27,5 @@ export class Cheers {
     
   static unbind = (socket: socketIO.Socket) => {
 
-  } */
+  }
 }

@@ -7,7 +7,7 @@ const uuid = require('uuid')
 
 export class Events {
 
-  static bind() {
+  static attach() {
 
     Api.endpoints.route('/api/events/:userId')
       .get(async (req, res) => {

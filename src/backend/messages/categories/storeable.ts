@@ -133,7 +133,7 @@ export class Storeable extends Message {
             take(1)
           )
           .toPromise()
-        command.listener.unbind()
+        command.listener.unattach()
         await Command.deleteOne({userId: this.iClient.userId, command: name})
         this.commands.splice(this.commands.indexOf(command), 1)
         this.client.say(channel, `/me Successfully deleted command...`)

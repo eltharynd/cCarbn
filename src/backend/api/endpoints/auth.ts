@@ -30,7 +30,7 @@ export const authMiddleware = async (req, res, next) => {
 }
 export class Auth {
 
-  static bind() {
+  static attach() {
 
     Api.endpoints.post('/api/auth/token', async (req, res) => {
       if(!req.body.code || !req.body.redirect || !req.body.state) {

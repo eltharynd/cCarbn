@@ -51,9 +51,9 @@ export class Api {
     Api.server.listen(PORT)
 
 
-    Auth.bind()
-    User.bind()
-    Events.bind()
+    Auth.attach()
+    User.attach()
+    Events.attach()
 
 
     Api.endpoints.get('/api/logger', async (req,res) => {

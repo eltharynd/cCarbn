@@ -12,7 +12,7 @@ import { from, map, toArray } from "rxjs"
 
 export class User {
 
-  static bind() {
+  static attach() {
 
     Api.endpoints.delete('/api/user/:userId', authMiddleware, async (req, res) => {
       if(req.params.userId.length>10) {
