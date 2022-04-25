@@ -1,5 +1,4 @@
 import * as express from 'express'
-import * as stream from 'stream'
 require('express-async-errors')
 import { createServer, Server } from 'http'
 import * as cors from 'cors'
@@ -9,13 +8,8 @@ import { Auth, authMiddleware } from './endpoints/auth'
 import { User } from './endpoints/user'
 import { Events } from './endpoints/events'
 import { Mongo } from '../db/mongo'
-import { User as MongoUser } from '../db/models/user'
 import { UploadUsage } from '../db/models/upload-usage'
 import * as multer from 'multer'
-import * as fs from 'fs'
-import { HelixUser } from '@twurple/api/lib'
-import { Twitch } from '../twitch/twitch'
-import { Socket } from '../socket/socket'
 import { TTS } from '../external/tts'
 const { Readable } = require('stream');
 
