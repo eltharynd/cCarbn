@@ -61,7 +61,7 @@ export class ElementsRoutes {
         let removed = elements.splice(elements.indexOf(found), 1)
         userElements.json = elements
         await userElements.save()
-        res.send()
+        res.send({})
 
         if(removed.length>0)
           for(let event of removed[0].events) {

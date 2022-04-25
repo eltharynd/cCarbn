@@ -17,19 +17,12 @@ export class EventsService {
 
   constructor(private data: DataService) { 
 
-/*     setTimeout(() => {
-      this.queueUp({
-        type: 'tts',
-        voice: 'au',
-        text: `What do you think this tts would do???? huh?`
-      })
-    }, 1000); */
     this.eventsSubject.subscribe(event => {
       switch (event.what) {
         case 'ended':
-          setTimeout(() => {
-            this.playing = false
-            this.playNext()
+          this.playing--
+          setTimeout(async () => {
+            await this.playNext()
           }, 500);
       }
     }) 
@@ -38,40 +31,50 @@ export class EventsService {
       this.elements = await this.data.get(`elements/${user}`)
     })
 
+    this.data.socketIO.on('events', async data => {
+      console.info('event received', data)
 
-/*     let exampleRedemption = {
-      eventType: 'redeem',
-      broadcaster_user_id: "76541564",
-      broadcaster_user_login: "eltharynd",
-      broadcaster_user_name: "eltharynd",
-      id: "8464cdcd-4952-4ccc-bb4f-dd9ebe103375",
-      user_id: "76541564",
-      user_login: "eltharynd",
-      user_name: "eltharynd",
-      user_input: "",
-      status: "unfulfilled",
-      redeemed_at: "2022-04-24T18:19:32.939324522Z",
-      reward: {
-          "id": "3377e7b8-900f-4f7d-808a-01d60d6a3b05",
-          "title": "Hydrate!",
-          "prompt": "Sponsored by lttstore.com",
-          "cost": 1000
-      }
-    } */
-    this.data.socketIO.on('events', data => {
-      console.log('event received', data)
+      let user = data.user_name||null
+
       for(let element of this.elements) {
 
         let ignore = false
         for(let c of element.conditions) {
-          console.log(c)
+          //console.log(c)
           if(c.type === 'bit') {
             if(data.eventType !== 'cheer') {
-              ignore = true
+              let howMuch = 0
+              try { howMuch = parseInt(c.compared) } catch(e) { ignore = true; continue; }
+              switch (c.operator) {
+                case 'lesser':
+                  ignore = +data.bits >= +howMuch
+                  break
+                case 'lesserEqual':
+                  ignore = +data.bits > +howMuch
+                  break
+                case 'greater':
+                  ignore = +data.bits <= +howMuch
+                  break
+                case 'greaterEqual':
+                  ignore = +data.bits < +howMuch
+                  break
+                case 'equals':
+                  ignore = +data.bits !== +howMuch
+                  break
+              }
               continue
             }
           } else if(c.type === 'user') {
-            //TODO implement
+            switch (c.operator) {
+              case 'is':
+                ignore = `${c.compared}`.toLowerCase().replace(/\s/g, '') !== `${user}`.toLowerCase()
+                break
+              case 'isnt':
+                ignore = `${c.compared}`.toLowerCase().replace(/\s/g, '') === `${user}`.toLowerCase()
+                break
+              default:
+                ignore = true
+            }
             continue
           } else if(c.type === 'redeem') {
             //TODO implement
@@ -92,7 +95,7 @@ export class EventsService {
                 event.text = null
                 break
               case 'cheerMessage':
-                event.text = null
+                event.text = data.message
                 break
               case 'redemptionMessage':
               default:
@@ -100,30 +103,36 @@ export class EventsService {
                 break
             }
           }
-          this.queueUp(event)
+          await this.queueUp(event)
         }
 
       }
     })
-    this.data.socketIO.on('test', data => {
-      this.queueUp(data)
+
+    this.data.socketIO.on('test', async data => {
+      await this.queueUp(data)
     })
+
   }
 
 
-
-  queueUp(event) {
+  async queueUp(event) {
     this.eventsQueue.push(event)
-    this.playNext()
+    await this.playNext()
   } 
   
-  private playing = false
-  private playNext() {
-    if(this.playing || this.eventsQueue.length<=0)
+  private playing = 0
+  private async playNext() {
+    if(this.eventsQueue.length<1 || (this.playing>0 && !this.eventsQueue[0].withPrevious))
       return
-    this.playing = true
+    this.playing++
     let buffer = this.eventsQueue.splice(0, 1)[0]
     this.eventsSubject.next(Object.assign(buffer, { what: 'start' }))
+
+    if(this.eventsQueue.length>0 && this.eventsQueue[0].withPrevious)
+      return this.playNext()
+    else 
+      return true
   } 
 }
 

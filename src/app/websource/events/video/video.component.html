@@ -1,12 +1,8 @@
 <div class="container" [ngStyle]="{
     position: 'absolute',
     display: 'flex',
-    width: viewport.width+'px',
-    height: viewport.height+'px',
-    paddingTop: viewport.paddingTop ? viewport.paddingTop+'px' : null,
-    paddingRight: viewport.paddingRight ? viewport.paddingRight+'px' : null,
-    paddingBottom: viewport.paddingBottom ? viewport.paddingBottom+'px' : null,
-    paddingLeft: viewport.paddingLeft ? viewport.paddingLeft+'px' : null,
+    width: (+viewport.width - (+viewport.padding*2))+'px',
+    height: (+viewport.height - (+viewport.padding*2))+'px',
     alignItems: alignItems ? alignItems : 'center',
     justifyContent: justifyContent ? justifyContent : 'center'
 }">

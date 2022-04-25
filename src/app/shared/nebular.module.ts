@@ -1,6 +1,6 @@
 
 import { NgModule } from '@angular/core'
-import { NbThemeModule, NbLayoutModule, NbIconModule, NbCardModule, NbButtonModule, NbSpinnerModule, NbSidebarModule, NbUserModule, NbActionsModule, NbContextMenuModule, NbMediaBreakpointsService, NbMenuService, NbContextMenuDirective, NbMenuModule, NbToggleModule, NbListModule, NbAccordionModule, NbSelectModule, NbTabsetModule, NbInputModule, NbTooltipModule } from '@nebular/theme';
+import { NbThemeModule, NbLayoutModule, NbIconModule, NbCardModule, NbButtonModule, NbSpinnerModule, NbSidebarModule, NbUserModule, NbActionsModule, NbContextMenuModule, NbMediaBreakpointsService, NbMenuService, NbContextMenuDirective, NbMenuModule, NbToggleModule, NbListModule, NbAccordionModule, NbSelectModule, NbTabsetModule, NbInputModule, NbTooltipModule, NbCheckboxModule } from '@nebular/theme';
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
@@ -22,6 +22,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
     NbActionsModule,
     NbButtonModule,
     NbCardModule,
+    NbCheckboxModule,
     NbContextMenuModule,
     NbInputModule,
     NbListModule,
@@ -48,6 +49,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
     NbActionsModule,
     NbButtonModule,
     NbCardModule,
+    NbCheckboxModule,
     NbContextMenuModule,
     NbInputModule,
     NbListModule,

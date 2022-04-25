@@ -3,32 +3,26 @@ import { Subject } from 'rxjs'
 import { EventsService } from './events.service'
 @Component({
   selector: 'app-events',
-  templateUrl: './events.component.html',
-  styleUrls: ['./events.component.scss']
+  templateUrl: './events.component.html'
 })
 export class EventsComponent {
 
   viewport = {
     width: 1920,
     height: 1080,
-    padding: 50,
-    background: false,
-    dark: false
+    padding: 50
   }
 
-  currentEvent
+  currentEvents: any[] = []
   
   constructor(private events: EventsService) {
     events.eventsSubject.subscribe(event => {
       switch (event.what) {
         case 'start':
-          this.currentEvent = event
+          this.currentEvents.push(event)
           break
         case 'ended': 
-          this.currentEvent = null
-          /* events.eventsSubject.next({
-            what: 'stopped'
-          }) */
+          this.currentEvents.splice(this.currentEvents.indexOf(event), 1)
           break
       }
     })

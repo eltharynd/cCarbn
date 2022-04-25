@@ -2,13 +2,21 @@ import { OnInit, Component } from '@angular/core';
 import { AuthGuard } from '../../../auth/auth.guard'
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 import { EVENT_TYPES, POSITION } from 'src/app/websource/events/events.service'
-import { concat, filter, from, map, Subject, toArray } from 'rxjs'
+import { filter, from, map, Subject, toArray } from 'rxjs'
+import { environment } from 'src/environments/environment'
 @Component({
   selector: 'app-api',
   templateUrl: './api.component.html',
   styleUrls: ['./api.component.scss']
 })
 export class ApiComponent implements OnInit {
+
+  viewport = {
+    url: `${environment?.production ? 'https://cCarbn.io/' : 'http://localhost:4200/'}websource/${this.auth.currentUser?._id}`,
+    width: 1920,
+    height: 1080,
+    padding: 50,
+  }
 
   elements: _element[] = []
   channelRewards: _redemption[] = []
@@ -20,7 +28,7 @@ export class ApiComponent implements OnInit {
 
     this.data.get(`user/${this.auth.currentUser?._id}/redemptions`).then(data => this.channelRewards = data)
     this.uploadedSubject.subscribe(data => {
-      this.videoUploaded(data.reference.e, data.reference.ee, data.url.url)
+      this.videoUploaded(data.reference.elem, data.reference.ev, data.url.url)
     })
   }
 
@@ -31,11 +39,11 @@ export class ApiComponent implements OnInit {
     }
   }
 
-  sendTestEvent(pointerEvent, event) {
+  sendTestEvent(pointerEvent, element) {
     pointerEvent.stopPropagation()
 
-    for(let e of event.events)
-      this.data.send('test', Object.assign({}, e, {
+    for(let event of element.events)
+      this.data.send('test', Object.assign({}, event, {
         userId: this.auth.currentUser?._id
       }))
   }
@@ -121,9 +129,11 @@ export class ApiComponent implements OnInit {
     }
   }
   async deleteElement(element: _element) {
-    console.log(element)
     if(element._id) 
-      if(!await this.data.delete(`elements/${this.auth.currentUser?._id}/${element._id}`)) return false
+      if(!await this.data.delete(`elements/${this.auth.currentUser?._id}/${element._id}`)) {
+        element.error = true
+        return false
+      }
     
     let index = this.elements.indexOf(element)
     if(index>=0) {
@@ -142,26 +152,28 @@ export class ApiComponent implements OnInit {
   }
 
 
-  deleteEvent(event, index) {
-    event.events.splice(index, 1)
+  deleteEvent(element: _element, index) {
+    element.events.splice(index, 1)
+    if(element.events.length>0) delete element.events[0].withPrevious
+
     setTimeout(() => {
       this._singleSelection = null
-      event.changes = true
+      element.changes = true
     }, 100)
   }
 
-  addCondition(event) {
-    event.conditions.push({
+  addCondition(element: _element) {
+    element.conditions.push({
       type: 'bit',
       operator: 'equals',
       compared: 1
     })
-    event.changes = true
+    element.changes = true
   }
 
-  deleteCondition(event, condition) {
-    event.conditions.splice(event.conditions.indexOf(condition), 1)
-    event.changes = true
+  deleteCondition(element: _element, condition) {
+    element.conditions.splice(element.conditions.indexOf(condition), 1)
+    element.changes = true
   }
 
 
@@ -230,13 +242,13 @@ export class ApiComponent implements OnInit {
     }  
   }
   onLoadedData(event, data) {
-    let videoFile = data.srcElement
-    let videoInformation = {
-      width: videoFile.videoWidth,
-      height: videoFile.videoHeight,
-      duration: videoFile.duration
+    let file = data.srcElement
+    let mediaInformation = {
+      width: file.videoWidth||null,
+      height: file.videoHeight||null,
+      duration: file.duration
     }
-    event.videoInformation = videoInformation
+    event.mediaInformation = mediaInformation
   }
 
   EventTypes = EVENT_TYPES
@@ -265,8 +277,8 @@ export class ApiComponent implements OnInit {
     isnt: 'isn\'t',
   }
   UserTypeOperators = {
-    typeis: 'type is',
-    typeisnt: 'type isn\'t',
+    //typeis: 'type is',
+    //typeisnt: 'type isn\'t',
   }
   RedemptionOperators = {
     redeemed: 'redeemed'
@@ -290,7 +302,7 @@ export class ApiComponent implements OnInit {
 
   _ttsOptions = {
     redemptionMessage: 'Redemption message',
-    //cheerMessage: 'Cheer message',
+    cheerMessage: 'Cheer message',
     //subMessage: 'Sub message',
   }
   __ttsVoices = {

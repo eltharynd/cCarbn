@@ -12,7 +12,23 @@
                             VIEWPORT
                         </nb-accordion-item-header>
                         <nb-accordion-item-body>
-                            width<br>height
+                            <nb-list>
+                                <nb-list-item>
+                                    Browser source url:
+                                    &nbsp;
+                                    <a [href]="viewport.url" target="_blank">{{viewport.url}}</a>
+                                </nb-list-item>
+                                <nb-list-item>
+                                    Browser source size:
+                                    &nbsp;
+                                    {{viewport.width}}&nbsp;x&nbsp;{{viewport.height}}&nbsp;px
+                                </nb-list-item>
+                                <nb-list-item>
+                                    Browser source padding:
+                                    &nbsp;
+                                    {{viewport.padding}}&nbsp;px
+                                </nb-list-item>
+                            </nb-list>
                         </nb-accordion-item-body>
                     </nb-accordion-item>
                 </nb-accordion>
@@ -74,32 +90,46 @@
 
                         <nb-card-body class="events-body">
                             <nb-tabset fullWidth>
-                                <nb-tab *ngFor="let ev of elem.events" [tabTitle]="ev.type">
+                                <nb-tab *ngFor="let ev of elem.events; let i = index" [tabTitle]="ev.type">
 
-                                    <div #video *ngIf="ev.type==='video' || ev.type==='audio'" class="video-container">
+                                    <div #videoaudio *ngIf="ev.type==='video' || ev.type==='audio'" class="video-container">
                                         
-                                        <div *ngIf="ev.src" class="video-preview">
+                                        <div *ngIf="ev.src && ev.type==='video'" class="video-preview">
                                             <video style="width: 100%; height: 100%;" (loadeddata)="onLoadedData(ev, $event)" autoplay loop [muted]="'muted'">
                                                 <source [src]="ev.src">
                                             </video>  
                                             <button nbButton class="video-delete" status="danger" (click)="deleteVideoSrc(elem, ev, ev.src)"><nb-icon icon="trash-2"></nb-icon></button>
                                         </div>
+                                        <div *ngIf="ev.src && ev.type==='audio'" class="video-preview">
+                                            <audio (loadeddata)="onLoadedData(ev, $event)" controls>
+                                                <source *ngIf="ev.src" [src]="ev.src">
+                                            </audio>
+                                            <button nbButton class="video-delete" status="danger" (click)="deleteVideoSrc(elem, ev, ev.src)"><nb-icon icon="trash-2"></nb-icon></button>
+                                        </div>
+
                                         <div *ngIf="!ev.src" class="video-uploader">
-                                            <nb-select placeholder="Select a video" *ngIf="ev.select" [(selected)]="ev.src" (selectedChange)="videoSelected(elem, ev);elem.changes=true">
+                                            <nb-select placeholder="Select a video" *ngIf="ev.select && ev.type==='video'" [(selected)]="ev.src" (selectedChange)="videoSelected(elem, ev);elem.changes=true">
                                                 <nb-option *ngFor="let file of userVideos" [value]=file.src>{{file.filename}}</nb-option>
+                                            </nb-select>
+                                            <nb-select placeholder="Select an audio" *ngIf="ev.select && ev.type==='audio'" [(selected)]="ev.src" (selectedChange)="videoSelected(elem, ev);elem.changes=true">
+                                                <nb-option *ngFor="let file of userAudios" [value]=file.src>{{file.filename}}</nb-option>
                                             </nb-select>
                                             <app-uploader *ngIf="ev.upload" width="240px" height="120px" [autoIndexing]="true" [uploaded]="uploadedSubject" [reference]="{elem: elem, ev: ev}"></app-uploader>
                                             <button nbButton class="file-select" status="success" nbTooltip="Select file from existing" nbTooltipStatus="success" (click)="getUserSelectableFiles(ev)"><nb-icon icon="book-open"></nb-icon></button>
                                             <button nbButton  class="file-upload" status="warning" nbTooltip="Upload a new file" nbTooltipStatus="warning" (click)="ev.upload=true; ev.select = false"><nb-icon icon="cloud-upload"></nb-icon></button>
                                         </div>
-                                        <div *ngIf="ev.src && ev.videoInformation" class="video-details">
-                                            <div *ngIf="ev.type==='video'">Width: {{ev.videoInformation.width}}px</div>
-                                            <div *ngIf="ev.type==='video'">Height: {{ev.videoInformation.height}}px</div>
-                                            <div>Duration: {{ev.videoInformation.duration}}s</div>
+
+                                        <div *ngIf="ev.src && ev.mediaInformation" class="video-details">
+                                            <div *ngIf="ev.mediaInformation.width">Width: {{ev.mediaInformation.width}}px</div>
+                                            <div *ngIf="ev.mediaInformation.height">Height: {{ev.mediaInformation.height}}px</div>
+                                            <div>Duration: {{ev.mediaInformation.duration | number: '1.1-1'}}s</div>
                                         </div>
 
                                         <div class="video-settings">
                                             <nb-list *ngIf="ev.type==='video'">
+                                                <nb-list-item>
+                                                    <nb-checkbox [(ngModel)]="ev.withPrevious" [disabled]="i===0">Don't wait for previous</nb-checkbox>
+                                                </nb-list-item>
                                                 <nb-list-item *ngFor="let s of _videoSettings | keyvalue">
                                                     <div class="key">{{s.key}}</div>
                                                     <div class="value" *ngIf="s.value==='number'">
@@ -114,6 +144,9 @@
                                                 </nb-list-item>
                                             </nb-list>
                                             <nb-list *ngIf="ev.type==='audio'">
+                                                <nb-list-item>
+                                                    <nb-checkbox [(ngModel)]="ev.withPrevious" [disabled]="i===0">Don't wait for previous</nb-checkbox>
+                                                </nb-list-item>
                                                 <nb-list-item *ngFor="let s of _audioSettings | keyvalue">
                                                     <div class="key">{{s.key}}</div>
                                                     <div class="value" *ngIf="s.value==='number'">
@@ -132,12 +165,17 @@
                                     </div>
 
                                     <div #tts *ngIf="ev.type==='tts'" class="tts-container">
+
                                         <nb-select [(selected)]="ev.voice" placeholder="Select which voice to use">
                                             <nb-option *ngFor="let v of __ttsVoices | keyvalue" [value]="v.key">{{v.value}}</nb-option>
                                         </nb-select>
+
                                         <nb-select [(selected)]="ev.message" placeholder="Select what to read">
                                             <nb-option *ngFor="let o of _ttsOptions | keyvalue" [value]="o.key">{{o.value}}</nb-option>
                                         </nb-select>
+
+                                        <nb-checkbox [(ngModel)]="ev.withPrevious" [disabled]="i===0">Don't wait for previous</nb-checkbox>
+
                                     </div>
                                 
                                     <div #message *ngIf="ev.type==='message'" class="message-container">

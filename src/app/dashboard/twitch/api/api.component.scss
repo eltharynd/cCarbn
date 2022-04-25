@@ -25,7 +25,6 @@ input {
     border-left: 1px solid gray;
 
     > * {
-        //color: rgb(226, 226, 226);
         color: rgb(226, 226, 226);
         > strong {
             color: white;
@@ -158,7 +157,8 @@ input {
     }
 }
 .tts-container {
-
+    display: flex;
+    justify-content: space-between;
 }
 .message-container {
 
