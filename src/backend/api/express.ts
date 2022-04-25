@@ -10,7 +10,7 @@ import { Events } from './endpoints/events'
 import { Mongo } from '../db/mongo'
 import { UploadUsage } from '../db/models/upload-usage'
 import * as multer from 'multer'
-import { TTS } from '../external/tts'
+import { TTS, TTSVoices } from '../external/tts'
 const { Readable } = require('stream');
 
 export class Api {
@@ -163,11 +163,23 @@ export class Api {
       await Api.unlink(req.params.filename, req.params.userId, res)
     })
     
-    Api.endpoints.get('/api/tts/:text', async (req,res): Promise<any> => {
+    Api.endpoints.get('/api/tts/:language/:text', async (req,res): Promise<any> => {
       let text = req.params.text.replace(/\&questionmark\;/gi, '?')
       if(!text || text.length<1) return res.status(400).send()
 
-      let result = await TTS.convert(text)
+      let result 
+      switch (req.params.language) {
+        case 'au':
+          result = await TTS.convert(text, TTSVoices.au)
+          break
+        case 'uk':
+          result = await TTS.convert(text, TTSVoices.uk)
+          break
+        default:
+          result = await TTS.convert(text, TTSVoices.us)
+          break;
+      }
+      
       if(!result) return res.status(500).send()
 
       try{

@@ -131,6 +131,14 @@
 
                                     </div>
 
+                                    <div #tts *ngIf="ee.type==='tts'" class="tts-container">
+                                        <nb-select [(selected)]="ee.voice" placeholder="Select which voice to use">
+                                            <nb-option *ngFor="let v of __ttsVoices | keyvalue" [value]="v.key">{{v.value}}</nb-option>
+                                        </nb-select>
+                                        <nb-select [(selected)]="ee.message" placeholder="Select what to read">
+                                            <nb-option *ngFor="let o of _ttsOptions | keyvalue" [value]="o.key">{{o.value}}</nb-option>
+                                        </nb-select>
+                                    </div>
                                 
                                     <div #message *ngIf="ee.type==='message'" class="message-container">
                                         message

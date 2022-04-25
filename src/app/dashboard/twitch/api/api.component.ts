@@ -295,6 +295,17 @@ export class ApiComponent implements OnInit {
   }
   _audioSettings = {
   }
+
+  _ttsOptions = {
+    redemptionMessage: 'Redemption message',
+    //cheerMessage: 'Cheer message',
+    //subMessage: 'Sub message',
+  }
+  __ttsVoices = {
+    au: 'Australian english',
+    uk: 'British english',
+    us: 'American english',
+  }
 }
 
 const cleanEvent = (event: _event) => {

@@ -20,9 +20,10 @@ export class EventsService {
 /*     setTimeout(() => {
       this.queueUp({
         type: 'tts',
+        voice: 'au',
         text: `What do you think this tts would do???? huh?`
       })
-    }, 2000); */
+    }, 1000); */
     this.eventsSubject.subscribe(event => {
       switch (event.what) {
         case 'ended':
@@ -58,7 +59,7 @@ export class EventsService {
       }
     }
     this.data.socketIO.on('events', data => {
-      console.log(data)
+      console.log('event received', data)
       for(let e of this.events) {
 
         let ignore = false
@@ -85,6 +86,20 @@ export class EventsService {
         if(ignore) continue
 
         for(let ee of e.events) {
+          if(ee.type==='tts') {
+            switch (ee.message) {
+              case 'subMessage':
+                ee.text = null
+                break
+              case 'cheerMessage':
+                ee.text = null
+                break
+              case 'redemptionMessage':
+              default:
+                ee.text = data.user_input
+                break
+            }
+          }
           this.queueUp(ee)
         }
 
