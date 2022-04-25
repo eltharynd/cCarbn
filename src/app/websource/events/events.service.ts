@@ -108,6 +108,7 @@ export class EventsService {
     })
 
     this.data.socketIO.on('test', async data => {
+      console.log('test', data)
       await this.queueUp(data)
     })
 

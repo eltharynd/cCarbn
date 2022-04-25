@@ -34,7 +34,7 @@ export class Socket {
       })
 
       socket.on('test', (data) => {
-        
+        console.log(data)
         if(data.userId) {
           console.log('sending test back')
           Socket.io.to(data.userId).emit('test', data)

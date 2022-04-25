@@ -41,7 +41,7 @@ export class ElementsComponent implements OnInit {
 
     for(let event of element.events) {
       let testData: any = { userId: this.auth.currentUser?._id }
-      if(event.type === 'tts') testData.text = 'This is a test TTS! I hope you enjoy it!',
+      if(event.type === 'tts') testData.text = 'This is a test TTS! I hope you enjoy it!'
       this.data.send('test', Object.assign({}, event, testData))
     }
   }
