@@ -23,7 +23,6 @@ export class HypeTrain {
         let helixUser: HelixUser|null = await Twitch.client.users.getUserById(u.user_id)
         if(helixUser) {
           u.picture = helixUser.profilePictureUrl
-          Api.eventsCollection.push({ top_contributions_picture: u.picture })
         }
       }  
     }
