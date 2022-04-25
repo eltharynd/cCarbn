@@ -25,7 +25,7 @@ export class ApiComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.elements = await this.data.get(`events/${this.auth.currentUser?._id}`)
+    this.elements = await this.data.get(`elements/${this.auth.currentUser?._id}`)
     for(let elem of this.elements) {
       elem.backup = JSON.stringify(elem)
     }
@@ -104,7 +104,7 @@ export class ApiComponent implements OnInit {
 
     if(valid) {
       let clone = cleanElement(element)
-      let response = await this.data.post(`events/${this.auth.currentUser?._id}`, clone)
+      let response = await this.data.post(`elements/${this.auth.currentUser?._id}`, clone)
       if(response) {
         element._id = response
         element.changes = false
@@ -123,7 +123,7 @@ export class ApiComponent implements OnInit {
   async deleteElement(element: _element) {
     console.log(element)
     if(element._id) 
-      if(!await this.data.delete(`events/${this.auth.currentUser?._id}/${element._id}`)) return false
+      if(!await this.data.delete(`elements/${this.auth.currentUser?._id}/${element._id}`)) return false
     
     let index = this.elements.indexOf(element)
     if(index>=0) {
