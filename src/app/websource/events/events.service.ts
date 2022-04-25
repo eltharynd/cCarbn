@@ -10,7 +10,7 @@ import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 })
 export class EventsService {
 
-  events: _element[] = []
+  elements: _element[] = []
   private eventsQueue: any[] = []
   eventsSubject: Subject<any> = new Subject()
 
@@ -35,11 +35,11 @@ export class EventsService {
     }) 
 
     this.data.userId.subscribe(async user => {
-      this.events = await this.data.get(`events/${user}`)
+      this.elements = await this.data.get(`elements/${user}`)
     })
 
 
-    let exampleRedemption = {
+/*     let exampleRedemption = {
       eventType: 'redeem',
       broadcaster_user_id: "76541564",
       broadcaster_user_login: "eltharynd",
@@ -57,13 +57,13 @@ export class EventsService {
           "prompt": "Sponsored by lttstore.com",
           "cost": 1000
       }
-    }
+    } */
     this.data.socketIO.on('events', data => {
       console.log('event received', data)
-      for(let e of this.events) {
+      for(let element of this.elements) {
 
         let ignore = false
-        for(let c of e.conditions) {
+        for(let c of element.conditions) {
           console.log(c)
           if(c.type === 'bit') {
             if(data.eventType !== 'cheer') {
@@ -85,22 +85,22 @@ export class EventsService {
 
         if(ignore) continue
 
-        for(let ee of e.events) {
-          if(ee.type==='tts') {
-            switch (ee.message) {
+        for(let event of element.events) {
+          if(event.type==='tts') {
+            switch (event.message) {
               case 'subMessage':
-                ee.text = null
+                event.text = null
                 break
               case 'cheerMessage':
-                ee.text = null
+                event.text = null
                 break
               case 'redemptionMessage':
               default:
-                ee.text = data.user_input
+                event.text = data.user_input
                 break
             }
           }
-          this.queueUp(ee)
+          this.queueUp(event)
         }
 
       }
