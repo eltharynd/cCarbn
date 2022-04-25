@@ -8,7 +8,8 @@ import { WebSourceComponent } from "./websource.component";
 import { ClipComponent } from './common/clip/clip.component';
 import { EventsComponent } from './events/events.component';
 import { VideoComponent } from './events/video/video.component';
-import { AudioComponent } from './events/audio/audio.component'
+import { AudioComponent } from './events/audio/audio.component';
+import { TTSComponent } from './events/tts/tts.component'
 
 
 
@@ -27,6 +28,7 @@ import { AudioComponent } from './events/audio/audio.component'
     EventsComponent,
     VideoComponent,
     AudioComponent,
+    TTSComponent,
   ],
  })
  export class WebSourceModule {}

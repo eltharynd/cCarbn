@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router'
 import { Subject } from 'rxjs'
 import { AuthGuard } from 'src/app/auth/auth.guard'
 import { _event } from 'src/app/dashboard/twitch/api/api.component'
-import { DataService } from 'src/app/shared/data.service'
+import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +17,13 @@ export class EventsService {
 
   constructor(private data: DataService) { 
 
+    setTimeout(() => {
+      console.log('queuing up')
+      this.queueUp({
+        type: 'tts',
+        text: `What do you think this tts would do???? huh?`
+      })
+    }, 2000);
     this.eventsSubject.subscribe(event => {
       switch (event.what) {
         case 'ended':
@@ -121,6 +128,7 @@ export enum POSITION {
 export enum EVENT_TYPES {
   video = 'Video',
   audio = 'Audio',
+  tts = 'TTS',
 /*   gif = 'GIF',
   message = 'Chat Message' */
 }

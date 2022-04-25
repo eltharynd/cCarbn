@@ -1,4 +1,5 @@
 import * as express from 'express'
+import * as stream from 'stream'
 require('express-async-errors')
 import { createServer, Server } from 'http'
 import * as cors from 'cors'
@@ -15,6 +16,7 @@ import * as fs from 'fs'
 import { HelixUser } from '@twurple/api/lib'
 import { Twitch } from '../twitch/twitch'
 import { Socket } from '../socket/socket'
+import { TTS } from '../external/tts'
 const { Readable } = require('stream');
 
 export class Api {
@@ -235,7 +237,37 @@ export class Api {
       await Api.unlink(req.params.filename, req.params.userId, res)
     })
     
+    Api.endpoints.get('/api/tts/:text', async (req,res) => {
+      let text = req.params.text.replace(/\&questionmark\;/gi, '?')
+      if(!text || text.length<1) return res.status(400).send()
 
+      let result = await TTS.convertTTS(text)
+      if(!result) return res.status(500).send()
+
+      try{
+
+        const readStream = new stream.PassThrough()
+        readStream.end(result)
+        res.set({
+          'content-type': 'audio/mpeg'
+        })
+        readStream.pipe(res)
+        /* readStream.on("data", (chunk) => {
+          res.write(chunk);
+        });
+        readStream.on("end", () => {
+          res.status(200).end();
+        });
+        readStream.on("error", (err) => {
+          console.log(err);
+          res.status(500).send(err);
+        }); */
+
+      } catch (e) {
+        console.error(e)
+        return res.status(500).send()
+      } 
+    })
 
 /*     Api.endpoints.get('/api/status', async (req, res) => {
       res.json({ status: 'UP', test: 'working' })
