@@ -41,6 +41,7 @@ export class ElementsComponent implements OnInit {
 
     for(let event of element.events)
       this.data.send('test', Object.assign({}, event, {
+        text: 'This is a test TTS! I hope you enjoy it!',
         userId: this.auth.currentUser?._id
       }))
   }
