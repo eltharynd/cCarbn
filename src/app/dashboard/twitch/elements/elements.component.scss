@@ -78,18 +78,25 @@ input {
 
 .conditions-header {
     text-align: center;
-    background-color: #5b8cd54f;
-    border-color: #5b8cd5;
+    
     padding: 0;
 
-    > nb-list > nb-list-item.conditions-entry {
-        display: flex;
-        width: 100%;
-        justify-content: center;
-        margin-top: .5rem;
-        > * {
-            margin-left: .5rem;
-            margin-right: .5rem;
+    > nb-list {
+        > nb-list-item.conditions-entry {
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            padding-top: 1.4rem;
+            background-color: #5b8cd54f;
+            border-top-color: #5b8cd5;
+            > * {
+                margin-left: .5rem;
+                margin-right: .5rem;
+            }
+        }
+        > nb-list-item:last-child {
+            padding-top: 1.4rem;
+            background-color: #2e4d7c38;
         }
     }
 }

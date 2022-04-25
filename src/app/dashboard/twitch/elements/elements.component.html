@@ -112,12 +112,11 @@
 
 
                                     <button nbButton status="danger" [disabled]="elem.conditions.length<2" (click)="deleteCondition(elem, c)"><nb-icon icon="trash-2"></nb-icon></button>
-
+                                    <button nbButton status="success" (click)="addCondition(elem)" [disabled]="i<elem.conditions.length-1"><nb-icon icon="plus"></nb-icon></button>
                                 </nb-list-item>
                         
                                 <nb-list-item>
-                                    <button nbButton status="primary" (click)="addCondition(elem)">ADD CONDITION</button>
-                                    <div class="field-container" style="width: 100%; margin-left:1rem">
+                                    <div class="field-container" style="width: 100%;">
                                         <input nbInput [(ngModel)]="elem.name" (change)="elem.changes=true" fullWidth>
                                         <div class="anchor"><label>Element name</label></div>
                                     </div>
