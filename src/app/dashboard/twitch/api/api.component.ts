@@ -29,7 +29,6 @@ export class ApiComponent implements OnInit {
     for(let e of this.events) {
       e.backup = JSON.stringify(e)
     }
-    console.log(this.events)
   }
 
   sendTestEvent(pointerEvent, event) {
@@ -103,7 +102,6 @@ export class ApiComponent implements OnInit {
         return false
       }
     } else {
-      console.log('invalid')
       event.error = true
       return false
     }

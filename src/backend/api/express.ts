@@ -24,7 +24,6 @@ export class Api {
   static server: Server
   private static upload: multer.Mi
 
-  static eventsCollection: any[] = []
   constructor() {
 
     Api.upload = multer({ storage: multer.memoryStorage() }).single('file')
@@ -57,65 +56,6 @@ export class Api {
     User.attach()
     Events.attach()
 
-
-    Api.endpoints.get('/api/logger', async (req,res) => {
-      res.json(Api.eventsCollection)
-    })
-    Api.endpoints.get('/api/hypetrain', async (req,res) => {
-      setTimeout(async () => {
-        let train = JSON.parse('' + fs.readFileSync('tag.json'))
-        let start
-        let delta 
-
-        let broadcasterId = train[0].event.broadcaster_user_id
-        let user: any =  await MongoUser.findOne({ twitchId: broadcasterId })
-
-        for(let e of train) {
-          if(!start) {
-            start = e.time
-            delta = Date.now() - start
-          }
-          setTimeout(async () => {  
-
-            let buffer = JSON.parse(JSON.stringify(e.event))
-            buffer.type = e.type
-            if(buffer.last_contribution) {
-              let helixUser: HelixUser|null = await Twitch.client.users.getUserById(buffer.last_contribution.user_id)
-              if(helixUser) 
-              buffer.last_contribution.picture = helixUser.profilePictureUrl
-            }
-            if(buffer.top_contributions) {
-              for(let u of buffer.top_contributions) {
-                let helixUser: HelixUser|null = await Twitch.client.users.getUserById(u.user_id)
-                if(helixUser) 
-                  u.picture = helixUser.profilePictureUrl
-              }  
-            }
-            buffer.time = Date.now()
-            if(buffer.started_at) buffer.started_at = new Date(new Date(buffer.started_at).getTime() + delta)
-            if(buffer.ended_at) buffer.ended_at = new Date(new Date(buffer.ended_at).getTime() + delta)
-            if(buffer.expires_at) buffer.expires_at = new Date(new Date(buffer.expires_at).getTime() + delta)
-            if(buffer.cooldown_ends_at) buffer.cooldown_ends_at = new Date(new Date(buffer.cooldown_ends_at).getTime() + delta)
-            
-            //Socket.io.to('6111a02594ce3e08c3274c5f').emit('hypetrain', buffer)
-            if(buffer.type === 'Hype Train Begin') {
-              console.log('emitting', e.type)
-              //Socket.io.to(user._id.toString()).emit('hypetrain', buffer)  //real
-              Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)  //dev
-              //Socket.io.to('61118f4ce72d0103d112f005').emit('hypetrain', buffer)    //prod
-            } else {
-              setTimeout(() => {
-                console.log('emitting', e.type)
-                //Socket.io.to(user._id.toString()).emit('hypetrain', buffer)  //real
-                Socket.io.to('611180bbda7c789038a04a1b').emit('hypetrain', buffer)  //dev
-                //Socket.io.to('61118f4ce72d0103d112f005').emit('hypetrain', buffer)    //prod
-              }, 1000);
-            }
-          }, e.time - start);
-        }
-      }, 2000)
-      res.json('Starting test to cakeums (lvl 5 hype train)')
-    })
 
     Api.endpoints.route('/api/uploads/:userId/:filename')
       .post(authMiddleware, Api.upload, async (req, res): Promise<any> => {
@@ -180,7 +120,7 @@ export class Api {
             res.status(200).end();
           });
           readStream.on("error", (err) => {
-            console.log(err);
+            console.error(err);
             res.status(500).send(err);
           });
 
@@ -241,28 +181,14 @@ export class Api {
       let text = req.params.text.replace(/\&questionmark\;/gi, '?')
       if(!text || text.length<1) return res.status(400).send()
 
-      let result = await TTS.convertTTS(text)
+      let result = await TTS.convert(text)
       if(!result) return res.status(500).send()
 
       try{
-
-        const readStream = new stream.PassThrough()
-        readStream.end(result)
         res.set({
           'content-type': 'audio/mpeg'
         })
-        readStream.pipe(res)
-        /* readStream.on("data", (chunk) => {
-          res.write(chunk);
-        });
-        readStream.on("end", () => {
-          res.status(200).end();
-        });
-        readStream.on("error", (err) => {
-          console.log(err);
-          res.status(500).send(err);
-        }); */
-
+        result.pipe(res)
       } catch (e) {
         console.error(e)
         return res.status(500).send()

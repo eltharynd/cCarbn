@@ -9,7 +9,7 @@ export class Redemptions {
 
 
   static redemptionEvent = async (event: EventSubChannelRedemptionAddEvent) => {
-    console.log(toJSON(event))
+    console.info(toJSON(event))
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
       Socket.io.to(found._id.toString()).emit('events', Object.assign({

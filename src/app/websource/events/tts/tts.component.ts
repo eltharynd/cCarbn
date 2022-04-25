@@ -13,9 +13,8 @@ export class TTSComponent implements OnInit {
   encodedTTS
 
   constructor(private events: EventsService) { }
-  ngOnInit(): void {
-    console.log(this.tts)
-      this.encodedTTS = `${SERVER_URL}tts/${encodeURI(this.tts.text.replace(/\?/g, '&questionmark;'))}`
+  async ngOnInit() {
+    this.encodedTTS = `${SERVER_URL}tts/${encodeURI(this.tts.text.replace(/\?/g, '&questionmark;'))}`
   }
 
   alignItems

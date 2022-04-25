@@ -15,7 +15,7 @@ export class HypeTrain {
       time: Date.now(),
       event: toJSON(event)
     })
-    console.log(toJSON(event))
+    console.info(toJSON(event))
     let data = toJSON(event)
     data.type = 'Hype Train Begin'
     if(data.last_contribution) {
@@ -43,7 +43,7 @@ export class HypeTrain {
       time: Date.now(),
       event: toJSON(event)
     })
-    console.log(toJSON(event))
+    console.info(toJSON(event))
     let data = toJSON(event)
     data.type = 'Hype Train Progress'
     if(data.last_contribution) {
@@ -71,7 +71,7 @@ export class HypeTrain {
       time: Date.now(),
       event: toJSON(event)
     })
-    console.log(toJSON(event))
+    console.info(toJSON(event))
     let data = toJSON(event)
     data.type = 'Hype Train End'
     if(data.last_contribution) {

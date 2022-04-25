@@ -156,7 +156,6 @@ export class Twitch {
             iClient.subscriptions.push({listener: Listeners.redemption, subscription: await Twitch.listener.subscribeToChannelRedemptionAddEvents(channel.id, Redemptions.redemptionEvent)})
             break
           case Listeners.cheer:
-            console.log('toggling cheers')
             iClient.subscriptions.push({listener: Listeners.cheer, subscription: await Twitch.listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent)})
             break
           case Listeners.hypetrain:
