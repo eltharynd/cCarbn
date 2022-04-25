@@ -39,11 +39,11 @@ export class ElementsComponent implements OnInit {
   sendTestEvent(pointerEvent, element) {
     pointerEvent.stopPropagation()
 
-    for(let event of element.events)
-      this.data.send('test', Object.assign({}, event, {
-        text: 'This is a test TTS! I hope you enjoy it!',
-        userId: this.auth.currentUser?._id
-      }))
+    for(let event of element.events) {
+      let testData: any = { userId: this.auth.currentUser?._id }
+      if(event.type === 'tts') testData.text = 'This is a test TTS! I hope you enjoy it!',
+      this.data.send('test', Object.assign({}, event, testData))
+    }
   }
 
 
