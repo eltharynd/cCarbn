@@ -103,7 +103,7 @@
                                     </div>
 
                                     <div *ngIf="c.type === 'redeem'" class="field-container">
-                                        <nb-select [(selected)]="c.compared" (selectedChange)="elem.changes=true">
+                                        <nb-select [(selected)]="c.compared" [placeholder]="c.compared?.title||''" (selectedChange)="elem.changes=true">
                                             <nb-option *ngFor="let r of channelRewards" [value]=r>{{r.title}}</nb-option>
                                         </nb-select>
                                         <div class="anchor"><label>which</label></div>
