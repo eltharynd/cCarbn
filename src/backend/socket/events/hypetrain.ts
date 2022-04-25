@@ -10,11 +10,6 @@ import { toJSON } from "./util/toJSON"
 export class HypeTrain {
 
   static hypeTrainBegin = async (event: EventSubChannelHypeTrainBeginEvent) => {
-    Api.eventsCollection.push({
-      type: 'Hype Train Begin',
-      time: Date.now(),
-      event: toJSON(event)
-    })
     console.info(toJSON(event))
     let data = toJSON(event)
     data.type = 'Hype Train Begin'
@@ -38,11 +33,6 @@ export class HypeTrain {
   }
 
   static hypeTrainProgress = async (event: EventSubChannelHypeTrainProgressEvent) => {
-    Api.eventsCollection.push({
-      type: 'Hype Train Progress',
-      time: Date.now(),
-      event: toJSON(event)
-    })
     console.info(toJSON(event))
     let data = toJSON(event)
     data.type = 'Hype Train Progress'
@@ -66,11 +56,6 @@ export class HypeTrain {
   }
 
   static hypeTrainEnd = async (event: EventSubChannelHypeTrainEndEvent) => {
-    Api.eventsCollection.push({
-      type: 'Hype Train End',
-      time: Date.now(),
-      event: toJSON(event)
-    })
     console.info(toJSON(event))
     let data = toJSON(event)
     data.type = 'Hype Train End'
