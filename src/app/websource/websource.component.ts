@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
+import { AuthGuard } from '../auth/auth.guard'
 import { DataService } from '../shared/data.service'
 
 @Component({
@@ -18,9 +19,15 @@ export class WebSourceComponent implements OnInit {
 
   userId: string
 
-  constructor(private route: ActivatedRoute, private data: DataService) {
+  constructor(private route: ActivatedRoute, private router: Router, private data: DataService, private auth: AuthGuard) {
     this.route.params.subscribe(params => {
-      this.userId = params.userId
+      if(params.userId) {
+        if(/^[a-zA-Z]+$/g.test(params.userId)) {
+          this.router.navigate([`${this.auth.currentUser?._id}/${params.userId}`], { relativeTo: this.route.parent, replaceUrl: true })
+        } else {
+          this.userId = params.userId
+        }
+      }
     })
   }
 
@@ -28,8 +35,5 @@ export class WebSourceComponent implements OnInit {
     if(!this.userId) 
       return
     this.data.userId.next(this.userId)
-    /* this.data.socketIO.emit('bind', {
-      userId: this.userId
-    }) */
   }
 }

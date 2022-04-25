@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment'
   templateUrl: './twitchapi.component.html',
   styleUrls: ['./twitchapi.component.scss']
 })
-export class TwitchAPIComponent {
+export class TwitchAPIComponent  {
 
   url = environment?.production ? 'https://cCarbn.io/' : 'http://localhost:4200/'
   object = Object

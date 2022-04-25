@@ -127,7 +127,7 @@ export class Twitch {
     let subscriptions: {listener: Listeners, subscription: EventSubSubscription}[] = []
     if(settings?.api?.listeners?.redemption?.enabled) {
       //@ts-ignore
-      subscriptions.push({listener: Redemptions.redemptionEvent, subscription: await Twitch.listener.subscribeToChannelRedemptionAddEvents(channel.id, Redemptions.redemptionEvent)})    
+      subscriptions.push({listener: Listeners.redemption, subscription: await Twitch.listener.subscribeToChannelRedemptionAddEvents(channel.id, Redemptions.redemptionEvent)})    
     }
     if(settings?.api?.listeners?.cheer?.enabled) {
       //@ts-ignore

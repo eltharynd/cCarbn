@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-discord',
-  templateUrl: './discord.component.html',
-  styleUrls: ['./discord.component.scss']
+  template: '<router-outlet></router-outlet>'
 })
 export class DiscordComponent implements OnInit {
 

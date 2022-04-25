@@ -5,7 +5,7 @@ import { NbMenuItem, NbMenuService } from "@nebular/theme"
 
 @Component({
   selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html'
+  template: '<nb-menu [items]="menu"></nb-menu>'
 })
 export class SidebarComponent {
 
@@ -31,6 +31,12 @@ export class SidebarComponent {
           link: 'twitch/elements',
         },
         {
+          title: 'Hype Train',
+          icon: {icon: 'train', pack: 'fa'},
+          url: '/websource/hypetrain',
+          target: '_blank',
+        },
+        {
           title: 'Chatbot',
           icon: {icon: 'swatchbook', pack: 'fa'},
           link: 'twitch/chatbot',
@@ -40,7 +46,6 @@ export class SidebarComponent {
     {
       title: 'Discord',
       icon: {icon: 'discord', pack:'fab'},
-      link: 'discord',
       children: [
         {
           title: 'API',
@@ -56,11 +61,6 @@ export class SidebarComponent {
     }
   ]
 
-  constructor(private menuService: NbMenuService, private router: Router) {
-    /* this.menuService.onSubmenuToggle().subscribe(({ item }) => {
-      if(item.expanded)
-        this.router.navigate([`/dashboard/${item.link}`])
-    }) */
-  }
+  constructor(private menuService: NbMenuService, private router: Router) {}
 
 }
