@@ -2,7 +2,7 @@ import { OnInit, Component } from '@angular/core';
 import { AuthGuard } from '../../../auth/auth.guard'
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 import { EVENT_TYPES, POSITION } from 'src/app/websource/events/events.service'
-import { filter, from, map, Subject, toArray } from 'rxjs'
+import { filter, firstValueFrom, from, map, Subject, toArray } from 'rxjs'
 import { environment } from 'src/environments/environment'
 @Component({
   selector: 'app-elements',
@@ -174,11 +174,11 @@ export class ElementsComponent implements OnInit {
   }
 
 
-  userVideos: any[]
-  userAudios: any[]
+  userVideos
+  userAudios
   async getUserSelectableFiles(event) {
     let files = await this.data.get(`user/${this.auth.currentUser?._id}/uploads`)
-    //@ts-ignore
+    
     this.userVideos = await from(files).pipe(
       filter((u: any) => /^video/i.test(u.contentType)),
       map((u: any) => {
@@ -188,7 +188,7 @@ export class ElementsComponent implements OnInit {
       }),
       toArray()
     ).toPromise()
-    //@ts-ignore
+
     this.userAudios = await from(files).pipe(
       filter((u: any) => /^audio/i.test(u.contentType)),
       map((u: any) => {
@@ -196,8 +196,9 @@ export class ElementsComponent implements OnInit {
           src: `${SERVER_URL}uploads/${this.auth.currentUser?._id}/${encodeURI(u.filename)}`
         })
       }),
-      toArray()
+      toArray(),
     ).toPromise()
+    
     event.select = true
     event.upload = false;
   }
@@ -219,7 +220,9 @@ export class ElementsComponent implements OnInit {
     let filePath = src.replace(SERVER_URL, '')
     if(await this.data.delete(filePath)) {
       event.src = null
-      //TODO save on server
+      
+      await this.saveElement(element)
+      //TODO if element could not be saved (invalid) this can be problematic.. consider saving onls new src (original PATCH request)
     }
   }
   
@@ -238,6 +241,7 @@ export class ElementsComponent implements OnInit {
       event.src = null
     }  
   }
+
   onLoadedData(event, data) {
     let file = data.srcElement
     let mediaInformation = {
@@ -274,8 +278,8 @@ export class ElementsComponent implements OnInit {
     isnt: 'isn\'t',
   }
   UserTypeOperators = {
-    //typeis: 'type is',
-    //typeisnt: 'type isn\'t',
+    typeis: 'type is',
+    typeisnt: 'type isn\'t',
   }
   RedemptionOperators = {
     redeemed: 'redeemed'

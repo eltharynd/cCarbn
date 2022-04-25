@@ -1,7 +1,7 @@
 nb-card,
 nb-accordion {
     max-width: 900px;
-    margin:auto;
+    margin: auto;
 }
 
 nb-list-item:first-child {
@@ -14,21 +14,51 @@ input {
     width: 180px;
 }
 
-
-
-.global-card > nb-card-body {
-    padding: 0;
+.field-container {
+    height: 40px;
+    > .anchor {
+        position: relative;
+        top: -100%;
+        left: 0;
+        width: 1px;
+        height: 1px;
+        > label {
+            position: relative;
+            left: .4rem;
+            top: -18px;
+            font-size: 12px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        color: rgba(white, .5);
+    }
+    
 }
 
 
 
+.global-card {
+    margin-bottom: 2rem;
+    > nb-card-body {
+        padding: 0;
+    }
+}
+
+
+.element-header {
+    justify-content: space-between;
+}
 .element-name {
     margin-left: 1rem;
 }
 .element-details {
+    font-size: smaller;
+    flex-grow: 1;
+    text-align: right;
     margin-left: 1rem;
     padding-left: 1rem;
-    border-left: 1px solid gray;
+    padding-right: 3rem;
+    //border-left: 1px solid gray;
 
     > * {
         color: rgb(226, 226, 226);
@@ -55,7 +85,12 @@ input {
     > nb-list > nb-list-item.conditions-entry {
         display: flex;
         width: 100%;
-        justify-content: space-between;
+        justify-content: center;
+        margin-top: .5rem;
+        > * {
+            margin-left: .5rem;
+            margin-right: .5rem;
+        }
     }
 }
 
