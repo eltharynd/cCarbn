@@ -224,12 +224,12 @@
 
                                 </nb-tab>
                                 <nb-tab tabTitle="Add" tabIcon="file-add">
-                                    <nb-select placeholder="Select type of event" fullWidth [(selected)]="_singleSelection" (selectedChange)="addElement(elem, $event)">
+                                    <nb-select placeholder="Select type of event to add" fullWidth [(selected)]="_singleSelection" (selectedChange)="addElement(elem, $event)">
                                         <nb-option *ngFor="let type of EventTypes | keyvalue" [value]="type.key">{{type.value}}</nb-option>
                                     </nb-select>
                                 </nb-tab>
                                 <nb-tab tabTitle="Delete" tabIcon="trash-2" [disabled]="!elem.events || elem.events.length<1">
-                                    <nb-select placeholder="Select event to delete" fullWidth [(selected)]="_singleSelection" (selectedChange)="deleteEvent(elem, $event)">
+                                    <nb-select placeholder="Select the event to delete" fullWidth [(selected)]="_singleSelection" (selectedChange)="deleteEvent(elem, $event)">
                                         <nb-option *ngFor="let ev of elem.events; let i = index" [value]="i">{{ev.type}}</nb-option>
                                     </nb-select>
                                 </nb-tab>
