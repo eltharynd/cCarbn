@@ -1,5 +1,3 @@
-import * as fs from 'fs'
-import * as util from 'util'
 import { TextToSpeechClient } from '@google-cloud/text-to-speech'
 
 export class TTS {
@@ -10,7 +8,6 @@ export class TTS {
     static async convertTTS(text: any): Promise<Uint8Array> {
         return new Promise(async (resolve, reject) => {
             try {
-                let audioFileName = `${Date.now().toString()}.mp3`
                 let request: any = {
                     input: { text: text },
                     voice: { languageCode: 'en-US', name: 'en-US-Wavenet-D' },

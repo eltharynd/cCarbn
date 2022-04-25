@@ -17,13 +17,13 @@ export class EventsService {
 
   constructor(private data: DataService) { 
 
-    setTimeout(() => {
+/*     setTimeout(() => {
       console.log('queuing up')
       this.queueUp({
         type: 'tts',
         text: `What do you think this tts would do???? huh?`
       })
-    }, 2000);
+    }, 2000); */
     this.eventsSubject.subscribe(event => {
       switch (event.what) {
         case 'ended':
