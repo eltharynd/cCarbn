@@ -19,12 +19,16 @@ export class SidebarComponent {
     {
       title: 'Twitch',
       icon: {icon: 'twitch', pack:'fab'},
-      link: 'twitch',
       children: [
         {
           title: 'API',
           icon: {icon: 'link', pack: 'fa'},
           link: 'twitch/api',
+        },
+        {
+          title: 'Web source',
+          icon: {icon: 'film', pack: 'eva'},
+          link: 'twitch/elements',
         },
         {
           title: 'Chatbot',
@@ -53,10 +57,10 @@ export class SidebarComponent {
   ]
 
   constructor(private menuService: NbMenuService, private router: Router) {
-    this.menuService.onSubmenuToggle().subscribe(({ item }) => {
+    /* this.menuService.onSubmenuToggle().subscribe(({ item }) => {
       if(item.expanded)
         this.router.navigate([`/dashboard/${item.link}`])
-    })
+    }) */
   }
 
 }

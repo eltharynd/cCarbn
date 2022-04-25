@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router'
 import { Subject } from 'rxjs'
-import { AuthGuard } from 'src/app/auth/auth.guard'
-import { _element } from 'src/app/dashboard/twitch/api/api.component'
+import { _element } from 'src/app/dashboard/twitch/elements/elements.component'
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 
 @Injectable({

@@ -5,14 +5,9 @@ import { SharedNebularModule } from "../../shared/nebular.module"
 
 import { TwitchRoutingModule } from "./twitch-routing.module"
 import { TwitchComponent } from "./twitch.component"
-import { ApiComponent } from "./api/api.component"
+import { ElementsComponent } from "./elements/elements.component"
 import { ChatbotComponent } from "./chatbot/chatbot.component";
-import { HomeComponent } from './home/home.component'
-import { SharedMaterialModule } from "src/app/shared/material.module"
-import { FormsModule } from "@angular/forms"
-
-
-
+import { TwitchAPIComponent } from './twitchapi/twitchapi.component'
 
  @NgModule({
   imports: [
@@ -22,9 +17,9 @@ import { FormsModule } from "@angular/forms"
   ],
   declarations: [
     TwitchComponent,
-    HomeComponent,
+    TwitchAPIComponent,
     ChatbotComponent,
-    ApiComponent,
+    ElementsComponent,
   ],
  })
  export class TwitchModule { }

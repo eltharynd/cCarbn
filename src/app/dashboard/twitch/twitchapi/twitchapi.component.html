@@ -1,0 +1,17 @@
+
+<div class="container">
+
+    <nb-card *ngIf="listeners.settings">
+      <nb-card-header>
+        <nb-toggle [disabled]="data.busy" [(checked)]="listeners.settings.api.enabled" (change)="listeners.toggleApi()">Api</nb-toggle>
+      </nb-card-header>
+      <nb-list>
+        <nb-list-item *ngFor="let k of object.keys(listeners.settings.api.listeners)">     
+          <nb-toggle (change)="listeners.toggleListener(k)" [(checked)]="listeners.settings.api.listeners[k].enabled" [disabled]="data.busy || !listeners.settings.api.enabled">{{k}}</nb-toggle>
+          <a [href]="url + 'websource/' + auth.currentUser?._id +'/' + k">Browser Source link</a>
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+    
+</div>
+  

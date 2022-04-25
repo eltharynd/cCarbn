@@ -1,1 +1,16 @@
-<p>chatbot coming soon!</p>
+
+<div class="container">
+  
+    <nb-card *ngIf="listeners.settings">
+      <nb-card-header>
+        <nb-toggle [disabled]="data.busy" [(checked)]="listeners.settings.chatbot.enabled" (change)="listeners.toggleChatBot()">Chatbot</nb-toggle>
+      </nb-card-header>
+      <nb-list>
+        <nb-list-item *ngFor="let k of object.keys(listeners.settings.chatbot.categories)">
+          <nb-toggle (change)="listeners.toggleCategory(k)" [(checked)]="listeners.settings.chatbot.categories[k].enabled" [disabled]="data.busy || !listeners.settings.chatbot.enabled">{{k}}</nb-toggle><br>
+        </nb-list-item>
+      </nb-list>
+    </nb-card>
+  
+</div>
+  

@@ -5,15 +5,14 @@ import { ListenersService } from 'src/app/shared/listeners.service'
 import { environment } from 'src/environments/environment'
 
 @Component({
-  selector: 'app-chatbot',
-  templateUrl: './chatbot.component.html',
-  styleUrls: ['./chatbot.component.scss']
+  selector: 'app-twitchapi',
+  templateUrl: './twitchapi.component.html',
+  styleUrls: ['./twitchapi.component.scss']
 })
-export class ChatbotComponent {
+export class TwitchAPIComponent {
 
   url = environment?.production ? 'https://cCarbn.io/' : 'http://localhost:4200/'
   object = Object
 
   constructor(public listeners: ListenersService, public data: DataService, public auth: AuthGuard) {}
-
 }

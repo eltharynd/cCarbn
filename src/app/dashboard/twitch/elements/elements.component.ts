@@ -5,11 +5,11 @@ import { EVENT_TYPES, POSITION } from 'src/app/websource/events/events.service'
 import { filter, from, map, Subject, toArray } from 'rxjs'
 import { environment } from 'src/environments/environment'
 @Component({
-  selector: 'app-api',
-  templateUrl: './api.component.html',
-  styleUrls: ['./api.component.scss']
+  selector: 'app-elements',
+  templateUrl: './elements.component.html',
+  styleUrls: ['./elements.component.scss']
 })
-export class ApiComponent implements OnInit {
+export class ElementsComponent implements OnInit {
 
   viewport = {
     url: `${environment?.production ? 'https://cCarbn.io/' : 'http://localhost:4200/'}websource/${this.auth.currentUser?._id}`,
@@ -23,9 +23,6 @@ export class ApiComponent implements OnInit {
   uploadedSubject: Subject<any> = new Subject()
 
   constructor(private data: DataService, private auth: AuthGuard) {
-    //TODO LOAD FROM BACKEND 
-
-
     this.data.get(`user/${this.auth.currentUser?._id}/redemptions`).then(data => this.channelRewards = data)
     this.uploadedSubject.subscribe(data => {
       this.videoUploaded(data.reference.elem, data.reference.ev, data.url.url)
