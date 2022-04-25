@@ -6,7 +6,7 @@ import * as bodyParser from 'body-parser'
 import { PORT } from '..'
 import { Auth, authMiddleware } from './endpoints/auth'
 import { User } from './endpoints/user'
-import { Events } from './endpoints/events'
+import { ElementsRoutes } from './endpoints/elements'
 import { Mongo } from '../db/mongo'
 import { UploadUsage } from '../db/models/upload-usage'
 import * as multer from 'multer'
@@ -48,7 +48,7 @@ export class Api {
 
     Auth.attach()
     User.attach()
-    Events.attach()
+    ElementsRoutes.attach()
 
 
     Api.endpoints.route('/api/uploads/:userId/:filename')

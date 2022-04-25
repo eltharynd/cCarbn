@@ -10,24 +10,24 @@ import { concat, filter, from, map, Subject, toArray } from 'rxjs'
 })
 export class ApiComponent implements OnInit {
 
-  events: _event[] = []
-  redemptions: _redemption[] = []
+  elements: _element[] = []
+  channelRewards: _redemption[] = []
   uploadedSubject: Subject<any> = new Subject()
 
   constructor(private data: DataService, private auth: AuthGuard) {
     //TODO LOAD FROM BACKEND 
 
 
-    this.data.get(`user/${this.auth.currentUser?._id}/redemptions`).then(data => this.redemptions = data)
+    this.data.get(`user/${this.auth.currentUser?._id}/redemptions`).then(data => this.channelRewards = data)
     this.uploadedSubject.subscribe(data => {
       this.videoUploaded(data.reference.e, data.reference.ee, data.url.url)
     })
   }
 
   async ngOnInit() {
-    this.events = await this.data.get(`events/${this.auth.currentUser?._id}`)
-    for(let e of this.events) {
-      e.backup = JSON.stringify(e)
+    this.elements = await this.data.get(`events/${this.auth.currentUser?._id}`)
+    for(let elem of this.elements) {
+      elem.backup = JSON.stringify(elem)
     }
   }
 
@@ -40,8 +40,10 @@ export class ApiComponent implements OnInit {
       }))
   }
 
-  addNewEvent() {
-    let buffer: any = {
+
+
+  addNewElement() {
+    let element: any = {
       name: 'An event',
       conditions: [
         {
@@ -50,19 +52,31 @@ export class ApiComponent implements OnInit {
           compared: 1
         }
       ],
-      events: []
+      events: [],
+      expanded: true
     }
-    buffer.backup = JSON.stringify(buffer)
-    this.events.push(buffer)
+    element.backup = JSON.stringify(element)
+    this.elements.push(element)
   }
 
-  async save(event) {
+  revertElement(element: _element) {
+    element.error = false
+    let backup = JSON.parse(element.backup)
+    for(let key of Object.keys(element)) {
+      if(backup.hasOwnProperty(key)) {
+        element[key] = backup[key]
+      } else {
+        delete element[key]
+      }
+    }
+  }
+  async saveElement(element: _element) {
     let valid = true
-    event.error = null
-    if(event.conditions.length < 1) {
+    element.error = false
+    if(element.conditions.length < 1) {
       valid = false
     } else {
-      for(let condition of event.conditions) {
+      for(let condition of element.conditions) {
         let c: _condition = condition
         try {
           if(
@@ -82,79 +96,57 @@ export class ApiComponent implements OnInit {
       }
     }
     
-    if(event.events.length < 1) {
+    if(element.events.length < 1) {
       valid = false
     } else {
       //TODO check events
     }
 
     if(valid) {
-      let clone = cleanEvent(event)
+      let clone = cleanElement(element)
       let response = await this.data.post(`events/${this.auth.currentUser?._id}`, clone)
       if(response) {
-        event._id = response
-        event.changes = false
-        delete event.backup
-        event.backup = JSON.stringify(event)
-        return event._id
+        element._id = response
+        element.changes = false
+        delete element.backup
+        element.backup = JSON.stringify(element)
+        return element._id
       } else {
-        event.error = true
+        element.error = true
         return false
       }
     } else {
-      event.error = true
+      element.error = true
       return false
     }
   }
-  async update(event) {
-    if(!event._id) 
-      if(!await this.save(event))
-        return false
+  async deleteElement(element: _element) {
+    console.log(element)
+    if(element._id) 
+      if(!await this.data.delete(`events/${this.auth.currentUser?._id}/${element._id}`)) return false
     
-
-    return true
-
-    //TODO PATCH
-  }
-
-  revert(event) {
-    event.error = null
-    let backup = JSON.parse(event.backup)
-    for(let key of Object.keys(event)) {
-      if(backup.hasOwnProperty(key)) {
-        event[key] = backup[key]
-      } else {
-        delete event[key]
-      }
-    }
-  }
-
-  async deleteE(event) {
-    if(event._id) 
-      if(!await this.data.delete(`events/${this.auth.currentUser?._id}/${event._id}`)) return false
-    
-    let index = this.events.indexOf(event)
+    let index = this.elements.indexOf(element)
     if(index>=0) {
-      this.events.splice(index, 1)
+      this.elements.splice(index, 1)
     }
     return true
   }
-
-  addEvent(e, type) {
-    e.events.push({
+  addElement(element: _element, type) {
+    element.events.push({
       type: type
     })
     setTimeout(() => {
       this._singleSelection = null
-      e.changes = true
+      element.changes = true
     }, 100)
   }
 
-  deleteEvent(e, index) {
-    e.events.splice(index, 1)
+
+  deleteEvent(event, index) {
+    event.events.splice(index, 1)
     setTimeout(() => {
       this._singleSelection = null
-      e.changes = true
+      event.changes = true
     }, 100)
   }
 
@@ -175,7 +167,7 @@ export class ApiComponent implements OnInit {
 
   userVideos: any[]
   userAudios: any[]
-  async getUserSelectableFiles(ee) {
+  async getUserSelectableFiles(event) {
     let files = await this.data.get(`user/${this.auth.currentUser?._id}/uploads`)
     //@ts-ignore
     this.userVideos = await from(files).pipe(
@@ -197,54 +189,54 @@ export class ApiComponent implements OnInit {
       }),
       toArray()
     ).toPromise()
-    ee.select = true
-    ee.upload = false;
+    event.select = true
+    event.upload = false;
   }
 
 
-  async videoSelected(e, ee) {
-    let fileName = ee.src.replace(SERVER_URL,'').replace(/^.+\//g, '')
+  async videoSelected(element: _element, event) {
+    let fileName = event.src.replace(SERVER_URL,'').replace(/^.+\//g, '')
     if(!await this.data.get(`uploads/${this.auth.currentUser?._id}/link/${fileName}`)) {
-      ee.src = null
+      event.src = null
       return
     }
-    if(!await this.save(e)) {
+    if(!await this.saveElement(element)) {
       await this.data.get(`uploads/${this.auth.currentUser?._id}/unlink/${fileName}`)
-      ee.src = null
+      event.src = null
     }  
   }
 
-  async deleteVideoSrc(e, ee, src) {
+  async deleteVideoSrc(element: _element, event, src) {
     let filePath = src.replace(SERVER_URL, '')
     if(await this.data.delete(filePath)) {
-      ee.src = null
+      event.src = null
       //TODO save on server
     }
   }
   
-  async videoUploaded(e, ee, url) {
-    ee.src = `${SERVER_URL}${url}`
-    ee.upload = false
-    let fileName = ee.src.replace(/^.+\//g, '')
+  async videoUploaded(element: _element, event, url) {
+    event.src = `${SERVER_URL}${url}`
+    event.upload = false
+    let fileName = event.src.replace(/^.+\//g, '')
 
-    if(e.name === 'An event') {
-      e.name = fileName
-      e.changes = true
+    if(element.name === 'An event') {
+      element.name = fileName
+      element.changes = true
     }
 
-    if(!await this.save(e)) {
+    if(!await this.saveElement(element)) {
       await this.data.get(`uploads/${this.auth.currentUser?._id}/unlink/${fileName}`)
-      ee.src = null
+      event.src = null
     }  
   }
-  onLoadedData(ee, data) {
+  onLoadedData(event, data) {
     let videoFile = data.srcElement
     let videoInformation = {
       width: videoFile.videoWidth,
       height: videoFile.videoHeight,
       duration: videoFile.duration
     }
-    ee.videoInformation = videoInformation
+    event.videoInformation = videoInformation
   }
 
   EventTypes = EVENT_TYPES
@@ -308,23 +300,30 @@ export class ApiComponent implements OnInit {
   }
 }
 
-const cleanEvent = (event: _event) => {
-  let clone = JSON.parse(JSON.stringify(event))
+const cleanElement = (element: _element) => {
+  let clone = JSON.parse(JSON.stringify(element))
+  delete clone.backup
   delete clone.changes
+  delete clone.error
+  delete clone.expanded
   delete clone.select
   delete clone.upload
-  delete clone.backup
   return clone
 }
 
 
-export interface _event {
+export interface _element {
   name: string
   conditions: _condition[]
   events: any[]
-  changes?: boolean
+
+  _id?: string
   backup?: any
-  error?: string
+  changes?: boolean
+  error?: boolean
+  expanded?: any
+  select?: boolean
+  upload?: boolean
 }
 
 interface _condition {

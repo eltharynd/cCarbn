@@ -188,7 +188,7 @@ export class User {
       res.send(settings.json)
     })
 
-    Api.endpoints.get('/api/user/:userId/redemptions', authMiddleware, async (req, res) => {
+    Api.endpoints.get('/api/user/:userId/redemptions', authMiddleware, async (req, res): Promise<any> => {
       let user = await Twitch.findByUserId(req.params.userId)
       if(!user || !user.userClient) return res.status(405).send(`Your twitch API doesn't seem to be enabled`)
       let rewards: any = await user.userClient.channelPoints.getCustomRewards(user.user.id)

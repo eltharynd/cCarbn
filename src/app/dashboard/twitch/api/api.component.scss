@@ -1,75 +1,91 @@
-
-.global-card > nb-card-body {
-    padding: 0;
-}
-
-.add-event-card {
-    margin-top: 2rem;
-    nb-card-body {
-        padding: 0;
-    }
-}
-
-.header-name {
-    margin-left: 1rem;
-}
-.header-conditions {
-    margin-left: 1rem;
-    padding-left: 1rem;
-    border-left: 1px solid gray;
-}
-
-.header-conditions > * {
-    color: rgb(226, 226, 226);
-}
-.header-conditions > * > strong {
-    color: white;
-    text-transform: uppercase;
-}
-
-.conditions-header {
-    text-align: center;
-    background-color: rgba(914, 201, 231, 0.08);
-    padding: 0;
-}
-.condition-item {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-}
-
-.events-body {
-    background-color: rgba(white, 0.1);
-    padding: 0;
-}
-
-.event-error {
-    background-color: var(--card-header-danger-background-color);
-    text-align: center;
-    font-weight: bold;
-}
-
-.event-footer {
-    display: flex;
-    justify-content: space-between;
-}
-
-.event-footer > *:nth-child(2) {
-    margin-left: 1rem;
-    margin-right: 1rem;
-    flex-grow: 1;
-}
-
 nb-list-item:first-child {
     border-top: 0;
 }
 nb-list-item:last-child {
     border-bottom: 0;
 }
-
 input {
     width: 180px;
 }
+
+
+
+.global-card > nb-card-body {
+    padding: 0;
+}
+
+
+
+.element-name {
+    margin-left: 1rem;
+}
+.element-details {
+    margin-left: 1rem;
+    padding-left: 1rem;
+    border-left: 1px solid gray;
+
+    > * {
+        //color: rgb(226, 226, 226);
+        color: rgb(226, 226, 226);
+        > strong {
+            color: white;
+            text-transform: uppercase;
+        }
+    }
+}
+.element-entry:nth-child(2n) {
+    background-color: #2e3750;
+}
+
+.element-card {
+    border-color: #5b8cd5;
+}
+
+.conditions-header {
+    text-align: center;
+    background-color: #5b8cd54f;
+    border-color: #5b8cd5;
+    padding: 0;
+
+    > nb-list > nb-list-item.conditions-entry {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+
+.events-body {
+    background-color: #2e4d7c38;
+    padding: 0;
+}
+.event-error {
+    background-color: var(--card-header-danger-background-color);
+    text-align: center;
+    font-weight: bold;
+}
+
+
+.element-footer {
+    display: flex;
+    justify-content: space-between;
+    background-color: #5b8cd54f;
+    border-color: #5b8cd5;
+    > *:nth-child(2) {
+        margin-left: 1rem;
+        margin-right: 1rem;
+        flex-grow: 1;
+    }
+}
+.add-element-card {
+    margin-top: 2rem;
+    nb-card-body {
+        padding: 0;
+    }
+}
+
+
+
 
 .video-container {
     display: flex;
@@ -141,11 +157,12 @@ input {
         right: 4rem;
     }
 }
+.tts-container {
 
+}
 .message-container {
 
 }
-
 .gif-container {
 
 }
