@@ -129,14 +129,6 @@ export class Api {
           console.error(e)
           return res.status(500).send()
         }
-        /* Mongo.Upload.read({filename: req.params.filename, metadata: { userId: Mongo.ObjectId(req.params.userId) } }, async (error, buffer) => {
-          if(error) return res.status(500).send()
-          res.set({
-            'content-type': found.contentType,
-            'Last-modified': found.updatedAt.toUTCString()
-          })
-          res.send(await Buffer.from(buffer))
-        }) */
       })
       .delete(authMiddleware, async (req, res): Promise<any> => {
         let found: any = await Mongo.Upload.findOne({ filename: req.params.filename, metadata: { userId: Mongo.ObjectId(req.params.userId) } })
@@ -177,7 +169,7 @@ export class Api {
       await Api.unlink(req.params.filename, req.params.userId, res)
     })
     
-    Api.endpoints.get('/api/tts/:text', async (req,res) => {
+    Api.endpoints.get('/api/tts/:text', async (req,res): Promise<any> => {
       let text = req.params.text.replace(/\&questionmark\;/gi, '?')
       if(!text || text.length<1) return res.status(400).send()
 
