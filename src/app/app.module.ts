@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { SharedNebularModule } from './shared/nebular.module';
+import { MessageComponent } from './message/message.component';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import { SharedNebularModule } from './shared/nebular.module';
   ],
   declarations: [
     AppComponent,
+    MessageComponent,
   ],
 
   providers: [],

@@ -1,8 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard'
+import { MessageComponent } from './message/message.component'
 
 const routes: Routes = [
+  {path: 'websource', component: MessageComponent},
+  {path: 'websource/:any', component: MessageComponent},
+  {path: 'websource/:any/:any2', component: MessageComponent},
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then(
