@@ -2,26 +2,28 @@ import { NgModule } from "@angular/core"
 import { SharedMaterialModule } from "../shared/material.module"
 import { HypetrainModule } from "./hypetrain/hypetrain.module"
 import { PredictionsComponent } from "./predictions/predictions.component"
-import { WebSourceRoutingModule } from "./websource-routing.module"
-import { WebSourceComponent } from "./websource.component";
+import { BrowserSourceRoutingModule } from "./browsersource-routing.module"
+import { BrowserSourceComponent } from "./browsersource.component";
 import { EventsComponent } from './events/events.component';
 import { VideoComponent } from './events/video/video.component';
 import { AudioComponent } from './events/audio/audio.component';
-import { TTSComponent } from './events/tts/tts.component'
+import { TTSComponent } from './events/tts/tts.component';
+import { ObsComponent } from './events/obs/obs.component'
 
  @NgModule({
   imports: [
-    WebSourceRoutingModule,
+    BrowserSourceRoutingModule,
     SharedMaterialModule,
     HypetrainModule,
   ],
   declarations: [
-    WebSourceComponent,
+    BrowserSourceComponent,
     PredictionsComponent,
     EventsComponent,
     VideoComponent,
     AudioComponent,
     TTSComponent,
+    ObsComponent,
   ],
  })
- export class WebSourceModule {}
+ export class BrowserSourceModule {}

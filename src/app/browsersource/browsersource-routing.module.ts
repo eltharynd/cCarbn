@@ -1,20 +1,19 @@
 import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
-import { AuthGuard } from "../auth/auth.guard"
 
 import { EventsComponent } from "./events/events.component"
 import { HypetrainComponent } from "./hypetrain/hypetrain.component"
 import { PredictionsComponent } from "./predictions/predictions.component"
-import { WebSourceComponent } from "./websource.component"
+import { BrowserSourceComponent } from "./browsersource.component"
 
 const routes: Routes = [
   {
     path: '',
-    component: WebSourceComponent,
+    component: BrowserSourceComponent,
   },
   {
     path: ':userId',
-    component: WebSourceComponent,
+    component: BrowserSourceComponent,
     children: [
       {
         path: 'hypetrain',
@@ -36,4 +35,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class WebSourceRoutingModule {}
+export class BrowserSourceRoutingModule {}

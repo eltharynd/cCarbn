@@ -9,7 +9,7 @@
                 <nb-accordion>
                     <nb-accordion-item>
                         <nb-accordion-item-header>
-                            VIEWPORT
+                            BROWSER SOURCE
                         </nb-accordion-item-header>
                         <nb-accordion-item-body>
                             <nb-list>
@@ -28,6 +28,11 @@
                                     &nbsp;
                                     {{viewport.padding}}&nbsp;px
                                 </nb-list-item>
+                                <nb-list-item>
+                                    <div>
+                                        In order for cCarbn to control your scenes/sources in OBS you must install the latest <a href="https://github.com/obsproject/obs-websocket/releases" target="_blank">OBS-websocket plugin</a> (pre-release version is fine). Then set your browser source permissions to <strong>Advanced</strong> or higher
+                                    </div>
+                                </nb-list-item>
                             </nb-list>
                         </nb-accordion-item-body>
                     </nb-accordion-item>
@@ -39,7 +44,7 @@
             <nb-accordion-item *ngFor="let elem of elements" [expanded]="elem.expanded" class="element-entry">
                 
                 <nb-accordion-item-header class="element-header">
-                    <button nbButton status="primary" nbTooltip="Send test to websource" nbTooltipStatus="primary" (click)="sendTestEvent($event, elem)"><nb-icon icon="cast"></nb-icon></button>
+                    <button nbButton status="primary" nbTooltip="Send test to browser source" nbTooltipStatus="primary" (click)="sendTestEvent($event, elem)"><nb-icon icon="cast"></nb-icon></button>
                     <div class="element-name">
                         {{elem.name}}
                     </div>
@@ -212,6 +217,31 @@
 
                                         <nb-checkbox [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-checkbox>
 
+                                    </div>
+
+                                    <div #obs *ngIf="ev.type==='obs'" class="obs-container">
+                                        <div class="field-container">
+                                            <nb-select [placeholder]="ev.source?.inputName" [(selected)]="ev.source" (selectedChange)="sourceSelected(elem, $event)" fullWidth="">
+                                                <nb-option *ngFor="let s of OBS.sources" [value]="s">{{s.inputName}}</nb-option>
+                                            </nb-select>
+                                            <div class="anchor"><label>Source</label></div>
+                                        </div>
+
+                                        <nb-toggle (change)="elem.changes=true" [(checked)]="ev.toggleTo">
+                                            Turn {{ev.toggleTo ? 'Visible' : 'Invisible'}}
+                                        </nb-toggle>
+
+                                        <div class="field-container">
+                                            <input nbInput type="number" [(ngModel)]="ev.for" (change)="elem.changes=true">
+                                            <div class="anchor"><label>for (seconds)</label></div>
+                                        </div>
+
+                                        <div class="field-container">
+                                            <nb-select [placeholder]="ev.scene?.sceneName" [(selected)]="ev.scene" (selectedChange)="sourceSelected(elem, $event)" fullWidth="">
+                                                <nb-option *ngFor="let s of OBS.scenes" [value]="s">{{s.sceneName}}</nb-option>
+                                            </nb-select>
+                                            <div class="anchor"><label>Only if in scene</label></div>
+                                        </div>
                                     </div>
                                 
                                     <div #message *ngIf="ev.type==='message'" class="message-container">

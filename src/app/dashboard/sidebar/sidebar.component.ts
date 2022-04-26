@@ -26,14 +26,14 @@ export class SidebarComponent {
           link: 'twitch/api',
         },
         {
-          title: 'Web source',
+          title: 'Browser Source',
           icon: {icon: 'film', pack: 'eva'},
           link: 'twitch/elements',
         },
         {
           title: 'Hype Train',
           icon: {icon: 'train', pack: 'fa'},
-          url: '/websource/hypetrain',
+          url: '/browsersource/hypetrain',
           target: '_blank',
         },
         {

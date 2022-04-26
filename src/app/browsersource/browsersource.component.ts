@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router'
 import { AuthGuard } from '../auth/auth.guard'
 import { DataService } from '../shared/data.service'
+import { OBSService } from '../shared/obs.service'
 
 @Component({
   template: `
@@ -13,13 +14,13 @@ import { DataService } from '../shared/data.service'
       <div class="overlay-bottom">&nbsp;</div>
     </div>
   `,
-  styleUrls: ['./websource.component.scss']
+  styleUrls: ['./browsersource.component.scss']
 })
-export class WebSourceComponent implements OnInit {
+export class BrowserSourceComponent implements OnInit {
 
   userId: string
 
-  constructor(private route: ActivatedRoute, private router: Router, private data: DataService, private auth: AuthGuard) {
+  constructor(private route: ActivatedRoute, private router: Router, private data: DataService, private auth: AuthGuard, private OBS: OBSService) {
     this.route.params.subscribe(params => {
       if(params.userId) {
         if(/^[a-zA-Z]+$/g.test(params.userId)) {

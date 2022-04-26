@@ -24,7 +24,7 @@ export class PredictionsComponent implements OnInit, OnDestroy {
 
     this.data.userId.next(this.userId)
     this.data.socketIO.on('prediction', (data) => {
-      console.log(data)
+      //console.log(data)
     })
   }
 

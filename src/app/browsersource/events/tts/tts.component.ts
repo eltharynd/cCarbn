@@ -25,7 +25,7 @@ export class TTSComponent implements OnInit {
 
   onPlaybackEnded() {
     this.events.eventsSubject.next({
-      type: 'audittso',
+      type: 'tts',
       what: 'ended'
     })
   }

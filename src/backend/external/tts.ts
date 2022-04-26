@@ -7,7 +7,6 @@ const gtts = {
 export class TTS {
     static async convert(text:any, voice?: TTSVoices): Promise<any> {
         return new Promise(async (resolve, reject) => {
-            console.log(voice)
             resolve(gtts[voice ? voice : TTSVoices.us].stream(text))
         })
     }

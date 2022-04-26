@@ -17,10 +17,10 @@ const routes: Routes = [
     ),
   },
   {
-    path: 'websource',
+    path: 'browsersource',
     //canActivate: [AuthGuard],
-    loadChildren: () => import('./websource/websource.module').then(
-      m => m.WebSourceModule
+    loadChildren: () => import('./browsersource/browsersource.module').then(
+      m => m.BrowserSourceModule
     ),
   },
   {path: '**', redirectTo: 'dashboard'},

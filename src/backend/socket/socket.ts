@@ -1,10 +1,6 @@
 import * as socketIO from 'socket.io'
 import { Api } from '../api/express'
 import { Mongo } from '../db/mongo'
-import { Cheers } from './events/cheers'
-import { HypeTrain } from './events/hypetrain'
-import { Predictions } from './events/predictions'
-import { Subscriptions } from './events/subscriptions'
 
 export class Socket {
   static io: socketIO.Server
@@ -33,11 +29,20 @@ export class Socket {
           socket.leave(data.userId)
       })
 
-      socket.on('test', (data) => {
-        console.log(data)
+      socket.on('requestOBSlist', (data) => {
+        if(data.userId)
+          socket.to(data.userId).emit('requestOBSlist', data)
+      })
+
+      socket.on('sendOBSlist', data => {
         if(data.userId) {
-          console.log('sending test back')
-          Socket.io.to(data.userId).emit('test', data)
+          socket.to(data.userId).emit('receiveOBSlist', data.response)
+        }
+      })
+
+      socket.on('test', (data) => {
+        if(data.userId) {
+          socket.to(data.userId).emit('test', data)
         }
       })
 

@@ -20,7 +20,7 @@ export class DataService {
   _clientId
 
   userId: Subject<string> = new Subject()
-  private _userId: string
+  _userId: string
 
   constructor(private router: Router, private auth: AuthGuard) {
     
@@ -30,10 +30,11 @@ export class DataService {
     })
 
     this.socketIO.on('connect', () => {
-      if(this._userId)
+      if(this._userId) {
         this.socketIO.emit('bind', {
           userId: this._userId
         })
+      }
     })
 
     this.userId.subscribe((userId) => {
@@ -44,6 +45,10 @@ export class DataService {
         })
     })
 
+    this.auth.userChanged.subscribe(user => {
+      if(user?._id) this.userId.next(user?._id)
+    })
+
     this.socketIO.on('clientId', (data) => {
       DataService.clientId = data.clientId
       this._clientId = data.clientId
@@ -52,16 +57,8 @@ export class DataService {
     this.socketIO.connect()
   }
 
-  public async send(name, data) {
+  public async send(name, data?) {
     this.socketIO.emit(name, data)
-  }
-
-  public async join(room) {
-
-  }
-
-  public async leave(room) {
-
   }
 
   public async get(endpoint: string): Promise<any> {
