@@ -1,9 +1,10 @@
 import { OnInit, Component } from '@angular/core';
 import { AuthGuard } from '../../../auth/auth.guard'
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
-import { EVENT_TYPES, POSITION } from 'src/app/websource/events/events.service'
-import { filter, firstValueFrom, from, map, Subject, toArray } from 'rxjs'
+import { EVENT_TYPES, POSITION } from 'src/app/browsersource/events/events.service'
+import { filter, from, map, Subject, toArray } from 'rxjs'
 import { environment } from 'src/environments/environment'
+import { OBSService } from 'src/app/shared/obs.service'
 @Component({
   selector: 'app-elements',
   templateUrl: './elements.component.html',
@@ -12,7 +13,7 @@ import { environment } from 'src/environments/environment'
 export class ElementsComponent implements OnInit {
 
   viewport = {
-    url: `${environment?.production ? 'https://cCarbn.io/' : 'http://localhost:4200/'}websource/${this.auth.currentUser?._id}`,
+    url: `${environment?.production ? 'https://cCarbn.io/' : 'http://localhost:4200/'}browsersource/${this.auth.currentUser?._id}`,
     width: 1920,
     height: 1080,
     padding: 50,
@@ -22,7 +23,7 @@ export class ElementsComponent implements OnInit {
   channelRewards: _redemption[] = []
   uploadedSubject: Subject<any> = new Subject()
 
-  constructor(private data: DataService, private auth: AuthGuard) {
+  constructor(private data: DataService, private auth: AuthGuard, public OBS: OBSService) {
     this.data.get(`user/${this.auth.currentUser?._id}/redemptions`).then(data => this.channelRewards = data)
     this.uploadedSubject.subscribe(data => {
       this.videoUploaded(data.reference.elem, data.reference.ev, data.url.url)
@@ -34,6 +35,10 @@ export class ElementsComponent implements OnInit {
     for(let elem of this.elements) {
       elem.backup = JSON.stringify(elem)
     }
+
+    this.data.send('requestOBSlist', {
+      userId: this.auth.currentUser?._id
+    })
   }
 
   sendTestEvent(pointerEvent, element) {
@@ -251,6 +256,18 @@ export class ElementsComponent implements OnInit {
       duration: file.duration
     }
     event.mediaInformation = mediaInformation
+  }
+
+
+  sourcesInScene: any = []
+  async sourceSelected(elem: _element, sceneName) {
+    if(sceneName) {
+      this.sourcesInScene = await from(this.OBS.sources).pipe(
+        filter(s =>  true),
+        toArray()
+      ).toPromise()
+    } else this.sourcesInScene = []
+    elem.changes = true
   }
 
   EventTypes = EVENT_TYPES
