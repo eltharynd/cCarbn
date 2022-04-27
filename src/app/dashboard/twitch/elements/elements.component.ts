@@ -55,7 +55,7 @@ export class ElementsComponent implements OnInit {
 
   addNewElement() {
     let element: any = {
-      name: 'An event',
+      name: 'An element',
       conditions: [
         {
           type: 'bit',
@@ -241,7 +241,7 @@ export class ElementsComponent implements OnInit {
     event.upload = false
     let fileName = event.src.replace(/^.+\//g, '')
 
-    if(element.name === 'An event') {
+    if(element.name === 'An element') {
       element.name = fileName
       element.changes = true
     }
