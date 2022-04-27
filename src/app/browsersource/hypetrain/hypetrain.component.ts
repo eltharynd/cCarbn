@@ -24,8 +24,8 @@ export class HypetrainComponent implements OnInit, OnDestroy {
 
 
   viewport = {
-    width: 1920,
-    height: 1080,
+    width: 1280,
+    height: 720,
     background: false,
     dark: false
   }
