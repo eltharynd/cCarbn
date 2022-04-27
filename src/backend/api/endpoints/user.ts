@@ -104,10 +104,11 @@ export class User {
       //@ts-ignore
       let settings: any = await Settings.findOne({userId: req.headers.authorization._id})
       let json = settings.json
-      json.api.listeners[req.params.listener] = merge(json.api.listeners[req.params.listener], { enabled: true })
+      let listener = req.params.listener
+      json.api.listeners[listener] = merge(json.api.listeners[listener], { enabled: true })
       settings.json = json
       //@ts-ignore
-      await Twitch.toggleListener(await Twitch.client.users.getUserById(req.headers.authorization.twitchId), Listeners[req.params.listener], true, json) 
+      await Twitch.toggleListener(await Twitch.client.users.getUserById(req.headers.authorization.twitchId), Listeners[listener], true, json) 
       await settings.save()
       res.send(settings.json)
     })
@@ -115,10 +116,11 @@ export class User {
       //@ts-ignore
       let settings: any = await Settings.findOne({userId: req.headers.authorization._id})
       let json = settings.json
-      json.api.listeners[req.params.listener] = merge(json.api.listeners[req.params.listener], { enabled: false })
+      let listener = req.params.listener
+      json.api.listeners[listener] = merge(json.api.listeners[listener], { enabled: false })
       settings.json = json
       //@ts-ignore
-      await Twitch.toggleListener(await Twitch.client.users.getUserById(req.headers.authorization.twitchId), Listeners[req.params.listener], false, json)
+      await Twitch.toggleListener(await Twitch.client.users.getUserById(req.headers.authorization.twitchId), Listeners[listener], false, json)
       await settings.save()
       res.send(settings.json)
     })
@@ -129,7 +131,8 @@ export class User {
         found = new Settings({userId: req.params.userId})
         await found.save()
       }
-      res.send(found.json.api.listeners[req.params.listener])
+      let listener = req.params.listener
+      res.send(found.json.api.listeners[listener])
     })
     Api.endpoints.post('/api/user/:userId/settings/api/listener/:listener', authMiddleware, async (req, res) => {
       let found: any = await Settings.findOne({userId: req.params.userId})
@@ -137,15 +140,16 @@ export class User {
         res.status(400).send()
         return
       }
+      let listener = req.params.listener
       let buffer = {
         api: {
           listeners: {}
         }
       }
-      buffer.api.listeners[req.params.listener] = req.body
+      buffer.api.listeners[listener] = req.body
       found.json = merge(found.json, buffer)
       await found.save()
-      res.send(found.json.api.listeners[req.params.listener])
+      res.send(found.json.api.listeners[listener])
     })
 
 
@@ -171,9 +175,10 @@ export class User {
       //@ts-ignore
       let settings: any = await Settings.findOne({userId: req.headers.authorization._id})
       let json = settings.json
-      json.chatbot.categories[req.params.category] = merge(json.chatbot.categories[req.params.category], { enabled: true })
+      let category = req.params.category
+      json.chatbot.categories[category] = merge(json.chatbot.categories[category], { enabled: true })
       settings.json = json
-      await Chat.toggleCategory(req.headers.authorization, Category[req.params.category], true, json) 
+      await Chat.toggleCategory(req.headers.authorization, Category[category], true, json) 
       await settings.save()
       res.send(settings.json)
     })
@@ -181,9 +186,10 @@ export class User {
       //@ts-ignore
       let settings: any = await Settings.findOne({userId: req.headers.authorization._id})
       let json = settings.json
-      json.chatbot.categories[req.params.category] = merge(json.chatbot.categories[req.params.category], { enabled: false })
+      let category = req.params.category
+      json.chatbot.categories[category] = merge(json.chatbot.categories[category], { enabled: false })
       settings.json = json
-      await Chat.toggleCategory(req.headers.authorization, Category[req.params.category], false, json)
+      await Chat.toggleCategory(req.headers.authorization, Category[category], false, json)
       await settings.save()
       res.send(settings.json)
     })

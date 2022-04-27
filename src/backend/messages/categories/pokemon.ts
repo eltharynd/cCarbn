@@ -39,8 +39,10 @@ export class Pokemon extends Message {
           text += ` at lvl ${details.min_level}`
         if(details.item)
           text += ` by using ${details.item.name.toUpperCase()}`
-        if(details.trigger.name === 'trade')
+        if(details.trigger?.name === 'trade')
           text += ` from trading`
+        if(details.trigger?.name === 'spin')
+          text += ` from spinning around`
         if(details.trade_species)
           text += ` with a ${details.trade_species.name.toUpperCase()}` 
         if(details.held_item)
@@ -125,20 +127,20 @@ export class Pokemon extends Message {
         return
       }
 
-      let weaknesses = []
+      let weaknesses: any = []
       for (let t of data.types) weaknesses.push((await axios.get(t.type.url)).data)
 
       let weakness = {}
-      for (let w of weaknesses)
+      for (let w of weaknesses) 
         for (let key of Object.keys(w.damage_relations)) {
           if (/_from/.test(key)) {
-            let relation = w.damage_relations[key]
-            let multiplier = key === 'double_damage_from' ? 2 : key === 'half_damage_from' ? 0.5 : key === 'no_damage_from' ? 0 : 1
-            for (let type of relation) weakness[type.name] = weakness[type.name] ? weakness[type.name] * multiplier : multiplier
+            let relation: any = w.damage_relations[key];
+            let multiplier = key === 'double_damage_from' ? 2 : key === 'half_damage_from' ? 0.5 : key === 'no_damage_from' ? 0 : 1;
+            for (let type of relation) weakness[type.name] = weakness.hasOwnProperty(type.name) ? +weakness[type.name] * multiplier : multiplier
           }
         }
 
-      let ordered = []
+      let ordered: any = []
       for (let key of Object.keys(weakness)) ordered.push({ type: key, multiplier: weakness[key] })
       ordered = ordered.sort((a, b) => {
         return b.multiplier - a.multiplier
