@@ -29,6 +29,10 @@ export class EventsService {
       this.elements = await this.data.get(`elements/${user}`)
     })
 
+    this.data.socketIO.on('elementsUpdated', data => {
+      this.elements = data.elements
+    })
+    
     this.data.socketIO.on('events', async data => {
       console.info('event received', data)
 

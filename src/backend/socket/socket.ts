@@ -40,6 +40,12 @@ export class Socket {
         }
       })
 
+      socket.on('elementsUpdated', (data) => {
+        if(data.userId) {
+          socket.to(data.userId).emit('elementsUpdated', data.elements)
+        }
+      })
+
       socket.on('test', (data) => {
         if(data.userId) {
           socket.to(data.userId).emit('test', data)

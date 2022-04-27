@@ -121,6 +121,10 @@ export class ElementsComponent implements OnInit {
         element.changes = false
         delete element.backup
         element.backup = JSON.stringify(element)
+        this.data.send('elementsUpdated', {
+          userId: this.auth.currentUser?._id,
+          elements: this.elements
+        })
         return element._id
       } else {
         element.error = true
