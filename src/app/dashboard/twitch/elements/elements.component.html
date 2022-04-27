@@ -264,7 +264,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="obs-inner" *ngIf="ev.input">
+                                        <div class="obs-inner" *ngIf="ev.filter || ev.source">
 
                                             <nb-toggle (change)="elem.changes=true" [(checked)]="ev.toggleTo">
                                                 Turn {{ev.toggleTo ? 'Visible' : 'Invisible'}}
