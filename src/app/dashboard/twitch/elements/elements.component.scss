@@ -209,10 +209,31 @@ input {
     justify-content: space-between;
 }
 .obs-container {
-    min-height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    
+    > .field-container:first-child {
+        margin-top: 1rem;
+        margin-bottom: 4rem;
+    }
+    .obs-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 2rem;
+        > * {
+            width: 100%;
+            margin-left: .5rem;
+            margin-right: .5rem;
+        }
+        > *:first-child {
+            margin-left: 0;
+        }
+        > *:last-child {
+            margin-right: 0;
+        }
+    }
+    .obs-inner:last-child {
+        margin-bottom: 2rem;
+    }
 }
 .message-container {
 

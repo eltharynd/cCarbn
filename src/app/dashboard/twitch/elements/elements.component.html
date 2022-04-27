@@ -29,6 +29,11 @@
                                     {{viewport.padding}}&nbsp;px
                                 </nb-list-item>
                                 <nb-list-item>
+                                    obs-websocket:
+                                    &nbsp;
+                                    port 4455, no authentication (will change in the future)
+                                </nb-list-item>
+                                <nb-list-item>
                                     <div>
                                         In order for cCarbn to control your scenes/sources in OBS you must install the latest <a href="https://github.com/obsproject/obs-websocket/releases" target="_blank">OBS-websocket plugin</a> (pre-release version is fine). Then set your browser source permissions to <strong>Advanced</strong> or higher
                                     </div>
@@ -208,7 +213,7 @@
                                     <div #tts *ngIf="ev.type==='tts'" class="tts-container">
 
                                         <nb-select [(selected)]="ev.voice" (selectedChange)="elem.changes=true" placeholder="Select which voice to use">
-                                            <nb-option *ngFor="let v of __ttsVoices | keyvalue" [value]="v.key">{{v.value}}</nb-option>
+                                            <nb-option *ngFor="let v of _ttsVoices | keyvalue" [value]="v.key">{{v.value}}</nb-option>
                                         </nb-select>
 
                                         <nb-select [(selected)]="ev.message" (selectedChange)="elem.changes=true" placeholder="Select what to read">
@@ -220,29 +225,62 @@
                                     </div>
 
                                     <div #obs *ngIf="ev.type==='obs'" class="obs-container">
+
+
                                         <div class="field-container">
-                                            <nb-select [placeholder]="ev.source?.inputName" [(selected)]="ev.source" (selectedChange)="sourceSelected(elem, $event)" fullWidth="">
-                                                <nb-option *ngFor="let s of OBS.sources" [value]="s">{{s.inputName}}</nb-option>
+                                            <nb-select [placeholder]="ev.trigger" [(selected)]="ev.trigger" (selectedChange)="elem.changes=true; ev.scene=null; ev.source=null; ev.input=null; ev.duration=null; ev.toggleTo=null; ev.revert = ev.trigger==='filterVisibility' ? false : ev.revert" fullWidth>
+                                                <nb-option *ngFor="let t of _obs.triggers | keyvalue" [value]="t.key">{{t.value}}</nb-option>
                                             </nb-select>
-                                            <div class="anchor"><label>Source</label></div>
+                                            <div class="anchor"><label>Trigger</label></div>
                                         </div>
 
-                                        <nb-toggle (change)="elem.changes=true" [(checked)]="ev.toggleTo">
-                                            Turn {{ev.toggleTo ? 'Visible' : 'Invisible'}}
-                                        </nb-toggle>
-
-                                        <div class="field-container">
-                                            <input nbInput type="number" [(ngModel)]="ev.for" (change)="elem.changes=true">
-                                            <div class="anchor"><label>for (seconds)</label></div>
+                                        <div *ngIf="ev.trigger==='sourceVisibility'" class="obs-inner">
+                                            <div class="field-container">
+                                                <nb-select [placeholder]="ev.scene?.sceneName" [(selected)]="ev.scene" (selectedChange)="elem.changes=true; ev.source=null" fullWidth>
+                                                    <nb-option *ngFor="let s of OBS.scenes" [value]="s">{{s.sceneName}}</nb-option>
+                                                </nb-select>
+                                                <div class="anchor"><label>Scene</label></div>
+                                            </div>
+                                            <div class="field-container" >
+                                                <nb-select [placeholder]="ev.source?.sourceName" [(selected)]="ev.source" (selectedChange)="elem.changes=true" fullWidth [disabled]="!ev.scene || !ev.scene.sources">
+                                                    <nb-option *ngFor="let s of ev.scene?.sources||[]" [value]="s">{{s.sourceName}}</nb-option>
+                                                </nb-select>
+                                                <div class="anchor"><label>Source</label></div>
+                                            </div>
                                         </div>
 
-                                        <div class="field-container">
-                                            <nb-select [placeholder]="ev.scene?.sceneName" [(selected)]="ev.scene" (selectedChange)="sourceSelected(elem, $event)" fullWidth="">
-                                                <nb-option *ngFor="let s of OBS.scenes" [value]="s">{{s.sceneName}}</nb-option>
-                                            </nb-select>
-                                            <div class="anchor"><label>Only if in scene</label></div>
+                                        <div *ngIf="ev.trigger==='filterVisibility'" class="obs-inner">
+                                            <div class="field-container" >
+                                                <nb-select [placeholder]="ev.input?.inputName" [(selected)]="ev.input" (selectedChange)="elem.changes=true" fullWidth>
+                                                    <nb-option *ngFor="let i of OBS.sources" [value]="i">{{i.inputName}}</nb-option>
+                                                </nb-select>
+                                                <div class="anchor"><label>Input</label></div>
+                                            </div>
+                                            <div class="field-container" >
+                                                <nb-select [placeholder]="ev.filter?.filterName" [(selected)]="ev.filter" (selectedChange)="elem.changes=true" fullWidth [disabled]="!ev.input || !ev.input.filters">
+                                                    <nb-option *ngFor="let f of ev.input?.filters||[]" [value]="f">{{f.filterName}}</nb-option>
+                                                </nb-select>
+                                                <div class="anchor"><label>Filter</label></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="obs-inner" *ngIf="ev.input">
+
+                                            <nb-toggle (change)="elem.changes=true" [(checked)]="ev.toggleTo">
+                                                Turn {{ev.toggleTo ? 'Visible' : 'Invisible'}}
+                                            </nb-toggle>
+
+                                            <nb-toggle (change)="elem.changes=true;" [(checked)]="ev.revert">
+                                                {{ev.revert ? 'Automatically revert back' : 'Leave as is'}}
+                                            </nb-toggle>
+                                            <div class="field-container">
+                                                <input nbInput type="number" [(ngModel)]="ev.duration" (change)="elem.changes=true" fullWidth>
+                                                <div class="anchor"><label>Duration</label></div>
+                                            </div>
+
                                         </div>
                                     </div>
+                                   
                                 
                                     <div #message *ngIf="ev.type==='message'" class="message-container">
                                         message

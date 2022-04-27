@@ -259,7 +259,7 @@ export class ElementsComponent implements OnInit {
   }
 
 
-  sourcesInScene: any = []
+/*   sourcesInScene: any = []
   async sourceSelected(elem: _element, sceneName) {
     if(sceneName) {
       this.sourcesInScene = await from(this.OBS.sources).pipe(
@@ -268,7 +268,7 @@ export class ElementsComponent implements OnInit {
       ).toPromise()
     } else this.sourcesInScene = []
     elem.changes = true
-  }
+  } */
 
   EventTypes = EVENT_TYPES
   ConditionTypes = {
@@ -324,24 +324,27 @@ export class ElementsComponent implements OnInit {
     cheerMessage: 'Cheer message',
     //subMessage: 'Sub message',
   }
-  __ttsVoices = {
+  _ttsVoices = {
     au: 'Australian english',
     uk: 'British english',
     us: 'American english',
   }
+
+  _obs = {
+    triggers: {
+      sourceVisibility: 'Source (or Group) visibility',
+      filterVisibility: 'Filter visibility'
+    }
+  }
 }
 
-const cleanElement = (element: _element) => {
-  let clone = JSON.parse(JSON.stringify(element))
-  delete clone.backup
-  delete clone.changes
-  delete clone.error
-  delete clone.expanded
-  delete clone.select
-  delete clone.upload
-  return clone
-}
 
+
+interface _condition {
+  type: string,
+  operator: string,
+  compared: any
+}
 
 export interface _element {
   name: string
@@ -357,10 +360,15 @@ export interface _element {
   upload?: boolean
 }
 
-interface _condition {
-  type: string,
-  operator: string,
-  compared: any
+const cleanElement = (element: _element) => {
+  let clone = JSON.parse(JSON.stringify(element))
+  delete clone.backup
+  delete clone.changes
+  delete clone.error
+  delete clone.expanded
+  delete clone.select
+  delete clone.upload
+  return clone
 }
 
 interface _redemption {

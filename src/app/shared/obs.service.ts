@@ -13,8 +13,8 @@ export class OBSService {
   private OBS
 
   currentScene: string 
-  scenes: any[]
-  sources: any[] 
+  scenes: any[] = []
+  sources: any[] = []
 
   events: Subject<any> = new Subject()
 
@@ -64,7 +64,22 @@ export class OBSService {
         this.OBS.on('SceneItemRemoved', (event) => {
           this.getItems()
         })
-        this.OBS.on('SceneItemListReindexed', (event) => {
+        this.OBS.on('InputCreated', (event) => {
+          this.getItems()
+        })
+        this.OBS.on('InputRemoved', (event) => {
+          this.getItems()
+        })
+        this.OBS.on('InputNameChanged', (event) => {
+          this.getItems()
+        })
+        this.OBS.on('SourceFilterCreated', (event) => {
+          this.getItems()
+        })
+        this.OBS.on('SourceFilterRemoved', (event) => {
+          this.getItems()
+        })
+        this.OBS.on('SourceFilterNameChanged', (event) => {
           this.getItems()
         })
       })
@@ -74,40 +89,96 @@ export class OBSService {
       this.currentScene = data.currentScene
       this.scenes = data.scenes
       this.sources = data.sources
+      console.log(this.scenes)
+      console.log(this.sources)
     })
   }
 
   private async getItems() {
-    this.OBS.call('GetSceneList').then(response => {
+
+    let response = await this.OBS.call('GetSceneList')
+    if(response) {
       this.currentScene = response.currentProgramSceneName
       this.scenes = response.scenes
-    })  
+      for(let s of this.scenes) {
+        let sources =  await this.OBS.call('GetSceneItemList', {
+          sceneName: s.sceneName
+        })
+        s.sources = sources.sceneItems
 
-    this.OBS.call('GetInputList').then(response => {    
+        /* for(let source of s.sources) {
+          if(source.isGroup) {
+            let inner = await this.OBS.call('GetGroupItemList', {
+              sceneName: source.sourceName
+            })
+            source.items = inner.sceneItems
+          }
+        } */
+      }
+    }
+  
+    response = await this.OBS.call('GetInputList')
+    if(response) {
       this.sources = response.inputs
-      this.OBS.call('GetGroupList').then(response => {  
-        for(let g of response.groups) {
+      let groups = await this.OBS.call('GetGroupList')
+      if(groups) {
+        for(let g of groups.groups) {
           this.sources.push({
             inputKind: 'group', inputName: g
           })
         }  
+      }
+      this.sources.sort((a, b) => {
+        if(a.inputName.toLowerCase() < b.inputName.toLowerCase())
+          return -1
+        else if (a.inputName.toLowerCase() > b.inputName.toLowerCase())
+          return 1
+        else return 0
       })
-    })
+
+      for(let s of this.sources) {
+        let response = await this.OBS.call('GetSourceFilterList', {
+          sourceName: s.inputName
+        })
+        s.filters = response.filters
+      }
+    }
+
+    if(this.data._userId) {
+      this.data.send('sendOBSlist', {
+        userId: this.data._userId,
+        response: {
+          currentScene: this.currentScene,
+          scenes: this.scenes,
+          sources: this.sources
+        }
+      })
+    }
+   
   }
 
-  async toggle(visibile: boolean, scene: any, source: any) {
+  async toggleSource(visibile: boolean, scene: string, source: string) {
 
     let response = await this.OBS.call('GetSceneItemId', {
-      sceneName : scene.sceneName,
-      sourceName: source.inputName
+      sceneName : scene,
+      sourceName: source
     })
 
     if(response)
       await this.OBS.call('SetSceneItemEnabled', {
-        sceneName: scene.sceneName,
+        sceneName: scene,
         sceneItemId: response.sceneItemId,
         sceneItemEnabled: visibile
       })
+  }
+
+  async toggleFilter(visible: boolean, source: string, filter: string) {
+    await this.OBS.call('SetSourceFilterEnabled', {
+      sourceName: source,
+      filterName: filter,
+      filterEnabled: visible
+    })
+
   }
 
 }
