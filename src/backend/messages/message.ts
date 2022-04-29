@@ -23,7 +23,7 @@ export class Message {
   private cooldowns = {}
 
   protected _init = () => {
-    let keys = []
+    let keys: string[] = []
     for (let key of Object.keys(this))
       if (typeof this[key] === 'function' && !key.startsWith('_'))
         keys.push(key)
@@ -35,7 +35,7 @@ export class Message {
   protected _timeout = (timeInSeconds?: number, identifier?: string): boolean => {
     let caller = identifier
       ? identifier
-      : new Error().stack
+      : new Error().stack!
           .split('\n')[2]
           .replace(/^.*\.\_this\./, '')
           .replace(/ \(.*\)$/, '')
