@@ -32,7 +32,117 @@ export class EventsService {
       this.elements = data.elements
     })
     
-    this.data.socketIO.on('events', async data => this.distributeEvents(data))
+    this.data.socketIO.on('events', async data => {
+      console.info('event received', data)
+
+      let user = data.user_name||null
+
+      for(let element of this.elements) {
+
+        let ignore = false
+        for(let c of element.conditions) {
+          if(c.type === 'bit') {
+            if(data.type === 'Cheer') {
+              let howMuch = 0
+              try { howMuch = parseInt(c.compared) } catch(e) { ignore = true; continue; }
+              switch (c.operator) {
+                case 'lesser':
+                  ignore = +data.bits >= +howMuch
+                  break
+                case 'lesserEqual':
+                  ignore = +data.bits > +howMuch
+                  break
+                case 'greater':
+                  ignore = +data.bits <= +howMuch
+                  break
+                case 'greaterEqual':
+                  ignore = +data.bits < +howMuch
+                  break
+                case 'equals':
+                  ignore = +data.bits !== +howMuch
+                  break
+              }
+            } else {
+              ignore = true
+              break
+            }
+          } else if(c.type === 'user') {
+            switch (c.operator) {
+              case 'is':
+                ignore = `${c.compared}`.toLowerCase().replace(/\s/g, '') !== `${user}`.toLowerCase()
+                break
+              case 'isnt':
+                ignore = `${c.compared}`.toLowerCase().replace(/\s/g, '') === `${user}`.toLowerCase()
+                break
+              default:
+                ignore = true
+            }
+            continue
+          } else if(c.type === 'redeem') {
+            //TODO implement
+            if(data.type !== 'Redemption Add') {
+              ignore = true
+              break
+            }
+            ignore = c.compared.id !== data.reward.id
+          } else if(c.type === 'follow') {
+            if(data.type !== 'Follow') {
+              ignore = true
+              break
+            }
+          } else if(c.type === 'subscription') {
+            switch (c.operator) {
+              case 'sub':
+                if(data.type !== 'Subscription') {
+                  ignore = true
+                  break
+                }
+                if(c.operator === 'sub')
+                  ignore = (c.compared === 'real' && data.is_gift) ||
+                            (c.compared === 'gifted' && !data.is_gift)
+                break
+              case 'subEnd':
+                if(data.type !== 'Subscription End') ignore = true
+                break
+              case 'gift':
+                if(data.type !== 'Subscription Gift') ignore = true
+                break
+              case 'subMessage':
+                if(data.type !== 'Subscription Message') ignore = true
+                break
+              default:
+                ignore = true
+                break
+            }
+            if(ignore) break
+          }
+        }
+
+        if(ignore) continue
+
+        for(let event of element.events) {
+          if(event.type==='tts') {
+            switch (event.message) {
+              case 'subMessage':
+                event.text = null
+                break
+              case 'cheerMessage':
+                event.text = data.message
+                break
+              case 'redemptionMessage':
+              default:
+                event.text = data.user_input
+                break
+            }
+          }
+          if(event.text) {
+            event.text = this.populateText(event.text, data)
+          }
+          await this.queueUp(event)
+        }
+
+      }
+    })
 
     this.data.socketIO.on('test', async data => {
       let buffer = Object.assign({
@@ -53,115 +163,7 @@ export class EventsService {
   }
 
   async distributeEvents(data) {
-    console.info('event received', data)
-
-    let user = data.user_name||null
-
-    for(let element of this.elements) {
-
-      let ignore = false
-      for(let c of element.conditions) {
-        if(c.type === 'bit') {
-          if(data.type === 'Cheer') {
-            let howMuch = 0
-            try { howMuch = parseInt(c.compared) } catch(e) { ignore = true; continue; }
-            switch (c.operator) {
-              case 'lesser':
-                ignore = +data.bits >= +howMuch
-                break
-              case 'lesserEqual':
-                ignore = +data.bits > +howMuch
-                break
-              case 'greater':
-                ignore = +data.bits <= +howMuch
-                break
-              case 'greaterEqual':
-                ignore = +data.bits < +howMuch
-                break
-              case 'equals':
-                ignore = +data.bits !== +howMuch
-                break
-            }
-          } else {
-            ignore = true
-            break
-          }
-        } else if(c.type === 'user') {
-          switch (c.operator) {
-            case 'is':
-              ignore = `${c.compared}`.toLowerCase().replace(/\s/g, '') !== `${user}`.toLowerCase()
-              break
-            case 'isnt':
-              ignore = `${c.compared}`.toLowerCase().replace(/\s/g, '') === `${user}`.toLowerCase()
-              break
-            default:
-              ignore = true
-          }
-          continue
-        } else if(c.type === 'redeem') {
-          //TODO implement
-          if(data.type !== 'Redemption Add') {
-            ignore = true
-            break
-          }
-          ignore = c.compared.id !== data.reward.id
-        } else if(c.type === 'follow') {
-          if(data.type !== 'Follow') {
-            ignore = true
-            break
-          }
-        } else if(c.type === 'subscription') {
-          switch (c.operator) {
-            case 'sub':
-              if(data.type !== 'Subscription') {
-                ignore = true
-                break
-              }
-              if(c.operator === 'sub')
-                ignore = (c.compared === 'real' && data.is_gift) ||
-                          (c.compared === 'gifted' && !data.is_gift)
-              break
-            case 'subEnd':
-              if(data.type !== 'Subscription End') ignore = true
-              break
-            case 'gift':
-              if(data.type !== 'Subscription Gift') ignore = true
-              break
-            case 'subMessage':
-              if(data.type !== 'Subscription Message') ignore = true
-              break
-            default:
-              ignore = true
-              break
-          }
-          if(ignore) break
-        }
-      }
-
-      if(ignore) continue
-
-      for(let event of element.events) {
-        if(event.type==='tts') {
-          switch (event.message) {
-            case 'subMessage':
-              event.text = null
-              break
-            case 'cheerMessage':
-              event.text = data.message
-              break
-            case 'redemptionMessage':
-            default:
-              event.text = data.user_input
-              break
-          }
-        }
-        if(event.text) {
-          event.text = this.populateText(event.text, data)
-        }
-        await this.queueUp(event)
-      }
-
-    }
+    
   }
 
   async queueUp(event) {
