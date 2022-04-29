@@ -25,7 +25,8 @@ export class Chat {
     let client = await this.connectToUser(user)
     let iClient = {
       userId: user._id.toString(),
-      client: client,
+      channel: client.channel,
+      client: client.client,
       //@ts-ignore
       settings: settings? settings : (await Settings.findOne({userId: user._id}).json)
     }
@@ -55,7 +56,7 @@ export class Chat {
       }
     })
     chatClient.connect()
-    return chatClient
+    return { channel: user.twitchName, client: chatClient }
   }
 
   static async bindCategories(iClient, settings) {
@@ -92,8 +93,9 @@ export class Chat {
             break
         } 
       } else {
-        await iClient.client.quit()
-        iClient.client = await this.connectToUser(user)
+        await iClient!.client.quit()
+        iClient!.client = (await this.connectToUser(user)).client
+        iClient!.channel = (await this.connectToUser(user)).channel
         await this.bindCategories(iClient, settings)
       }
     }
@@ -105,6 +107,7 @@ export class Chat {
 
 export class IChatClient {
   userId: string
+  channel: string
   client: ChatClient
 }
 

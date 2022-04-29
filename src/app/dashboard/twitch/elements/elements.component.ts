@@ -1,10 +1,11 @@
 import { OnInit, Component } from '@angular/core';
 import { AuthGuard } from '../../../auth/auth.guard'
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
-import { EVENT_TYPES, POSITION } from 'src/app/browsersource/events/events.service'
+import { EVENT_TYPES } from 'src/app/browsersource/events/events.service'
 import { filter, from, map, Subject, toArray } from 'rxjs'
 import { environment } from 'src/environments/environment'
 import { OBSService } from 'src/app/shared/obs.service'
+import { POSITION } from 'src/app/browsersource/events/events.component'
 @Component({
   selector: 'app-elements',
   templateUrl: './elements.component.html',
@@ -43,11 +44,8 @@ export class ElementsComponent implements OnInit {
 
   sendTestEvent(pointerEvent, element) {
     pointerEvent.stopPropagation()
-
     for(let event of element.events) {
-      let testData: any = { userId: this.auth.currentUser?._id }
-      if(event.type === 'tts') testData.text = 'This is a test TTS! I hope you enjoy it!'
-      this.data.send('test', Object.assign({}, event, testData))
+      this.data.send('test', Object.assign({ userId: this.auth.currentUser?._id }, event))
     }
   }
 
@@ -92,11 +90,11 @@ export class ElementsComponent implements OnInit {
         try {
           if(
             (c.type === 'bit' && 
-              (!this.ComparisonOperators.hasOwnProperty(c.operator) || parseInt(c.compared+'')<1)
+              (!this._operators.comparison.hasOwnProperty(c.operator) || parseInt(c.compared+'')<1)
             ) ||
             (c.type === 'user' && !(
-              (this.UserOperators.hasOwnProperty(c.operator) && !this.UserTypes.hasOwnProperty(c.compared)) ||
-              (this.UserTypeOperators.hasOwnProperty(c.operator) && this.UserTypes.hasOwnProperty(c.compared)))
+              (this._operators.user.hasOwnProperty(c.operator) && !this._userTypes.hasOwnProperty(c.compared)) ||
+              (this._operators.userType.hasOwnProperty(c.operator) && this._userTypes.hasOwnProperty(c.compared)))
             ) ||
             false
           )
@@ -148,26 +146,6 @@ export class ElementsComponent implements OnInit {
     }
     return true
   }
-  addElement(element: _element, type) {
-    element.events.push({
-      type: type
-    })
-    setTimeout(() => {
-      this._singleSelection = null
-      element.changes = true
-    }, 100)
-  }
-
-
-  deleteEvent(element: _element, index) {
-    element.events.splice(index, 1)
-    if(element.events.length>0) delete element.events[0].withPrevious
-
-    setTimeout(() => {
-      this._singleSelection = null
-      element.changes = true
-    }, 100)
-  }
 
   addCondition(element: _element) {
     element.conditions.push({
@@ -177,10 +155,29 @@ export class ElementsComponent implements OnInit {
     })
     element.changes = true
   }
-
   deleteCondition(element: _element, condition) {
     element.conditions.splice(element.conditions.indexOf(condition), 1)
     element.changes = true
+  }
+
+  selectedEventType
+  addEvent(element: _element, type) {
+    element.events.push({
+      type: type
+    })
+    setTimeout(() => {
+      this.selectedEventType = null
+      element.changes = true
+    }, 100)
+  }
+  deleteEvent(element: _element, index) {
+    element.events.splice(index, 1)
+    if(element.events.length>0) delete element.events[0].withPrevious
+
+    setTimeout(() => {
+      this.selectedEventType = null
+      element.changes = true
+    }, 100)
   }
 
 
@@ -225,7 +222,6 @@ export class ElementsComponent implements OnInit {
       event.src = null
     }  
   }
-
   async deleteVideoSrc(element: _element, event, src) {
     let filePath = src.replace(SERVER_URL, '')
     if(await this.data.delete(filePath)) {
@@ -235,7 +231,6 @@ export class ElementsComponent implements OnInit {
       //TODO if element could not be saved (invalid) this can be problematic.. consider saving onls new src (original PATCH request)
     }
   }
-  
   async videoUploaded(element: _element, event, url) {
     event.src = `${SERVER_URL}${url}`
     event.upload = false
@@ -251,7 +246,6 @@ export class ElementsComponent implements OnInit {
       event.src = null
     }  
   }
-
   onLoadedData(event, data) {
     let file = data.srcElement
     let mediaInformation = {
@@ -263,31 +257,15 @@ export class ElementsComponent implements OnInit {
   }
 
 
-/*   sourcesInScene: any = []
-  async sourceSelected(elem: _element, sceneName) {
-    if(sceneName) {
-      this.sourcesInScene = await from(this.OBS.sources).pipe(
-        filter(s =>  true),
-        toArray()
-      ).toPromise()
-    } else this.sourcesInScene = []
-    elem.changes = true
-  } */
+
 
   EventTypes = EVENT_TYPES
-  ConditionTypes = {
+  _conditionTypes = {
     bit: 'Bits cheered',
     user: 'User',
     redeem: 'Channel redemption',
   }
-  ComparisonOperators = {
-    equals: '=',
-    lesser: '<',
-    lesserEqual: '<=',
-    greater: '>',
-    greaterEqual: '<=',
-  }
-  UserTypes = {
+  _userTypes = {
     mod: 'Mod',
     new: 'New',
     streamer: 'Streamer',
@@ -295,51 +273,85 @@ export class ElementsComponent implements OnInit {
     vip: 'VIP',
     welcome: 'Just joined'
   }
-  UserOperators = {
-    is: 'is',
-    isnt: 'isn\'t',
-  }
-  UserTypeOperators = {
-    typeis: 'type is',
-    typeisnt: 'type isn\'t',
-  }
-  RedemptionOperators = {
-    redeemed: 'redeemed'
-  }
-  AllOperators = Object.assign({}, this.ComparisonOperators, this.UserOperators, this.UserTypeOperators, this.RedemptionOperators)
-  _UserTypes = Object.keys(this.UserTypes)
-  _singleSelection
 
+  _operators = {
+    comparison: {
+      equals: '=',
+      lesser: '<',
+      lesserEqual: '<=',
+      greater: '>',
+      greaterEqual: '<=',
+    },
+    user: {
+      is: 'is',
+      isnt: 'isn\'t',
+    },
+    userType: {
+      typeis: 'type is',
+      typeisnt: 'type isn\'t',
+    },
+    redemption: {
+      redeemed: 'redeemed'
+    },
+    all : () => Object.assign({}, 
+      this._operators.comparison, 
+      this._operators.user, 
+      this._operators.userType, 
+      this._operators.redemption
+      )
+  }
+  
   _POSITION = Object.keys(POSITION)
-  _videoSettings = {
-    position: 'POSITION',
-    width: 'number',
-    height: 'number',
-    marginTop: 'number',
-    marginRight: 'number',
-    marginBottom: 'number',
-    marginLeft: 'number',
+  _video = {
+    settings: {
+      position: 'POSITION',
+      width: 'number',
+      height: 'number',
+      marginTop: 'number',
+      marginRight: 'number',
+      marginBottom: 'number',
+      marginLeft: 'number',
+    }
   }
-  _audioSettings = {
+  _audio = {
+    settings: {
+    }
   }
-
-  _ttsOptions = {
-    redemptionMessage: 'Redemption message',
-    cheerMessage: 'Cheer message',
-    //subMessage: 'Sub message',
+  _tts = {
+    options: {
+      redemptionMessage: 'Redemption message',
+      cheerMessage: 'Cheer message',
+      //subMessage: 'Sub message',
+    },
+    voices: {
+      au: 'Australian english',
+      uk: 'British english',
+      us: 'American english',
+    }
   }
-  _ttsVoices = {
-    au: 'Australian english',
-    uk: 'British english',
-    us: 'American english',
-  }
-
   _obs = {
     triggers: {
       sourceVisibility: 'Source (or Group) visibility',
       filterVisibility: 'Filter visibility'
     }
   }
+  _chat = {
+    keywords: {
+      "$user": "The display name of the user triggered the event",
+      "$user_id": "The user that triggered the event",
+
+      "$bits": "The amount of bits cheered",
+      //"$gifted": "The amount of gifted subs",
+
+      //"$raider": "The display name of user that raided",
+      //"$raider_id": "The user that raided",
+      //"$raiders": "The amount of people that came with the raid",
+
+      //"$raid": "The user being raided",
+      //"$raid_id": "The userId being raided",
+    }
+  }
+
 }
 
 

@@ -64,7 +64,7 @@
                     </div>
                     <div class="element-details">
                         <div *ngFor="let c of elem.conditions; let i = index" style="white-space: pre-line;">
-                            <strong>{{ConditionTypes[c.type]}}</strong> {{AllOperators[c.operator]}} {{c.compared.title ? c.compared.title : _UserTypes.includes(c.compared+'') ?  UserTypes[c.compared] : c.compared}}
+                            <strong>{{_conditionTypes[c.type]}}</strong> {{_operators.all()[c.operator]}} {{c.compared.title ? c.compared.title : _userTypes.hasOwnProperty(c.compared+'') ?  _userTypes[c.compared] : c.compared}}
                             <strong *ngIf="i+1 < elem.conditions.length">&nbsp;AND&nbsp;</strong>
                         </div>
                     </div>
@@ -79,7 +79,7 @@
 
                                     <div class="field-container">
                                         <nb-select [(selected)]="c.type" (selectedChange)="elem.changes=true">
-                                            <nb-option *ngFor="let type of ConditionTypes | keyvalue" [value]=type.key>{{type.value}}</nb-option>
+                                            <nb-option *ngFor="let type of _conditionTypes | keyvalue" [value]=type.key>{{type.value}}</nb-option>
                                         </nb-select>
                                         <div class="anchor"><label>{{i==0 ? 'When' : 'AND'}}</label></div>
                                     </div>
@@ -88,17 +88,17 @@
 
                                     <div *ngIf="c.type!=='user' && c.type!=='redeem'" class="field-container">
                                         <nb-select [(selected)]="c.operator" (selectedChange)="elem.changes=true" size="small">
-                                            <nb-option *ngFor="let op of ComparisonOperators | keyvalue" [value]=op.key>{{op.value}}</nb-option>
+                                            <nb-option *ngFor="let op of _operators.comparison | keyvalue" [value]=op.key>{{op.value}}</nb-option>
                                         </nb-select>
                                         <div class="anchor"><label>is</label></div>
                                     </div>
                                     <nb-select *ngIf="c.type==='user'" [(selected)]="c.operator" (selectedChange)="elem.changes=true" size="small">
-                                        <nb-option *ngFor="let op of UserOperators | keyvalue" [value]=op.key>{{op.value}}</nb-option>
-                                        <nb-option *ngFor="let op of UserTypeOperators | keyvalue" [value]=op.key>{{op.value}}</nb-option>
+                                        <nb-option *ngFor="let op of _operators.user | keyvalue" [value]=op.key>{{op.value}}</nb-option>
+                                        <nb-option *ngFor="let op of _operators.userType | keyvalue" [value]=op.key>{{op.value}}</nb-option>
                                     </nb-select>
                                     <div *ngIf="c.type==='redeem'" class="field-container">
                                         <nb-select [(selected)]="c.operator" (selectedChange)="elem.changes=true" size="small">
-                                            <nb-option *ngFor="let op of RedemptionOperators | keyvalue" [value]=op.key>{{op.value}}</nb-option>
+                                            <nb-option *ngFor="let op of _operators.redemption | keyvalue" [value]=op.key>{{op.value}}</nb-option>
                                         </nb-select>
                                         <div class="anchor"><label>is</label></div>
                                     </div>
@@ -116,7 +116,7 @@
                                     </div>
                                     <div *ngIf="c.type === 'user' && c.operator[0]==='t'"class="field-container">
                                         <nb-select [(selected)]="c.compared" (selectedChange)="elem.changes=true">
-                                            <nb-option *ngFor="let ut of UserTypes | keyvalue" [value]=ut.key>{{ut.value}}</nb-option>
+                                            <nb-option *ngFor="let ut of _userTypes | keyvalue" [value]=ut.key>{{ut.value}}</nb-option>
                                         </nb-select>
                                         <div class="anchor"><label>what</label></div>
                                     </div>
@@ -185,7 +185,7 @@
                                                 <nb-list-item>
                                                     <nb-checkbox [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-checkbox>
                                                 </nb-list-item>
-                                                <nb-list-item *ngFor="let s of _videoSettings | keyvalue">
+                                                <nb-list-item *ngFor="let s of _video.settings | keyvalue">
                                                     <div class="key">{{s.key}}</div>
                                                     <div class="value" *ngIf="s.value==='number'">
                                                         <input nbInput type="number" [(ngModel)]="ev[s.key]" (change)="elem.changes=true" fullWidth>
@@ -202,7 +202,7 @@
                                                 <nb-list-item>
                                                     <nb-checkbox [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-checkbox>
                                                 </nb-list-item>
-                                                <nb-list-item *ngFor="let s of _audioSettings | keyvalue">
+                                                <nb-list-item *ngFor="let s of _audio.settings | keyvalue">
                                                     <div class="key">{{s.key}}</div>
                                                     <div class="value" *ngIf="s.value==='number'">
                                                         <input nbInput type="number" [(ngModel)]="ev[s.key]" (change)="elem.changes=true" fullWidth>
@@ -222,11 +222,11 @@
                                     <div #tts *ngIf="ev.type==='tts'" class="tts-container">
 
                                         <nb-select [(selected)]="ev.voice" (selectedChange)="elem.changes=true" placeholder="Select which voice to use">
-                                            <nb-option *ngFor="let v of _ttsVoices | keyvalue" [value]="v.key">{{v.value}}</nb-option>
+                                            <nb-option *ngFor="let v of _tts.voices | keyvalue" [value]="v.key">{{v.value}}</nb-option>
                                         </nb-select>
 
                                         <nb-select [(selected)]="ev.message" (selectedChange)="elem.changes=true" placeholder="Select what to read">
-                                            <nb-option *ngFor="let o of _ttsOptions | keyvalue" [value]="o.key">{{o.value}}</nb-option>
+                                            <nb-option *ngFor="let o of _tts.options | keyvalue" [value]="o.key">{{o.value}}</nb-option>
                                         </nb-select>
 
                                         <nb-checkbox [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-checkbox>
@@ -291,8 +291,14 @@
                                     </div>
                                    
                                 
-                                    <div #message *ngIf="ev.type==='message'" class="message-container">
-                                        message
+                                    <div #chat *ngIf="ev.type==='chat'" class="chat-container">
+                                        <textarea nbInput type="text" (change)="elem.changes=true" placeholder="Chat message. You can type the keywords below and they will be replaced accordingly." [(ngModel)]="ev.text" fullWidth></textarea>
+                                        <div class="keywords">
+                                            <div *ngFor="let keyword of _chat.keywords | keyvalue">
+                                                <div>{{keyword.key}}:</div>
+                                                <div>{{keyword.value}}</div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div #gif *ngIf="ev.type==='gif'" class="gif-container">
@@ -301,12 +307,12 @@
 
                                 </nb-tab>
                                 <nb-tab tabTitle="Add" tabIcon="file-add">
-                                    <nb-select placeholder="Select type of event to add" fullWidth [(selected)]="_singleSelection" (selectedChange)="addElement(elem, $event)">
+                                    <nb-select placeholder="Select type of event to add" fullWidth [(selected)]="selectedEventType" (selectedChange)="addEvent(elem, $event)">
                                         <nb-option *ngFor="let type of EventTypes | keyvalue" [value]="type.key">{{type.value}}</nb-option>
                                     </nb-select>
                                 </nb-tab>
                                 <nb-tab tabTitle="Delete" tabIcon="trash-2" [disabled]="!elem.events || elem.events.length<1">
-                                    <nb-select placeholder="Select the event to delete" fullWidth [(selected)]="_singleSelection" (selectedChange)="deleteEvent(elem, $event)">
+                                    <nb-select placeholder="Select the event to delete" fullWidth [(selected)]="selectedEventType" (selectedChange)="deleteEvent(elem, $event)">
                                         <nb-option *ngFor="let ev of elem.events; let i = index" [value]="i">{{ev.type}}</nb-option>
                                     </nb-select>
                                 </nb-tab>

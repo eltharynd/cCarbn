@@ -9,6 +9,7 @@
     <app-audio *ngIf="event?.type === 'audio'" [audio]=event></app-audio>
     <app-tts *ngIf="event?.type === 'tts'" [tts]=event></app-tts>
     <app-obs *ngIf="event?.type === 'obs'" [event]=event></app-obs>
+    <app-chat *ngIf="event?.type === 'chat'" [event]=event></app-chat>
   </div>
   
   <div id="cover" [ngStyle]="{

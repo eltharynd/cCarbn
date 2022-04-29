@@ -1,6 +1,8 @@
+import { filter, from, Subject, take } from 'rxjs'
 import * as socketIO from 'socket.io'
 import { Api } from '../api/express'
 import { Mongo } from '../db/mongo'
+import { Chat, IChatClient } from '../twitch/chat'
 
 export class Socket {
   static io: socketIO.Server
@@ -49,6 +51,19 @@ export class Socket {
       socket.on('test', (data) => {
         if(data.userId) {
           socket.to(data.userId).emit('test', data)
+        }
+      })
+
+      //TODO build a queue not to repeat messages when user has multiple browsersources opened
+      socket.on('chat-relay', async (data) => {
+        if(data.userId && data.message) {
+          let found: IChatClient|undefined = await from(Chat.clients).pipe(
+            filter((c: IChatClient) => c.userId === data.userId),
+            take(1)
+          ).toPromise()
+          if(found) {
+            found.client.say(found.channel, data.message)
+          }
         }
       })
 

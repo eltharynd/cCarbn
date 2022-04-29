@@ -235,8 +235,33 @@ input {
         margin-bottom: 2rem;
     }
 }
-.message-container {
-
+.chat-container {
+    > textarea {
+        margin-top: 2rem;
+        margin-bottom: 3rem;
+    }
+    > .keywords {
+        display: grid;
+        grid-template-columns: 1fr;
+        > div {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            > div {
+                padding-right: 0.5rem;
+                color: rgba(white, 0.8);
+            }
+            > div:first-child {
+                font-weight: bold;
+                color: white;
+            }
+            margin-bottom: 0.5rem;
+        }
+    }
+    @media only screen and (min-width: 825px) {
+        > .keywords {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
 }
 .gif-container {
 

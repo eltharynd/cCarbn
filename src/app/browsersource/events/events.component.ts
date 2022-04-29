@@ -1,6 +1,19 @@
 import { Component } from '@angular/core';
 import { Subject } from 'rxjs'
 import { EventsService } from './events.service'
+
+export enum POSITION {
+  TOP_LEFT = 'TOP_LEFT',
+  TOP = 'TOP',
+  TOP_RIGHT = 'TOP_RIGHT',
+  LEFT = 'LEFT',
+  CENTER = 'CENTER',
+  RIGHT = 'RIGHT',
+  BOTTOM_LEFT = 'BOTTOM_LEFT',
+  BOTTOM = 'BOTTOM',
+  BOTTOM_RIGHT = 'BOTTOM_RIGHT'
+}
+
 @Component({
   selector: 'app-events',
   templateUrl: './events.component.html'

@@ -8,7 +8,8 @@ import { EventsComponent } from './events/events.component';
 import { VideoComponent } from './events/video/video.component';
 import { AudioComponent } from './events/audio/audio.component';
 import { TTSComponent } from './events/tts/tts.component';
-import { ObsComponent } from './events/obs/obs.component'
+import { ObsComponent } from './events/obs/obs.component';
+import { ChatComponent } from './events/chat/chat.component'
 
  @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { ObsComponent } from './events/obs/obs.component'
     AudioComponent,
     TTSComponent,
     ObsComponent,
+    ChatComponent,
   ],
  })
  export class BrowserSourceModule {}
