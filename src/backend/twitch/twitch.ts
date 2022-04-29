@@ -165,7 +165,7 @@ export class Twitch {
     }
     if(settings?.api?.listeners?.prediction?.enabled) {
       subscriptions.push({listener: Listeners.prediction, subscription: await Twitch.listener.subscribeToChannelPredictionBeginEvents(channel.id, PredictionHandler.predictionBeginEvent)})    
-      subscriptions.push({listener: Listeners.prediction, subscription: await Twitch.listener.subscribeToChannelPredictionProgressEvents(channel.id, PredictionHandler.predictionProgressEvent)})    
+      //subscriptions.push({listener: Listeners.prediction, subscription: await Twitch.listener.subscribeToChannelPredictionProgressEvents(channel.id, PredictionHandler.predictionProgressEvent)})    
       subscriptions.push({listener: Listeners.prediction, subscription: await Twitch.listener.subscribeToChannelPredictionLockEvents(channel.id, PredictionHandler.predictionLockEvent)})    
       subscriptions.push({listener: Listeners.prediction, subscription: await Twitch.listener.subscribeToChannelPredictionEndEvents(channel.id, PredictionHandler.predictionEndEvent)})    
     }
