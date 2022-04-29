@@ -299,8 +299,8 @@ export class ElementsComponent implements OnInit {
       subMessage: 'User announces sub/resub'
     },
     raid: {
-      received: 'Raid received',
-      launched: 'Raid launched'
+      received: 'Raided by someone',
+      launched: 'Raided someone else'
     },
     ban: {
       banned: 'User is banned',
