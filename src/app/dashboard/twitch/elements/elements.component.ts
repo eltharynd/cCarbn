@@ -300,7 +300,7 @@ export class ElementsComponent implements OnInit {
     },
     raid: {
       received: 'Raid received',
-      started: 'Raid started'
+      launched: 'Raid launched'
     },
     ban: {
       banned: 'User is banned',

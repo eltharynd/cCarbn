@@ -104,7 +104,7 @@ export class EventsService {
             }
           } else if(c.type === 'raid') {
             ignore = (c.operator === 'received' && data.type !== 'Raid from') ||
-                      (c.operator === 'started' && data.type !== 'Raid to')
+                      (c.operator === 'launched' && data.type !== 'Raid to')
           } else if(c.type === 'ban') {
             ignore = (c.operator === 'banned' && (data.type !== 'Ban' || !data.is_permanent)) ||
                       (c.operator === 'timeout' && (data.type !== 'Ban' || data.is_permanent)) ||
