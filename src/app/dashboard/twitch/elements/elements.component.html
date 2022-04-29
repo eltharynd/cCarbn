@@ -190,7 +190,7 @@
                                             <nb-select placeholder="Select an audio" *ngIf="ev.select && ev.type==='audio'" [(selected)]="ev.src" (selectedChange)="videoSelected(elem, ev);elem.changes=true">
                                                 <nb-option *ngFor="let file of userAudios" [value]=file.src>{{file.filename}}</nb-option>
                                             </nb-select>
-                                            <app-uploader *ngIf="ev.upload" width="240px" height="120px" [autoIndexing]="true" [uploaded]="uploadedSubject" [reference]="{elem: elem, ev: ev}"></app-uploader>
+                                            <app-uploader *ngIf="ev.upload" [allowedTypes]="[ev.type]" width="240px" height="120px" [autoIndexing]="true" [uploaded]="uploadedSubject" [reference]="{elem: elem, ev: ev}"></app-uploader>
                                             <button nbButton class="file-select" status="success" nbTooltip="Select file from existing" nbTooltipStatus="success" (click)="getUserSelectableFiles(ev)"><nb-icon icon="book-open"></nb-icon></button>
                                             <button nbButton  class="file-upload" status="warning" nbTooltip="Upload a new file" nbTooltipStatus="warning" (click)="ev.upload=true; ev.select = false"><nb-icon icon="cloud-upload"></nb-icon></button>
                                         </div>

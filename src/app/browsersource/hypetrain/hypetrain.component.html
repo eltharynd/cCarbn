@@ -80,7 +80,8 @@
                   [displayTextOverride] = "'LVL 0->1 TRACK'"
                   [disabled]="!audioLoaded || data.busy || currentLevel>0"
                   [uploading]="trackUploadingSubject"
-                  [uploaded]="trackChangeSubject" 
+                  [uploaded]="trackChangeSubject"
+                  [allowedTypes]="['audio']" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
     <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-1')" [disabled]="!audio.tracks[1] || !audioLoaded || currentLevel>0" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
@@ -90,6 +91,7 @@
                   [disabled]="!audioLoaded || data.busy || currentLevel>0"
                   [uploading]="trackUploadingSubject"
                   [uploaded]="trackChangeSubject" 
+                  [allowedTypes]="['audio']" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
     <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-2')" [disabled]="!audio.tracks[2] || !audioLoaded || currentLevel>0" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
@@ -99,6 +101,7 @@
                   [disabled]="!audioLoaded || data.busy || currentLevel>0"
                   [uploading]="trackUploadingSubject"
                   [uploaded]="trackChangeSubject" 
+                  [allowedTypes]="['audio']" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
     <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-3')" [disabled]="!audio.tracks[3] || !audioLoaded || currentLevel>0" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
@@ -108,6 +111,7 @@
                   [disabled]="!audioLoaded || data.busy || currentLevel>0"
                   [uploading]="trackUploadingSubject"
                   [uploaded]="trackChangeSubject" 
+                  [allowedTypes]="['audio']" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
     <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-4')" [disabled]="!audio.tracks[4] || !audioLoaded || currentLevel>0" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
@@ -117,6 +121,7 @@
                   [disabled]="!audioLoaded || data.busy || currentLevel>0"
                   [uploading]="trackUploadingSubject"
                   [uploaded]="trackChangeSubject" 
+                  [allowedTypes]="['audio']" 
                   [height]="'4rem'" 
                   [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
     <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-5')" [disabled]="!audio.tracks[5] || !audioLoaded || currentLevel>0" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
@@ -256,7 +261,7 @@
       <div class="table-outer">
         <div class="table-inner">
           <span class="label">Background</span>
-          <app-uploader [name]="'locomotive-background'" [url]="train.locomotive.pictures.background" [uploaded]="pictureChangeSubject" [height]="'4rem'" [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
+          <app-uploader [name]="'locomotive-background'" [allowedTypes]="['image']" [url]="train.locomotive.pictures.background" [uploaded]="pictureChangeSubject" [height]="'4rem'" [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
           <button mat-raised-button color="accent" (click)="defaultPicture('locomotive-background')" [disabled]="!train.locomotive.pictures.background" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
           <mat-form-field>
             <input matInput type="number" placeholder="Background Width (px)" [disabled]="true" [(ngModel)]="train.locomotive.size.width">
@@ -270,7 +275,7 @@
         </div>
         <div class="table-inner">
           <span class="label">Foreground</span>
-          <app-uploader [name]="'locomotive-foreground'" [url]="train.locomotive.pictures.foreground" [uploaded]="pictureChangeSubject" [height]="'4rem'" [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
+          <app-uploader [name]="'locomotive-foreground'" [allowedTypes]="['image']" [url]="train.locomotive.pictures.foreground" [uploaded]="pictureChangeSubject" [height]="'4rem'" [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
           <button mat-raised-button color="accent" (click)="defaultPicture('locomotive-foreground')" [disabled]="!train.locomotive.pictures.foreground" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
           <mat-form-field>
             <input matInput type="number" placeholder="Background Height (px)" [disabled]="true" [(ngModel)]="train.locomotive.size.height">
@@ -296,7 +301,7 @@
     <div class="table-outer">
       <div class="table-inner">
         <span class="label">Background</span>
-        <app-uploader [name]="'carriage-background'" [url]="train.carriage.pictures.background" [uploaded]="pictureChangeSubject" [height]="'4rem'" [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
+        <app-uploader [name]="'carriage-background'" [allowedTypes]="['image']" [url]="train.carriage.pictures.background" [uploaded]="pictureChangeSubject" [height]="'4rem'" [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
         <button mat-raised-button color="accent" (click)="defaultPicture('carriage-background')" [disabled]="!train.carriage.pictures.background" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
         <mat-form-field>
           <input matInput type="number" placeholder="Background Width (px)" [disabled]="true" [(ngModel)]="train.carriage.size.width">
@@ -310,7 +315,7 @@
       </div>
       <div class="table-inner">
         <span class="label">Foreground</span>
-        <app-uploader [name]="'carriage-foreground'" [url]="train.carriage.pictures.foreground" [uploaded]="pictureChangeSubject" [height]="'4rem'" [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
+        <app-uploader [name]="'carriage-foreground'" [allowedTypes]="['image']" [url]="train.carriage.pictures.foreground" [uploaded]="pictureChangeSubject" [height]="'4rem'" [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
         <button mat-raised-button color="accent" (click)="defaultPicture('carriage-foreground')" [disabled]="!train.carriage.pictures.foreground" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
         <mat-form-field>
           <input matInput type="number" placeholder="Background Height (px)" [disabled]="true" [(ngModel)]="train.carriage.size.height">

@@ -24,11 +24,16 @@ export class UploadComponent {
     @Input() reference: any
 
     @Input() disabled: boolean = false
+
+    @Input() maxSizeInMB: number = 10
+    @Input() allowedTypes: string[]
     
     rnd = uuid.v4()
     busy
     success
     failure
+
+    feedbackMessage: string|null
 
 
     constructor(private auth: AuthGuard) { }
@@ -53,9 +58,36 @@ export class UploadComponent {
         //formData.append(key, this.fields[key])
         formData.append('file', file, newName)
   
+        if(this.allowedTypes) {
+            let allowed = false
+            for(let type of this.allowedTypes) {
+                if((new RegExp(type, 'gi')).test(file.type)) {
+                    allowed = true
+                    break
+                }     
+            }
+            if(!allowed) {
+                this.failure = true
+                this.busy = false
+                if(this.uploading) this.uploading.next(false)
+                this.feedbackMessage = `File format not valid. Allowed file types: ${this.allowedTypes.join(', ')}`
+                return
+            }
+        }
+
+        let sizeInMB = file.size / 1024 / 1204
+        if(this.maxSizeInMB && sizeInMB>this.maxSizeInMB) {
+            this.failure = true
+            this.busy = false
+            if(this.uploading) this.uploading.next(false)
+            this.feedbackMessage = `File too heavy. Max ${this.maxSizeInMB} MB.`
+            return
+        }
+
         let xhr = new XMLHttpRequest()
         
         xhr.open('POST', `${SERVER_URL}uploads/${this.auth.currentUser?._id}/${newName}`)
+        //@ts-ignore
         xhr.setRequestHeader('Authorization', this.auth?.currentUser?.token ? `Basic ${this.auth.currentUser.token}` : '')
         xhr.setRequestHeader('AutoIndexing', `${this.autoIndexing}`)
         let contentType
