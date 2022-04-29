@@ -10,6 +10,7 @@ import { UserToken, ClientToken } from '../db/models/tokens'
 import { User } from '../db/models/user'
 import { PORT } from '../index'
 
+import { BanHandler } from '../socket/events/ban'
 import { CheerHandler } from '../socket/events/cheer'
 import { FollowHandler } from '../socket/events/follow'
 import { HypetrainHandler } from '../socket/events/hypetrain'
@@ -139,7 +140,8 @@ export class Twitch {
   static async bindListeners(channel: HelixUser, settings) {
     let subscriptions: {listener: Listeners, subscription: EventSubSubscription}[] = []
     if(settings?.api?.listeners?.ban?.enabled) {
-
+      subscriptions.push({listener: Listeners.ban, subscription: await Twitch.listener.subscribeToChannelBanEvents(channel.id, BanHandler.banEvent)})    
+      subscriptions.push({listener: Listeners.ban, subscription: await Twitch.listener.subscribeToChannelUnbanEvents(channel.id, BanHandler.unbanEvent)})    
     }
     if(settings?.api?.listeners?.cheer?.enabled) {
       subscriptions.push({listener: Listeners.cheer, subscription: await Twitch.listener.subscribeToChannelCheerEvents(channel.id, CheerHandler.cheerEvent)})    

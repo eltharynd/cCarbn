@@ -6,6 +6,7 @@ import { filter, from, map, Subject, toArray } from 'rxjs'
 import { environment } from 'src/environments/environment'
 import { OBSService } from 'src/app/shared/obs.service'
 import { POSITION } from 'src/app/browsersource/events/events.component'
+import { KeyValue } from '@angular/common'
 @Component({
   selector: 'app-elements',
   templateUrl: './elements.component.html',
@@ -51,14 +52,14 @@ export class ElementsComponent implements OnInit {
 
 
 
-  addNewElement() {
+  addElement() {
     let element: any = {
       name: 'An element',
       conditions: [
         {
           type: 'bit',
           operator: 'equals',
-          compared: 1
+          compared: null
         }
       ],
       events: [],
@@ -151,7 +152,7 @@ export class ElementsComponent implements OnInit {
     element.conditions.push({
       type: 'bit',
       operator: 'equals',
-      compared: 1
+      compared: null
     })
     element.changes = true
   }
@@ -257,15 +258,19 @@ export class ElementsComponent implements OnInit {
   }
 
 
-
+  originalOrder = (a: KeyValue<string,string>, b: KeyValue<string,string>): number => {
+    return 0;
+  }
 
   EventTypes = EVENT_TYPES
   _conditionTypes = {
     bit: 'Bits cheered',
-    user: 'User',
     redeem: 'Channel redemption',
     follow: 'Follow',
-    subscription: 'Subscription'
+    raid: 'Raid',
+    subscription: 'Subscription',
+    user: 'User',
+    ban: 'Ban or Timeout',
   }
 
   _operators = {
@@ -292,6 +297,15 @@ export class ElementsComponent implements OnInit {
       subEnd: 'User sub ended',
       gift: 'User gifted a sub',
       subMessage: 'User announces sub/resub'
+    },
+    raid: {
+      received: 'Raid received',
+      started: 'Raid started'
+    },
+    ban: {
+      banned: 'User is banned',
+      timeout: 'User timed out',
+      unbanned: 'Ban/TO ended'
     },
     all : () => Object.assign({}, 
       this._operators.comparison, 
@@ -358,15 +372,20 @@ export class ElementsComponent implements OnInit {
 
       "$tier": "The subscription tier",
       "$is_gift": "Subscription was a gift (true/false)",
+      "$gifted": "The amount of gifted subs",
+      "$cumulative": "The cumulative amount of gifted subs",
 
-      //"$gifted": "The amount of gifted subs",
+      "$raider": "The display name of user that raided",
+      "$raider_id": "The user that raided",
+      "$raiders": "The amount of people that came with the raid",
 
-      //"$raider": "The display name of user that raided",
-      //"$raider_id": "The user that raided",
-      //"$raiders": "The amount of people that came with the raid",
+      "$raid": "The user being raided",
+      "$raid_id": "The userId being raided",
 
-      //"$raid": "The user being raided",
-      //"$raid_id": "The userId being raided",
+      "$banned_by": "The display name of the mod that banned/unbanned",
+      "$banned_by_id": "The mod that banned/unbanned",
+      "$reason": "The reason for the ban",
+      "$duration": "The time left for timeout",
     }
   }
 

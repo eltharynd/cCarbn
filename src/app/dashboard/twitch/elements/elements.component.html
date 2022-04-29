@@ -64,7 +64,7 @@
                     </div>
                     <div class="element-details">
                         <div *ngFor="let c of elem.conditions; let i = index" style="white-space: pre-line;">
-                            <strong>{{_conditionTypes[c.type]}}</strong> {{_operators.all()[c.operator]}} {{c.compared.title ? c.compared.title : _userTypes.hasOwnProperty(c.compared+'') ?  _userTypes[c.compared] : c.compared}}
+                            <strong>{{_conditionTypes[c.type]}}</strong> {{_operators.all()[c.operator]}} {{c.compared?.title ? c.compared.title : _userTypes.hasOwnProperty(c.compared+'') ? _userTypes[c.compared] : c.compared}}
                             <strong *ngIf="i+1 < elem.conditions.length">&nbsp;AND&nbsp;</strong>
                         </div>
                     </div>
@@ -78,8 +78,8 @@
                                 <nb-list-item *ngFor="let c of elem.conditions; let i = index" class="conditions-entry">
 
                                     <div class="field-container">
-                                        <nb-select [(selected)]="c.type" (selectedChange)="elem.changes=true">
-                                            <nb-option *ngFor="let type of _conditionTypes | keyvalue" [value]=type.key>{{type.value}}</nb-option>
+                                        <nb-select [(selected)]="c.type" (selectedChange)="elem.changes=true; c.compared = null">
+                                            <nb-option *ngFor="let type of _conditionTypes | keyvalue: originalOrder" [value]=type.key>{{type.value}}</nb-option>
                                         </nb-select>
                                         <div class="anchor"><label>{{i==0 ? 'When' : 'AND'}}</label></div>
                                     </div>
@@ -88,23 +88,35 @@
 
                                     <div *ngIf="c.type==='bit'" class="field-container">
                                         <nb-select [(selected)]="c.operator" (selectedChange)="elem.changes=true" size="small">
-                                            <nb-option *ngFor="let op of _operators.comparison | keyvalue" [value]=op.key>{{op.value}}</nb-option>
+                                            <nb-option *ngFor="let op of _operators.comparison | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
                                         </nb-select>
                                         <div class="anchor"><label>is</label></div>
                                     </div>
                                     <nb-select *ngIf="c.type==='user'" [(selected)]="c.operator" (selectedChange)="elem.changes=true" size="small">
-                                        <nb-option *ngFor="let op of _operators.user | keyvalue" [value]=op.key>{{op.value}}</nb-option>
-                                        <nb-option *ngFor="let op of _operators.userType | keyvalue" [value]=op.key>{{op.value}}</nb-option>
+                                        <nb-option *ngFor="let op of _operators.user | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+                                        <nb-option *ngFor="let op of _operators.userType | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
                                     </nb-select>
                                     <div *ngIf="c.type==='redeem'" class="field-container">
                                         <nb-select [(selected)]="c.operator" (selectedChange)="elem.changes=true" size="small">
-                                            <nb-option *ngFor="let op of _operators.redemption | keyvalue" [value]=op.key>{{op.value}}</nb-option>
+                                            <nb-option *ngFor="let op of _operators.redemption | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
                                         </nb-select>
                                         <div class="anchor"><label>is</label></div>
                                     </div>
                                     <div *ngIf="c.type==='subscription'" class="field-container" >
                                         <nb-select [(selected)]="c.operator" (selectedChange)="elem.changes=true">
-                                            <nb-option *ngFor="let op of _operators.subscription | keyvalue" [value]=op.key>{{op.value}}</nb-option>
+                                            <nb-option *ngFor="let op of _operators.subscription | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+                                        </nb-select>
+                                        <div class="anchor"><label>what</label></div>
+                                    </div>
+                                    <div *ngIf="c.type==='raid'" class="field-container" >
+                                        <nb-select [(selected)]="c.operator" [placeholder]="_operators.raid[c.operator]" (selectedChange)="elem.changes=true">
+                                            <nb-option *ngFor="let op of _operators.raid | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+                                        </nb-select>
+                                        <div class="anchor"><label>what</label></div>
+                                    </div>
+                                    <div *ngIf="c.type==='ban'" class="field-container" >
+                                        <nb-select [(selected)]="c.operator" [placeholder]="_operators.ban[c.operator]" (selectedChange)="elem.changes=true">
+                                            <nb-option *ngFor="let op of _operators.ban | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
                                         </nb-select>
                                         <div class="anchor"><label>what</label></div>
                                     </div>
@@ -121,7 +133,7 @@
                                     </div>
                                     <div *ngIf="c.type === 'user' && c.operator[0]==='t'"class="field-container">
                                         <nb-select [(selected)]="c.compared" (selectedChange)="elem.changes=true">
-                                            <nb-option *ngFor="let ut of _userTypes | keyvalue" [value]=ut.key>{{ut.value}}</nb-option>
+                                            <nb-option *ngFor="let ut of _userTypes | keyvalue: originalOrder" [value]=ut.key>{{ut.value}}</nb-option>
                                         </nb-select>
                                         <div class="anchor"><label>what</label></div>
                                     </div>
@@ -133,7 +145,7 @@
                                     </div>
                                     <div *ngIf="c.type === 'subscription' && c.operator==='sub'" class="field-container">
                                         <nb-select [(selected)]="c.compared" [placeholder]="_subOptions[c.compared]||''" (selectedChange)="elem.changes=true" fullWidth>
-                                            <nb-option *ngFor="let o of _subOptions | keyvalue" [value]=o.key>{{o.value}}</nb-option>
+                                            <nb-option *ngFor="let o of _subOptions | keyvalue: originalOrder" [value]=o.key>{{o.value}}</nb-option>
                                         </nb-select>
                                         <div class="anchor"><label>Condition</label></div>
                                     </div>
@@ -194,7 +206,7 @@
                                                 <nb-list-item>
                                                     <nb-checkbox [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-checkbox>
                                                 </nb-list-item>
-                                                <nb-list-item *ngFor="let s of _video.settings | keyvalue">
+                                                <nb-list-item *ngFor="let s of _video.settings | keyvalue: originalOrder">
                                                     <div class="key">{{s.key}}</div>
                                                     <div class="value" *ngIf="s.value==='number'">
                                                         <input nbInput type="number" [(ngModel)]="ev[s.key]" (change)="elem.changes=true" fullWidth>
@@ -211,7 +223,7 @@
                                                 <nb-list-item>
                                                     <nb-checkbox [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-checkbox>
                                                 </nb-list-item>
-                                                <nb-list-item *ngFor="let s of _audio.settings | keyvalue">
+                                                <nb-list-item *ngFor="let s of _audio.settings | keyvalue: originalOrder">
                                                     <div class="key">{{s.key}}</div>
                                                     <div class="value" *ngIf="s.value==='number'">
                                                         <input nbInput type="number" [(ngModel)]="ev[s.key]" (change)="elem.changes=true" fullWidth>
@@ -231,11 +243,11 @@
                                     <div #tts *ngIf="ev.type==='tts'" class="tts-container">
 
                                         <nb-select [(selected)]="ev.voice" (selectedChange)="elem.changes=true" placeholder="Select which voice to use">
-                                            <nb-option *ngFor="let v of _tts.voices | keyvalue" [value]="v.key">{{v.value}}</nb-option>
+                                            <nb-option *ngFor="let v of _tts.voices | keyvalue: originalOrder" [value]="v.key">{{v.value}}</nb-option>
                                         </nb-select>
 
                                         <nb-select [(selected)]="ev.message" (selectedChange)="elem.changes=true" placeholder="Select what to read">
-                                            <nb-option *ngFor="let o of _tts.options | keyvalue" [value]="o.key">{{o.value}}</nb-option>
+                                            <nb-option *ngFor="let o of _tts.options | keyvalue: originalOrder" [value]="o.key">{{o.value}}</nb-option>
                                         </nb-select>
 
                                         <nb-checkbox [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-checkbox>
@@ -247,7 +259,7 @@
 
                                         <div class="field-container">
                                             <nb-select [placeholder]="ev.trigger" [(selected)]="ev.trigger" (selectedChange)="elem.changes=true; ev.scene=null; ev.source=null; ev.input=null; ev.duration=null; ev.toggleTo=null; ev.revert = ev.trigger==='filterVisibility' ? false : ev.revert" fullWidth>
-                                                <nb-option *ngFor="let t of _obs.triggers | keyvalue" [value]="t.key">{{t.value}}</nb-option>
+                                                <nb-option *ngFor="let t of _obs.triggers | keyvalue: originalOrder" [value]="t.key">{{t.value}}</nb-option>
                                             </nb-select>
                                             <div class="anchor"><label>Trigger</label></div>
                                         </div>
@@ -303,7 +315,7 @@
                                     <div #chat *ngIf="ev.type==='chat'" class="chat-container">
                                         <textarea nbInput type="text" (change)="elem.changes=true" placeholder="Chat message. You can type the keywords below and they will be replaced accordingly." [(ngModel)]="ev.text" fullWidth></textarea>
                                         <div class="keywords">
-                                            <div *ngFor="let keyword of _chat.keywords | keyvalue">
+                                            <div *ngFor="let keyword of _chat.keywords | keyvalue: originalOrder">
                                                 <div>{{keyword.key}}:</div>
                                                 <div>{{keyword.value}}</div>
                                             </div>
@@ -317,7 +329,7 @@
                                 </nb-tab>
                                 <nb-tab tabTitle="Add" tabIcon="file-add">
                                     <nb-select placeholder="Select type of event to add" fullWidth [(selected)]="selectedEventType" (selectedChange)="addEvent(elem, $event)">
-                                        <nb-option *ngFor="let type of EventTypes | keyvalue" [value]="type.key">{{type.value}}</nb-option>
+                                        <nb-option *ngFor="let type of EventTypes | keyvalue: originalOrder" [value]="type.key">{{type.value}}</nb-option>
                                     </nb-select>
                                 </nb-tab>
                                 <nb-tab tabTitle="Delete" tabIcon="trash-2" [disabled]="!elem.events || elem.events.length<1">
@@ -345,7 +357,7 @@
 
         <nb-card class="add-element-card">
             <nb-card-body>
-                <button nbButton status="success" fullWidth (click)="addNewElement()">ADD NEW ELEMENT</button>
+                <button nbButton status="success" fullWidth (click)="addElement()">ADD NEW ELEMENT</button>
             </nb-card-body>
         </nb-card>
 

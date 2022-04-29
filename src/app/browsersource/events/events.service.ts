@@ -62,10 +62,7 @@ export class EventsService {
                   ignore = +data.bits !== +howMuch
                   break
               }
-            } else {
-              ignore = true
-              break
-            }
+            } else ignore
           } else if(c.type === 'user') {
             switch (c.operator) {
               case 'is':
@@ -79,17 +76,9 @@ export class EventsService {
             }
             continue
           } else if(c.type === 'redeem') {
-            //TODO implement
-            if(data.type !== 'Redemption Add') {
-              ignore = true
-              break
-            }
-            ignore = c.compared.id !== data.reward.id
+            ignore = (data.type !== 'Redemption Add') || (c.compared.id !== data.reward.id)
           } else if(c.type === 'follow') {
-            if(data.type !== 'Follow') {
-              ignore = true
-              break
-            }
+            ignore = data.type !== 'Follow'
           } else if(c.type === 'subscription') {
             switch (c.operator) {
               case 'sub':
@@ -112,10 +101,17 @@ export class EventsService {
                 break
               default:
                 ignore = true
-                break
             }
-            if(ignore) break
+          } else if(c.type === 'raid') {
+            ignore = (c.operator === 'received' && data.type !== 'Raid from') ||
+                      (c.operator === 'started' && data.type !== 'Raid to')
+          } else if(c.type === 'ban') {
+            ignore = (c.operator === 'banned' && (data.type !== 'Ban' || !data.is_permanent)) ||
+                      (c.operator === 'timeout' && (data.type !== 'Ban' || data.is_permanent)) ||
+                      (c.operator === 'unbanned' && data.type !== 'Unban')
           }
+
+          if(ignore) break
         }
 
         if(ignore) continue
@@ -149,7 +145,16 @@ export class EventsService {
         text: `This is a test message for a ${data.type} type event.`,
         user_name: 'JeffBezos',
         user_login: 'jeffbezos',
-        bits: '1000',
+        bits: (Math.floor(Math.random()*10)+1)*100,
+        gifted: Math.floor(Math.random()*50)+1,
+        cumulative: Math.floor(Math.random()*60)+1,
+        tier: Math.floor(Math.random()*3)+1,
+        raider: 'Pokimane',
+        raider_id: 'pokimane',
+        raiders: Math.floor(Math.random()*300)+1,
+        raid: 'PewDiePie',
+        raid_id: 'pewdiepie',
+        is_gift: 'true'
       }, data)
       if(buffer.type === 'tts') 
         buffer.text = 'This is a test TTS! I hope you enjoy it!'
@@ -160,10 +165,6 @@ export class EventsService {
       await this.queueUp(buffer)
     })
 
-  }
-
-  async distributeEvents(data) {
-    
   }
 
   async queueUp(event) {
@@ -187,13 +188,35 @@ export class EventsService {
 
   private populateText(text: string, event: any) {
     return text
-      .replace(/\$user_id/g, event.last_contribution ? event.last_contribution.user_login :  event.user_login)
-      .replace(/\$user/g, event.last_contribution ? event.last_contribution.user_name :  event.user_name)
+      .replace(/\$user_id/g, event.is_anonymous ? 'Anonymous' : event.last_contribution ? event.last_contribution.user_login :  event.user_login)
+      .replace(/\$user/g, event.is_anonymous ? 'Anonymous' : event.last_contribution ? event.last_contribution.user_name :  event.user_name)
 
       .replace(/\$bits/g, event.bits)
 
+      .replace(/\$gifted/g, event.total)
+      .replace(/\$cumulative/g, event.cumulative_total)
       .replace(/\$tier/g, event.tier)
       .replace(/\$is_gift/g, event.is_gift ? 'true' : 'false')
+
+      .replace(/\$raider/g, event.from_broadcaster_user_name)
+      .replace(/\$raider_id/g, event.from_broadcaster_user_login)
+      .replace(/\$raiders/g, event.viewers)
+
+      .replace(/\$raid/g, event.to_broadcaster_user_name)
+      .replace(/\$raid_id/g, event.to_broadcaster_user_login)
+
+
+      .replace(/\$banned_by/g, event.moderator_user_name)
+      .replace(/\$banned_by_id/g, event.moderator_user_login)
+      .replace(/\$reason/g, event.reason ? event.reason : 'Not specified.')
+      .replace(/\$duration/g, event.left > 60*1000 ? 
+                                `${Math.floor(event.left/600)/100} minutes` :
+                                event.left > 0 ?
+                                  `${Math.floor(event.left/10)/100} seconds` :
+                                  ''
+
+      )
+
   }
 
 }
