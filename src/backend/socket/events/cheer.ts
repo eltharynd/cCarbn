@@ -6,13 +6,17 @@ import { toJSON } from "./util/toJSON"
 
 
 
-export class Cheers {
+export class CheerHandler {
 
   static cheerEvent = async (event: EventSubChannelCheerEvent) => {
-    console.info(toJSON(event))
+    let data = toJSON(event)
+    data.type = 'Cheer'
+    console.log(data)
+
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found) {
-      Socket.io.to(found._id.toString()).emit('events', toJSON(event))
+      Socket.io.to(found._id.toString()).emit('events', data)
     }
   }
+  
 }

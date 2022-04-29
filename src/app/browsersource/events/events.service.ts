@@ -43,7 +43,7 @@ export class EventsService {
         let ignore = false
         for(let c of element.conditions) {
           if(c.type === 'bit') {
-            if(data.eventType !== 'cheer') {
+            if(data.type !== 'Cheer') {
               let howMuch = 0
               try { howMuch = parseInt(c.compared) } catch(e) { ignore = true; continue; }
               switch (c.operator) {
@@ -79,7 +79,7 @@ export class EventsService {
             continue
           } else if(c.type === 'redeem') {
             //TODO implement
-            if(data.eventType !== 'redeem') {
+            if(data.type !== 'Redemption Add') {
               ignore = true
               continue
             }

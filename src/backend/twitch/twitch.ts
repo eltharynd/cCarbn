@@ -1,17 +1,29 @@
 import { ApiClient, HelixChannelSearchResult, HelixStream, HelixUser } from '@twurple/api'
-import { DirectConnectionAdapter, EventSubChannelHypeTrainBeginEvent, EventSubListener, EventSubSubscription, ReverseProxyAdapter } from '@twurple/eventsub'
+import { DirectConnectionAdapter, EventSubListener, EventSubSubscription, ReverseProxyAdapter } from '@twurple/eventsub'
 import { from, Subject } from 'rxjs'
 import * as fs from 'fs'
 import { filter, take, toArray } from 'rxjs/operators'
 
-import { HypeTrain } from '../socket/events/hypetrain'
-import { Cheers } from '../socket/events/cheers'
-import { Redemptions } from '../socket/events/redemptions'
-import { ClientCredentialsAuthProvider, RefreshingAuthProvider, TokenInfo } from '@twurple/auth'
+import { ClientCredentialsAuthProvider, RefreshingAuthProvider } from '@twurple/auth'
 import { Mongo } from '../db/mongo'
 import { UserToken, ClientToken } from '../db/models/tokens'
 import { User } from '../db/models/user'
 import { PORT } from '../index'
+
+import { CheerHandler } from '../socket/events/cheer'
+import { FollowHandler } from '../socket/events/follow'
+import { HypetrainHandler } from '../socket/events/hypetrain'
+import { ModeratorHandler } from '../socket/events/moderator'
+import { PollHandler } from '../socket/events/poll'
+import { PredictionHandler } from '../socket/events/prediction'
+import { RaidHandler } from '../socket/events/raid'
+import { RedemptionHandler } from '../socket/events/redemption'
+import { RewardHandler } from '../socket/events/reward'
+import { SubscriptionHandler } from '../socket/events/subscriptions'
+import { UpdateHandler } from '../socket/events/update'
+import { OnlineHandler } from '../socket/events/online'
+
+
 
 export const DEV_ENDPOINT = JSON.parse('' + fs.readFileSync('endpoint_credentials.json'))
 const FORCE_REVERSE_PROXY = true
@@ -97,8 +109,9 @@ export class Twitch {
 
 
     let channel = await Twitch.client.users.getUserByName(user.twitchName)
-    let subscriptions = await Twitch.bindListeners(channel, settings)
+    if(!channel) return console.error(`Channel not found for user: ${user._id} when trying to connect twitch API.`)
 
+    let subscriptions = await Twitch.bindListeners(channel, settings)
 
     let iClient = Object.assign(new IApiClient(), {
       userId: user._id,
@@ -123,24 +136,64 @@ export class Twitch {
     }
   }
 
-  static async bindListeners(channel: HelixUser|null, settings) {
+  static async bindListeners(channel: HelixUser, settings) {
     let subscriptions: {listener: Listeners, subscription: EventSubSubscription}[] = []
-    if(settings?.api?.listeners?.redemption?.enabled) {
-      //@ts-ignore
-      subscriptions.push({listener: Listeners.redemption, subscription: await Twitch.listener.subscribeToChannelRedemptionAddEvents(channel.id, Redemptions.redemptionEvent)})    
+    if(settings?.api?.listeners?.ban?.enabled) {
+
     }
     if(settings?.api?.listeners?.cheer?.enabled) {
-      //@ts-ignore
-      subscriptions.push({listener: Listeners.cheer, subscription: await Twitch.listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent)})    
+      subscriptions.push({listener: Listeners.cheer, subscription: await Twitch.listener.subscribeToChannelCheerEvents(channel.id, CheerHandler.cheerEvent)})    
+    }
+    if(settings?.api?.listeners?.follow?.enabled) {
+      subscriptions.push({listener: Listeners.follow, subscription: await Twitch.listener.subscribeToChannelFollowEvents(channel.id, FollowHandler.followEvent)})    
     }
     if(settings?.api?.listeners?.hypetrain?.enabled) {
-      //@ts-ignore
-      subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainBeginEvents(channel.id, HypeTrain.hypeTrainBegin)})
-      //@ts-ignore
-      subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainProgressEvents(channel.id, HypeTrain.hypeTrainProgress)})
-      //@ts-ignore
-      subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainEndEvents(channel.id, HypeTrain.hypeTrainEnd)}) 
+      subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainBeginEvents(channel.id, HypetrainHandler.hypeTrainBegin)})
+      subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainProgressEvents(channel.id, HypetrainHandler.hypeTrainProgress)})
+      subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainEndEvents(channel.id, HypetrainHandler.hypeTrainEnd)}) 
     }
+    if(settings?.api?.listeners?.moderator?.enabled) {
+      subscriptions.push({listener: Listeners.moderator, subscription: await Twitch.listener.subscribeToChannelModeratorAddEvents(channel.id, ModeratorHandler.moderatorAddEvent)})    
+      subscriptions.push({listener: Listeners.moderator, subscription: await Twitch.listener.subscribeToChannelModeratorRemoveEvents(channel.id, ModeratorHandler.moderatorRemoveEvent)})    
+    }
+    if(settings?.api?.listeners?.poll?.enabled) {
+      subscriptions.push({listener: Listeners.poll, subscription: await Twitch.listener.subscribeToChannelPollBeginEvents(channel.id, PollHandler.pollBeginEvent)})    
+      subscriptions.push({listener: Listeners.poll, subscription: await Twitch.listener.subscribeToChannelPollProgressEvents(channel.id, PollHandler.pollProgressEvent)})    
+      subscriptions.push({listener: Listeners.poll, subscription: await Twitch.listener.subscribeToChannelPollEndEvents(channel.id, PollHandler.pollEndEvent)})    
+    }
+    if(settings?.api?.listeners?.prediction?.enabled) {
+      subscriptions.push({listener: Listeners.prediction, subscription: await Twitch.listener.subscribeToChannelPredictionBeginEvents(channel.id, PredictionHandler.predictionBeginEvent)})    
+      subscriptions.push({listener: Listeners.prediction, subscription: await Twitch.listener.subscribeToChannelPredictionProgressEvents(channel.id, PredictionHandler.predictionProgressEvent)})    
+      subscriptions.push({listener: Listeners.prediction, subscription: await Twitch.listener.subscribeToChannelPredictionLockEvents(channel.id, PredictionHandler.predictionLockEvent)})    
+      subscriptions.push({listener: Listeners.prediction, subscription: await Twitch.listener.subscribeToChannelPredictionEndEvents(channel.id, PredictionHandler.predictionEndEvent)})    
+    }
+    if(settings?.api?.listeners?.raid?.enabled) {
+      subscriptions.push({listener: Listeners.prediction, subscription: await Twitch.listener.subscribeToChannelRaidEventsFrom(channel.id, RaidHandler.raidFromEvent)})    
+      subscriptions.push({listener: Listeners.prediction, subscription: await Twitch.listener.subscribeToChannelRaidEventsTo(channel.id, RaidHandler.raidToEvent)})    
+    }
+    if(settings?.api?.listeners?.redemption?.enabled) {
+      subscriptions.push({listener: Listeners.redemption, subscription: await Twitch.listener.subscribeToChannelRedemptionAddEvents(channel.id, RedemptionHandler.redemptionAddEvent)})    
+      subscriptions.push({listener: Listeners.redemption, subscription: await Twitch.listener.subscribeToChannelRedemptionUpdateEvents(channel.id, RedemptionHandler.redemptionUpdateEvent)})    
+    }
+    if(settings?.api?.listeners?.reward?.enabled) {
+      subscriptions.push({listener: Listeners.reward, subscription: await Twitch.listener.subscribeToChannelRewardAddEvents(channel.id, RewardHandler.rewardAddEvent)})  
+      subscriptions.push({listener: Listeners.reward, subscription: await Twitch.listener.subscribeToChannelRewardRemoveEvents(channel.id, RewardHandler.rewardRemoveEvent)})  
+      subscriptions.push({listener: Listeners.reward, subscription: await Twitch.listener.subscribeToChannelRewardUpdateEvents(channel.id, RewardHandler.rewardUpdateEvent)})  
+    }
+    if(settings?.api?.listeners?.subscription?.enabled) {
+      subscriptions.push({listener: Listeners.subscription, subscription: await Twitch.listener.subscribeToChannelSubscriptionEvents(channel.id, SubscriptionHandler.subscriptionEvent)})  
+      subscriptions.push({listener: Listeners.subscription, subscription: await Twitch.listener.subscribeToChannelSubscriptionEndEvents(channel.id, SubscriptionHandler.subscriptionEndEvent)})  
+      subscriptions.push({listener: Listeners.subscription, subscription: await Twitch.listener.subscribeToChannelSubscriptionGiftEvents(channel.id, SubscriptionHandler.subscriptionGiftEvent)})  
+      subscriptions.push({listener: Listeners.subscription, subscription: await Twitch.listener.subscribeToChannelSubscriptionMessageEvents(channel.id, SubscriptionHandler.subscriptionMessageEvent)})  
+    }
+    if(settings?.api?.listeners?.update?.enabled) {
+      subscriptions.push({listener: Listeners.update, subscription: await Twitch.listener.subscribeToChannelUpdateEvents(channel.id, UpdateHandler.updateEvent)})  
+    }
+    if(settings?.api?.listeners?.live?.enabled) {
+      subscriptions.push({listener: Listeners.online, subscription: await Twitch.listener.subscribeToStreamOnlineEvents(channel.id, OnlineHandler.onlineEvent)})  
+      subscriptions.push({listener: Listeners.online, subscription: await Twitch.listener.subscribeToStreamOfflineEvents(channel.id, OnlineHandler.offlineEvent)})  
+    }
+
     return subscriptions
   }
 
@@ -153,15 +206,15 @@ export class Twitch {
       if(enable && iClient?.subscriptions) {
         switch(listener) {
           case Listeners.redemption:
-            iClient.subscriptions.push({listener: Listeners.redemption, subscription: await Twitch.listener.subscribeToChannelRedemptionAddEvents(channel.id, Redemptions.redemptionEvent)})
+            iClient.subscriptions.push({listener: Listeners.redemption, subscription: await Twitch.listener.subscribeToChannelRedemptionAddEvents(channel.id, RedemptionHandler.redemptionAddEvent)})
             break
           case Listeners.cheer:
-            iClient.subscriptions.push({listener: Listeners.cheer, subscription: await Twitch.listener.subscribeToChannelCheerEvents(channel.id, Cheers.cheerEvent)})
+            iClient.subscriptions.push({listener: Listeners.cheer, subscription: await Twitch.listener.subscribeToChannelCheerEvents(channel.id, CheerHandler.cheerEvent)})
             break
           case Listeners.hypetrain:
-            iClient.subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainBeginEvents(channel.id, HypeTrain.hypeTrainBegin)})
-            iClient.subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainProgressEvents(channel.id, HypeTrain.hypeTrainProgress)})
-            iClient.subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainEndEvents(channel.id, HypeTrain.hypeTrainEnd)}) 
+            iClient.subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainBeginEvents(channel.id, HypetrainHandler.hypeTrainBegin)})
+            iClient.subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainProgressEvents(channel.id, HypetrainHandler.hypeTrainProgress)})
+            iClient.subscriptions.push({listener: Listeners.hypetrain, subscription: await Twitch.listener.subscribeToChannelHypeTrainEndEvents(channel.id, HypetrainHandler.hypeTrainEnd)}) 
             break
         } 
       } else {

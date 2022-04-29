@@ -7,12 +7,13 @@ import { Twitch } from "../../twitch/twitch"
 import { Socket } from "../socket"
 import { toJSON } from "./util/toJSON"
 
-export class HypeTrain {
+export class HypetrainHandler {
 
   static hypeTrainBegin = async (event: EventSubChannelHypeTrainBeginEvent) => {
-    console.info(toJSON(event))
     let data = toJSON(event)
     data.type = 'Hype Train Begin'
+    console.log(data)
+
     if(data.last_contribution) {
       let helixUser: HelixUser|null = await Twitch.client.users.getUserById(data.last_contribution.user_id)
       if(helixUser)
@@ -27,14 +28,17 @@ export class HypeTrain {
       }  
     }
     let found: any = await User.findOne({twitchId: event.broadcasterId})
-    if(found)
+    if(found) {
+      Socket.io.to(found._id.toString()).emit('events', data)
       Socket.io.to(found._id.toString()).emit('hypetrain', data)
+    }
   }
 
   static hypeTrainProgress = async (event: EventSubChannelHypeTrainProgressEvent) => {
-    console.info(toJSON(event))
     let data = toJSON(event)
     data.type = 'Hype Train Progress'
+    console.log(data)
+
     if(data.last_contribution) {
       let helixUser: HelixUser|null = await Twitch.client.users.getUserById(data.last_contribution.user_id)
       if(helixUser)
@@ -50,14 +54,16 @@ export class HypeTrain {
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
       setTimeout(() => {
+        Socket.io.to(found._id.toString()).emit('events', data)
         Socket.io.to(found._id.toString()).emit('hypetrain', data)
       }, 1000); 
   }
 
   static hypeTrainEnd = async (event: EventSubChannelHypeTrainEndEvent) => {
-    console.info(toJSON(event))
     let data = toJSON(event)
     data.type = 'Hype Train End'
+    console.log(data)
+
     if(data.last_contribution) {
       let helixUser: HelixUser|null = await Twitch.client.users.getUserById(data.last_contribution.user_id)
       if(helixUser)
@@ -73,9 +79,9 @@ export class HypeTrain {
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found)
       setTimeout(() => {
+        Socket.io.to(found._id.toString()).emit('events', data)
         Socket.io.to(found._id.toString()).emit('hypetrain', data)
-      }, 1000);
-      
+      }, 1000);  
   }
 
 }
