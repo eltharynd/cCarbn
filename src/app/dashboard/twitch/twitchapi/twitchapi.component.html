@@ -8,20 +8,7 @@
       <nb-list>
         <nb-list-item *ngFor="let k of object.keys(listeners.settings.api.listeners)">     
           <nb-toggle (change)="listeners.toggleListener(k)" [(checked)]="listeners.settings.api.listeners[k].enabled" 
-          [disabled]="
-            data.busy || 
-            !listeners.settings.api.enabled ||
-            k === 'ban' ||
-            k === 'follow' ||
-            k === 'moderator' ||
-            k === 'poll' ||
-            k === 'prediction' ||
-            k === 'raid' ||
-            k === 'reward' ||
-            k === 'subscription' ||
-            k === 'update' ||
-            k === 'online'
-          ">{{k}}</nb-toggle>
+          [disabled]="data.busy || !listeners.settings.api.enabled">{{k}}</nb-toggle>
         </nb-list-item>
       </nb-list>
     </nb-card>

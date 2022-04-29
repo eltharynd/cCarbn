@@ -1,4 +1,4 @@
-import { EventSubChannelPredictionBeginEvent, EventSubChannelPredictionEndEvent, EventSubChannelPredictionLockEvent, EventSubChannelPredictionProgressEvent } from "@twurple/eventsub/lib"import * as socketIO from "socket.io"
+import { EventSubChannelPredictionBeginEvent, EventSubChannelPredictionEndEvent, EventSubChannelPredictionLockEvent, EventSubChannelPredictionProgressEvent } from "@twurple/eventsub/lib"
 import { User } from "../../db/models/user"
 import { Socket } from "../socket"
 import { toJSON } from "./util/toJSON"
