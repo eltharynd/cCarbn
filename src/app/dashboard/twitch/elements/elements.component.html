@@ -86,7 +86,7 @@
 
 
 
-                                    <div *ngIf="c.type!=='user' && c.type!=='redeem'" class="field-container">
+                                    <div *ngIf="c.type==='bit'" class="field-container">
                                         <nb-select [(selected)]="c.operator" (selectedChange)="elem.changes=true" size="small">
                                             <nb-option *ngFor="let op of _operators.comparison | keyvalue" [value]=op.key>{{op.value}}</nb-option>
                                         </nb-select>
@@ -102,14 +102,19 @@
                                         </nb-select>
                                         <div class="anchor"><label>is</label></div>
                                     </div>
+                                    <div *ngIf="c.type==='subscription'" class="field-container" >
+                                        <nb-select [(selected)]="c.operator" (selectedChange)="elem.changes=true">
+                                            <nb-option *ngFor="let op of _operators.subscription | keyvalue" [value]=op.key>{{op.value}}</nb-option>
+                                        </nb-select>
+                                        <div class="anchor"><label>what</label></div>
+                                    </div>
 
 
 
-                                    <div *ngIf="c.type !== 'user' && c.type !== 'redeem'" class="field-container">
+                                    <div *ngIf="c.type === 'bit'" class="field-container">
                                         <input nbInput type="number" [(ngModel)]="c.compared" (change)="elem.changes=true">
                                         <div class="anchor"><label>how many</label></div>
                                     </div>
-
                                     <div *ngIf="c.type === 'user' && c.operator[0]!=='t'" class="field-container">
                                         <input nbInput type="text" [(ngModel)]="c.compared" (change)="elem.changes=true">
                                         <div class="anchor"><label>username</label></div>
@@ -120,14 +125,18 @@
                                         </nb-select>
                                         <div class="anchor"><label>what</label></div>
                                     </div>
-
                                     <div *ngIf="c.type === 'redeem'" class="field-container">
                                         <nb-select [(selected)]="c.compared" [placeholder]="c.compared?.title||''" (selectedChange)="elem.changes=true">
                                             <nb-option *ngFor="let r of channelRewards" [value]=r>{{r.title}}</nb-option>
                                         </nb-select>
                                         <div class="anchor"><label>which</label></div>
                                     </div>
-
+                                    <div *ngIf="c.type === 'subscription' && c.operator==='sub'" class="field-container">
+                                        <nb-select [(selected)]="c.compared" [placeholder]="_subOptions[c.compared]||''" (selectedChange)="elem.changes=true" fullWidth>
+                                            <nb-option *ngFor="let o of _subOptions | keyvalue" [value]=o.key>{{o.value}}</nb-option>
+                                        </nb-select>
+                                        <div class="anchor"><label>Condition</label></div>
+                                    </div>
 
 
                                     <button nbButton status="danger" [disabled]="elem.conditions.length<2" (click)="deleteCondition(elem, c)"><nb-icon icon="trash-2"></nb-icon></button>

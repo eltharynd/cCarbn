@@ -264,14 +264,8 @@ export class ElementsComponent implements OnInit {
     bit: 'Bits cheered',
     user: 'User',
     redeem: 'Channel redemption',
-  }
-  _userTypes = {
-    mod: 'Mod',
-    new: 'New',
-    streamer: 'Streamer',
-    sub: 'Sub',
-    vip: 'VIP',
-    welcome: 'Just joined'
+    follow: 'Follow',
+    subscription: 'Subscription'
   }
 
   _operators = {
@@ -293,12 +287,32 @@ export class ElementsComponent implements OnInit {
     redemption: {
       redeemed: 'redeemed'
     },
+    subscription: {
+      sub: 'User subscribed',
+      subEnd: 'User sub ended',
+      gift: 'User gifted a sub',
+      subMessage: 'User announces sub/resub'
+    },
     all : () => Object.assign({}, 
       this._operators.comparison, 
       this._operators.user, 
       this._operators.userType, 
       this._operators.redemption
       )
+  }
+
+  _userTypes = {
+    mod: 'Mod',
+    new: 'New',
+    streamer: 'Streamer',
+    sub: 'Sub',
+    vip: 'VIP',
+    welcome: 'Just joined'
+  }
+  _subOptions = {
+    any: 'Any',
+    real: 'Only real',
+    gifted: 'Only gifted'
   }
   
   _POSITION = Object.keys(POSITION)
@@ -341,6 +355,10 @@ export class ElementsComponent implements OnInit {
       "$user_id": "The user that triggered the event",
 
       "$bits": "The amount of bits cheered",
+
+      "$tier": "The subscription tier",
+      "$is_gift": "Subscription was a gift (true/false)",
+
       //"$gifted": "The amount of gifted subs",
 
       //"$raider": "The display name of user that raided",

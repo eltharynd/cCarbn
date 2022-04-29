@@ -62,7 +62,7 @@ export class EventsService {
       let ignore = false
       for(let c of element.conditions) {
         if(c.type === 'bit') {
-          if(data.type !== 'Cheer') {
+          if(data.type === 'Cheer') {
             let howMuch = 0
             try { howMuch = parseInt(c.compared) } catch(e) { ignore = true; continue; }
             switch (c.operator) {
@@ -82,7 +82,9 @@ export class EventsService {
                 ignore = +data.bits !== +howMuch
                 break
             }
-            continue
+          } else {
+            ignore = true
+            break
           }
         } else if(c.type === 'user') {
           switch (c.operator) {
@@ -100,9 +102,39 @@ export class EventsService {
           //TODO implement
           if(data.type !== 'Redemption Add') {
             ignore = true
-            continue
+            break
           }
           ignore = c.compared.id !== data.reward.id
+        } else if(c.type === 'follow') {
+          if(data.type !== 'Follow') {
+            ignore = true
+            break
+          }
+        } else if(c.type === 'subscription') {
+          switch (c.operator) {
+            case 'sub':
+              if(data.type !== 'Subscription') {
+                ignore = true
+                break
+              }
+              if(c.operator === 'sub')
+                ignore = (c.compared === 'real' && data.is_gift) ||
+                          (c.compared === 'gifted' && !data.is_gift)
+              break
+            case 'subEnd':
+              if(data.type !== 'Subscription End') ignore = true
+              break
+            case 'gift':
+              if(data.type !== 'Subscription Gift') ignore = true
+              break
+            case 'subMessage':
+              if(data.type !== 'Subscription Message') ignore = true
+              break
+            default:
+              ignore = true
+              break
+          }
+          if(ignore) break
         }
       }
 
@@ -152,12 +184,14 @@ export class EventsService {
   } 
 
   private populateText(text: string, event: any) {
-    console.log(event)
-    return event.text
+    return text
       .replace(/\$user_id/g, event.last_contribution ? event.last_contribution.user_login :  event.user_login)
       .replace(/\$user/g, event.last_contribution ? event.last_contribution.user_name :  event.user_name)
 
       .replace(/\$bits/g, event.bits)
+
+      .replace(/\$tier/g, event.tier)
+      .replace(/\$is_gift/g, event.is_gift ? 'true' : 'false')
   }
 
 }
