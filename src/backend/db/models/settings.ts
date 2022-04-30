@@ -120,27 +120,11 @@ const SETTINGS_TEMPLATE = {
   chatbot: {
     enabled: false,
     categories: {
+      self: {
+        enabled: false,
+      },
       common: {
         enabled: false
-      },
-      everyone: {
-        enabled: false,
-        timeout: {
-          enabled: true,
-          command: 'poof',
-          streamer: {
-            reply: true,
-            message: `/me @user Sure! Like I'm gonna timeout the streamer...`
-          },
-          self: {
-            reply: true,
-            message: `/me @user Sure! Like I'm gonna timeout myself...`
-          },
-          mod: {
-            reply: true,
-            message: `/me @user You're a mod ffs... What'd you expect?`
-          }
-        }
       },
       pokemon: {
         enabled: false

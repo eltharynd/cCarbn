@@ -21,12 +21,12 @@ export class SidebarComponent {
       icon: {icon: 'twitch', pack:'fab'},
       children: [
         {
-          title: 'API',
+          title: 'API & Connections',
           icon: {icon: 'link', pack: 'fa'},
           link: 'twitch/api',
         },
         {
-          title: 'Browser Source',
+          title: 'Elements & Alerts',
           icon: {icon: 'film', pack: 'eva'},
           link: 'twitch/elements',
         },
@@ -37,7 +37,7 @@ export class SidebarComponent {
           target: '_blank',
         },
         {
-          title: 'Chatbot',
+          title: 'Chat Commands',
           icon: {icon: 'swatchbook', pack: 'fa'},
           link: 'twitch/chatbot',
         }
@@ -48,7 +48,7 @@ export class SidebarComponent {
       icon: {icon: 'discord', pack:'fab'},
       children: [
         {
-          title: 'API',
+          title: 'API & Connections',
           icon: {icon: 'link', pack: 'fa'},
           link: 'discord/api',
         },

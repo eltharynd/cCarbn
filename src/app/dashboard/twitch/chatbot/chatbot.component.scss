@@ -21,6 +21,8 @@ nb-card:first-child > nb-list-item {
 }
 
 
+
+
 nb-accordion-item-header {
   display: flex;
   align-items: center;
@@ -40,9 +42,6 @@ nb-accordion-item-header {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  .usage {
-
-  }
   .description {
     color: rgba(white, .4);
     font-style: italic;

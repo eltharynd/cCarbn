@@ -1,24 +1,10 @@
 <nb-layout>
   <nb-layout-column *ngIf="listeners.settings">
 
-  
-
-    <nb-card>
-      <nb-list>
-        <nb-list-item   *ngFor="let k of object.keys(listeners.settings.chatbot.categories)" 
-                        [class.invisible]="k==='storeable'">
-          <nb-toggle  (change)="listeners.toggleCategory(k)" 
-                      [(checked)]="listeners.settings.chatbot.categories[k].enabled" 
-                      [disabled]="data.busy || !listeners.settings.chatbot.enabled || k==='storeable'"
-                      >
-            {{k}}
-          </nb-toggle><br>
-        </nb-list-item>
-      </nb-list>
-    </nb-card>
-
+    <!-- STOREABLE -->
     <nb-accordion class="centered">
       <nb-accordion-item>
+
         <nb-accordion-item-header>
           <nb-toggle [(checked)]="listeners.settings.chatbot.categories.storeable.enabled"
                       (click)="$event.stopPropagation()"
@@ -30,9 +16,8 @@
             <span class="text-description">Use these functionalities to create your own commands</span>
           </div>
         </nb-accordion-item-header>
+
         <nb-accordion-item-body>
-
-
           <div class="composed-title storeable-header">
             <strong class="text-title-sub">Usage</strong>
             <span class="text-description-sub">Every command here can start with any of the following: !cmd !cmds !command !commands</span>
@@ -73,9 +58,95 @@
               <div class="description">{{keyword.description}}</div>
             </nb-list-item>
           </nb-list>
-
-
         </nb-accordion-item-body>
+
+      </nb-accordion-item>
+    </nb-accordion>
+
+    
+    <!-- POKÉMON -->
+    <nb-accordion class="centered">
+      <nb-accordion-item>
+
+        <nb-accordion-item-header>
+          <nb-toggle [(checked)]="listeners.settings.chatbot.categories.common.enabled"
+                      (click)="$event.stopPropagation()"
+                      (change)="listeners.toggleCategory('common')" 
+                      [disabled]="data.busy || !listeners.settings.chatbot.enabled"
+                      ></nb-toggle>
+          <div class="composed-title">
+            <strong class="text-title">POKÉMON COMMANDS</strong>
+            <span class="text-description">A collection of commands useful for pokemon trainers</span>
+          </div>
+        </nb-accordion-item-header>
+
+        <nb-accordion-item-body class="unpadded">
+          <nb-list>
+            <nb-list-item class="usage-description" *ngFor="let command of _pokemon.commands">
+              <div class="usage">{{command.command}}</div>
+              <div class="description">{{command.description}}</div>
+            </nb-list-item>
+          </nb-list>
+        </nb-accordion-item-body>
+
+      </nb-accordion-item>
+    </nb-accordion>
+
+
+    <!-- COMMON -->
+    <nb-accordion class="centered">
+      <nb-accordion-item>
+
+        <nb-accordion-item-header>
+          <nb-toggle [(checked)]="listeners.settings.chatbot.categories.common.enabled"
+                      (click)="$event.stopPropagation()"
+                      (change)="listeners.toggleCategory('common')" 
+                      [disabled]="data.busy || !listeners.settings.chatbot.enabled"
+                      ></nb-toggle>
+          <div class="composed-title">
+            <strong class="text-title">COMMON COMMANDS</strong>
+            <span class="text-description">A collection of common twitch meta commands</span>
+          </div>
+        </nb-accordion-item-header>
+
+        <nb-accordion-item-body class="unpadded">
+          <nb-list>
+            <nb-list-item class="usage-description" *ngFor="let command of _common.commands">
+              <div class="usage">{{command.command}}</div>
+              <div class="description">{{command.description}}</div>
+            </nb-list-item>
+          </nb-list>
+        </nb-accordion-item-body>
+
+      </nb-accordion-item>
+    </nb-accordion>
+
+
+    <!-- SELF -->
+    <nb-accordion class="centered">
+      <nb-accordion-item>
+
+        <nb-accordion-item-header>
+          <nb-toggle [(checked)]="listeners.settings.chatbot.categories.self.enabled"
+                      (click)="$event.stopPropagation()"
+                      (change)="listeners.toggleCategory('self')" 
+                      [disabled]="data.busy || !listeners.settings.chatbot.enabled"
+                      ></nb-toggle>
+          <div class="composed-title">
+            <strong class="text-title">SELF COMMANDS</strong>
+            <span class="text-description">A collection of commands that cCarbn does on its own</span>
+          </div>
+        </nb-accordion-item-header>
+
+        <nb-accordion-item-body class="unpadded">
+          <nb-list>
+            <nb-list-item class="usage-description" *ngFor="let command of _self.commands">
+              <div class="usage">{{command.command}}</div>
+              <div class="description">{{command.description}}</div>
+            </nb-list-item>
+          </nb-list>
+        </nb-accordion-item-body>
+
       </nb-accordion-item>
     </nb-accordion>
 

@@ -67,9 +67,6 @@ $nb-themes: nb-register-theme((
   
 ), ccarbn, cosmic);
 
-//$inner-element-background: #2e4d7c38;
-//$inner-element-header-background: #5b8cd54f;
-//$inner-element-border: #5b8cd5;
 $inner-element-background: #8d54f733;
 $inner-element-background-light: #a16eff63;
 $inner-element-border: #a16eff;
@@ -100,9 +97,15 @@ $inner-element-color: #cbafff;
 }
 
 
-
 nb-accordion-item:nth-child(2n) {
   background-color: var(--background-basic-color-2);
+}
+
+nb-accordion-item-body.unpadded > div > div {
+  padding: 0;
+  > nb-list > nb-list-item:first-child {
+    border-top:0
+  }
 }
 
 nb-select.size-medium:not(.full-width) {
@@ -112,6 +115,7 @@ nb-select.size-medium:not(.full-width) {
 .centered {
   max-width: 900px;
   margin: auto;
+  margin-bottom: 2rem;
 }
 
 //Workaround until they fix https://github.com/akveo/nebular/issues/2119

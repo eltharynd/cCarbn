@@ -323,3 +323,29 @@ export class Storeable extends Message {
     }
   }
 }
+
+
+/* private justice = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
+  if (/!justice/.test(message)) {
+    if (this._timeout(20)) return
+    this.client.say(channel, `I have brought peace, freedom, justice, and security to my new empire.`)
+    setTimeout(() => {
+      this.client.say(channel, `Your new empire?`)
+      setTimeout(() => {
+        this.client.say(channel, `Don't make me kill you.`)
+        setTimeout(() => {
+          this.client.say(channel, `Anakin, my allegiance is to the Republic, to Democracy!`)
+          setTimeout(() => {
+            this.client.say(channel, `If you are not with me, then you are my enemy.`)
+            setTimeout(() => {
+              this.client.say(channel, `Only a Sith deals in absolutes. I will do what I must.`)
+              setTimeout(() => {
+                this.client.say(channel, `You will try.`)
+              }, 3500)
+            }, 2500)
+          }, 2500)
+        }, 2500)
+      }, 1500)
+    }, 7000)
+  }
+} */

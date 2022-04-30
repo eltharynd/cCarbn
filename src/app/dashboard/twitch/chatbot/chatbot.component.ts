@@ -84,6 +84,36 @@ export class ChatbotComponent {
     ]
   }
 
+  _pokemon = {
+    commands: [
+      { command: `!evo <pokemon>`, description: `Displays the evolution line of the <pokemon>.`},
+      { command: `!weak <pokemon>`, description: `Displays the <pokemon> types effectiveness.`},
+      { command: `!move <move>`, description: `Displays the <move>'s details. `},
+      { command: `!nature <nature>`, description: `Displays what stats are changed by <nature>.`},
+      { command: `!ability <ability>`, description: `Displays the <ability>'s in-game description.`},
+      { command: `!ability+ <ability>`, description: `Displays the <ability>'s effect details.`}
+    ]
+  }
+
+  _common = {
+    commands: [
+      { command: `<any mention of ccarbn>`, description: `cCarbn answers the greeting`},
+      { command: `F`, description: `cCarbn "F"s too`},
+      { command: `^`, description: `cCarbn "^"s too`}
+    ]
+  }
+
+  _self = {
+    commands: [
+      { command: `!hug <user>`, description: `Hugs the user`},
+      { command: `!tuck <user>`, description: `Tucks the user`},
+      { command: `!time <timezone or abbreviation>`, description: `Returns the time in that specific timezone (Europe/Bern, CET, EST, PST)`},
+      { command: `!8ball <question>`, description: `Peers into the future to answer your question...`},
+      { command: `!dadjokes`, description: `Attemps to tell a dad joke from a public API.`},
+      { command: `!darkjoke`, description: `Attempts to tell a dark joke from a public API.\nWARNING: can be offensive!`},
+    ]
+  }
+
   constructor(public listeners: ListenersService, public data: DataService, public auth: AuthGuard) {}
 
 }

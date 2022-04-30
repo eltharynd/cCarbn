@@ -9,23 +9,23 @@ export class Pokemon extends Message {
   }
 
   private evolution = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
-    if (/^!evo [\w\s]+/i.test(message) || /^!evol [\w\s]+/i.test(message) || /^!evolution [\w\s]+/i.test(message) || /^!evolve [\w\s]+/i.test(message)) {
+    if (/^!evo [\w\s]+/i.test(message)) {
       let pokemon = message.replace(/^!\w+ /, '').toLowerCase()
       let data
 
       if(pokemon === 'rockruff' || pokemon === ' lycanroc'){
-        this.client.say(channel, `/me listen, it's compilcated... just check this shit out https://bulbapedia.bulbagarden.net/wiki/Rockruff_(Pok%C3%A9mon)#Evolution`)
+        this.client.say(channel, `/me listen, it's complicated... just check this stuff out https://bulbapedia.bulbagarden.net/wiki/Rockruff_(Pok%C3%A9mon)#Evolution`)
         return
       }
 
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/pokemon-species/${pokemon.replace(' ', '-')}`)).data
       } catch (error) {
-        this.client.say(channel, `/me Sorry I couldn't find that pokemon... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that pokemon... Try checking your spelling...`)
         return
       }
       if (!data || !data.id) {
-        this.client.say(channel, `/me Sorry I couldn't find that pokemon... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that pokemon... Try checking your spelling...`)
         return
       }
 
@@ -101,7 +101,7 @@ export class Pokemon extends Message {
         `/me ${text}`.replace(/\n/g, '')
       )
     } else if (/^!evo/i.test(message)) {
-      this.client.say(channel, `/me You didn't specify a pokemon to look up for... You piece of shit...`)
+      this.client.say(channel, `/me You didn't specify a pokemon to look up for...`)
     }
   }
 
@@ -119,11 +119,11 @@ export class Pokemon extends Message {
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.replace(' ', '-')}`)).data
       } catch (error) {
-        this.client.say(channel, `/me Sorry I couldn't find that pokemon... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that pokemon... Try checking your spelling...`)
         return
       }
       if (!data || !data.types) {
-        this.client.say(channel, `/me Sorry I couldn't find that pokemon... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that pokemon... Try checking your spelling...`)
         return
       }
 
@@ -178,14 +178,14 @@ export class Pokemon extends Message {
             `.replace(/\n/g, '')
       )
     } else if (/^!weak/i.test(message)) {
-      this.client.say(channel, `/me You didn't specify a pokemon to look up for... You piece of shit...`)
+      this.client.say(channel, `/me You didn't specify a pokemon to look up for...`)
     }
   }
 
   private move = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!move [\w\s]+/i.test(message)) {
       if (filterParameters(message).length == 0) {
-        this.client.say(channel, `/me You didn't specify a move to look up for... You piece of shit...`)
+        this.client.say(channel, `/me You didn't specify a move to look up for...`)
         return
       }
 
@@ -195,12 +195,12 @@ export class Pokemon extends Message {
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/move/${move.replace(' ', '-')}`)).data
       } catch (error) {
-        this.client.say(channel, `/me Sorry I couldn't find that move... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that move... Try checking your spelling...`)
         return
       }
 
       if (!data || !data.type) {
-        this.client.say(channel, `/me Sorry I couldn't find that move... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that move... Try checking your spelling...`)
         return
       }
 
@@ -213,14 +213,14 @@ export class Pokemon extends Message {
         }`.replace(/\n/g, '')
       )
     } else if (/^!move/i.test(message)) {
-      this.client.say(channel, `/me You didn't specify a move to look up for... You piece of shit...`)
+      this.client.say(channel, `/me You didn't specify a move to look up for...`)
     }
   }
 
   private nature = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!nature [\w\s]+/i.test(message)) {
       if (filterParameters(message).length == 0) {
-        this.client.say(channel, `/me You didn't specify a move to look up for... You piece of shit...`)
+        this.client.say(channel, `/me You didn't specify a move to look up for...`)
         return
       }
 
@@ -230,12 +230,12 @@ export class Pokemon extends Message {
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/nature/${nature.replace(' ', '-')}`)).data
       } catch (error) {
-        this.client.say(channel, `/me Sorry I couldn't find that nature... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that nature... Try checking your spelling...`)
         return
       }
 
       if (!data || !data.decreased_stat) {
-        this.client.say(channel, `/me Sorry I couldn't find that nature... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that nature... Try checking your spelling...`)
         return
       }
 
@@ -247,14 +247,14 @@ export class Pokemon extends Message {
         )
       )
     } else if (/^!nature/i.test(message)) {
-      this.client.say(channel, `/me You didn't specify a nature to look up for... You piece of shit...`)
+      this.client.say(channel, `/me You didn't specify a nature to look up for...`)
     }
   }
 
   private ability = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!ability [\w\s]+/i.test(message)) {
       if (filterParameters(message).length == 0) {
-        this.client.say(channel, `/me You didn't specify a move to look up for... You piece of shit...`)
+        this.client.say(channel, `/me You didn't specify a move to look up for...`)
         return
       }
 
@@ -264,12 +264,12 @@ export class Pokemon extends Message {
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/ability/${ability.replace(' ', '-')}`)).data
       } catch (error) {
-        this.client.say(channel, `/me Sorry I couldn't find that ability... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that ability... Try checking your spelling...`)
         return
       }
 
       if (!data || !data.flavor_text_entries) {
-        this.client.say(channel, `/me Sorry I couldn't find that ability... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that ability... Try checking your spelling...`)
         return
       }
 
@@ -286,11 +286,11 @@ export class Pokemon extends Message {
         `/me ${ability.substring(0, 1).toUpperCase()}${ability.substring(1)} ability: ${data.flavor_text_entries[0].flavor_text.replace(
           /\n/g,
           ' '
-        )}. To have more detailed info use '!ability+ ${ability}'`.replace(/\n/g, '')
+        )}.`.replace(/\n/g, '')
       )
     } else if (/^!ability\+ [\w\s]+/i.test(message)) {
       if (filterParameters(message).length == 0) {
-        this.client.say(channel, `/me You didn't specify a move to look up for... You piece of shit...`)
+        this.client.say(channel, `/me You didn't specify a move to look up for...`)
         return
       }
 
@@ -300,12 +300,12 @@ export class Pokemon extends Message {
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/ability/${ability.replace(' ', '-')}`)).data
       } catch (error) {
-        this.client.say(channel, `/me Sorry I couldn't find that ability... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that ability... Try checking your spelling...`)
         return
       }
 
       if (!data || !data.flavor_text_entries) {
-        this.client.say(channel, `/me Sorry I couldn't find that ability... check your spelling bitch!`)
+        this.client.say(channel, `/me Sorry I couldn't find that ability... Try checking your spelling...`)
         return
       }
 
@@ -318,7 +318,7 @@ export class Pokemon extends Message {
       }
       this.client.say(channel, `/me ${text}`.replace(/\n/g, ''))
     } else if (/^!ability/i.test(message)) {
-      this.client.say(channel, `/me You didn't specify a ability to look up for... You piece of shit...`)
+      this.client.say(channel, `/me You didn't specify a ability to look up for...`)
     }
   }
   
