@@ -17,7 +17,11 @@
                         <nb-list-item>
                             Browser source url:
                             &nbsp;
-                            <a [href]="viewport.url" target="_blank">{{viewport.url}}</a>
+                            <div class="streamer-mode" [class.on]="!showBrowserSource">
+                                <nb-icon *ngIf="!showBrowserSource" (click)="showBrowserSource=true" icon="eye"></nb-icon>
+                                <a [href]="viewport.url" target="_blank" class>{{viewport.url}}</a>
+                            </div>
+                            
                         </nb-list-item>
                         <nb-list-item>
                             Browser source size:

@@ -14,6 +14,7 @@ import { KeyValue } from '@angular/common'
 })
 export class ElementsComponent implements OnInit {
 
+  showBrowserSource = false
   viewport = {
     url: `${environment?.production ? 'https://cCarbn.io/' : 'http://localhost:4200/'}browsersource/${this.auth.currentUser?._id}`,
     width: 1920,
