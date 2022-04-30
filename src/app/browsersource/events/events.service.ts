@@ -206,8 +206,8 @@ export class EventsService {
       .replace(/\$raid_id/g, event.to_broadcaster_user_login)
 
 
-      .replace(/\$banned_by/g, event.moderator_user_name)
-      .replace(/\$banned_by_id/g, event.moderator_user_login)
+      .replace(/\$ban_by/g, event.moderator_user_name)
+      .replace(/\$ban_by_id/g, event.moderator_user_login)
       .replace(/\$reason/g, event.reason ? event.reason : 'Not specified.')
       .replace(/\$duration/g, event.left > 60*1000 ? 
                                 `${Math.floor(event.left/600)/100} minutes` :

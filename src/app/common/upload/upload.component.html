@@ -1,6 +1,6 @@
 <div class="form-group" [class.disabled]="disabled" [class.busy]="busy" [style.width]="width" [style.height]="height">
     <div *ngIf="url" class="img" [ngStyle]="{ 'background-image': 'url(' + url + '#)'}"></div>
-    <label for="file" [class.error]="feedbackMessage"><span>{{feedbackMessage ? feedbackMessage : displayTextOverride ? displayTextOverride : 'DRAG HERE OR CLICK TO UPLOAD'}}</span></label>
+    <label for="file" [class.error]="feedbackMessage"><span>{{feedbackMessage ? feedbackMessage : displayTextOverride ? displayTextOverride : 'DRAG OR CLICK HERE\nTO UPLOAD'}}</span></label>
     <div [id]="'overlay' + rnd" class="overlay">&nbsp;</div>
     <input type="file"
         [id]="'upload-' + rnd"

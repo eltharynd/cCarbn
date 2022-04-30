@@ -35,7 +35,7 @@
                                 </nb-list-item>
                                 <nb-list-item>
                                     <div>
-                                        In order for cCarbn to control your scenes/sources in OBS you must install the latest <a href="https://github.com/obsproject/obs-websocket/releases" target="_blank">OBS-websocket plugin</a> (pre-release version is fine). Then set your browser source permissions to <strong>Advanced</strong> or higher
+                                        In order for cCarbn to control your scenes/sources in OBS you must install the latest <a href="https://github.com/obsproject/obs-websocket/releases" target="_blank">OBS-websocket plugin</a> (version 5.0.0 or higher). Then set your browser source permissions to <strong>Advanced</strong> or higher
                                     </div>
                                 </nb-list-item>
                                 <nb-list-item>
@@ -55,7 +55,7 @@
         </nb-card>
 
         <nb-accordion multi>
-            <nb-accordion-item *ngFor="let elem of elements" [expanded]="elem.expanded" class="element-entry">
+            <nb-accordion-item *ngFor="let elem of elements" [expanded]="elem.expanded">
                 
                 <nb-accordion-item-header class="element-header">
                     <button nbButton status="primary" nbTooltip="Send test to browser source" nbTooltipStatus="primary" (click)="sendTestEvent($event, elem)"><nb-icon icon="cast"></nb-icon></button>
@@ -166,7 +166,7 @@
 
                         <nb-card-body class="events-body">
                             <nb-tabset fullWidth>
-                                <nb-tab *ngFor="let ev of elem.events; let i = index" [tabTitle]="ev.type">
+                                <nb-tab *ngFor="let ev of elem.events; let i = index" [tabTitle]="ev.type" [active]="elem.activeTab===i">
 
                                     <div #videoaudio *ngIf="ev.type==='video' || ev.type==='audio'" class="video-container">
                                         
@@ -315,7 +315,7 @@
                                     <div #chat *ngIf="ev.type==='chat'" class="chat-container">
                                         <textarea nbInput type="text" (change)="elem.changes=true" placeholder="Chat message. You can type the keywords below and they will be replaced accordingly." [(ngModel)]="ev.text" fullWidth></textarea>
                                         <div class="keywords">
-                                            <div *ngFor="let keyword of _chat.keywords | keyvalue: originalOrder">
+                                            <div *ngFor="let keyword of _chat.keywords | keyvalue: originalOrder;">
                                                 <div>{{keyword.key}}:</div>
                                                 <div>{{keyword.value}}</div>
                                             </div>

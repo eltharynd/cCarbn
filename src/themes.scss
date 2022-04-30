@@ -1,33 +1,87 @@
-@import '~@nebular/theme/styles/theming';
-@import '~@nebular/theme/styles/themes/dark';
+@forward '@nebular/theme/styles/theming';
+@use '@nebular/theme/styles/theming' as *;
+@use '@nebular/theme/styles/themes/cosmic';
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+$nb-enable-css-custom-properties: true;
 
 $nb-themes: nb-register-theme((
 
+  font-family-primary: 'Poppins, sans-serif',
+  font-family-secondary: 'Poppins, sans-serif',
+
+/*   text-basic-color: red,
+  text-alternate-color: red,
+  text-control-color: red,
+  text-disabled-color: red,
+  text-hint-color: red, */
+
   // add your variables here like:
 
-  // color-primary-100: #f2f6ff,
-  // color-primary-200: #d9e4ff,
-  // color-primary-300: #a6c1ff,
-  // color-primary-400: #598bff,
-  // color-primary-500: #3366ff,
-  // color-primary-600: #274bdb,
-  // color-primary-700: #1a34b8,
-  // color-primary-800: #102694,
-  // color-primary-900: #091c7a,
+/*   color-basic-100: white,
+  color-basic-200: #eefafc,
+  color-basic-300: #e8f5fa,
+  color-basic-400: #d6e6f2,
+  color-basic-500: #c7dbeb,
+  color-basic-600: #a9c0db,
+  color-basic-700: #4f969e,
+  color-basic-800: #336a77,
+  color-basic-900: #295c66,
+  color-basic-1000: #244555,
+  color-basic-1100: #121a2b, */
 
+/*   background-basic-color-1: color-basic-700,
+  background-basic-color-2: color-basic-800,
+  background-basic-color-3: color-basic-900,
+  background-basic-color-4: color-basic-100,
+  border-basic-color-1: color-basic-700,
+  border-basic-color-2: color-basic-800,
+  border-basic-color-3: color-basic-900,
+  border-basic-color-4: color-basic-1000,
+  border-basic-color-5: color-basic-1100, */
+
+/*   shadow: 0 0.5rem 1rem 0 rgba(25, 30, 51, 0.24), */
+
+/*   text-disabled-color: color-basic-600, */
+
+/*   color-primary-100: #f2f6ff,
+  color-primary-200: #d9e4ff,
+  color-primary-300: #a6c1ff,
+  color-primary-400: #598bff,
+  color-primary-500: #3366ff,
+  color-primary-600: #274bdb,
+  color-primary-700: #1a34b8,
+  color-primary-800: #102694,
+  color-primary-900: #091c7a, */
+
+
+/*   card-header-primary-background-color: #3366ff,
+  card-header-info-background-color: #3366ff, */
+
+  
   select-outline-small-padding: 0.4375rem 1rem,
   select-min-width: 100px,
   select-small-max-width: 100px,
   select-medium-max-width: 180px,
-  //input-medium-max-width: 10rem,
   
+), ccarbn, cosmic);
 
-), dark, dark);
+//$inner-element-background: #2e4d7c38;
+//$inner-element-header-background: #5b8cd54f;
+//$inner-element-border: #5b8cd5;
+$inner-element-background: #8d54f733;
+$inner-element-background-light: #a16eff63;
+$inner-element-border: #a16eff;
+$inner-element-color: #cbafff;
+
+nb-accordion-item:nth-child(2n) {
+  background-color: var(--background-basic-color-2);
+}
 
 nb-select.size-medium:not(.full-width) {
   min-width: 180px;
 }
-
 
 //Workaround until they fix https://github.com/akveo/nebular/issues/2119
 ::-webkit-scrollbar {

@@ -127,10 +127,16 @@ export class ElementsComponent implements OnInit {
         return element._id
       } else {
         element.error = true
+        setTimeout(() => {
+          element.error = false
+        }, 3000)
         return false
       }
     } else {
       element.error = true
+      setTimeout(() => {
+        element.error = false
+      }, 3000)
       return false
     }
   }
@@ -138,6 +144,9 @@ export class ElementsComponent implements OnInit {
     if(element._id) 
       if(!await this.data.delete(`elements/${this.auth.currentUser?._id}/${element._id}`)) {
         element.error = true
+        setTimeout(() => {
+          element.error = false
+        }, 3000)
         return false
       }
     
@@ -166,19 +175,17 @@ export class ElementsComponent implements OnInit {
     element.events.push({
       type: type
     })
-    setTimeout(() => {
-      this.selectedEventType = null
-      element.changes = true
-    }, 100)
+
+    this.selectedEventType = null
+    element.activeTab = element.events.length-1
+    element.changes = true
   }
   deleteEvent(element: _element, index) {
     element.events.splice(index, 1)
     if(element.events.length>0) delete element.events[0].withPrevious
 
-    setTimeout(() => {
-      this.selectedEventType = null
-      element.changes = true
-    }, 100)
+    this.selectedEventType = null
+    element.changes = true
   }
 
 
@@ -382,8 +389,8 @@ export class ElementsComponent implements OnInit {
       "$raid": "The user being raided",
       "$raid_id": "The userId being raided",
 
-      "$banned_by": "The display name of the mod that banned/unbanned",
-      "$banned_by_id": "The mod that banned/unbanned",
+      "$ban_by": "The display name of the mod that banned/unbanned",
+      "$ban_by_id": "The mod that banned/unbanned",
       "$reason": "The reason for the ban",
       "$duration": "The time left for timeout",
     }
@@ -411,6 +418,7 @@ export interface _element {
   expanded?: any
   select?: boolean
   upload?: boolean
+  activeTab?: number
 }
 
 const cleanElement = (element: _element) => {
@@ -421,6 +429,7 @@ const cleanElement = (element: _element) => {
   delete clone.expanded
   delete clone.select
   delete clone.upload
+  delete clone.addedTab
   return clone
 }
 

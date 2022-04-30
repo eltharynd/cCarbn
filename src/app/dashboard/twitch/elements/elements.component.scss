@@ -1,3 +1,5 @@
+@import "../../../../themes.scss";
+
 nb-card,
 nb-accordion {
     max-width: 900px;
@@ -58,8 +60,7 @@ input {
     margin-left: 1rem;
     padding-left: 1rem;
     padding-right: 3rem;
-    //border-left: 1px solid gray;
-
+    
     > * {
         color: rgb(226, 226, 226);
         > strong {
@@ -68,12 +69,10 @@ input {
         }
     }
 }
-.element-entry:nth-child(2n) {
-    background-color: #2e3750;
-}
+
 
 .element-card {
-    border-color: #5b8cd5;
+    border-color: $inner-element-border;
 }
 
 .conditions-header {
@@ -87,23 +86,28 @@ input {
             width: 100%;
             justify-content: center;
             padding-top: 1.4rem;
-            background-color: #5b8cd54f;
-            border-top-color: #5b8cd5;
+            border-color: $inner-element-border;
+            background-color: $inner-element-background-light;
             > * {
                 margin-left: .5rem;
                 margin-right: .5rem;
             }
         }
+        > nb-list-item.conditions-entry:nth-last-child(2) {
+            border: 0;
+        }
         > nb-list-item:last-child {
             padding-top: 1.4rem;
-            background-color: #2e4d7c38;
+            background-color: $inner-element-background;
+            border-top: 1px solid $inner-element-border;
+            border-bottom: 0
         }
     }
 }
 
 
 .events-body {
-    background-color: #2e4d7c38;
+    background-color: $inner-element-background;
     padding: 0;
 }
 .event-error {
@@ -116,8 +120,8 @@ input {
 .element-footer {
     display: flex;
     justify-content: space-between;
-    background-color: #5b8cd54f;
-    border-color: #5b8cd5;
+    background-color: $inner-element-background-light;
+    border-color: $inner-element-border;
     > *:nth-child(2) {
         margin-left: 1rem;
         margin-right: 1rem;
@@ -245,7 +249,7 @@ input {
         grid-template-columns: 1fr;
         > div {
             display: grid;
-            grid-template-columns: 1fr 3fr;
+            grid-template-columns: 1fr 2fr;
             > div {
                 padding-right: 0.5rem;
                 color: rgba(white, 0.8);
@@ -253,13 +257,21 @@ input {
             > div:first-child {
                 font-weight: bold;
                 color: white;
+                text-align: right;
+                padding-right: 1rem;
             }
-            margin-bottom: 0.5rem;
+            margin-bottom: 2rem;
         }
     }
     @media only screen and (min-width: 825px) {
         > .keywords {
             grid-template-columns: 1fr 1fr;
+            > div:nth-child(1n) {
+                margin-right: 0.1rem;
+            }
+            > div:nth-child(2n) {
+                margin-left: 0.1rem;
+            }
         }
     }
 }

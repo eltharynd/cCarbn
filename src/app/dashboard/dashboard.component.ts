@@ -1,5 +1,4 @@
 import { Component } from "@angular/core"
-import { NbThemeService } from "@nebular/theme"
 
 @Component({
   template: `

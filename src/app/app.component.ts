@@ -5,7 +5,7 @@ import { DataService } from './shared/data.service'
 
 @Component({
   selector: 'app-root',
-  template: `<div><router-outlet></router-outlet></div>`
+  template: `<router-outlet></router-outlet>`
 })
 export class AppComponent {
   title = 'cCarbn'

@@ -8,7 +8,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 @NgModule({
   imports: [
     CommonModule,
-    NbThemeModule.forRoot({ name: 'dark' }),
+    NbThemeModule.forRoot({ name: 'ccarbn' }),
     NbSidebarModule.forRoot(),
     NbMenuModule.forRoot(),
     NbLayoutModule,
