@@ -72,7 +72,9 @@ $inner-element-background-light: #a16eff63;
 $inner-element-border: #a16eff;
 $inner-element-color: #cbafff;
 
-
+.card-header {
+  background-color: $inner-element-background-light;
+}
 
 .composed-title {
   display: flex;
