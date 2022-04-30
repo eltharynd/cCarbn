@@ -1,24 +1,14 @@
 # cCarbn
 
-cCarbn aims to be a powerful all-in-one Twitch tool to connect **EVERYTHING** a streamer needs. This includes discord live notifications, a chatbot, configurable Browser Sources, etc...
+cCarbn aims to be a powerful all-in-one Twitch tool to connect **EVERYTHING** a streamer needs.
 
-In other words it's goal is to allow content creators to develop custom commands that are currently not possible with alternatives such as nightbot, as well as to integrate that with events not capturable via chat (hype trains and such) and to allow the creation of dynamic single page web apps (through Angular) that can be controlled based on chat and/or events and can ultimately be used as Browser Sources in OBS and such.
+This includes a chatbot, configurable Browser Sources, discord live notifications etc...
+
+In other words its goal is to allow content creators to develop custom commands that are currently not possible with alternatives, as well as to integrate that with events not capturable via chat (hype trains and such) and to allow the creation of dynamic single page web apps (through Angular) that can be controlled based on chat and/or events and can ultimately be used as Browser Sources in OBS and such to create powerful alerts and viewer engagement tools.
 
 ## GETTING STARTED
 
-Just go to [ccarbn.io](https://ccarbn.io) and login with your twitch account.
-
-<br>
-<br>
-<br>
-
-# PLANNED ROADMAP
-
-- Finish the Twitch <-> BrowserSources integration
-- Finish the Twitch Chatbot integration
-- Discord Chatbot integration
-- After the main project is ready and user friendly I will also develop an elgato Stream Deck plugin for it.
-- After that's done I will build a one-click cloud installator for non-developers to use this as well, or at least the basic functionalities. This will be hosted on cCarbn's servers so that youdon't require a domain name and SSL certificate.
+Just go to [ccarbn.io](https://ccarbn.io), login with your twitch account and follow the instructions.
 
 <br>
 <br>
@@ -66,7 +56,7 @@ Install the libraries for the project (and the initialization script)
 npm install
 ```
 
-Then you can run the initialization script. 
+Then you can run the initialization script.
 
 ```bash
 tsc init.ts && node init.js
@@ -138,6 +128,4 @@ ng serve --prod
 
 # SETTING UP YOUR PRODUCTION ENVIRONMENT
 
-### NGINX PROXY
-
-TODO: write
+## To be written
