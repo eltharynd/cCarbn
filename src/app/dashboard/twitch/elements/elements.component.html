@@ -64,7 +64,7 @@
                     </div>
                     <div class="element-details">
                         <div *ngFor="let c of elem.conditions; let i = index" style="white-space: pre-line;">
-                            <strong>{{_conditionTypes[c.type]}}</strong> {{_operators.all()[c.operator]}} {{c.compared?.title ? c.compared.title : _userTypes.hasOwnProperty(c.compared+'') ? _userTypes[c.compared] : c.compared}}
+                            <strong>{{_conditionTypes[c.type]}}</strong> - {{_operators.all()[c.operator]}} {{c.compared?.title ? c.compared.title : _userTypes.hasOwnProperty(c.compared+'') ? _userTypes[c.compared] : c.compared}}
                             <strong *ngIf="i+1 < elem.conditions.length">&nbsp;AND&nbsp;</strong>
                         </div>
                     </div>

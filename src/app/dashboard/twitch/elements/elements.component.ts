@@ -318,7 +318,10 @@ export class ElementsComponent implements OnInit {
       this._operators.comparison, 
       this._operators.user, 
       this._operators.userType, 
-      this._operators.redemption
+      this._operators.redemption,
+      this._operators.subscription,
+      this._operators.raid,
+      this._operators.ban
       )
   }
 

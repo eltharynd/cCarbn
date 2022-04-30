@@ -44,7 +44,7 @@ export class Storeable extends Message {
         let edit = buffer.startsWith('edit') ? true : false
         buffer = buffer.replace('add ', '').replace('save ', '').replace('edit ', '')
 
-        let name: RegExpMatchArray | string = buffer.match(/^\!*\w+ /i)
+        let name: RegExpMatchArray|string = buffer.match(/^\!*\w+ /i)
         if (!name) {
           this.client.say(channel, `/me ${FORMAT_ERROR}`)
           return

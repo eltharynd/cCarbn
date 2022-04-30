@@ -1,0 +1,1 @@
+{"version":3,"file":"upload-usage.js","sourceRoot":"","sources":["../../../../backend/db/models/upload-usage.ts"],"names":[],"mappings":";;;AAAA,qCAAwC;AAE3B,QAAA,WAAW,GAAW,IAAI,iBAAM,CAAC;IAC5C,MAAM,EAAE,iBAAM,CAAC,KAAK,CAAC,QAAQ;IAC7B,MAAM,EAAE,MAAM;CACf,CAAC,CAAA;AACW,QAAA,WAAW,GAAG,IAAA,gBAAK,EAAC,aAAa,EAAE,mBAAW,CAAC,CAAA"}
