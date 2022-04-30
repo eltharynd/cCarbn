@@ -9,6 +9,7 @@ import { Settings } from './db/models/settings'
 import { Twitch } from './twitch/twitch'
 import { UserToken } from './db/models/tokens'
 import * as Mongoose from 'mongoose'
+import { Command } from './db/models/command'
 
 //@ts-ignore
 export const PORT: number = process.env.PORT || 3000
@@ -24,6 +25,16 @@ let startApp = async () => {
   await Mongo.connect()
 
   console.info('CONNECTING TO TWITCH...')
+
+  //MIGRATION. remove after first launch in production
+  let commands = await Command.find() 
+  for(let c of commands){
+    if(c.params) {
+      c.args = c.params
+      c.params = null
+    }
+    await c.save()
+  }
 
   await Twitch.init()
   let admin: any = await User.findOne({admin: true})

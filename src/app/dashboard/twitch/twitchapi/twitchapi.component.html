@@ -10,6 +10,9 @@
           <nb-toggle (change)="listeners.toggleListener(k)" [(checked)]="listeners.settings.api.listeners[k].enabled" 
           [disabled]="data.busy || !listeners.settings.api.enabled">{{k}}</nb-toggle>
         </nb-list-item>
+        <nb-list-item>
+          <nb-toggle [disabled]="data.busy" [(checked)]="listeners.settings.chatbot.enabled" (change)="listeners.toggleChatBot()">Chatbot</nb-toggle>
+        </nb-list-item>
       </nb-list>
     </nb-card>
     

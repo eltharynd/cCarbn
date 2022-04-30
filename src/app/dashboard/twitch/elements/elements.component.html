@@ -1,7 +1,7 @@
 <nb-layout>
     <nb-layout-column>
 
-        <nb-card class="global-card" status="primary">
+        <nb-card class="global-card centered" status="primary">
             <nb-card-header>
                 GLOBAL SETTINGS
             </nb-card-header>
@@ -54,7 +54,7 @@
             </nb-card-body>
         </nb-card>
 
-        <nb-accordion multi>
+        <nb-accordion class="centered" multi>
             <nb-accordion-item *ngFor="let elem of elements" [expanded]="elem.expanded">
                 
                 <nb-accordion-item-header class="element-header">
@@ -355,7 +355,7 @@
             </nb-accordion-item>
         </nb-accordion>
 
-        <nb-card class="add-element-card">
+        <nb-card class="add-element-card centered">
             <nb-card-body>
                 <button nbButton status="success" fullWidth (click)="addElement()">ADD NEW ELEMENT</button>
             </nb-card-body>

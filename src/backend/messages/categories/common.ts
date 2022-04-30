@@ -15,8 +15,7 @@ export class Common extends Message {
     { command: `^`, description: `cCarbn ^ too`},
     { command: `!hug <user>`, description: `Hugs the user`},
     { command: `!tuck <user>`, description: `Tucks the user`},
-
-    { command: ``, description: ``},
+    { command: `!time <timezone or abbreviation>`, description: `Returns the time in that specific timezone (Europe/Bern, CET, EST, PST)`}
   ]
 
   private greetings = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
@@ -79,24 +78,26 @@ export class Common extends Message {
     }
   }
 
-  
-  private cats = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
-    if (/!cat/i.test(message)) {
-      if (this._timeout(5)) return
-      let facts = (await axios.get(`https://cat-fact.herokuapp.com/facts`)).data
-      if (facts && facts.length > 0) 
-        this.client.say(channel, `/me ${facts[Math.floor(Math.random() * facts.length)].text}`)
-      else 
-        this.client.say(channel, `/me I'm trying to get some cool cat facts but this dudes aren't answering... I suppose that's what you get with free APIs`)
+  private time = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
+    if (/^!time [\w\/]+/i.test(message)) {
+      let par = message.replace(/^!time /i, '')
+      if(/pst/i.test(par) || /pt/i.test(par) || /pdt/i.test(par))
+        par = 'America/Los_Angeles'
+      let data: any
+      try {
+        data = (await axios.get(`http://worldtimeapi.org/api/timezone/${encodeURI(par).replace(/\//g, '%2F')}`)).data
+      } catch (e) {
+        this.client.say(channel, `/me I could not find that location...`)
+        return
+      }
+      if (data && data.abbreviation) {
+        this.client.say(channel, `/me Time in ${data.abbreviation} is ${data.datetime.slice(11, 16)}`)
+        return
+      } else if (data && data.length && data.length > 0) {
+        this.client.say(channel, `/me I've found multiple results... try one of the following: ${data[0]}, ${data[1]}, ${data[2]}, ...`)
+        return
+      }
     }
   }
 
-  private dogs = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
-    if (/!dog/i.test(message)) {
-      if (this._timeout(5)) return
-      let facts = (await axios.get(`https://dog-facts-api.herokuapp.com/api/v1/resources/dogs/all`)).data
-      if (facts && facts.length > 0) this.client.say(channel, `/me ${facts[Math.floor(Math.random() * facts.length)].fact}`)
-      else this.client.say(channel, `/me I'm trying to get some cool dog facts but this dudes aren't answering... I suppose that's what you get with free APIs`)
-    }
-  }
 }

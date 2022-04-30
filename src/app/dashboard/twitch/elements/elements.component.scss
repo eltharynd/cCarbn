@@ -1,11 +1,5 @@
 @import "../../../../themes.scss";
 
-nb-card,
-nb-accordion {
-    max-width: 900px;
-    margin: auto;
-}
-
 nb-list-item:first-child {
     border-top: 0;
 }
@@ -36,7 +30,6 @@ input {
     }
     
 }
-
 
 
 .global-card {
