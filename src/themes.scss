@@ -132,3 +132,8 @@ nb-select.size-medium:not(.full-width) {
 ::-webkit-scrollbar-track {
   background: nb-theme(background-basic-color-2);
 }
+
+
+.layout {
+  min-height: 100% !important;
+}

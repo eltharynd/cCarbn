@@ -1,0 +1,23 @@
+nb-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #a16eff42;
+    > img {
+        flex-grow: 1;
+        min-width: 100px;
+    }
+    > div {
+        display: flex;
+        flex-direction: column;
+        margin-left: 2rem;
+        flex-shrink: 0;
+    }
+}
+  
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 3rem;
+}
