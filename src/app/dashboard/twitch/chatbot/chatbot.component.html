@@ -69,9 +69,9 @@
       <nb-accordion-item>
 
         <nb-accordion-item-header>
-          <nb-toggle [(checked)]="listeners.settings.chatbot.categories.common.enabled"
+          <nb-toggle [(checked)]="listeners.settings.chatbot.categories.pokemon.enabled"
                       (click)="$event.stopPropagation()"
-                      (change)="listeners.toggleCategory('common')" 
+                      (change)="listeners.toggleCategory('pokemon')" 
                       [disabled]="data.busy || !listeners.settings.chatbot.enabled"
                       ></nb-toggle>
           <div class="composed-title">
