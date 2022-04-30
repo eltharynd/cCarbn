@@ -8,8 +8,7 @@ export const userSchema: Schema = new Schema({
   token: String,
   admin: Boolean,
   twitchId: String,
-  twitchLoginName: String,
-  twitchDisplayName: String,
+  twitchName: String,
   twitchPic: String,
   created: {
     type: Date,
