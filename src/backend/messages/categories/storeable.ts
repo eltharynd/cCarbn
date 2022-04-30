@@ -3,14 +3,30 @@ import { from } from 'rxjs'
 import { filter, map, take, toArray } from 'rxjs/operators'
 import { Command } from '../../db/models/command'
 import { Mongo } from '../../db/mongo'
-import { Chat } from '../../twitch/chat'
 import { MAX_CHAT_MESSAGE_LENGTH, Message } from '../message'
 
-const RGX_USER = /\@\w+(\s|$)/gi
-//@user replaces with user sending the message
+const RGX_TARGET = /\@\w+(\s|$)/gi
 const RGX_EVAL = /\$eval\(.+\)(\s|$)/gi
 const RGX_RAND = /\$((rand)|(rnd))\d+/gi
 
+const options = [
+  {
+    key: '--cd=<123>',
+    description: 'Sets cooldown for <123> seconds.'
+  },
+  {
+    key: '--cdpu',
+    description: 'Sets cooldown on a per user basis.'
+  },
+  {
+    key: '--mods',
+    description: 'Only mods are allowed to execture this command.'
+  },
+  {
+    key: '--streamer',
+    description: 'Only the streamer is allowed to exceute this command.'
+  },
+]
 const FORMAT_ERROR = 'This command is formatted wrong... Please check your spelling or consult the documentation...'
 
 export class Storeable extends Message {
@@ -31,16 +47,15 @@ export class Storeable extends Message {
     }
   }
 
-  //TODO implement mods only commands
   private command = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
-    if (/^!((command)|(cmd)) ((add)|(save)|(edit)|(delete)|(show)|(answer)|(source)) .+$/i.test(message)) {
+    if (/^!((command)|(commands)|(cmd)|(cmds)) ((add)|(edit)|(delete)|(show)|(source)|(args)) .+$/i.test(message)) {
       if (!msg.userInfo.isMod && !msg.userInfo.isBroadcaster) {
         this.client.say(channel, `/me Only mods can edit commands...`)
         return
       }
 
       let buffer = message.replace(/^!command /i, '').replace(/^!cmd /i, '')
-      if (buffer.startsWith('add') || buffer.startsWith('save') || buffer.startsWith('edit')) {
+      if (buffer.startsWith('add') || buffer.startsWith('edit')) {
         let edit = buffer.startsWith('edit') ? true : false
         buffer = buffer.replace('add ', '').replace('save ', '').replace('edit ', '')
 
@@ -62,48 +77,81 @@ export class Storeable extends Message {
           return
         }
 
-        let targets = buffer.match(new RegExp(RGX_USER))
+        let cooldown: any = buffer.match(/\-\-cd\=\d+/gi)
+        if(cooldown?.length>0) {
+          cooldown = parseInt(cooldown[0].replace('--cd=', ''))
+          buffer = buffer.replace(/\-\-cd\=\d+\s*/gi, '')
+        } else cooldown = 0
+
+        let cooldownPerUser: any = /\-\-cdpu/gi.test(buffer)
+        if(cooldownPerUser) buffer = buffer.replace(/\-\-cdpu\s*/gi, '')
+
+        let modsOnly: any = /\-\-modsonly/gi.test(buffer)
+        if(modsOnly) buffer = buffer.replace(/\-\-mods\s*/gi, '')
+
+        let streamerOnly: any = /\-\-streamer/gi.test(buffer)
+        if(streamerOnly) buffer = buffer.replace(/\-\-streamer\s*/gi, '')
+
+
+        let targets = buffer.match(new RegExp(RGX_TARGET))
         let ev = buffer.match(new RegExp(RGX_EVAL))
         let rand = buffer.match(new RegExp(RGX_RAND))
 
         let index = 0
-        let parameters = []
-        if (targets)
-          for (let i of targets) {
-            parameters.push(i.replace(' ', ''))
+        let args = []
+        if(targets)
+          for(let i of targets) {
+            if(!/\@user\s*/i.test(i)) {
+              args.push(i.replace(' ', ''))
+              buffer = buffer.replace(i, `{{${index++}}} `)
+            }
+          }
+
+        if(ev)
+          for(let i of ev) {
+            args.push(i.replace(/\s$/, ''))
             buffer = buffer.replace(i, `{{${index++}}} `)
           }
 
-        if (ev)
-          for (let i of ev) {
-            parameters.push(i.replace(/\s$/, ''))
-            buffer = buffer.replace(i, `{{${index++}}} `)
-          }
-
-        if (rand)
-          for (let i of rand) {
-            parameters.push(i.replace('rand', 'rnd'))
-            buffer = buffer.replace(i, `{{${index++}}}`)
-          }
+        if(rand) 
+          for(let i of rand)
+            buffer = buffer.replace(i, i.replace('rand', 'rnd'))
 
         if (exists) {
           exists.command = name
           exists.answer = buffer
-          exists.params = parameters
+          exists.args = args
           exists.source = message
-          exists.mods = null
+          exists.cooldown = cooldown
+          exists.cooldownPerUser = cooldownPerUser,
+          exists.mods = modsOnly
+          exists.streamer = streamerOnly
           await exists.save()
+          let found = await from(this.commands).pipe(
+            filter(c => c.command === exists.command),
+            take(1)
+          ).toPromise()
+          if(found) {
+            if(found.listener) 
+              found.listener.unbind()
+            this.commands.splice(this.commands.indexOf(found, 1))
+          }
+          
         } else {
           exists = new Command({
-            userId: this.iClient.userId,
+            userId: Mongo.ObjectId(this.iClient.userId),
             command: name,
             answer: buffer,
-            params: parameters,
+            args: args,
             source: message,
-            mods: null
+            cooldown: cooldown,
+            cooldownPerUser: cooldownPerUser,
+            mods: modsOnly,
+            streamer: streamerOnly
           })
           await exists.save()
         }
+
 
         let result = exists.toJSON()
         this.commands.push(result)
@@ -111,7 +159,7 @@ export class Storeable extends Message {
         result.listener = this.client.onMessage(listener)
 
         this.client.say(channel, `/me Successfully ${edit ? 'edited' : 'added new'} command...`)
-      } else if (buffer.startsWith('delete')) {
+      } else if(buffer.startsWith('delete')) {
         buffer = buffer.replace('delete ', '')
 
         let name: RegExpMatchArray | string = buffer.match(/^\!*\w+(\s|$)/i)
@@ -139,20 +187,24 @@ export class Storeable extends Message {
         await Command.deleteOne({userId: this.iClient.userId, command: name})
         this.commands.splice(this.commands.indexOf(command), 1)
         this.client.say(channel, `/me Successfully deleted command...`)
-      } else if (buffer.startsWith('show')) {
-        buffer = buffer.replace('show ', '').replace('answer ', '')
+      } else if(buffer.startsWith('show')) {
+        buffer = buffer.replace('show ', '')
         let found: any = await Command.findOne({userId: this.iClient.userId, command: buffer})
-        if (found) this.client.say(channel, `/me Here's the answer for command "${buffer}": \`${found.answer}\``)
+        if (found) this.client.say(channel, `/me Here's the answer for command "${buffer}": ${found.answer}`)
         else this.client.say(channel, `/me I couldn't find such command...`)
-      } else if (buffer.startsWith('source')) {
+      } else if(buffer.startsWith('source')) {
         buffer = buffer.replace('source ', '')
         let found: any = await Command.findOne({userId: this.iClient.userId, command: buffer})
-        if (found) this.client.say(channel, `/me Here's the source for command "${buffer}": \`${found.source}\``)
+        if (found) this.client.say(channel, `/me Here's the source for command "${buffer}": ${found.source.replace(/^!((command)|(commands)|(cmd)|(cmd)) ((add)|(edit))/i, '!cmd add')}`)
         else this.client.say(channel, `/me I couldn't find such command...`)
-      }
-    } else if (/!commands/.test(message)) {
-      //PRINT THE LIST OF ALL SAVED COMMANDS
-      let printables = await from(this.commands)
+      } else if(buffer.startsWith('args')) {
+        buffer = buffer.replace('args ', '')
+        let found: any = await Command.findOne({userId: this.iClient.userId, command: buffer})
+        if(found?.args?.length>0) this.client.say(channel, `/me "${buffer}" takes the following arguments: ${found.args.join(', ')}`)
+        else if(found) this.client.say(channel, `/me "${buffer}" doesn't take any argument...`)
+        else this.client.say(channel, `/me I couldn't find such command...`)
+      } else if(buffer.startsWith('list')) {
+        let printables = await from(this.commands)
         .pipe(
           map((v, i) => {
             return v.command
@@ -161,30 +213,30 @@ export class Storeable extends Message {
         )
         .toPromise()
 
-      //TODO check if message length > 500
-      if (!printables || printables.length < 1) this.client.say(channel, `/me No commands saved yet...`)
-      else {
-        let buffer = `/me There's the current commands: '${printables.join(`', '`)}'.`
-        if(buffer.length <= MAX_CHAT_MESSAGE_LENGTH) {
-          this.client.say(channel, buffer)
-        } else {
-          let strings: string[] = [`/me There's the current commands: `]
-          
-          for(let i=0; i<printables.length; i++) {
-            if(strings[strings.length-1].length + printables[i].length + 3 > MAX_CHAT_MESSAGE_LENGTH) {
-              strings.push(`'${printables[i]}'`)
-            } else {
-              strings[strings.length-1] = strings[strings.length-1] + ` '${printables[i]}'` 
+        if(!printables || printables.length < 1) this.client.say(channel, `/me No commands saved yet...`)
+        else {
+          let buffer = `/me There's the current commands: '${printables.join(`', '`)}'.`
+          if(buffer.length <= MAX_CHAT_MESSAGE_LENGTH) {
+            this.client.say(channel, buffer)
+          } else {
+            let strings: string[] = [`/me There's the current commands: `]
+            
+            for(let i=0; i<printables.length; i++) {
+              if(strings[strings.length-1].length + printables[i].length + 3 > MAX_CHAT_MESSAGE_LENGTH) {
+                strings.push(`'${printables[i]}'`)
+              } else {
+                strings[strings.length-1] = strings[strings.length-1] + ` '${printables[i]}'` 
+              }
+            }
+            
+            for(let i=0; i<strings.length; i++) {
+              setTimeout(() => {
+                this.client.say(channel, strings[i])
+              }, 500 * (i+1));
             }
           }
           
-          for(let i=0; i<strings.length; i++) {
-            setTimeout(() => {
-              this.client.say(channel, strings[i])
-            }, 500 * (i+1));
-          }
         }
-        
       }
     }
   }
@@ -192,31 +244,56 @@ export class Storeable extends Message {
   private _generateListener = (command) => {
     return (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
       let tester = command.command
-      if (new RegExp('^' + tester, 'i').test(message) && (!command.mods || msg.userInfo.isMod || msg.userInfo.isBroadcaster)) {
-        if (this._timeout(10, tester === '!pp' ? tester + user : tester)) return
+      if (new RegExp('^' + tester, 'i').test(message)) {
+
+        if (command.cooldown && this._timeout(command.cooldown, `${tester}${command.cooldownPerUser ? user : ''}`)) return
+
+        if(command.streamer && !msg.userInfo.isBroadcaster) 
+          return this.client.say(channel, `/me This command is for the streamer only...`)
+        if(command.mods && !msg.userInfo.isBroadcaster && !msg.userInfo.isMod) 
+          return this.client.say(channel, `/me This command is for mods only...`)
+
         let answer = command.answer
-        let inputs: string[] = message.replace(`${command.command} `, '').split(' ')
+        
+        let buffer = message.replace(`${command.command} `, '').replace(`${command.command}`, '')
+        let inputs: string[] = buffer.length>0 ? buffer.split(' ') : []
         let shift = () => {
           if (inputs.length < 1) throw new Error()
           return inputs.shift()
         }
 
         try {
-          for (let i = 0; i < command.params.length; i++) {
-            let p = command.params[i]
+          for (let i = 0; i < command.args.length; i++) {
+            let arg = command.args[i]
 
-            if (new RegExp(RGX_USER).test(p)) {
-              answer = answer.replace(`{{${i}}}`, /@user/gi.test(p) ? `@${msg.userInfo.displayName}` : inputs.length === 1 && /@\w+/ ? p : shift())
-            } else if (new RegExp(RGX_EVAL).test(p)) {
-              answer = answer.replace(`{{${i}}}`, `${eval(p.replace(/^\$eval\(/, '').replace(/\)$/, ''))}`)
-            } else if (new RegExp(RGX_RAND).test(p)) {
-              let num = parseInt(p.replace(`$rnd`, ''))
-              answer = answer.replace(`{{${i}}}`, `${Math.floor(Math.random() * ++num)}`)
+            if (new RegExp(RGX_TARGET).test(arg)) {
+              answer = answer.replace(`{{${i}}}`, shift())
+            } else if (new RegExp(RGX_EVAL).test(arg)) {
+              answer = answer.replace(`{{${i}}}`, `${eval(arg.replace(/^\$eval\(/, '').replace(/\)$/, ''))}`)
             }
           }
-          this.client.say(channel, `/me ${answer}`)
+
+          if(/\$timeout/i.test(answer)) {
+            answer = answer.replace(`$timeout`, '')
+            this.client.timeout(channel, user, this.settings?.storeable?.timeout|1).catch(e => {})
+          } 
+
+          if(answer?.length>0) {
+
+            let random = answer.match(new RegExp(RGX_RAND))
+            if(random?.length>0) {
+              for(let r of random) {
+                let num = parseInt(r.replace(`$rnd`, ''))
+                answer = answer.replace(r, `${Math.floor(Math.random() * ++num)}`)
+              }
+            }
+
+            if(/\@user/gi.test(answer)) answer = answer.replace(/\@user/gi, `@${msg.userInfo.displayName}`)
+
+            this.client.say(channel, `/me ${answer}`)
+          }
         } catch (e) {
-          this.client.say(channel, `/me This command requires more parameters...`)
+          this.client.say(channel, `/me This command requires more arguments...`)
         }
       }
     }
@@ -224,13 +301,12 @@ export class Storeable extends Message {
 
   confirmation = false
   private flush = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
-    if (/^!cmd flush$/i.test(message)) {
+    if (/^!((command)|(commands)|(cmd)|(cmds)) flush$/i.test(message)) {
       if (!msg.userInfo.isBroadcaster) this.client.say(channel, `/me Only the streamer can flush all commands from db... `)
       else if (this.confirmation) {
         await Command.deleteMany({userId: this.iClient.userId})
-        for (let c of this.commands) {
-          if (c.listener) this.client.removeMessageListener(c.listener)
-        }
+        for (let c of this.commands) 
+          if (c.listener) c.listener.unbind()
         this.commands = []
         this.client.say(channel, `/me Oooohkay boss... deleted everything... I hope you know what you're doing...`)
         this.confirmation = false
@@ -247,3 +323,29 @@ export class Storeable extends Message {
     }
   }
 }
+
+
+/* private justice = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
+  if (/!justice/.test(message)) {
+    if (this._timeout(20)) return
+    this.client.say(channel, `I have brought peace, freedom, justice, and security to my new empire.`)
+    setTimeout(() => {
+      this.client.say(channel, `Your new empire?`)
+      setTimeout(() => {
+        this.client.say(channel, `Don't make me kill you.`)
+        setTimeout(() => {
+          this.client.say(channel, `Anakin, my allegiance is to the Republic, to Democracy!`)
+          setTimeout(() => {
+            this.client.say(channel, `If you are not with me, then you are my enemy.`)
+            setTimeout(() => {
+              this.client.say(channel, `Only a Sith deals in absolutes. I will do what I must.`)
+              setTimeout(() => {
+                this.client.say(channel, `You will try.`)
+              }, 3500)
+            }, 2500)
+          }, 2500)
+        }, 2500)
+      }, 1500)
+    }, 7000)
+  }
+} */

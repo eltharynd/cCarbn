@@ -1,36 +1,50 @@
 @import '../../../../themes.scss';
-@import '~@nebular/theme/styles/global/breakpoints';
-@import '~bootstrap/scss/mixins/breakpoints';
 
-@include nb-install-component() {
+//TODO DELETE AFTER PAGE IS READY
+nb-card:first-child {
+  min-width: 25rem;
+  max-width: 25rem;
+  //margin: 0 0 2rem;
+}
 
-  .container {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: flex-start;
-    width: 100%;
-    max-width: 1200px;
-    margin: auto;
+//TODO DELETE AFTER PAGE IS READY
+nb-card:first-child > nb-list-item {
+  padding-left: 3rem;
+  padding-right: 2rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+//TODO DELETE AFTER PAGE IS READY
+.invisible {
+  display: none;
+}
+
+
+
+
+nb-accordion-item-header {
+  display: flex;
+  align-items: center;
+  > *:not(:last-child) {
+    margin-right: 2rem
   }
+}
 
-  nb-card {
-    min-width: 25rem;
-    max-width: 25rem;
-    margin: 0 0 2rem;
+.storeable-header {
+  margin: 1rem auto;
+}
+.storeable-header:not(:first-child) {
+  margin-top: 2.5rem;
+}
+
+.usage-description {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  .description {
+    color: rgba(white, .4);
+    font-style: italic;
+    white-space: pre-line;
   }
-
-  nb-list-item {
-    padding-left: 3rem;
-    padding-right: 2rem;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  @include media-breakpoint-down(lg) {
-    .container {
-      flex-direction: column;
-      align-items: center;
-    }
-  }
-
 }

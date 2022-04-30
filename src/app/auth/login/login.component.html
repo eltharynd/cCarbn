@@ -1,17 +1,94 @@
 
 
-<nb-card size="small">
-  <nb-card-header>Login With Twitch</nb-card-header>
+<nb-card>
 
-  <nb-card-body *ngIf="!auth.currentUser">
-    <p *ngIf="message || !data._clientId">{{message ? message : 'We seem to be experiencing server issues.. Attempting to reconnect...'}}</p>
-    <button [disabled]="(message?true:false) || !data._clientId" [nbSpinner]="message?true:false" status="primary" nbButton (click)="loginWithTwitch()" color="primary">LOG IN</button>
+  <nb-card-header>
+    <img src="assets/brand/logo-white.png">
+    <div>
+      <h1>Welcome to cCarbn</h1>
+      <ng-template *ngIf="false else login"></ng-template>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body>
+    <h3>What is cCarbn</h3>
+    <p>
+      Interact with Twitch chat and events
+      (subs, bits, hype trains, predictions etc)
+      through chat or via Browser-Source-ready dynamic pages.
+    </p>
+    <h3>Features</h3>
+    <p>
+      cCarbn is still in development but the following features are already implemented and working correctly:
+    </p>
+    <ul>
+      <li>
+        Element system to create alerts for
+        <ul>
+          <li>Channel points</li>
+          <li>Bits cheered</li>
+          <li>Follows</li>
+          <li>Subscriptions</li>
+          <li>Subscription gifts</li>
+          <li>Raids</li>
+          <li>Bans/timeouts</li>
+        </ul>
+      </li>
+      <li>
+        Browser source capable of receiving said events and more
+      </li>
+      <li>
+        Chatbot with the following functionalities
+        <ul>
+          <li>Basic common commands</li>
+          <li>Create and manage your custom commands</li>
+          <li>Pokémon API integration to look up pkm data</li>
+        </ul>
+      </li>
+    </ul>
+    <br/>
+    <p>
+      More features gets added very frequently so stay tuned for more soon.
+    </p>
+
+    <h3>Where to get support?</h3>
+    <p>
+      You can find us on <a href="https://discord.gg/uTmEUxGHKC">discord</a> or <a href="https://www.github.com/eltharynd/cCarbn">github</a>
+    </p>
+
+    <h3>Buy me a coffee</h3>
+    <p>
+      If you appreciate my work and you wanna buy me a coffee 
+      you can use the <a href="https://github.com/sponsors/eltharynd">github sponsors</a> page 
+      or come say hi on <a href="https://twitch.tv/eltharynd">twitch</a>.
+    </p>
+ 
   </nb-card-body>
 
-  <nb-card-body *ngIf="auth.currentUser">
-    <p>You're currently logged in as {{auth.currentUser?.name}}</p>
-    <button nbButton status="primary" (click)="auth.logout()">LOGOUT</button>
-  </nb-card-body>
+  <ng-template *ngIf="false else login"></ng-template>
 
 </nb-card>
+
+<ng-template #login>
+  <div *ngIf="!auth.currentUser" class="login-container" style="width: 100%;">
+    <p *ngIf="message || !data._clientId">{{message ? message : 'We seem to be experiencing server issues.. Attempting to reconnect...'}}</p>
+    <button [disabled]="(message?true:false) || !data._clientId" 
+            [nbSpinner]="message?true:false" 
+            status="primary" 
+            nbButton 
+            fullWidth
+            (click)="loginWithTwitch()" 
+            >
+      LOG IN WITH TWITCH
+    </button>
+  </div>
+  <div *ngIf="auth.currentUser" class="login-container">
+    <button nbButton
+            status="warning" 
+            (click)="auth.logout()" 
+            fullWidth>
+      LOGOUT
+    </button>
+  </div>
+</ng-template>
 

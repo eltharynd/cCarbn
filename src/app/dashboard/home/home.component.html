@@ -1,18 +1,31 @@
-<nb-card>
+<nb-card status="primary" class="centered">
   <nb-card-header>
-    Welcome to cCarbn.io
-    <br>
-    For the best experience, use this on desktop.
+    <div class="composed-title">
+      <strong class="text-title">Welcome to cCarbn.io</strong>
+      <span class="text-description">For the best experience, use this on desktop</span>
+    </div>
   </nb-card-header>
   <nb-card-body>
-    You can start by enabling Twitch APIs in order to receive event data from twitch.
-    <br>
-    Then go to Browser Source in order to set your events up.
-    <br>
-    <br>
-    <br>
-    The Hype Train functionality works but it's kinda complicated to set-up and the user interface is not intuitive yet...
-    <br>
-    Seek help on the <a href="https://discord.gg/uTmEUxGHKC" target="_blank">discord</a> if you're interested in it.
+    <h5>
+      First steps
+    </h5>
+    <p>
+      Start by <a routerLink="twitch/api">enabling Twitch APIs</a> in order to receive event data from twitch.
+    </p>
+    <p>
+      Then go to <a routerLink="twitch/elements">Elements & Alerts</a> in order to set your events up.
+    </p>
+    <p>
+      The <a routerLink="/browsersource/hypetrain">Hype Train</a> functionality works but it's kinda complicated to set-up and the user interface is not intuitive yet...
+    </p>
+    <p>
+      The <a routerLink="twitch/chatbot">Chatbot</a> can do for you...
+    </p>
+    
   </nb-card-body>
+  <nb-card-footer>
+    <p>
+      Seek help on the <a href="https://discord.gg/uTmEUxGHKC" target="_blank">discord</a> if you need support.
+    </p>
+  </nb-card-footer>
 </nb-card>

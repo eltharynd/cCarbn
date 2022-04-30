@@ -67,20 +67,55 @@ $nb-themes: nb-register-theme((
   
 ), ccarbn, cosmic);
 
-//$inner-element-background: #2e4d7c38;
-//$inner-element-header-background: #5b8cd54f;
-//$inner-element-border: #5b8cd5;
 $inner-element-background: #8d54f733;
 $inner-element-background-light: #a16eff63;
 $inner-element-border: #a16eff;
 $inner-element-color: #cbafff;
 
+
+
+.composed-title {
+  display: flex;
+  flex-direction: column;
+  > .text-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  > .text-description {
+    color: rgba(white, .75);
+    font-weight: 300;
+  }
+  > .text-title-sub {
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  > .text-description-sub {
+    font-size: 0.8rem;
+    color: rgba(white, .75);
+    font-weight: 300;
+  }
+}
+
+
 nb-accordion-item:nth-child(2n) {
   background-color: var(--background-basic-color-2);
 }
 
+nb-accordion-item-body.unpadded > div > div {
+  padding: 0;
+  > nb-list > nb-list-item:first-child {
+    border-top:0
+  }
+}
+
 nb-select.size-medium:not(.full-width) {
   min-width: 180px;
+}
+
+.centered {
+  max-width: 900px;
+  margin: auto;
+  margin-bottom: 2rem;
 }
 
 //Workaround until they fix https://github.com/akveo/nebular/issues/2119
@@ -96,4 +131,9 @@ nb-select.size-medium:not(.full-width) {
 
 ::-webkit-scrollbar-track {
   background: nb-theme(background-basic-color-2);
+}
+
+
+.layout {
+  min-height: 100% !important;
 }

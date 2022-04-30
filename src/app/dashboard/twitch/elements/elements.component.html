@@ -1,365 +1,367 @@
-<nb-layout>
-    <nb-layout-column>
+<!-- nb-select does not work without these (the router blocks the styling) -->
+<nb-layout><nb-layout-column>
 
-        <nb-card class="global-card" status="primary">
-            <nb-card-header>
-                GLOBAL SETTINGS
-            </nb-card-header>
-            <nb-card-body>
-                <nb-accordion>
-                    <nb-accordion-item>
-                        <nb-accordion-item-header>
-                            BROWSER SOURCE
-                        </nb-accordion-item-header>
-                        <nb-accordion-item-body>
-                            <nb-list>
-                                <nb-list-item>
-                                    Browser source url:
-                                    &nbsp;
-                                    <a [href]="viewport.url" target="_blank">{{viewport.url}}</a>
-                                </nb-list-item>
-                                <nb-list-item>
-                                    Browser source size:
-                                    &nbsp;
-                                    {{viewport.width}}&nbsp;x&nbsp;{{viewport.height}}&nbsp;px
-                                </nb-list-item>
-                                <nb-list-item>
-                                    Browser source padding:
-                                    &nbsp;
-                                    {{viewport.padding}}&nbsp;px
-                                </nb-list-item>
-                                <nb-list-item>
-                                    obs-websocket:
-                                    &nbsp;
-                                    port 4455, no authentication (will change in the future)
-                                </nb-list-item>
-                                <nb-list-item>
-                                    <div>
-                                        In order for cCarbn to control your scenes/sources in OBS you must install the latest <a href="https://github.com/obsproject/obs-websocket/releases" target="_blank">OBS-websocket plugin</a> (version 5.0.0 or higher). Then set your browser source permissions to <strong>Advanced</strong> or higher
-                                    </div>
-                                </nb-list-item>
-                                <nb-list-item>
-                                    <div>
-                                        Two very useful plugins for obs are <a href="https://obsproject.com/forum/resources/move-transition.913/" target="_blank">Move transition</a> and <a href="https://obsproject.com/forum/resources/streamfx-for-obs%C2%AE-studio.578/" target="_blank">StreamFX</a>.
-                                        <br>
-                                        These aren't required but they allow you to create animations and effects attached to sources as filters, which can be interacted with via cCarbn.
-                                        <br>
-                                        <a href="https://www.youtube.com/watch?v=6eSgiowHTCc" target="_blank">Here</a>'s a brief tutorial on how to setup those filters.
-                                    </div>
-                                </nb-list-item>
-                            </nb-list>
-                        </nb-accordion-item-body>
-                    </nb-accordion-item>
-                </nb-accordion>
-            </nb-card-body>
-        </nb-card>
 
-        <nb-accordion multi>
-            <nb-accordion-item *ngFor="let elem of elements" [expanded]="elem.expanded">
-                
-                <nb-accordion-item-header class="element-header">
-                    <button nbButton status="primary" nbTooltip="Send test to browser source" nbTooltipStatus="primary" (click)="sendTestEvent($event, elem)"><nb-icon icon="cast"></nb-icon></button>
-                    <div class="element-name">
-                        {{elem.name}}
-                    </div>
-                    <div class="element-details">
-                        <div *ngFor="let c of elem.conditions; let i = index" style="white-space: pre-line;">
-                            <strong>{{_conditionTypes[c.type]}}</strong> - {{_operators.all()[c.operator]}} {{c.compared?.title ? c.compared.title : _userTypes.hasOwnProperty(c.compared+'') ? _userTypes[c.compared] : c.compared}}
-                            <strong *ngIf="i+1 < elem.conditions.length">&nbsp;AND&nbsp;</strong>
-                        </div>
-                    </div>
+<nb-card class="global-card centered" status="primary">
+    <nb-card-header>
+        GLOBAL SETTINGS
+    </nb-card-header>
+    <nb-card-body>
+        <nb-accordion>
+            <nb-accordion-item>
+                <nb-accordion-item-header>
+                    BROWSER SOURCE
                 </nb-accordion-item-header>
-
                 <nb-accordion-item-body>
-                    <nb-card class="element-card">
-
-                        <nb-card-header class="conditions-header">                           
-                            <nb-list>
-                                <nb-list-item *ngFor="let c of elem.conditions; let i = index" class="conditions-entry">
-
-                                    <div class="field-container">
-                                        <nb-select [(selected)]="c.type" (selectedChange)="elem.changes=true; c.compared = null">
-                                            <nb-option *ngFor="let type of _conditionTypes | keyvalue: originalOrder" [value]=type.key>{{type.value}}</nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>{{i==0 ? 'When' : 'AND'}}</label></div>
-                                    </div>
-
-
-
-                                    <div *ngIf="c.type==='bit'" class="field-container">
-                                        <nb-select [(selected)]="c.operator" (selectedChange)="elem.changes=true" size="small">
-                                            <nb-option *ngFor="let op of _operators.comparison | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>is</label></div>
-                                    </div>
-                                    <nb-select *ngIf="c.type==='user'" [(selected)]="c.operator" (selectedChange)="elem.changes=true" size="small">
-                                        <nb-option *ngFor="let op of _operators.user | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                                        <nb-option *ngFor="let op of _operators.userType | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                                    </nb-select>
-                                    <div *ngIf="c.type==='redeem'" class="field-container">
-                                        <nb-select [(selected)]="c.operator" (selectedChange)="elem.changes=true" size="small">
-                                            <nb-option *ngFor="let op of _operators.redemption | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>is</label></div>
-                                    </div>
-                                    <div *ngIf="c.type==='subscription'" class="field-container" >
-                                        <nb-select [(selected)]="c.operator" (selectedChange)="elem.changes=true">
-                                            <nb-option *ngFor="let op of _operators.subscription | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>what</label></div>
-                                    </div>
-                                    <div *ngIf="c.type==='raid'" class="field-container" >
-                                        <nb-select [(selected)]="c.operator" [placeholder]="_operators.raid[c.operator]" (selectedChange)="elem.changes=true">
-                                            <nb-option *ngFor="let op of _operators.raid | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>what</label></div>
-                                    </div>
-                                    <div *ngIf="c.type==='ban'" class="field-container" >
-                                        <nb-select [(selected)]="c.operator" [placeholder]="_operators.ban[c.operator]" (selectedChange)="elem.changes=true">
-                                            <nb-option *ngFor="let op of _operators.ban | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>what</label></div>
-                                    </div>
-
-
-
-                                    <div *ngIf="c.type === 'bit'" class="field-container">
-                                        <input nbInput type="number" [(ngModel)]="c.compared" (change)="elem.changes=true">
-                                        <div class="anchor"><label>how many</label></div>
-                                    </div>
-                                    <div *ngIf="c.type === 'user' && c.operator[0]!=='t'" class="field-container">
-                                        <input nbInput type="text" [(ngModel)]="c.compared" (change)="elem.changes=true">
-                                        <div class="anchor"><label>username</label></div>
-                                    </div>
-                                    <div *ngIf="c.type === 'user' && c.operator[0]==='t'"class="field-container">
-                                        <nb-select [(selected)]="c.compared" (selectedChange)="elem.changes=true">
-                                            <nb-option *ngFor="let ut of _userTypes | keyvalue: originalOrder" [value]=ut.key>{{ut.value}}</nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>what</label></div>
-                                    </div>
-                                    <div *ngIf="c.type === 'redeem'" class="field-container">
-                                        <nb-select [(selected)]="c.compared" [placeholder]="c.compared?.title||''" (selectedChange)="elem.changes=true">
-                                            <nb-option *ngFor="let r of channelRewards" [value]=r>{{r.title}}</nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>which</label></div>
-                                    </div>
-                                    <div *ngIf="c.type === 'subscription' && c.operator==='sub'" class="field-container">
-                                        <nb-select [(selected)]="c.compared" [placeholder]="_subOptions[c.compared]||''" (selectedChange)="elem.changes=true" fullWidth>
-                                            <nb-option *ngFor="let o of _subOptions | keyvalue: originalOrder" [value]=o.key>{{o.value}}</nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>Condition</label></div>
-                                    </div>
-
-
-                                    <button nbButton status="danger" [disabled]="elem.conditions.length<2" (click)="deleteCondition(elem, c)"><nb-icon icon="trash-2"></nb-icon></button>
-                                    <button nbButton status="success" (click)="addCondition(elem)" [disabled]="i<elem.conditions.length-1"><nb-icon icon="plus"></nb-icon></button>
-                                </nb-list-item>
-                        
-                                <nb-list-item>
-                                    <div class="field-container" style="width: 100%;">
-                                        <input nbInput [(ngModel)]="elem.name" (change)="elem.changes=true" fullWidth>
-                                        <div class="anchor"><label>Element name</label></div>
-                                    </div>
-                                </nb-list-item>
-                            </nb-list>
-                        </nb-card-header>
-
-                        <nb-card-body class="events-body">
-                            <nb-tabset fullWidth>
-                                <nb-tab *ngFor="let ev of elem.events; let i = index" [tabTitle]="ev.type" [active]="elem.activeTab===i">
-
-                                    <div #videoaudio *ngIf="ev.type==='video' || ev.type==='audio'" class="video-container">
-                                        
-                                        <div *ngIf="ev.src && ev.type==='video'" class="video-preview">
-                                            <video style="width: 100%; height: 100%;" (loadeddata)="onLoadedData(ev, $event)" autoplay loop [muted]="'muted'">
-                                                <source [src]="ev.src">
-                                            </video>  
-                                            <button nbButton class="video-delete" status="danger" (click)="deleteVideoSrc(elem, ev, ev.src)"><nb-icon icon="trash-2"></nb-icon></button>
-                                        </div>
-                                        <div *ngIf="ev.src && ev.type==='audio'" class="video-preview">
-                                            <audio (loadeddata)="onLoadedData(ev, $event)" controls>
-                                                <source *ngIf="ev.src" [src]="ev.src">
-                                            </audio>
-                                            <button nbButton class="video-delete" status="danger" (click)="deleteVideoSrc(elem, ev, ev.src)"><nb-icon icon="trash-2"></nb-icon></button>
-                                        </div>
-
-                                        <div *ngIf="!ev.src" class="video-uploader">
-                                            <nb-select placeholder="Select a video" *ngIf="ev.select && ev.type==='video'" [(selected)]="ev.src" (selectedChange)="videoSelected(elem, ev);elem.changes=true">
-                                                <nb-option *ngFor="let file of userVideos" [value]=file.src>{{file.filename}}</nb-option>
-                                            </nb-select>
-                                            <nb-select placeholder="Select an audio" *ngIf="ev.select && ev.type==='audio'" [(selected)]="ev.src" (selectedChange)="videoSelected(elem, ev);elem.changes=true">
-                                                <nb-option *ngFor="let file of userAudios" [value]=file.src>{{file.filename}}</nb-option>
-                                            </nb-select>
-                                            <app-uploader *ngIf="ev.upload" [allowedTypes]="[ev.type]" width="240px" height="120px" [autoIndexing]="true" [uploaded]="uploadedSubject" [reference]="{elem: elem, ev: ev}"></app-uploader>
-                                            <button nbButton class="file-select" status="success" nbTooltip="Select file from existing" nbTooltipStatus="success" (click)="getUserSelectableFiles(ev)"><nb-icon icon="book-open"></nb-icon></button>
-                                            <button nbButton  class="file-upload" status="warning" nbTooltip="Upload a new file" nbTooltipStatus="warning" (click)="ev.upload=true; ev.select = false"><nb-icon icon="cloud-upload"></nb-icon></button>
-                                        </div>
-
-                                        <div *ngIf="ev.src && ev.mediaInformation" class="video-details">
-                                            <div *ngIf="ev.mediaInformation.width">Width: {{ev.mediaInformation.width}}px</div>
-                                            <div *ngIf="ev.mediaInformation.height">Height: {{ev.mediaInformation.height}}px</div>
-                                            <div>Duration: {{ev.mediaInformation.duration | number: '1.1-1'}}s</div>
-                                        </div>
-
-                                        <div class="video-settings">
-                                            <nb-list *ngIf="ev.type==='video'">
-                                                <nb-list-item>
-                                                    <nb-checkbox [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-checkbox>
-                                                </nb-list-item>
-                                                <nb-list-item *ngFor="let s of _video.settings | keyvalue: originalOrder">
-                                                    <div class="key">{{s.key}}</div>
-                                                    <div class="value" *ngIf="s.value==='number'">
-                                                        <input nbInput type="number" [(ngModel)]="ev[s.key]" (change)="elem.changes=true" fullWidth>
-                                                        <div class="unit">px</div>
-                                                    </div>
-                                                    <div class="value" *ngIf="s.value === 'POSITION'">
-                                                        <nb-select [(selected)]="ev.position" (selectedChange)="elem.changes=true">
-                                                            <nb-option *ngFor="let p of _POSITION" [value]="p">{{p}}</nb-option>
-                                                        </nb-select>
-                                                    </div>
-                                                </nb-list-item>
-                                            </nb-list>
-                                            <nb-list *ngIf="ev.type==='audio'">
-                                                <nb-list-item>
-                                                    <nb-checkbox [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-checkbox>
-                                                </nb-list-item>
-                                                <nb-list-item *ngFor="let s of _audio.settings | keyvalue: originalOrder">
-                                                    <div class="key">{{s.key}}</div>
-                                                    <div class="value" *ngIf="s.value==='number'">
-                                                        <input nbInput type="number" [(ngModel)]="ev[s.key]" (change)="elem.changes=true" fullWidth>
-                                                        <div class="unit">px</div>
-                                                    </div>
-                                                    <div class="value" *ngIf="s.value === 'POSITION'">
-                                                        <nb-select [(selected)]="ev.position" (selectedChange)="elem.changes=true">
-                                                            <nb-option *ngFor="let p of _POSITION" [value]="p">{{p}}</nb-option>
-                                                        </nb-select>
-                                                    </div>
-                                                </nb-list-item>
-                                            </nb-list>
-                                        </div>
-
-                                    </div>
-
-                                    <div #tts *ngIf="ev.type==='tts'" class="tts-container">
-
-                                        <nb-select [(selected)]="ev.voice" (selectedChange)="elem.changes=true" placeholder="Select which voice to use">
-                                            <nb-option *ngFor="let v of _tts.voices | keyvalue: originalOrder" [value]="v.key">{{v.value}}</nb-option>
-                                        </nb-select>
-
-                                        <nb-select [(selected)]="ev.message" (selectedChange)="elem.changes=true" placeholder="Select what to read">
-                                            <nb-option *ngFor="let o of _tts.options | keyvalue: originalOrder" [value]="o.key">{{o.value}}</nb-option>
-                                        </nb-select>
-
-                                        <nb-checkbox [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-checkbox>
-
-                                    </div>
-
-                                    <div #obs *ngIf="ev.type==='obs'" class="obs-container">
-
-
-                                        <div class="field-container">
-                                            <nb-select [placeholder]="ev.trigger" [(selected)]="ev.trigger" (selectedChange)="elem.changes=true; ev.scene=null; ev.source=null; ev.input=null; ev.duration=null; ev.toggleTo=null; ev.revert = ev.trigger==='filterVisibility' ? false : ev.revert" fullWidth>
-                                                <nb-option *ngFor="let t of _obs.triggers | keyvalue: originalOrder" [value]="t.key">{{t.value}}</nb-option>
-                                            </nb-select>
-                                            <div class="anchor"><label>Trigger</label></div>
-                                        </div>
-
-                                        <div *ngIf="ev.trigger==='sourceVisibility'" class="obs-inner">
-                                            <div class="field-container">
-                                                <nb-select [placeholder]="ev.scene?.sceneName" [(selected)]="ev.scene" (selectedChange)="elem.changes=true; ev.source=null" fullWidth>
-                                                    <nb-option *ngFor="let s of OBS.scenes" [value]="s">{{s.sceneName}}</nb-option>
-                                                </nb-select>
-                                                <div class="anchor"><label>Scene</label></div>
-                                            </div>
-                                            <div class="field-container" >
-                                                <nb-select [placeholder]="ev.source?.sourceName" [(selected)]="ev.source" (selectedChange)="elem.changes=true" fullWidth [disabled]="!ev.scene || !ev.scene.sources">
-                                                    <nb-option *ngFor="let s of ev.scene?.sources||[]" [value]="s">{{s.sourceName}}</nb-option>
-                                                </nb-select>
-                                                <div class="anchor"><label>Source</label></div>
-                                            </div>
-                                        </div>
-
-                                        <div *ngIf="ev.trigger==='filterVisibility'" class="obs-inner">
-                                            <div class="field-container" >
-                                                <nb-select [placeholder]="ev.input?.inputName" [(selected)]="ev.input" (selectedChange)="elem.changes=true" fullWidth>
-                                                    <nb-option *ngFor="let i of OBS.sources" [value]="i">{{i.inputName}}</nb-option>
-                                                </nb-select>
-                                                <div class="anchor"><label>Input</label></div>
-                                            </div>
-                                            <div class="field-container" >
-                                                <nb-select [placeholder]="ev.filter?.filterName" [(selected)]="ev.filter" (selectedChange)="elem.changes=true" fullWidth [disabled]="!ev.input || !ev.input.filters">
-                                                    <nb-option *ngFor="let f of ev.input?.filters||[]" [value]="f">{{f.filterName}}</nb-option>
-                                                </nb-select>
-                                                <div class="anchor"><label>Filter</label></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="obs-inner" *ngIf="ev.filter || ev.source">
-
-                                            <nb-toggle (change)="elem.changes=true" [(checked)]="ev.toggleTo">
-                                                Turn {{ev.toggleTo ? 'Visible' : 'Invisible'}}
-                                            </nb-toggle>
-
-                                            <nb-toggle (change)="elem.changes=true;" [(checked)]="ev.revert">
-                                                {{ev.revert ? 'Automatically revert back' : 'Leave as is'}}
-                                            </nb-toggle>
-                                            <div class="field-container">
-                                                <input nbInput type="number" [(ngModel)]="ev.duration" (change)="elem.changes=true" fullWidth>
-                                                <div class="anchor"><label>Duration</label></div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                   
-                                
-                                    <div #chat *ngIf="ev.type==='chat'" class="chat-container">
-                                        <textarea nbInput type="text" (change)="elem.changes=true" placeholder="Chat message. You can type the keywords below and they will be replaced accordingly." [(ngModel)]="ev.text" fullWidth></textarea>
-                                        <div class="keywords">
-                                            <div *ngFor="let keyword of _chat.keywords | keyvalue: originalOrder;">
-                                                <div>{{keyword.key}}:</div>
-                                                <div>{{keyword.value}}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div #gif *ngIf="ev.type==='gif'" class="gif-container">
-                                        gif
-                                    </div>
-
-                                </nb-tab>
-                                <nb-tab tabTitle="Add" tabIcon="file-add">
-                                    <nb-select placeholder="Select type of event to add" fullWidth [(selected)]="selectedEventType" (selectedChange)="addEvent(elem, $event)">
-                                        <nb-option *ngFor="let type of EventTypes | keyvalue: originalOrder" [value]="type.key">{{type.value}}</nb-option>
-                                    </nb-select>
-                                </nb-tab>
-                                <nb-tab tabTitle="Delete" tabIcon="trash-2" [disabled]="!elem.events || elem.events.length<1">
-                                    <nb-select placeholder="Select the event to delete" fullWidth [(selected)]="selectedEventType" (selectedChange)="deleteEvent(elem, $event)">
-                                        <nb-option *ngFor="let ev of elem.events; let i = index" [value]="i">{{ev.type}}</nb-option>
-                                    </nb-select>
-                                </nb-tab>
-                            </nb-tabset>
-                        </nb-card-body>
-
-                        <nb-card-footer *ngIf="elem.error" class="event-error">
-                            There were errors in your event's settings... Could not save it!
-                        </nb-card-footer>
-
-                        <nb-card-footer class="element-footer">
-                            <button nbButton status="warning" [disabled]="!elem.changes" (click)="revertElement(elem)"><nb-icon icon="refresh"></nb-icon></button>
-                            <button nbButton status="success" [disabled]="!elem.changes" (click)="saveElement(elem)">SAVE</button>
-                            <button nbButton status="danger" (click)="deleteElement(elem)"><nb-icon icon="trash-2"></nb-icon></button>
-                        </nb-card-footer>
-
-                    </nb-card>
+                    <nb-list>
+                        <nb-list-item>
+                            Browser source url:
+                            &nbsp;
+                            <a [href]="viewport.url" target="_blank">{{viewport.url}}</a>
+                        </nb-list-item>
+                        <nb-list-item>
+                            Browser source size:
+                            &nbsp;
+                            {{viewport.width}}&nbsp;x&nbsp;{{viewport.height}}&nbsp;px
+                        </nb-list-item>
+                        <nb-list-item>
+                            Browser source padding:
+                            &nbsp;
+                            {{viewport.padding}}&nbsp;px
+                        </nb-list-item>
+                        <nb-list-item>
+                            obs-websocket:
+                            &nbsp;
+                            port 4455, no authentication (will change in the future)
+                        </nb-list-item>
+                        <nb-list-item>
+                            <div>
+                                In order for cCarbn to control your scenes/sources in OBS you must install the latest <a href="https://github.com/obsproject/obs-websocket/releases" target="_blank">OBS-websocket plugin</a> (version 5.0.0 or higher). Then set your browser source permissions to <strong>Advanced</strong> or higher
+                            </div>
+                        </nb-list-item>
+                        <nb-list-item>
+                            <div>
+                                Two very useful plugins for obs are <a href="https://obsproject.com/forum/resources/move-transition.913/" target="_blank">Move transition</a> and <a href="https://obsproject.com/forum/resources/streamfx-for-obs%C2%AE-studio.578/" target="_blank">StreamFX</a>.
+                                <br>
+                                These aren't required but they allow you to create animations and effects attached to sources as filters, which can be interacted with via cCarbn.
+                                <br>
+                                <a href="https://www.youtube.com/watch?v=6eSgiowHTCc" target="_blank">Here</a>'s a brief tutorial on how to setup those filters.
+                            </div>
+                        </nb-list-item>
+                    </nb-list>
                 </nb-accordion-item-body>
             </nb-accordion-item>
         </nb-accordion>
+    </nb-card-body>
+</nb-card>
 
-        <nb-card class="add-element-card">
-            <nb-card-body>
-                <button nbButton status="success" fullWidth (click)="addElement()">ADD NEW ELEMENT</button>
-            </nb-card-body>
-        </nb-card>
+<nb-accordion class="centered" multi>
+    <nb-accordion-item *ngFor="let elem of elements" [expanded]="elem.expanded">
+        
+        <nb-accordion-item-header class="element-header">
+            <button nbButton status="primary" nbTooltip="Send test to browser source" nbTooltipStatus="primary" (click)="sendTestEvent($event, elem)"><nb-icon icon="cast"></nb-icon></button>
+            <div class="element-name">
+                {{elem.name}}
+            </div>
+            <div class="element-details">
+                <div *ngFor="let c of elem.conditions; let i = index" style="white-space: pre-line;">
+                    <strong>{{_conditionTypes[c.type]}}</strong> - {{_operators.all()[c.operator]}} {{c.compared?.title ? c.compared.title : _userTypes.hasOwnProperty(c.compared+'') ? _userTypes[c.compared] : c.compared}}
+                    <strong *ngIf="i+1 < elem.conditions.length">&nbsp;AND&nbsp;</strong>
+                </div>
+            </div>
+        </nb-accordion-item-header>
 
-    </nb-layout-column>
-</nb-layout>
+        <nb-accordion-item-body>
+            <nb-card class="element-card">
+
+                <nb-card-header class="conditions-header">                           
+                    <nb-list>
+                        <nb-list-item *ngFor="let c of elem.conditions; let i = index" class="conditions-entry">
+
+                            <div class="field-container">
+                                <nb-select [(selected)]="c.type" (selectedChange)="elem.changes=true; c.compared = null">
+                                    <nb-option *ngFor="let type of _conditionTypes | keyvalue: originalOrder" [value]=type.key>{{type.value}}</nb-option>
+                                </nb-select>
+                                <div class="anchor"><label>{{i==0 ? 'When' : 'AND'}}</label></div>
+                            </div>
+
+
+
+                            <div *ngIf="c.type==='bit'" class="field-container">
+                                <nb-select [(selected)]="c.operator" (selectedChange)="elem.changes=true" size="small">
+                                    <nb-option *ngFor="let op of _operators.comparison | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+                                </nb-select>
+                                <div class="anchor"><label>is</label></div>
+                            </div>
+                            <nb-select *ngIf="c.type==='user'" [(selected)]="c.operator" (selectedChange)="elem.changes=true" size="small">
+                                <nb-option *ngFor="let op of _operators.user | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+                                <nb-option *ngFor="let op of _operators.userType | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+                            </nb-select>
+                            <div *ngIf="c.type==='redeem'" class="field-container">
+                                <nb-select [(selected)]="c.operator" (selectedChange)="elem.changes=true" size="small">
+                                    <nb-option *ngFor="let op of _operators.redemption | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+                                </nb-select>
+                                <div class="anchor"><label>is</label></div>
+                            </div>
+                            <div *ngIf="c.type==='subscription'" class="field-container" >
+                                <nb-select [(selected)]="c.operator" (selectedChange)="elem.changes=true">
+                                    <nb-option *ngFor="let op of _operators.subscription | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+                                </nb-select>
+                                <div class="anchor"><label>what</label></div>
+                            </div>
+                            <div *ngIf="c.type==='raid'" class="field-container" >
+                                <nb-select [(selected)]="c.operator" [placeholder]="_operators.raid[c.operator]" (selectedChange)="elem.changes=true">
+                                    <nb-option *ngFor="let op of _operators.raid | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+                                </nb-select>
+                                <div class="anchor"><label>what</label></div>
+                            </div>
+                            <div *ngIf="c.type==='ban'" class="field-container" >
+                                <nb-select [(selected)]="c.operator" [placeholder]="_operators.ban[c.operator]" (selectedChange)="elem.changes=true">
+                                    <nb-option *ngFor="let op of _operators.ban | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+                                </nb-select>
+                                <div class="anchor"><label>what</label></div>
+                            </div>
+
+
+
+                            <div *ngIf="c.type === 'bit'" class="field-container">
+                                <input nbInput type="number" [(ngModel)]="c.compared" (change)="elem.changes=true">
+                                <div class="anchor"><label>how many</label></div>
+                            </div>
+                            <div *ngIf="c.type === 'user' && c.operator[0]!=='t'" class="field-container">
+                                <input nbInput type="text" [(ngModel)]="c.compared" (change)="elem.changes=true">
+                                <div class="anchor"><label>username</label></div>
+                            </div>
+                            <div *ngIf="c.type === 'user' && c.operator[0]==='t'"class="field-container">
+                                <nb-select [(selected)]="c.compared" (selectedChange)="elem.changes=true">
+                                    <nb-option *ngFor="let ut of _userTypes | keyvalue: originalOrder" [value]=ut.key>{{ut.value}}</nb-option>
+                                </nb-select>
+                                <div class="anchor"><label>what</label></div>
+                            </div>
+                            <div *ngIf="c.type === 'redeem'" class="field-container">
+                                <nb-select [(selected)]="c.compared" [placeholder]="c.compared?.title||''" (selectedChange)="elem.changes=true">
+                                    <nb-option *ngFor="let r of channelRewards" [value]=r>{{r.title}}</nb-option>
+                                </nb-select>
+                                <div class="anchor"><label>which</label></div>
+                            </div>
+                            <div *ngIf="c.type === 'subscription' && c.operator==='sub'" class="field-container">
+                                <nb-select [(selected)]="c.compared" [placeholder]="_subOptions[c.compared]||''" (selectedChange)="elem.changes=true" fullWidth>
+                                    <nb-option *ngFor="let o of _subOptions | keyvalue: originalOrder" [value]=o.key>{{o.value}}</nb-option>
+                                </nb-select>
+                                <div class="anchor"><label>Condition</label></div>
+                            </div>
+
+
+                            <button nbButton status="danger" [disabled]="elem.conditions.length<2" (click)="deleteCondition(elem, c)"><nb-icon icon="trash-2"></nb-icon></button>
+                            <button nbButton status="success" (click)="addCondition(elem)" [disabled]="i<elem.conditions.length-1"><nb-icon icon="plus"></nb-icon></button>
+                        </nb-list-item>
+                
+                        <nb-list-item>
+                            <div class="field-container" style="width: 100%;">
+                                <input nbInput [(ngModel)]="elem.name" (change)="elem.changes=true" fullWidth>
+                                <div class="anchor"><label>Element name</label></div>
+                            </div>
+                        </nb-list-item>
+                    </nb-list>
+                </nb-card-header>
+
+                <nb-card-body class="events-body">
+                    <nb-tabset fullWidth>
+                        <nb-tab *ngFor="let ev of elem.events; let i = index" [tabTitle]="ev.type" [active]="elem.activeTab===i">
+
+                            <div #videoaudio *ngIf="ev.type==='video' || ev.type==='audio'" class="video-container">
+                                
+                                <div *ngIf="ev.src && ev.type==='video'" class="video-preview">
+                                    <video style="width: 100%; height: 100%;" (loadeddata)="onLoadedData(ev, $event)" autoplay loop [muted]="'muted'">
+                                        <source [src]="ev.src">
+                                    </video>  
+                                    <button nbButton class="video-delete" status="danger" (click)="deleteVideoSrc(elem, ev, ev.src)"><nb-icon icon="trash-2"></nb-icon></button>
+                                </div>
+                                <div *ngIf="ev.src && ev.type==='audio'" class="video-preview">
+                                    <audio (loadeddata)="onLoadedData(ev, $event)" controls>
+                                        <source *ngIf="ev.src" [src]="ev.src">
+                                    </audio>
+                                    <button nbButton class="video-delete" status="danger" (click)="deleteVideoSrc(elem, ev, ev.src)"><nb-icon icon="trash-2"></nb-icon></button>
+                                </div>
+
+                                <div *ngIf="!ev.src" class="video-uploader">
+                                    <nb-select placeholder="Select a video" *ngIf="ev.select && ev.type==='video'" [(selected)]="ev.src" (selectedChange)="videoSelected(elem, ev);elem.changes=true">
+                                        <nb-option *ngFor="let file of userVideos" [value]=file.src>{{file.filename}}</nb-option>
+                                    </nb-select>
+                                    <nb-select placeholder="Select an audio" *ngIf="ev.select && ev.type==='audio'" [(selected)]="ev.src" (selectedChange)="videoSelected(elem, ev);elem.changes=true">
+                                        <nb-option *ngFor="let file of userAudios" [value]=file.src>{{file.filename}}</nb-option>
+                                    </nb-select>
+                                    <app-uploader *ngIf="ev.upload" [allowedTypes]="[ev.type]" width="240px" height="120px" [autoIndexing]="true" [uploaded]="uploadedSubject" [reference]="{elem: elem, ev: ev}"></app-uploader>
+                                    <button nbButton class="file-select" status="success" nbTooltip="Select file from existing" nbTooltipStatus="success" (click)="getUserSelectableFiles(ev)"><nb-icon icon="book-open"></nb-icon></button>
+                                    <button nbButton  class="file-upload" status="warning" nbTooltip="Upload a new file" nbTooltipStatus="warning" (click)="ev.upload=true; ev.select = false"><nb-icon icon="cloud-upload"></nb-icon></button>
+                                </div>
+
+                                <div *ngIf="ev.src && ev.mediaInformation" class="video-details">
+                                    <div *ngIf="ev.mediaInformation.width">Width: {{ev.mediaInformation.width}}px</div>
+                                    <div *ngIf="ev.mediaInformation.height">Height: {{ev.mediaInformation.height}}px</div>
+                                    <div>Duration: {{ev.mediaInformation.duration | number: '1.1-1'}}s</div>
+                                </div>
+
+                                <div class="video-settings">
+                                    <nb-list *ngIf="ev.type==='video'">
+                                        <nb-list-item>
+                                            <nb-checkbox [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-checkbox>
+                                        </nb-list-item>
+                                        <nb-list-item *ngFor="let s of _video.settings | keyvalue: originalOrder">
+                                            <div class="key">{{s.key}}</div>
+                                            <div class="value" *ngIf="s.value==='number'">
+                                                <input nbInput type="number" [(ngModel)]="ev[s.key]" (change)="elem.changes=true" fullWidth>
+                                                <div class="unit">px</div>
+                                            </div>
+                                            <div class="value" *ngIf="s.value === 'POSITION'">
+                                                <nb-select [(selected)]="ev.position" (selectedChange)="elem.changes=true">
+                                                    <nb-option *ngFor="let p of _POSITION" [value]="p">{{p}}</nb-option>
+                                                </nb-select>
+                                            </div>
+                                        </nb-list-item>
+                                    </nb-list>
+                                    <nb-list *ngIf="ev.type==='audio'">
+                                        <nb-list-item>
+                                            <nb-checkbox [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-checkbox>
+                                        </nb-list-item>
+                                        <nb-list-item *ngFor="let s of _audio.settings | keyvalue: originalOrder">
+                                            <div class="key">{{s.key}}</div>
+                                            <div class="value" *ngIf="s.value==='number'">
+                                                <input nbInput type="number" [(ngModel)]="ev[s.key]" (change)="elem.changes=true" fullWidth>
+                                                <div class="unit">px</div>
+                                            </div>
+                                            <div class="value" *ngIf="s.value === 'POSITION'">
+                                                <nb-select [(selected)]="ev.position" (selectedChange)="elem.changes=true">
+                                                    <nb-option *ngFor="let p of _POSITION" [value]="p">{{p}}</nb-option>
+                                                </nb-select>
+                                            </div>
+                                        </nb-list-item>
+                                    </nb-list>
+                                </div>
+
+                            </div>
+
+                            <div #tts *ngIf="ev.type==='tts'" class="tts-container">
+
+                                <nb-select [(selected)]="ev.voice" (selectedChange)="elem.changes=true" placeholder="Select which voice to use">
+                                    <nb-option *ngFor="let v of _tts.voices | keyvalue: originalOrder" [value]="v.key">{{v.value}}</nb-option>
+                                </nb-select>
+
+                                <nb-select [(selected)]="ev.message" (selectedChange)="elem.changes=true" placeholder="Select what to read">
+                                    <nb-option *ngFor="let o of _tts.options | keyvalue: originalOrder" [value]="o.key">{{o.value}}</nb-option>
+                                </nb-select>
+
+                                <nb-checkbox [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-checkbox>
+
+                            </div>
+
+                            <div #obs *ngIf="ev.type==='obs'" class="obs-container">
+
+
+                                <div class="field-container">
+                                    <nb-select [placeholder]="ev.trigger" [(selected)]="ev.trigger" (selectedChange)="elem.changes=true; ev.scene=null; ev.source=null; ev.input=null; ev.duration=null; ev.toggleTo=null; ev.revert = ev.trigger==='filterVisibility' ? false : ev.revert" fullWidth>
+                                        <nb-option *ngFor="let t of _obs.triggers | keyvalue: originalOrder" [value]="t.key">{{t.value}}</nb-option>
+                                    </nb-select>
+                                    <div class="anchor"><label>Trigger</label></div>
+                                </div>
+
+                                <div *ngIf="ev.trigger==='sourceVisibility'" class="obs-inner">
+                                    <div class="field-container">
+                                        <nb-select [placeholder]="ev.scene?.sceneName" [(selected)]="ev.scene" (selectedChange)="elem.changes=true; ev.source=null" fullWidth>
+                                            <nb-option *ngFor="let s of OBS.scenes" [value]="s">{{s.sceneName}}</nb-option>
+                                        </nb-select>
+                                        <div class="anchor"><label>Scene</label></div>
+                                    </div>
+                                    <div class="field-container" >
+                                        <nb-select [placeholder]="ev.source?.sourceName" [(selected)]="ev.source" (selectedChange)="elem.changes=true" fullWidth [disabled]="!ev.scene || !ev.scene.sources">
+                                            <nb-option *ngFor="let s of ev.scene?.sources||[]" [value]="s">{{s.sourceName}}</nb-option>
+                                        </nb-select>
+                                        <div class="anchor"><label>Source</label></div>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="ev.trigger==='filterVisibility'" class="obs-inner">
+                                    <div class="field-container" >
+                                        <nb-select [placeholder]="ev.input?.inputName" [(selected)]="ev.input" (selectedChange)="elem.changes=true" fullWidth>
+                                            <nb-option *ngFor="let i of OBS.sources" [value]="i">{{i.inputName}}</nb-option>
+                                        </nb-select>
+                                        <div class="anchor"><label>Input</label></div>
+                                    </div>
+                                    <div class="field-container" >
+                                        <nb-select [placeholder]="ev.filter?.filterName" [(selected)]="ev.filter" (selectedChange)="elem.changes=true" fullWidth [disabled]="!ev.input || !ev.input.filters">
+                                            <nb-option *ngFor="let f of ev.input?.filters||[]" [value]="f">{{f.filterName}}</nb-option>
+                                        </nb-select>
+                                        <div class="anchor"><label>Filter</label></div>
+                                    </div>
+                                </div>
+
+                                <div class="obs-inner" *ngIf="ev.filter || ev.source">
+
+                                    <nb-toggle (change)="elem.changes=true" [(checked)]="ev.toggleTo">
+                                        Turn {{ev.toggleTo ? 'Visible' : 'Invisible'}}
+                                    </nb-toggle>
+
+                                    <nb-toggle (change)="elem.changes=true;" [(checked)]="ev.revert">
+                                        {{ev.revert ? 'Automatically revert back' : 'Leave as is'}}
+                                    </nb-toggle>
+                                    <div class="field-container">
+                                        <input nbInput type="number" [(ngModel)]="ev.duration" (change)="elem.changes=true" fullWidth>
+                                        <div class="anchor"><label>Duration</label></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            
+                        
+                            <div #chat *ngIf="ev.type==='chat'" class="chat-container">
+                                <textarea nbInput type="text" (change)="elem.changes=true" placeholder="Chat message. You can type the keywords below and they will be replaced accordingly." [(ngModel)]="ev.text" fullWidth></textarea>
+                                <div class="keywords">
+                                    <div *ngFor="let keyword of _chat.keywords | keyvalue: originalOrder;">
+                                        <div>{{keyword.key}}:</div>
+                                        <div>{{keyword.value}}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div #gif *ngIf="ev.type==='gif'" class="gif-container">
+                                gif
+                            </div>
+
+                        </nb-tab>
+                        <nb-tab tabTitle="Add" tabIcon="file-add">
+                            <nb-select placeholder="Select type of event to add" fullWidth [(selected)]="selectedEventType" (selectedChange)="addEvent(elem, $event)">
+                                <nb-option *ngFor="let type of EventTypes | keyvalue: originalOrder" [value]="type.key">{{type.value}}</nb-option>
+                            </nb-select>
+                        </nb-tab>
+                        <nb-tab tabTitle="Delete" tabIcon="trash-2" [disabled]="!elem.events || elem.events.length<1">
+                            <nb-select placeholder="Select the event to delete" fullWidth [(selected)]="selectedEventType" (selectedChange)="deleteEvent(elem, $event)">
+                                <nb-option *ngFor="let ev of elem.events; let i = index" [value]="i">{{ev.type}}</nb-option>
+                            </nb-select>
+                        </nb-tab>
+                    </nb-tabset>
+                </nb-card-body>
+
+                <nb-card-footer *ngIf="elem.error" class="event-error">
+                    There were errors in your event's settings... Could not save it!
+                </nb-card-footer>
+
+                <nb-card-footer class="element-footer">
+                    <button nbButton status="warning" [disabled]="!elem.changes" (click)="revertElement(elem)"><nb-icon icon="refresh"></nb-icon></button>
+                    <button nbButton status="success" [disabled]="!elem.changes" (click)="saveElement(elem)">SAVE</button>
+                    <button nbButton status="danger" (click)="deleteElement(elem)"><nb-icon icon="trash-2"></nb-icon></button>
+                </nb-card-footer>
+
+            </nb-card>
+        </nb-accordion-item-body>
+    </nb-accordion-item>
+</nb-accordion>
+
+<nb-card class="add-element-card centered">
+    <nb-card-body>
+        <button nbButton status="success" fullWidth (click)="addElement()">ADD NEW ELEMENT</button>
+    </nb-card-body>
+</nb-card>
+
+
+<!-- nb-select does not work without these (the router blocks the styling) -->
+</nb-layout-column></nb-layout>
