@@ -97,7 +97,7 @@ let getOauth = async () => {
           'channel:manage:polls',
           'channel:manage:predictions',
           'channel:manage:redemptions',
-          'channel:manage:schedule',
+          //'channel:manage:schedule',
           'channel:read:hype_train',
           'channel:read:polls',
           'channel:read:predictions',
@@ -105,17 +105,17 @@ let getOauth = async () => {
           'channel:read:subscriptions',
           'clips:edit',
           'moderation:read',
-          'user:edit',
-          'user:manage:blocked_users',
-          'user:read:blocked_users',
-          'user:read:broadcast',
-          'user:read:follows',
-          'user:read:subscriptions',
+          //'user:edit',
+          //'user:manage:blocked_users',
+          //'user:read:blocked_users',
+          //'user:read:broadcast',
+          //'user:read:follows',
+          //'user:read:subscriptions',
           'channel:moderate',
           'chat:edit',
           'chat:read',
-          'whispers:read',
-          'whispers:edit'
+          //'whispers:read',
+          //'whispers:edit'
         ]
         let oauthString =
             `https://id.twitch.tv/oauth2/authorize
