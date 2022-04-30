@@ -9,17 +9,15 @@ export class Common extends Message {
     this._init()
   }
 
-  private hug = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
-    if (/^!hug [\@a-zA-Z0-9][a-zA-Z0-9]*/i.test(message)) {
-      this.client.say(channel, `/me @${user} hugs @${filterParameters(message)[0].replace('@', '')} then lowkey licks their cheek!`)
-    }
-  }
+  static commands = [
+    { command: `<any mention of ccarbn>`, description: `cCarbn answers the greeting`},
+    { command: `F`, description: `cCarbn Fs too`},
+    { command: `^`, description: `cCarbn ^ too`},
+    { command: `!hug <user>`, description: `Hugs the user`},
+    { command: `!tuck <user>`, description: `Tucks the user`},
 
-  private tuck = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
-    if (/^!tuck [\@a-zA-Z0-9][a-zA-Z0-9]*/i.test(message)) {
-      this.client.say(channel, `/me @${user} tucks @${filterParameters(message)[0].replace('@', '')} in their bed! Good Night you PogChamp!`)
-    }
-  }
+    { command: ``, description: ``},
+  ]
 
   private greetings = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/cCarbn/i.test(message) && (/hi/i.test(message) || /hey/i.test(message) || /hello/i.test(message) || /what's up/i.test(message) || /o\//i.test(message))) {
@@ -36,7 +34,7 @@ export class Common extends Message {
         `I was just thinking about you @${user}!!! D: D: D:`,
       ]
       let options = [
-        `@${user} this is ACTUALLY funny cause my server just got a 0 on a Math.random which is pretty fucking incredible if you ask me... I didn't even think this was ever gonna happen ngl...`,
+        `@${user} this is ACTUALLY funny cause my server just got a clean 0 on a Math.rand which is pretty fucking incredible if you ask me... I didn't even think this was ever gonna happen ngl...`,
 
         ...custom,
         ...custom,
@@ -49,16 +47,9 @@ export class Common extends Message {
         ...custom,
         ...custom,
 
-        `@${user} this is ACTUALLY funny cause my server just got a 1 on a Math.random which is pretty fucking incredible if you ask me... I didn't even think this was ever gonna happen ngl...`,
+        `@${user} this is ACTUALLY funny cause my server just got a clean 1 on a Math.random which is pretty fucking incredible if you ask me... I didn't even think this was ever gonna happen ngl...`,
       ]
-      this.client.say(channel, options[Math.floor(Math.random() * options.length)])
-    }
-  }
-
-  private simp = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
-    if (/ simp /i.test(message) || / simp[\?\!]/.test(message) || / simp$/.test(message) || / simping /.test(message) || / simping$/.test(message)) {
-      if (this._timeout(10)) return
-      this.client.say(channel, `/me @${user} We don't use that language over here...`)
+      this.client.say(channel, '/me ' + options[Math.floor(Math.random() * options.length)])
     }
   }
 
@@ -69,13 +60,26 @@ export class Common extends Message {
     }
   }
 
-  private quote = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
+  private hug = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
+    if (/^!hug [\@a-zA-Z0-9][a-zA-Z0-9]*/i.test(message)) {
+      this.client.say(channel, `/me @${user} hugs @${filterParameters(message)[0].replace('@', '')} with love!`)
+    }
+  }
+
+  private tuck = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
+    if (/^!tuck [\@a-zA-Z0-9][a-zA-Z0-9]*/i.test(message)) {
+      this.client.say(channel, `/me @${user} tucks @${filterParameters(message)[0].replace('@', '')} snuggly in their bed!`)
+    }
+  }
+
+  private caret = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^\^$/.test(message)) {
       if (this._timeout(20 * 60)) return
       this.client.say(channel, `/me ^^`)
     }
   }
 
+  
   private cats = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/!cat/i.test(message)) {
       if (this._timeout(5)) return
