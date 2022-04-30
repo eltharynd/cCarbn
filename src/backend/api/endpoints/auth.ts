@@ -115,7 +115,7 @@ export class Auth {
 
         Socket.io.emit(req.body.state, {
           _id: registered._id,
-          name: registered.twitchName,
+          name: registered.twitchDisplayName,
           token: registered.token,
           picture: registered.twitchPic
         })
@@ -151,8 +151,7 @@ export class Auth {
         }    
         res.send({
           _id: registered._id,
-          name: registered.twitchName,
-          displayName: registered.twitchDisplayName,
+          name: registered.twitchDisplayName,
           token: registered.token,
           picture: registered.twitchPic
         })
