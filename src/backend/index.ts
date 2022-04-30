@@ -26,16 +26,6 @@ let startApp = async () => {
 
   console.info('CONNECTING TO TWITCH...')
 
-  //MIGRATION. remove after first launch in production
-  let commands = await Command.find() 
-  for(let c of commands){
-    if(c.params) {
-      c.args = c.params
-      c.params = null
-    }
-    await c.save()
-  }
-
   await Twitch.init()
   let admin: any = await User.findOne({admin: true})
   let defaultUserToken: any = await UserToken.findOne({userId: admin._id})
