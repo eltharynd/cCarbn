@@ -29,6 +29,8 @@ nb-accordion-item-header {
   > *:not(:last-child) {
     margin-right: 2rem
   }
+  background-color: $inner-element-background;
+  border-radius: 5px
 }
 
 .storeable-header {
