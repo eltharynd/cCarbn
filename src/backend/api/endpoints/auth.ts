@@ -54,7 +54,7 @@ export class Auth {
           refreshToken: response.data.refresh_token,
           expiresIn: response.data.expires_in,
           obtainmentTimestamp: Date.now()
-       }
+        }
       
         let userProvider = new RefreshingAuthProvider(
           {
@@ -70,17 +70,22 @@ export class Auth {
         let tokenInfo = await twitch.getTokenInfo()
         let user: any = {
           twitchId: tokenInfo.userId,
-          twitchName: tokenInfo.userName
+          twitchName: tokenInfo.userName,
         }
         let registered: any = await User.findOne({ twitchId: user.twitchId })
         if(!registered) {
 
           let helixUser: HelixUser = await twitch.users.getUserById(user.twitchId)
-          if(helixUser)
+          if(helixUser) {
             user.twitchPic = helixUser.profilePictureUrl
+            user.twitchName = helixUser.name
+            user.twitchDisplayName = helixUser.displayName
+          }
+
 
           registered = new User(user)
           registered.token = `${uuid.v4()}`
+          registered.lastLogin = new Date()
           await registered.save()
           token.userId = registered._id
           let userToken = new UserToken(token)
@@ -89,10 +94,9 @@ export class Auth {
           let helixUser: HelixUser = await twitch.users.getUserById(user.twitchId)
           if(helixUser) {
             registered.twitchPic = helixUser.profilePictureUrl
-            await registered.save()
-          }
-          if(registered.twitchName !== helixUser.displayName) {
-            registered.twitchName = helixUser.displayName
+            registered.twitchName = helixUser.name
+            registered.twitchDisplayName = helixUser.displayName
+            registered.lastLogin = new Date()
             await registered.save()
           }
 
@@ -140,11 +144,15 @@ export class Auth {
         let helixUser: HelixUser = await twitch.users.getUserById(registered.twitchId)
         if(helixUser) {
           registered.twitchPic = helixUser.profilePictureUrl
+          registered.twitchName = helixUser.name
+          registered.twitchDisplayName = helixUser.displayName
+          registered.lastLogin = new Date()
           await registered.save()
         }    
         res.send({
           _id: registered._id,
           name: registered.twitchName,
+          displayName: registered.twitchDisplayName,
           token: registered.token,
           picture: registered.twitchPic
         })

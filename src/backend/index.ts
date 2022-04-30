@@ -11,6 +11,7 @@ import { UserToken } from './db/models/tokens'
 import * as Mongoose from 'mongoose'
 import { Command } from './db/models/command'
 import axios from 'axios'
+import { HelixUser } from '@twurple/api/lib'
 
 //@ts-ignore
 export const PORT: number = process.env.PORT || 3000

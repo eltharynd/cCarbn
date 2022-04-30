@@ -9,11 +9,16 @@ export const userSchema: Schema = new Schema({
   admin: Boolean,
   twitchId: String,
   twitchName: String,
+  twitchDisplayName: String,
   twitchPic: String,
   created: {
     type: Date,
     default: Date.now()
-  }
+  },
+  lastLogin: {
+    type: Date,
+    default: Date.now()
+  },
 })
 export const User = model('User', userSchema)
 
