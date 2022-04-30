@@ -7,12 +7,13 @@ nb-card-header {
   > img {
     flex-grow: 1;
     min-width: 100px;
+    max-width: 350px;
   }
   > div {
     display: flex;
     flex-direction: column;
     margin-left: 2rem;
-    flex-shrink: 0;
+    //flex-shrink: 0;
   }
 }
 
