@@ -16,7 +16,7 @@ import { Component } from "@angular/core"
         <router-outlet></router-outlet>
       </nb-layout-column>
 
-      <nb-layout-footer fixed>
+      <nb-layout-footer>
         <app-footer></app-footer>
       </nb-layout-footer>
 
