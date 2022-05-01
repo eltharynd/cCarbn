@@ -1,32 +1,16 @@
+import { HelixChannel } from '@twurple/api/lib'
 import { TwitchPrivateMessage } from '@twurple/chat/lib/commands/TwitchPrivateMessage'
 import { from } from 'rxjs'
 import { filter, map, take, toArray } from 'rxjs/operators'
 import { Command } from '../../db/models/command'
 import { Mongo } from '../../db/mongo'
+import { Twitch } from '../../twitch/twitch'
 import { MAX_CHAT_MESSAGE_LENGTH, Message } from '../message'
 
 const RGX_TARGET = /\@\w+(\s|$)/gi
 const RGX_EVAL = /\$eval\(.+\)(\s|$)/gi
 const RGX_RAND = /\$((rand)|(rnd))\d+/gi
 
-const options = [
-  {
-    key: '--cd=<123>',
-    description: 'Sets cooldown for <123> seconds.'
-  },
-  {
-    key: '--cdpu',
-    description: 'Sets cooldown on a per user basis.'
-  },
-  {
-    key: '--mods',
-    description: 'Only mods are allowed to execture this command.'
-  },
-  {
-    key: '--streamer',
-    description: 'Only the streamer is allowed to exceute this command.'
-  },
-]
 const FORMAT_ERROR = 'This command is formatted wrong... Please check your spelling or consult the documentation...'
 
 export class Storeable extends Message {
@@ -242,7 +226,7 @@ export class Storeable extends Message {
   }
 
   private _generateListener = (command) => {
-    return (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
+    return async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
       let tester = command.command
       if (new RegExp('^' + tester, 'i').test(message)) {
 
@@ -267,7 +251,36 @@ export class Storeable extends Message {
             let arg = command.args[i]
 
             if (new RegExp(RGX_TARGET).test(arg)) {
-              answer = answer.replace(`{{${i}}}`, shift())
+              if(/\@streamer\s*/gi.test(arg)) {
+                try {
+                  let streamer = shift().replace(/\@/gi, '').replace(/\s+/gi, '').toLowerCase()
+                  let channel: any = (await Twitch.client.search.searchChannels(streamer)).data
+                  channel = await from(channel).pipe(
+                    filter((channel: any) => channel.name === streamer),
+                    take(1)
+                  ).toPromise()
+                  let stream = await Twitch.client.streams.getStreamByUserId(channel.id)
+                  let lastGame
+                  let status = 'Offline'
+                  if(stream?.gameName) {
+                    lastGame = stream.gameName
+                    status = 'Online'
+                  } else if(channel.gameName)
+                    lastGame = channel.gameName
+                  else
+                    lastGame = "'Never streamed before'"
+
+                  answer = answer.replace(`{{${i}}}`, '')
+                  answer = answer.replace(/\$streamer/, channel.name)
+                  answer = answer.replace(/\$streamer_id/, channel.displayName)
+                  answer = answer.replace(/\$last_game/, lastGame)
+                  answer = answer.replace(/\$status/, status)
+                } catch (err) {
+                  this.client.say(channel, '/me I couldn\'t find that streamer...')
+                  return
+                } 
+              } else 
+                answer = answer.replace(`{{${i}}}`, shift())
             } else if (new RegExp(RGX_EVAL).test(arg)) {
               answer = answer.replace(`{{${i}}}`, `${eval(arg.replace(/^\$eval\(/, '').replace(/\)$/, ''))}`)
             }
@@ -289,6 +302,11 @@ export class Storeable extends Message {
             }
 
             if(/\@user/gi.test(answer)) answer = answer.replace(/\@user/gi, `@${msg.userInfo.displayName}`)
+            if(/\@streamer/gi.test(answer)) {
+
+
+              answer.replace(/\@streamer/gi, `@${msg.userInfo.displayName}`)
+            }
 
             this.client.say(channel, `/me ${answer}`)
           }

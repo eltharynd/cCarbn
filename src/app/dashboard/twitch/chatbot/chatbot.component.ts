@@ -54,10 +54,14 @@ export class ChatbotComponent {
         effect: `Replaces this with the user sending the command.`
       },
       {
+        key: '@streamer',
+        effect: 'Looks up a streamer and replaces the following:\n\n   $streamer   with the streamer username\n   $streamer_id   with the streamer login name\n   $last_game   with the last category they streamed\n   $status   with \'Online\' or \'Offline\'\n\nFor example you could create your shourout with:\n\n!cmd add !so @streamer Hey people, check out $streamer over at https://twitch.tv/$streamer_id. They\'re currently $status and were last seen playing $last_game'
+      },
+      {
         key: '@<any word>',
         effect: `Replaces this with an argument sent with the command.
 
-                  This works with @ followed by <any word> (except for user).
+                  This works with @ followed by <any word> (except for user and streamer).
                   You will see that same word as the name of the argument.`
       },
       {
