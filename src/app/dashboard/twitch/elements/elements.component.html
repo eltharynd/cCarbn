@@ -309,7 +309,7 @@
                                         {{ev.revert ? 'Automatically revert back' : 'Leave as is'}}
                                     </nb-toggle>
                                     <div class="field-container">
-                                        <input nbInput type="number" [(ngModel)]="ev.duration" (change)="elem.changes=true" fullWidth>
+                                        <input nbInput type="number" placeholder="Next will play immediately" [(ngModel)]="ev.duration" (change)="elem.changes=true; ev.duration=ev.duration>0 ? ev.duration : null" fullWidth>
                                         <div class="anchor"><label>Duration</label></div>
                                     </div>
 
