@@ -16,7 +16,7 @@ export class ObsComponent implements OnInit {
   async ngOnInit() {
 
     if(this.event.duration)
-     try { parseInt(this.event.duration) } catch(e) { this.event.duration = null }
+     try { parseFloat(this.event.duration) } catch(e) { this.event.duration = null }
      
     switch (this.event.trigger) {
       case 'sourceVisibility':
