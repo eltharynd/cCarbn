@@ -217,7 +217,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       this.audioLoaded = false
     })
     this.trackChangeSubject.subscribe(async response => {
-      if(!response.url) return
+      if(!response.url) return this.audioLoaded = true
       let name: string = response.url.replace(/^.*\//,'').replace(/\..*$/, '')
       let level = name.charAt(name.length-1)
       this.audio.tracks[level] = `${SERVER_URL}${response.url}`
