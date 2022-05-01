@@ -69,7 +69,7 @@ export class UploadComponent {
             if(!allowed) {
                 this.failure = true
                 this.busy = false
-                if(this.uploading) this.uploading.next(false)
+                if(this.uploaded) this.uploaded.next(false)
                 this.feedbackMessage = `File format not valid.\nAllowed file types: ${this.allowedTypes.join(', ')}`
                 return
             }
@@ -79,7 +79,7 @@ export class UploadComponent {
         if(this.maxSizeInMB && sizeInMB>this.maxSizeInMB) {
             this.failure = true
             this.busy = false
-            if(this.uploading) this.uploading.next(false)
+            if(this.uploaded) this.uploaded.next(false)
             this.feedbackMessage = `File too heavy.\nMax ${this.maxSizeInMB} MB.`
             return
         }

@@ -15,6 +15,9 @@ export class ObsComponent implements OnInit {
   constructor(private events: EventsService, private OBS: OBSService) { }
   async ngOnInit() {
 
+    if(this.event.duration)
+     try { parseFloat(this.event.duration) } catch(e) { this.event.duration = null }
+     
     switch (this.event.trigger) {
       case 'sourceVisibility':
         this.OBS.toggleSource(this.event.toggleTo, this.event.scene.sceneName ? this.event.scene.sceneName : this.event.scene, this.event.source.sourceName? this.event.source.sourceName : this.event.source)

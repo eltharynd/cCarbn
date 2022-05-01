@@ -14,6 +14,7 @@ import { KeyValue } from '@angular/common'
 })
 export class ElementsComponent implements OnInit {
 
+  showBrowserSource = false
   viewport = {
     url: `${environment?.production ? 'https://cCarbn.io/' : 'http://localhost:4200/'}browsersource/${this.auth.currentUser?._id}`,
     width: 1920,
@@ -87,6 +88,7 @@ export class ElementsComponent implements OnInit {
       valid = false
     } else {
       for(let condition of element.conditions) {
+        //TODO finish conditions check
         let c: _condition = condition
         try {
           if(
@@ -236,7 +238,7 @@ export class ElementsComponent implements OnInit {
       event.src = null
       
       await this.saveElement(element)
-      //TODO if element could not be saved (invalid) this can be problematic.. consider saving onls new src (original PATCH request)
+      //TODO if element could not be saved (invalid) this can be problematic.. consider saving only new src (original intended PATCH request)
     }
   }
   async videoUploaded(element: _element, event, url) {

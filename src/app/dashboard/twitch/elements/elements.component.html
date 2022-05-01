@@ -2,8 +2,8 @@
 <nb-layout><nb-layout-column>
 
 
-<nb-card class="global-card centered" status="primary">
-    <nb-card-header>
+<nb-card class="global-card centered">
+    <nb-card-header class="card-header">
         GLOBAL SETTINGS
     </nb-card-header>
     <nb-card-body>
@@ -17,7 +17,11 @@
                         <nb-list-item>
                             Browser source url:
                             &nbsp;
-                            <a [href]="viewport.url" target="_blank">{{viewport.url}}</a>
+                            <div class="streamer-mode" [class.on]="!showBrowserSource">
+                                <nb-icon *ngIf="!showBrowserSource" (click)="showBrowserSource=true" icon="eye"></nb-icon>
+                                <a [href]="viewport.url" target="_blank" class>{{viewport.url}}</a>
+                            </div>
+                            
                         </nb-list-item>
                         <nb-list-item>
                             Browser source size:
@@ -305,7 +309,7 @@
                                         {{ev.revert ? 'Automatically revert back' : 'Leave as is'}}
                                     </nb-toggle>
                                     <div class="field-container">
-                                        <input nbInput type="number" [(ngModel)]="ev.duration" (change)="elem.changes=true" fullWidth>
+                                        <input nbInput type="number" placeholder="Next will play immediately" [(ngModel)]="ev.duration" (change)="elem.changes=true; ev.duration=ev.duration>0 ? ev.duration : null" fullWidth>
                                         <div class="anchor"><label>Duration</label></div>
                                     </div>
 

@@ -74,7 +74,6 @@ export class Chat {
 
     } else  {
       if(enable) {
-        //TODO check if already connected
         switch(category) {
           case Category.self:
             new Self(iClient)

@@ -3,7 +3,7 @@
 <nb-accordion *ngIf="listeners.settings" class="centered">
   <nb-accordion-item>
 
-    <nb-accordion-item-header>
+    <nb-accordion-item-header class="card-header">
       <nb-toggle [(checked)]="listeners.settings.chatbot.categories.storeable.enabled"
                   (click)="$event.stopPropagation()"
                   (change)="listeners.toggleCategory('storeable')" 
@@ -66,7 +66,7 @@
 <nb-accordion *ngIf="listeners.settings" class="centered">
   <nb-accordion-item>
 
-    <nb-accordion-item-header>
+    <nb-accordion-item-header class="card-header">
       <nb-toggle [(checked)]="listeners.settings.chatbot.categories.pokemon.enabled"
                   (click)="$event.stopPropagation()"
                   (change)="listeners.toggleCategory('pokemon')" 
@@ -95,7 +95,7 @@
 <nb-accordion *ngIf="listeners.settings" class="centered">
   <nb-accordion-item>
 
-    <nb-accordion-item-header>
+    <nb-accordion-item-header class="card-header">
       <nb-toggle [(checked)]="listeners.settings.chatbot.categories.common.enabled"
                   (click)="$event.stopPropagation()"
                   (change)="listeners.toggleCategory('common')" 
@@ -124,7 +124,7 @@
 <nb-accordion *ngIf="listeners.settings" class="centered">
   <nb-accordion-item>
 
-    <nb-accordion-item-header>
+    <nb-accordion-item-header class="card-header">
       <nb-toggle [(checked)]="listeners.settings.chatbot.categories.self.enabled"
                   (click)="$event.stopPropagation()"
                   (change)="listeners.toggleCategory('self')" 

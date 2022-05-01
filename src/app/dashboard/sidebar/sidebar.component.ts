@@ -19,16 +19,17 @@ export class SidebarComponent {
     {
       title: 'Twitch',
       icon: {icon: 'twitch', pack:'fab'},
+      link: '/dashboard/twitch',
       children: [
         {
           title: 'API & Connections',
           icon: {icon: 'link', pack: 'fa'},
-          link: 'twitch/api',
+          link: '/dashboard/twitch/api',
         },
         {
           title: 'Elements & Alerts',
           icon: {icon: 'film', pack: 'eva'},
-          link: 'twitch/elements',
+          link: '/dashboard/twitch/elements',
         },
         {
           title: 'Hype Train',
@@ -39,23 +40,24 @@ export class SidebarComponent {
         {
           title: 'Chat Commands',
           icon: {icon: 'swatchbook', pack: 'fa'},
-          link: 'twitch/chatbot',
+          link: '/dashboard/twitch/chatbot',
         }
       ]
     },
     {
       title: 'Discord',
       icon: {icon: 'discord', pack:'fab'},
+      link: '/dashboard/discord',
       children: [
         {
           title: 'API & Connections',
           icon: {icon: 'link', pack: 'fa'},
-          link: 'discord/api',
+          link: '/dashboard/discord/api',
         },
         {
           title: 'Functions',
           icon: {icon: 'swatchbook', pack: 'fa'},
-          link: 'discord/functions',
+          link: '/dashboard/discord/functions',
         },
       ]
     }

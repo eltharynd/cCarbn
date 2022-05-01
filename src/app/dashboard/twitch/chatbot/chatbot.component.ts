@@ -56,8 +56,9 @@ export class ChatbotComponent {
       {
         key: '@<any word>',
         effect: `Replaces this with an argument sent with the command.
+
                   This works with @ followed by <any word> (except for user).
-                  You will see that same word as the name of the parameter.`
+                  You will see that same word as the name of the argument.`
       },
       {
         key: '$rnd<123>',
@@ -97,14 +98,6 @@ export class ChatbotComponent {
 
   _common = {
     commands: [
-      { command: `<any mention of ccarbn>`, description: `cCarbn answers the greeting`},
-      { command: `F`, description: `cCarbn "F"s too`},
-      { command: `^`, description: `cCarbn "^"s too`}
-    ]
-  }
-
-  _self = {
-    commands: [
       { command: `!hug <user>`, description: `Hugs the user`},
       { command: `!tuck <user>`, description: `Tucks the user`},
       { command: `!time <timezone or abbreviation>`, description: `Returns the time in that specific timezone (Europe/Bern, CET, EST, PST)`},
@@ -113,6 +106,16 @@ export class ChatbotComponent {
       { command: `!darkjoke`, description: `Attempts to tell a dark joke from a public API.\nWARNING: can be offensive!`},
     ]
   }
+  
+  _self = {
+    commands: [
+      { command: `<any mention of ccarbn>`, description: `cCarbn answers the greeting`},
+      { command: `F`, description: `cCarbn "F"s too`},
+      { command: `^`, description: `cCarbn "^"s too`}
+    ]
+  }
+
+
 
   constructor(public listeners: ListenersService, public data: DataService, public auth: AuthGuard) {}
 
