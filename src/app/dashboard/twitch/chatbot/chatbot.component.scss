@@ -1,28 +1,5 @@
 @import '../../../../themes.scss';
 
-//TODO DELETE AFTER PAGE IS READY
-nb-card:first-child {
-  min-width: 25rem;
-  max-width: 25rem;
-  //margin: 0 0 2rem;
-}
-
-//TODO DELETE AFTER PAGE IS READY
-nb-card:first-child > nb-list-item {
-  padding-left: 3rem;
-  padding-right: 2rem;
-  display: flex;
-  justify-content: space-between;
-}
-
-//TODO DELETE AFTER PAGE IS READY
-.invisible {
-  display: none;
-}
-
-
-
-
 nb-accordion-item-header {
   display: flex;
   align-items: center;

@@ -54,16 +54,16 @@ let startApp = async () => {
 
   console.info('SERVER INITIALIZED. ACTIVATING USER SERVICES...')
 
-  let settings: any[] = await Settings.find()
-  for(let s of settings) {
-    let user = await User.findOne({_id: s.userId})
+  let users = await User.find().sort({ lastLogin: -1 }) 
+  for(let user of users) {
+    let s = await Settings.findOne({userId: user._id})
+    if(!s) continue
 
-    if(!user) {
-      await Settings.deleteOne({_id: s._id})
-      continue
-    }
+    console.info(`Processing user ${user.twitchDisplayName}...`)
+
     let ss = s.json
     if(ss.api.enabled) {
+      console.info(`Enabling APIs for user ${user.twitchDisplayName}...`)
       try {
         await Twitch.connect(user.toJSON(), ss)
       } catch (e: any) {
@@ -75,6 +75,7 @@ let startApp = async () => {
       }
     }
     if(ss.chatbot.enabled) {
+      console.info(`Enabling chatbot for user ${user.twitchDisplayName}...`)
       try {
         await Chat.connect(user.toJSON(), ss)
       } catch (e) {

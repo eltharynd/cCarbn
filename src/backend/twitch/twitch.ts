@@ -66,6 +66,7 @@ export class Twitch {
           },
         }),
       secret: token.secret,
+      strictHostCheck: false //TODO check for production
     })
     //@ts-ignore
     await Twitch.listener.listen(FORCE_REVERSE_PROXY || process?.env?.NODE_ENV === 'production' ? null : +PORT + 1)
