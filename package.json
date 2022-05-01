@@ -1,6 +1,11 @@
 {
   "name": "ccarbn",
   "version": "1.0.0",
+  "license": "Apache 2.0 and CC",
+  "author": {
+    "name": "eltharynd",
+    "url": "https://twitch.tv/eltharynd"
+  },
   "scripts": {
     "build": "echo n| npm install && ng build && rm -rf dist/backend && tsc --project backend.tsconfig.json",
     "start": "NODE_ENV='production' node dist/backend/index.js",
