@@ -32,13 +32,13 @@ export class Storeable extends Message {
   }
 
   private command = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
-    if (/^!((command)|(commands)|(cmd)|(cmds)) ((add)|(edit)|(delete)|(show)|(source)|(args)|(list)) .+$/i.test(message)) {
+    if (/^!((command)|(commands)|(cmd)|(cmds)) ((add )|(edit )|(delete )|(show )|(source )|(args )|(list)).+$/i.test(message)) {
       if (!msg.userInfo.isMod && !msg.userInfo.isBroadcaster) {
         this.client.say(channel, `/me Only mods can edit commands...`)
         return
       }
 
-      let buffer = message.replace(/^!command /i, '').replace(/^!cmd /i, '')
+      let buffer = message.replace(/^!command /i, '').replace(/^!commands /i, '').replace(/^!cmd /i, '').replace(/^!cmds /i, '')
       if (buffer.startsWith('add') || buffer.startsWith('edit')) {
         let edit = buffer.startsWith('edit') ? true : false
         buffer = buffer.replace('add ', '').replace('save ', '').replace('edit ', '')
