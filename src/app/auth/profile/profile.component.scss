@@ -11,8 +11,9 @@ nb-card-header {
     > div {
         display: flex;
         flex-direction: column;
-        margin-left: 2rem;
-        //flex-shrink: 0;
+        margin-left: 1rem;
+        max-width: 50vw;
+        text-align: right;
     }
 }
   
