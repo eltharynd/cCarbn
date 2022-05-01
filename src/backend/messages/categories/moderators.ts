@@ -17,7 +17,7 @@ export class Moderators extends Message {
   }
 
   private shoutout = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
-    
+    return
     if (!msg.userInfo.isMod && !msg.userInfo.isBroadcaster) return
 
     let parameters = filterParameters(message)
