@@ -56,8 +56,9 @@ export class ChatbotComponent {
       {
         key: '@<any word>',
         effect: `Replaces this with an argument sent with the command.
+
                   This works with @ followed by <any word> (except for user).
-                  You will see that same word as the name of the parameter.`
+                  You will see that same word as the name of the argument.`
       },
       {
         key: '$rnd<123>',
