@@ -146,7 +146,7 @@ export class Storeable extends Message {
       } else if(buffer.startsWith('delete')) {
         buffer = buffer.replace('delete ', '')
 
-        let name: RegExpMatchArray | string = buffer.match(/^\!*\w+(\s|$)/i)
+        let name: RegExpMatchArray | string = buffer.match(/^\!*\S+ /i)
         if (!name) {
           this.client.say(channel, `/me ${FORMAT_ERROR}`)
           return
