@@ -55,7 +55,7 @@ export class ChatbotComponent {
       },
       {
         key: '@streamer',
-        effect: 'Looks up a streamer and replaces the following:\n\n   $streamer   with the streamer username\n   $streamer_id   with the streamer login name\n   $last_game   with the last category they streamed\n   $status   with \'Online\' or \'Offline\'\n\nFor example you could create your shourout with:\n\n!cmd add !so @streamer Hey people, check out $streamer over at https://twitch.tv/$streamer_id. They\'re currently $status and were last seen playing $last_game'
+        effect: 'Looks up a streamer and replaces the following:\n\n   $streamer   with the streamer username\n   $streamer_id   with the streamer login name\n   $last_game   with the last category they streamed\n   $status   with \'Online\' or \'Offline\'\n\nFor example you could create your shourout with:\n\n!cmd add !so @streamer Hey people, check out $streamer over at twitch.tv/$streamer_id . They\'re currently $status and were last seen playing $last_game'
       },
       {
         key: '@<any word>',
