@@ -447,9 +447,9 @@ export class ElementsComponent implements OnInit {
       //subMessage: 'Sub message',
     },
     voices: {
-      au: 'Australian english',
-      uk: 'British english',
-      us: 'American english'
+      'en-au': 'Australian english',
+      'en-uk': 'British english',
+      'en-us': 'American english'
     },
     supporterVoices: {
       'google_en-US-Standard-A': 'Google - Masculine A',

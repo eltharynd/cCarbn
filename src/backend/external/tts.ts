@@ -68,8 +68,7 @@ export class TTS {
                     }
                 }
 
-                _voice = TTSVoices[voice]
-                resolve(gtts[voice ? voice : TTSVoices.us].stream(text))
+                resolve(gtts[voice ? voice : 'en-us'].stream(text))
 
             } catch(e) {
                 console.error(e)
@@ -77,12 +76,4 @@ export class TTS {
             }
         })
     }
-}
-
-export enum TTSVoices {
-    au = 'en-au',
-    uk = 'en-uk',
-    us = 'en-us',
-    google_en = 'en_us',
-    amazon_joanna = 'Joanna'
 }
