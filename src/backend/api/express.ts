@@ -205,7 +205,7 @@ export class Api {
       let text = req.params.text.replace(/\&questionmark\;/gi, '?')
       if(!text || text.length<1) return res.status(400).send()
 
-      let user: any = await MongoUser.find({ _id: Mongo.ObjectId(req.params.userId)})
+      let user: any = await MongoUser.findOne({ _id: Mongo.ObjectId(req.params.userId)})
       if(!user)
         return res.send(403).send()
 
