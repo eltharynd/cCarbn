@@ -1,5 +1,5 @@
 <div class="container">
-    <audio *ngIf="audio" #audioPlayer (loadeddata)="onLoadedData()" (ended)="onPlaybackEnded()">
-        <source *ngIf="audio.src" [src]="audio.src">
+    <audio *ngIf="event" #audioPlayer (loadeddata)="onLoadedData()" (ended)="onPlaybackEnded()">
+        <source *ngIf="event.src" [src]="event.src">
     </audio>  
 </div>

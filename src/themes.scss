@@ -67,14 +67,17 @@ $nb-themes: nb-register-theme((
   
 ), ccarbn, cosmic);
 
-$inner-element-background: #8d54f733;
-$inner-element-background-light: #a16eff63;
+//$inner-element-background: #8d54f733;
+//$inner-element-background-light: #a16eff63;
+$inner-element-background: #443978;
+$inner-element-background-light: #5e4a99;
 $inner-element-border: #a16eff;
 $inner-element-color: #cbafff;
 
 .card-header {
   background-color: $inner-element-background-light;
 }
+
 
 .composed-title {
   display: flex;
@@ -99,9 +102,11 @@ $inner-element-color: #cbafff;
 }
 
 
-nb-accordion-item:nth-child(2n) {
+
+nb-accordion.alternate > nb-accordion-item:nth-child(2n) {
   background-color: var(--background-basic-color-2);
 }
+
 
 nb-accordion-item-body.unpadded > div > div {
   padding: 0;
@@ -110,15 +115,43 @@ nb-accordion-item-body.unpadded > div > div {
   }
 }
 
+
+nb-accordion.lighter {
+  nb-accordion-item {
+      overflow: hidden;
+  }
+  nb-accordion-item-header {
+      background-color: $inner-element-background-light;
+      border: 1px solid $inner-element-border;
+  }
+  nb-list-item {
+      background-color: $inner-element-background;
+      border-color: $inner-element-border;
+      border-left: 1px solid $inner-element-border;;
+      border-right: 1px solid $inner-element-border;;
+  }
+  nb-accordion-item:last-child {
+    nb-list-item:last-child {
+      border-bottom: 1px solid $inner-element-border;
+      border-radius: 0 0 .5rem .5rem;
+    }
+  }
+}
+
+
 nb-select.size-medium:not(.full-width) {
   min-width: 180px;
 }
+
 
 .centered {
   max-width: 900px;
   margin: auto;
   margin-bottom: 2rem;
 }
+
+
+
 
 //Workaround until they fix https://github.com/akveo/nebular/issues/2119
 ::-webkit-scrollbar {

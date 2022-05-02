@@ -26,7 +26,8 @@ export class UploadComponent {
     @Input() disabled: boolean = false
 
     @Input() maxSizeInMB: number = 10
-    @Input() allowedTypes: string[]
+    @Input() allowedTypes: string[]|null
+    @Input() blockedTypes: string[]|null
     
     rnd = uuid.v4()
     busy
@@ -71,6 +72,23 @@ export class UploadComponent {
                 this.busy = false
                 if(this.uploaded) this.uploaded.next(false)
                 this.feedbackMessage = `File format not valid.\nAllowed file types: ${this.allowedTypes.join(', ')}`
+                return
+            }
+        }
+
+        if(this.blockedTypes) {
+            let blocked = false
+            for(let type of this.blockedTypes) {
+                if((new RegExp(type, 'gi')).test(file.type)) {
+                    blocked = true
+                    break
+                }     
+            }
+            if(blocked) {
+                this.failure = true
+                this.busy = false
+                if(this.uploaded) this.uploaded.next(false)
+                this.feedbackMessage = `File format not valid.\Blocked file types: ${this.blockedTypes.join(', ')}`
                 return
             }
         }

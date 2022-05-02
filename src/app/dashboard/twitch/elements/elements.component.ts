@@ -5,7 +5,7 @@ import { EVENT_TYPES } from 'src/app/browsersource/events/events.service'
 import { filter, from, map, Subject, toArray } from 'rxjs'
 import { environment } from 'src/environments/environment'
 import { OBSService } from 'src/app/shared/obs.service'
-import { POSITION } from 'src/app/browsersource/events/events.component'
+import { POSITION, TRANSITION } from 'src/app/browsersource/events/events.component'
 import { KeyValue } from '@angular/common'
 @Component({
   selector: 'app-elements',
@@ -29,7 +29,7 @@ export class ElementsComponent implements OnInit {
   constructor(private data: DataService, private auth: AuthGuard, public OBS: OBSService) {
     this.data.get(`user/${this.auth.currentUser?._id}/redemptions`).then(data => this.channelRewards = data)
     this.uploadedSubject.subscribe(data => {
-      this.videoUploaded(data.reference.elem, data.reference.ev, data.url.url)
+      this.mediaUploaded(data.reference.elem, data.reference.ev, data.url.url)
     })
   }
 
@@ -112,6 +112,7 @@ export class ElementsComponent implements OnInit {
       valid = false
     } else {
       //TODO check events
+      delete element.events[0].withPrevious
     }
 
     if(valid) {
@@ -174,12 +175,12 @@ export class ElementsComponent implements OnInit {
 
   selectedEventType
   addEvent(element: _element, type) {
+    if(element.events.length>0) delete element.events[0].withPrevious
     element.events.push({
       type: type
     })
 
     this.selectedEventType = null
-    element.activeTab = element.events.length-1
     element.changes = true
   }
   deleteEvent(element: _element, index) {
@@ -193,6 +194,8 @@ export class ElementsComponent implements OnInit {
 
   userVideos
   userAudios
+  userGIFS
+  userImages
   async getUserSelectableFiles(event) {
     let files = await this.data.get(`user/${this.auth.currentUser?._id}/uploads`)
     
@@ -208,6 +211,26 @@ export class ElementsComponent implements OnInit {
 
     this.userAudios = await from(files).pipe(
       filter((u: any) => /^audio/i.test(u.contentType)),
+      map((u: any) => {
+        return Object.assign(u, {
+          src: `${SERVER_URL}uploads/${this.auth.currentUser?._id}/${encodeURI(u.filename)}`
+        })
+      }),
+      toArray(),
+    ).toPromise()
+
+    this.userGIFS = await from(files).pipe(
+      filter((u: any) => /^image\/gif/i.test(u.contentType)),
+      map((u: any) => {
+        return Object.assign(u, {
+          src: `${SERVER_URL}uploads/${this.auth.currentUser?._id}/${encodeURI(u.filename)}`
+        })
+      }),
+      toArray(),
+    ).toPromise()
+
+    this.userImages = await from(files).pipe(
+      filter((u: any) => /^image/i.test(u.contentType) && !/^image\/gif/i.test(u.contentType)),
       map((u: any) => {
         return Object.assign(u, {
           src: `${SERVER_URL}uploads/${this.auth.currentUser?._id}/${encodeURI(u.filename)}`
@@ -232,7 +255,7 @@ export class ElementsComponent implements OnInit {
       event.src = null
     }  
   }
-  async deleteVideoSrc(element: _element, event, src) {
+  async deleteMediaSource(element: _element, event, src) {
     let filePath = src.replace(SERVER_URL, '')
     if(await this.data.delete(filePath)) {
       event.src = null
@@ -241,7 +264,7 @@ export class ElementsComponent implements OnInit {
       //TODO if element could not be saved (invalid) this can be problematic.. consider saving only new src (original intended PATCH request)
     }
   }
-  async videoUploaded(element: _element, event, url) {
+  async mediaUploaded(element: _element, event, url) {
     event.src = `${SERVER_URL}${url}`
     event.upload = false
     let fileName = event.src.replace(/^.+\//g, '')
@@ -259,13 +282,12 @@ export class ElementsComponent implements OnInit {
   onLoadedData(event, data) {
     let file = data.srcElement
     let mediaInformation = {
-      width: file.videoWidth||null,
-      height: file.videoHeight||null,
-      duration: file.duration
+      width: file.videoWidth||file.naturalWidth||null,
+      height: file.videoHeight||file.naturalHeight||null,
+      duration: file.duration||null
     }
     event.mediaInformation = mediaInformation
   }
-
 
   originalOrder = (a: KeyValue<string,string>, b: KeyValue<string,string>): number => {
     return 0;
@@ -341,22 +363,83 @@ export class ElementsComponent implements OnInit {
     gifted: 'Only gifted'
   }
   
-  _POSITION = Object.keys(POSITION)
-  _video = {
-    settings: {
-      position: 'POSITION',
-      width: 'number',
-      height: 'number',
-      marginTop: 'number',
-      marginRight: 'number',
-      marginBottom: 'number',
-      marginLeft: 'number',
+  _POSITION = POSITION
+  _TRANSITION = TRANSITION
+  _options = {
+    video: {
+      mandatory: {
+        position: 'POSITION',
+        "transition IN": 'TRANSITION',
+        "transition OUT": 'TRANSITION',
+      },
+      default: {
+        position: POSITION.CENTER,
+        "transition IN": TRANSITION.NONE,
+        "transition OUT": TRANSITION.NONE,
+      },
+      optional: {
+        width: 'pixel',
+        height: 'pixel',
+        marginTop: 'pixel',
+        marginRight: 'pixel',
+        marginBottom: 'pixel',
+        marginLeft: 'pixel',
+      }
+    },
+    audio: {
+      mandatory: {
+      },
+      default: {
+      },
+      optional: {
+      }
+    },
+    gif: {
+      mandatory: {
+        duration: 'seconds',
+        position: 'POSITION',
+        "transition IN": 'TRANSITION',
+        "transition OUT": 'TRANSITION',
+      },
+      default: {
+        duration: 5,
+        position: POSITION.CENTER,
+        "transition IN": TRANSITION.NONE,
+        "transition OUT": TRANSITION.NONE,
+      },
+      optional: {
+        width: 'pixel',
+        height: 'pixel',
+        marginTop: 'pixel',
+        marginRight: 'pixel',
+        marginBottom: 'pixel',
+        marginLeft: 'pixel',
+      }
+    },
+    image: {
+      mandatory: {
+        duration: 'seconds',
+        position: 'POSITION',
+        "transition IN": 'TRANSITION',
+        "transition OUT": 'TRANSITION',
+      },
+      default: {
+        duration: 5,
+        position: POSITION.CENTER,
+        "transition IN": TRANSITION.NONE,
+        "transition OUT": TRANSITION.NONE,
+      },
+      optional: {
+        width: 'pixel',
+        height: 'pixel',
+        marginTop: 'pixel',
+        marginRight: 'pixel',
+        marginBottom: 'pixel',
+        marginLeft: 'pixel',
+      }
     }
   }
-  _audio = {
-    settings: {
-    }
-  }
+
   _tts = {
     options: {
       redemptionMessage: 'Redemption message',
@@ -434,7 +517,6 @@ const cleanElement = (element: _element) => {
   delete clone.expanded
   delete clone.select
   delete clone.upload
-  delete clone.addedTab
   return clone
 }
 

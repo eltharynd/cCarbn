@@ -116,6 +116,10 @@ export class EventsService {
 
         if(ignore) continue
 
+        if(element.events?.length>0) 
+          element.events[0].withPrevious = false
+        else continue
+
         for(let event of element.events) {
           if(event.type==='tts') {
             switch (event.message) {
@@ -172,13 +176,16 @@ export class EventsService {
     await this.playNext()
   } 
   
+  currentlyPlaying
   private playing = 0
   private async playNext() {
     if(this.eventsQueue.length<1 || (this.playing>0 && !this.eventsQueue[0].withPrevious))
       return
     this.playing++
     let buffer = this.eventsQueue.splice(0, 1)[0]
-    this.eventsSubject.next(Object.assign(buffer, { what: 'start' }))
+
+    this.currentlyPlaying = Object.assign(buffer, { what: 'start' })
+    this.eventsSubject.next(this.currentlyPlaying)
 
     if(this.eventsQueue.length>0 && this.eventsQueue[0].withPrevious)
       return this.playNext()
@@ -227,6 +234,7 @@ export enum EVENT_TYPES {
   audio = 'Audio',
   tts = 'TTS',
   obs = 'OBS',
-  chat = 'Chat Message'
-  //gif = 'GIF',
+  chat = 'Chat Message',
+  gif = 'GIF',
+  image = 'Image',
 }

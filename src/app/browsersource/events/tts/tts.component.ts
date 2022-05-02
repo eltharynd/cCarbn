@@ -8,13 +8,13 @@ import { EventsService } from '../events.service'
 })
 export class TTSComponent implements OnInit {
 
-  @Input() tts: any
+  @Input() event: any
   @ViewChild('ttsPlayer') ttsPlayer: ElementRef
   encodedTTS
 
   constructor(private events: EventsService) { }
   async ngOnInit() {
-    this.encodedTTS = `${SERVER_URL}tts/${this.tts.voice ? this.tts.voice : 'us'}/${encodeURI(this.tts.text.replace(/\?/g, '&questionmark;'))}`
+    this.encodedTTS = `${SERVER_URL}tts/${this.event.voice ? this.event.voice : 'us'}/${encodeURI(this.event.text.replace(/\?/g, '&questionmark;'))}`
   }
 
   alignItems

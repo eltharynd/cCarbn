@@ -1,0 +1,19 @@
+<div class="container" [ngStyle]="{
+    position: 'absolute',
+    display: 'flex',
+    width: (+viewport.width - (+viewport.padding*2))+'px',
+    height: (+viewport.height - (+viewport.padding*2))+'px',
+    alignItems: alignItems ? alignItems : 'center',
+    justifyContent: justifyContent ? justifyContent : 'center'
+}">
+    <img    [src]="event.src"
+            (load)="onLoadedData()"
+            [ngStyle]="{
+                width: event.width ? event.width+'px' : 'fit-content',
+                height: event.height ? event.height+'px' : 'fit-content',
+                marginTop: event.marginTop ? event.marginTop+'px' : null,
+                marginRight: event.marginRight ? event.marginRight+'px' : null,
+                marginBottom: event.marginBottom ? event.marginBottom+'px' : null,
+                marginLeft: event.marginLeft ? event.marginLeft+'px' : null
+            }">
+</div>

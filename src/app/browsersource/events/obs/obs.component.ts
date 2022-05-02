@@ -1,5 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { SERVER_URL } from 'src/app/shared/data.service'
+import { Component, Input, OnInit } from '@angular/core';
 import { OBSService } from 'src/app/shared/obs.service'
 import { EventsService } from '../events.service'
 

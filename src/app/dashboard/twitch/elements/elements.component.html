@@ -59,8 +59,8 @@
     </nb-card-body>
 </nb-card>
 
-<nb-accordion class="centered" multi>
-    <nb-accordion-item *ngFor="let elem of elements" [expanded]="elem.expanded">
+<nb-accordion class="centered alternate" multi>
+    <nb-accordion-item *ngFor="let elem of elements" expanded="true">
         
         <nb-accordion-item-header class="element-header">
             <button nbButton status="primary" nbTooltip="Send test to browser source" nbTooltipStatus="primary" (click)="sendTestEvent($event, elem)"><nb-icon icon="cast"></nb-icon></button>
@@ -78,13 +78,15 @@
         <nb-accordion-item-body>
             <nb-card class="element-card">
 
-                <nb-card-header class="conditions-header">                           
+                <nb-card-header class="conditions-header lighter">                           
                     <nb-list>
                         <nb-list-item *ngFor="let c of elem.conditions; let i = index" class="conditions-entry">
 
                             <div class="field-container">
                                 <nb-select [(selected)]="c.type" (selectedChange)="elem.changes=true; c.compared = null">
-                                    <nb-option *ngFor="let type of _conditionTypes | keyvalue: originalOrder" [value]=type.key>{{type.value}}</nb-option>
+                                    <nb-option  *ngFor="let type of _conditionTypes | keyvalue: originalOrder" [value]=type.key >
+                                        {{type.value}}
+                                    </nb-option>
                                 </nb-select>
                                 <div class="anchor"><label>{{i==0 ? 'When' : 'AND'}}</label></div>
                             </div>
@@ -171,77 +173,117 @@
 
                 <nb-card-body class="events-body">
                     <nb-tabset fullWidth>
-                        <nb-tab *ngFor="let ev of elem.events; let i = index" [tabTitle]="ev.type" [active]="elem.activeTab===i">
+                        <nb-tab *ngFor="let ev of elem.events; let i = index" [tabTitle]="ev.type" style="padding: 0;">
 
-                            <div #videoaudio *ngIf="ev.type==='video' || ev.type==='audio'" class="video-container">
+                            <div #media *ngIf="ev.type==='video' || ev.type==='audio' || ev.type==='gif' || ev.type==='image'" class="media-container">
                                 
-                                <div *ngIf="ev.src && ev.type==='video'" class="video-preview">
-                                    <video style="width: 100%; height: 100%;" (loadeddata)="onLoadedData(ev, $event)" autoplay loop [muted]="'muted'">
+                                <div *ngIf="ev.src" class="media-preview">
+
+                                    <video *ngIf="ev.type==='video'" style="width: 100%; height: 100%;" (loadeddata)="onLoadedData(ev, $event)" autoplay loop [muted]="'muted'">
                                         <source [src]="ev.src">
                                     </video>  
-                                    <button nbButton class="video-delete" status="danger" (click)="deleteVideoSrc(elem, ev, ev.src)"><nb-icon icon="trash-2"></nb-icon></button>
-                                </div>
-                                <div *ngIf="ev.src && ev.type==='audio'" class="video-preview">
-                                    <audio (loadeddata)="onLoadedData(ev, $event)" controls>
+
+                                    <audio *ngIf="ev.type==='audio'" (loadeddata)="onLoadedData(ev, $event)" controls>
                                         <source *ngIf="ev.src" [src]="ev.src">
                                     </audio>
-                                    <button nbButton class="video-delete" status="danger" (click)="deleteVideoSrc(elem, ev, ev.src)"><nb-icon icon="trash-2"></nb-icon></button>
+
+                                    <img *ngIf="ev.type==='gif' || ev.type==='image'" [src]="ev.src" (load)="onLoadedData(ev, $event)" loop="False">
+
+                                    <button nbButton class="media-delete-button" status="danger" (click)="deleteMediaSource(elem, ev, ev.src)"><nb-icon icon="trash-2"></nb-icon></button>
                                 </div>
 
-                                <div *ngIf="!ev.src" class="video-uploader">
-                                    <nb-select placeholder="Select a video" *ngIf="ev.select && ev.type==='video'" [(selected)]="ev.src" (selectedChange)="videoSelected(elem, ev);elem.changes=true">
+                                <div *ngIf="!ev.src" class="media-uploader">
+
+                                    <nb-select placeholder="Select a video" *ngIf="ev.select && ev.type==='video'" [(selected)]="ev.src" (selectedChange)="videoSelected(elem, ev);elem.changes=true" fullWidth>
+                                        <nb-option *ngIf="!userVideos || userVideos.length<1" disabled>No valid file exists</nb-option>
                                         <nb-option *ngFor="let file of userVideos" [value]=file.src>{{file.filename}}</nb-option>
                                     </nb-select>
-                                    <nb-select placeholder="Select an audio" *ngIf="ev.select && ev.type==='audio'" [(selected)]="ev.src" (selectedChange)="videoSelected(elem, ev);elem.changes=true">
+
+                                    <nb-select placeholder="Select an audio" *ngIf="ev.select && ev.type==='audio'" [(selected)]="ev.src" (selectedChange)="videoSelected(elem, ev);elem.changes=true" fullWidth>
+                                        <nb-option *ngIf="!userAudios || userAudios.length<1" disabled>No valid file exists</nb-option>
                                         <nb-option *ngFor="let file of userAudios" [value]=file.src>{{file.filename}}</nb-option>
                                     </nb-select>
-                                    <app-uploader *ngIf="ev.upload" [allowedTypes]="[ev.type]" width="240px" height="120px" [autoIndexing]="true" [uploaded]="uploadedSubject" [reference]="{elem: elem, ev: ev}"></app-uploader>
-                                    <button nbButton class="file-select" status="success" nbTooltip="Select file from existing" nbTooltipStatus="success" (click)="getUserSelectableFiles(ev)"><nb-icon icon="book-open"></nb-icon></button>
-                                    <button nbButton  class="file-upload" status="warning" nbTooltip="Upload a new file" nbTooltipStatus="warning" (click)="ev.upload=true; ev.select = false"><nb-icon icon="cloud-upload"></nb-icon></button>
+
+                                    <nb-select placeholder="Select a GIF" *ngIf="ev.select && ev.type==='gif'" [(selected)]="ev.src" (selectedChange)="videoSelected(elem, ev);elem.changes=true" fullWidth>
+                                        <nb-option *ngIf="!userGIFS || userGIFS.length<1" disabled>No valid file exists</nb-option>
+                                        <nb-option *ngFor="let file of userGIFS" [value]=file.src>{{file.filename}}</nb-option>
+                                    </nb-select>
+
+                                    <nb-select placeholder="Select an image" *ngIf="ev.select && ev.type==='image'" [(selected)]="ev.src" (selectedChange)="videoSelected(elem, ev);elem.changes=true" fullWidth>
+                                        <nb-option *ngIf="!userImages || userImages.length<1" disabled>No valid file exists</nb-option>
+                                        <nb-option *ngFor="let file of userImages" [value]=file.src>{{file.filename}}</nb-option>
+                                    </nb-select>
+
+                                    <app-uploader *ngIf="ev.upload || !ev.src && !ev.select" [allowedTypes]="[ev.type]" [blockedTypes]="ev.type==='image' ? ['gif'] : null" height="120px" [autoIndexing]="true" [uploaded]="uploadedSubject" [reference]="{elem: elem, ev: ev}"></app-uploader>
+                                    <button nbButton class="media-select-button" status="success" nbTooltip="Select file from existing" nbTooltipStatus="success" (click)="getUserSelectableFiles(ev)"><nb-icon icon="book-open"></nb-icon></button>
+                                    <button nbButton *ngIf="ev.select" class="media-upload-button" status="warning" nbTooltip="Upload a new file" nbTooltipStatus="warning" (click)="ev.upload=true; ev.select = false"><nb-icon icon="cloud-upload"></nb-icon></button>
                                 </div>
 
-                                <div *ngIf="ev.src && ev.mediaInformation" class="video-details">
+                                <div *ngIf="ev.src && ev.mediaInformation" class="media-details">
                                     <div *ngIf="ev.mediaInformation.width">Width: {{ev.mediaInformation.width}}px</div>
                                     <div *ngIf="ev.mediaInformation.height">Height: {{ev.mediaInformation.height}}px</div>
-                                    <div>Duration: {{ev.mediaInformation.duration | number: '1.1-1'}}s</div>
+                                    <div *ngIf="ev.mediaInformation.duration">Duration: {{ev.mediaInformation.duration | number: '1.1-1'}}s</div>
                                 </div>
 
-                                <div class="video-settings">
-                                    <nb-list *ngIf="ev.type==='video'">
-                                        <nb-list-item>
-                                            <nb-checkbox [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-checkbox>
-                                        </nb-list-item>
-                                        <nb-list-item *ngFor="let s of _video.settings | keyvalue: originalOrder">
-                                            <div class="key">{{s.key}}</div>
-                                            <div class="value" *ngIf="s.value==='number'">
-                                                <input nbInput type="number" [(ngModel)]="ev[s.key]" (change)="elem.changes=true" fullWidth>
-                                                <div class="unit">px</div>
-                                            </div>
-                                            <div class="value" *ngIf="s.value === 'POSITION'">
-                                                <nb-select [(selected)]="ev.position" (selectedChange)="elem.changes=true">
-                                                    <nb-option *ngFor="let p of _POSITION" [value]="p">{{p}}</nb-option>
-                                                </nb-select>
-                                            </div>
-                                        </nb-list-item>
-                                    </nb-list>
-                                    <nb-list *ngIf="ev.type==='audio'">
-                                        <nb-list-item>
-                                            <nb-checkbox [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-checkbox>
-                                        </nb-list-item>
-                                        <nb-list-item *ngFor="let s of _audio.settings | keyvalue: originalOrder">
-                                            <div class="key">{{s.key}}</div>
-                                            <div class="value" *ngIf="s.value==='number'">
-                                                <input nbInput type="number" [(ngModel)]="ev[s.key]" (change)="elem.changes=true" fullWidth>
-                                                <div class="unit">px</div>
-                                            </div>
-                                            <div class="value" *ngIf="s.value === 'POSITION'">
-                                                <nb-select [(selected)]="ev.position" (selectedChange)="elem.changes=true">
-                                                    <nb-option *ngFor="let p of _POSITION" [value]="p">{{p}}</nb-option>
-                                                </nb-select>
-                                            </div>
-                                        </nb-list-item>
-                                    </nb-list>
-                                </div>
+                                <div class="media-settings">
+
+                                    <nb-toggle [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i==0">
+                                        Don't wait for previous
+                                    </nb-toggle>
+
+                                    <nb-accordion class="lighter">
+
+                                        <nb-accordion-item expanded>
+                                            <nb-accordion-item-header>
+                                                Primary Settings
+                                            </nb-accordion-item-header>
+                                            <nb-accordion-item-body class="unpadded">
+                                                <nb-list>
+                                                    <nb-list-item *ngFor="let o of _options[ev.type].mandatory | keyvalue: originalOrder">
+                                                        <div class="key">{{o.key}}</div>
+                                                        <div class="value" *ngIf="o.value==='pixel' || o.value==='seconds'">
+                                                            <input nbInput type="number" [placeholder]="_options[ev.type].default.hasOwnProperty(o.key) ? _options[ev.type].default[o.key] : null" [(ngModel)]="ev[o.key]" (change)="elem.changes=true" fullWidth>
+                                                            <div class="unit">{{o.value}}</div>
+                                                        </div>
+                                                        <div class="value" *ngIf="o.value === 'POSITION'">
+                                                            <nb-select [placeholder]="_options[ev.type].default[o.key] ? _options[ev.type].default[o.key] : 'Select one'" [(selected)]="ev.position" (selectedChange)="elem.changes=true" fullWidth>
+                                                                <nb-option *ngFor="let p of _POSITION | keyvalue : originalOrder" [value]="p.value">{{p.value}}</nb-option>
+                                                            </nb-select>
+                                                        </div>
+                                                        <div class="value" *ngIf="o.value === 'TRANSITION'">
+                                                            <nb-select [placeholder]="_TRANSITION[ev[o.key]] ? _TRANSITION[ev[o.key]] :  _options[ev.type].default[o.key] ? _options[ev.type].default[o.key] : 'Select one'" [(selected)]="ev[o.key]" (selectedChange)="elem.changes=true" fullWidth>
+                                                                <nb-option *ngFor="let t of _TRANSITION | keyvalue : originalOrder" [value]="t.key">{{t.value}}</nb-option>
+                                                            </nb-select>
+                                                        </div>
+                                                    </nb-list-item>
+                                                </nb-list>
+                                            </nb-accordion-item-body>
+                                        </nb-accordion-item>
+
+                                        <nb-accordion-item>
+                                            <nb-accordion-item-header>
+                                                More Settings
+                                            </nb-accordion-item-header>
+                                            <nb-accordion-item-body class="unpadded">
+                                                <nb-list>
+                                                    <nb-list-item *ngFor="let o of _options[ev.type].optional | keyvalue: originalOrder">
+                                                        <div class="key">{{o.key}}:</div>
+                                                        <div class="value" *ngIf="o.value==='pixel' || o.value==='seconds'">
+                                                            <input nbInput type="number" [(ngModel)]="ev[o.key]" (change)="elem.changes=true" fullWidth>
+                                                            <div class="unit">{{o.value}}</div>
+                                                        </div>
+                                                        <div class="value" *ngIf="o.value === 'POSITION'">
+                                                            <nb-select placeholder="Select one" [(selected)]="ev.position" (selectedChange)="elem.changes=true" fullWidth>
+                                                                <nb-option *ngFor="let p of _POSITION | keyvalue : originalOrder" [value]="p.key">{{p.value}}</nb-option>
+                                                            </nb-select>
+                                                        </div>
+                                                    </nb-list-item>
+                                                </nb-list>
+                                            </nb-accordion-item-body>
+                                        </nb-accordion-item>
+
+                                    </nb-accordion>
+                            </div>
 
                             </div>
 
@@ -316,7 +358,6 @@
                                 </div>
                             </div>
                             
-                        
                             <div #chat *ngIf="ev.type==='chat'" class="chat-container">
                                 <textarea nbInput type="text" (change)="elem.changes=true" placeholder="Chat message. You can type the keywords below and they will be replaced accordingly." [(ngModel)]="ev.text" fullWidth></textarea>
                                 <div class="keywords">
@@ -325,10 +366,6 @@
                                         <div>{{keyword.value}}</div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div #gif *ngIf="ev.type==='gif'" class="gif-container">
-                                gif
                             </div>
 
                         </nb-tab>

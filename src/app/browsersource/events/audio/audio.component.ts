@@ -1,13 +1,15 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { EVENT_ANIMATIONS } from '../events.component'
 import { EventsService } from '../events.service'
 
 @Component({
   selector: 'app-audio',
-  templateUrl: './audio.component.html'
+  templateUrl: './audio.component.html',
+  animations: EVENT_ANIMATIONS
 })
 export class AudioComponent {
 
-  @Input() audio: any
+  @Input() event: any
   @ViewChild('audioPlayer') audioPlayer: ElementRef
 
   constructor(private events: EventsService) {}

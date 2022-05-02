@@ -1,15 +1,14 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { EventsService } from '../events.service'
 
 @Component({
-  selector: 'app-video',
-  templateUrl: './video.component.html'
+  selector: 'app-image',
+  templateUrl: './image.component.html'
 })
-export class VideoComponent {
+export class ImageComponent {
 
   @Input() viewport: any
   @Input() event: any
-  @ViewChild('videoPlayer') videoPlayer: ElementRef
 
   constructor(private events: EventsService) {}
 
@@ -32,12 +31,15 @@ export class VideoComponent {
       } 
     }
 
-    this.videoPlayer.nativeElement.play()
+    setTimeout(() => {
+      console.log('ending', (+this.event.duration|0)*1000)
+      this.onPlaybackEnded()
+    }, (+this.event.duration|5)*1000);
   }
 
   onPlaybackEnded() {
     this.events.eventsSubject.next({
-      type: 'video',
+      type: 'gif',
       what: 'ended'
     })
   }
