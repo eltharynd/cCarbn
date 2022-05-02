@@ -176,7 +176,11 @@ export class Api {
           if(found) {
             if(!found.ttsStart)
               found.ttsStart = Date.now()
-            found.ttsCharacters = logger[twitchName]
+
+            if(+logger[twitchName] !== +found.ttsCharacters) {
+              found.ttsCharacters = logger[twitchName]
+              await found.save()
+            }
           } else {
             console.error('could not find user for tmp logs')
           }
@@ -209,11 +213,13 @@ export class Api {
       if(!user)
         return res.send(403).send()
 
-      if(!logger.hasOwnProperty(user.twitchDisplayName))
-        logger[user.twitchDisplayName] = req.params.text.length
-      else
-        logger[user.twitchDisplayName] = logger[user.twitchDisplayName] + req.params.text.length
-      saveLogs()
+      if(/^google_/.test(req.params.voice) || /^aws_/.test(req.params.voice)) {
+        if(!logger.hasOwnProperty(user.twitchDisplayName))
+          logger[user.twitchDisplayName] = req.params.text.length
+        else
+          logger[user.twitchDisplayName] = logger[user.twitchDisplayName] + req.params.text.length
+        saveLogs()
+      }
       
       
       let result = await TTS.convert(user, text, req.params.voice)

@@ -44,9 +44,9 @@ export class TTS {
                     } else
                         return reject(null)
                     
-                } else if(/^amazon_/.test(voice) && (user.founder || user.supporter || user.premium)) {
+                } else if(/^aws_/.test(voice) && (user.founder || user.supporter || user.premium)) {
 
-                    _voice = voice.replace(/^amazon_/, '')
+                    _voice = voice.replace(/^aws_/, '')
                     let neural = /^neural_/.test(_voice)
                     _voice = _voice.replace(/^neural_/,'')
 
