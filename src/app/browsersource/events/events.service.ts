@@ -161,7 +161,7 @@ export class EventsService {
         is_gift: 'true'
       }, data)
       if(buffer.type === 'tts') 
-        buffer.text = 'This is a test TTS! I hope you enjoy it!'
+        buffer.text = `Hello! I'm a robot reading some text!`
       
       if(buffer.text)
         buffer.text = this.populateText(buffer.text, buffer)

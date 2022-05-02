@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { SERVER_URL } from 'src/app/shared/data.service'
+import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 import { EventsService } from '../events.service'
 
 @Component({
@@ -12,15 +12,20 @@ export class TTSComponent implements OnInit {
   @ViewChild('ttsPlayer') ttsPlayer: ElementRef
   encodedTTS
 
-  constructor(private events: EventsService) { }
+  constructor(private events: EventsService, private data: DataService) { }
   async ngOnInit() {
-    this.encodedTTS = `${SERVER_URL}tts/${this.event.voice ? this.event.voice : 'us'}/${encodeURI(this.event.text.replace(/\?/g, '&questionmark;'))}`
+    this.encodedTTS = `${SERVER_URL}tts/${this.data._userId}/${this.event.voice ? this.event.voice : 'us'}/${encodeURI(this.event.text.replace(/\?/g, '&questionmark;'))}`
   }
 
   alignItems
   justifyContent
   onLoadedData() {
     this.ttsPlayer.nativeElement.play()
+  }
+
+  onError(error) {
+    console.error(error)
+    this.onPlaybackEnded()
   }
 
   onPlaybackEnded() {

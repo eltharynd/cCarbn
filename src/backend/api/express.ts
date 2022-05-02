@@ -8,9 +8,10 @@ import { Auth, authMiddleware } from './endpoints/auth'
 import { User } from './endpoints/user'
 import { ElementsRoutes } from './endpoints/elements'
 import { Mongo } from '../db/mongo'
+import { User as MongoUser } from '../db/models/user'
 import { UploadUsage } from '../db/models/upload-usage'
 import * as multer from 'multer'
-import { TTS, TTSVoices } from '../external/tts'
+import { TTS } from '../external/tts'
 const { Readable } = require('stream');
 
 export class Api {
@@ -163,25 +164,60 @@ export class Api {
       await Api.unlink(req.params.filename, req.params.userId, res)
     })
     
-    Api.endpoints.get('/api/tts/:language/:text', async (req,res): Promise<any> => {
+
+
+
+    //TODO delete once assessed
+    let logger: any
+    let saveLogs = async () => {
+      try {
+        for(let twitchName of Object.keys(logger)) {
+          let found: any = await MongoUser.findOne({twitchName: twitchName})
+          if(found) {
+            if(!found.ttsStart)
+              found.ttsStart = Date.now()
+            found.ttsCharacters = logger[twitchName]
+          } else {
+            console.error('could not find user for tmp logs')
+          }
+        }
+      } catch(e) {
+        console.error('could not save tmp logs')
+        console.error(e)
+      }
+    }
+    setTimeout(async () => {
+      if(!logger) {
+        logger = {}
+        console.log('creating logs')
+        let users = await MongoUser.find()
+        for(let u of users) {
+          if(u.ttsStart)
+            logger[u.twitchName] = +u.ttsCharacters
+        }
+      }
+    }, 1000);
+    Api.endpoints.get('/api/logger', async (req,res) => {
+      res.send(logger)
+    })
+
+    Api.endpoints.get('/api/tts/:userId/:voice/:text', async (req,res): Promise<any> => {
       let text = req.params.text.replace(/\&questionmark\;/gi, '?')
       if(!text || text.length<1) return res.status(400).send()
 
-      let result 
-      switch (req.params.language) {
-        case 'au':
-          result = await TTS.convert(text, TTSVoices.au)
-          break
-        case 'uk':
-          result = await TTS.convert(text, TTSVoices.uk)
-          break
-        default:
-          result = await TTS.convert(text, TTSVoices.us)
-          break;
-      }
-      
-      if(!result) return res.status(500).send()
+      let user: any = await MongoUser.find({ _id: Mongo.ObjectId(req.params.userId)})
+      if(!user)
+        return res.send(403).send()
 
+      if(!logger.hasOwnProperty(user.twitchDisplayName))
+        logger[user.twitchDisplayName] = req.params.text.length
+      else
+        logger[user.twitchDisplayName] = logger[user.twitchDisplayName] + req.params.text.length
+      saveLogs()
+      
+      
+      let result = await TTS.convert(user, text, req.params.voice)
+      if(!result) return res.status(500).send()
       try{
         res.set({
           'content-type': 'audio/mpeg'

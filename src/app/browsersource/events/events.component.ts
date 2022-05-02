@@ -1,6 +1,7 @@
 import { animate, animateChild, style, transition, trigger } from '@angular/animations'
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs'
+import { OBSService } from 'src/app/shared/obs.service'
 import { EventsService } from './events.service'
 
 export enum POSITION {
@@ -108,18 +109,10 @@ export const EVENT_ANIMATIONS = [
 @Component({
   selector: 'app-events',
   templateUrl: './events.component.html',
-/*   animations: [
-    trigger('keep', [
-      transition(`void => *`, [
-        style({opacity: 0}),
-        animate('500ms ease', style({opacity: 1})),
-        animateChild()
-      ])
-    ])
-  ] */
   animations: EVENT_ANIMATIONS
 })
-export class EventsComponent {
+export class EventsComponent implements OnInit {
+
 
   viewport = {
     width: 1920,
@@ -128,8 +121,9 @@ export class EventsComponent {
   }
 
   currentEvents: any[] = []
+  cantPlay = false
   
-  constructor(private events: EventsService) {
+  constructor(private events: EventsService, public OBS: OBSService) {
     events.eventsSubject.subscribe(event => {
       switch (event.what) {
         case 'start':
@@ -140,5 +134,18 @@ export class EventsComponent {
           break
       }
     })
+  }
+
+  async ngOnInit() {
+    if(!this.OBS.isOBS) {
+      let audio = new Audio()
+      audio.play().catch(e => {
+        this.cantPlay = true
+        window.onclick = (click) => {
+          this.cantPlay = false
+          window.onclick = null
+        }
+      })
+    }
   }
 }

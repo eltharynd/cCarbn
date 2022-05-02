@@ -20,6 +20,11 @@ export class AudioComponent {
     this.audioPlayer.nativeElement.play()
   }
 
+  onError(error) {
+    console.error(error)
+    this.onPlaybackEnded()
+  }
+
   onPlaybackEnded() {
     this.events.eventsSubject.next({
       type: 'audio',

@@ -26,7 +26,7 @@ export class ElementsComponent implements OnInit {
   channelRewards: _redemption[] = []
   uploadedSubject: Subject<any> = new Subject()
 
-  constructor(private data: DataService, private auth: AuthGuard, public OBS: OBSService) {
+  constructor(private data: DataService, public auth: AuthGuard, public OBS: OBSService) {
     this.data.get(`user/${this.auth.currentUser?._id}/redemptions`).then(data => this.channelRewards = data)
     this.uploadedSubject.subscribe(data => {
       this.mediaUploaded(data.reference.elem, data.reference.ev, data.url.url)
@@ -55,7 +55,7 @@ export class ElementsComponent implements OnInit {
 
   addElement() {
     let element: any = {
-      name: 'An element',
+      name: 'An alert',
       conditions: [
         {
           type: 'bit',
@@ -269,7 +269,7 @@ export class ElementsComponent implements OnInit {
     event.upload = false
     let fileName = event.src.replace(/^.+\//g, '')
 
-    if(element.name === 'An element') {
+    if(element.name === 'An alert') {
       element.name = fileName
       element.changes = true
     }
@@ -449,7 +449,66 @@ export class ElementsComponent implements OnInit {
     voices: {
       au: 'Australian english',
       uk: 'British english',
-      us: 'American english',
+      us: 'American english'
+    },
+    supporterVoices: {
+      'google_en-US-Standard-A': 'Google - Masculine A',
+      'google_en-US-Standard-B': 'Google - Masculine B',
+      'google_en-US-Standard-I': 'Google - Masculine I',
+      'google_en-US-Standard-J': 'Google - Masculine J',
+      'google_en-US-Standard-D': 'Google - Masculine D',
+
+      'google_en-US-Standard-C': 'Google - Feminine C',
+      'google_en-US-Standard-E': 'Google - Feminine E',
+      'google_en-US-Standard-F': 'Google - Feminine F',
+      'google_en-US-Standard-G': 'Google - Feminine G',
+      'google_en-US-Standard-H': 'Google - Feminine H',
+
+      'amazon_Amy': 'AWS - Amy',
+      'amazon_Aditi': 'AWS - Aditi',
+      'amazon_Brian': 'AWS - Brian',
+      'amazon_Emma': 'AWS - Emma',
+      'amazon_Ivy': 'AWS - Ivy',
+      'amazon_Joanna': 'AWS - Joanna',
+      'amazon_Joey': 'AWS - Joey',
+      'amazon_Justin': 'AWS - Justin',
+      'amazon_Kendra': 'AWS - Kendra',
+      'amazon_Kevin': 'AWS - Kevin',
+      'amazon_Kimberly': 'AWS - Kimberly',
+      'amazon_Matthew': 'AWS - Matthew',
+      'amazon_Nicole': 'AWS - Nicole',
+      'amazon_Raveena': 'AWS - Raveena',
+      'amazon_Russell': 'AWS - Russell',
+      'amazon_Salli': 'AWS - Salli',
+
+    }, premiumVoices: {
+      'google_en-US-Wavenet-A': 'Google Wavenet - Masculine A',
+      'google_en-US-Wavenet-B': 'Google Wavenet - Masculine B',
+      'google_en-US-Wavenet-I': 'Google Wavenet - Masculine I',
+      'google_en-US-Wavenet-J': 'Google Wavenet - Masculine J',
+      'google_en-US-Wavenet-D': 'Google Wavenet - Masculine D',
+
+      'google_en-US-Wavenet-C': 'Google Wavenet - Feminine C', 
+      'google_en-US-Wavenet-E': 'Google Wavenet - Feminine E', 
+      'google_en-US-Wavenet-F': 'Google Wavenet - Feminine F', 
+      'google_en-US-Wavenet-G': 'Google Wavenet - Feminine G', 
+      'google_en-US-Wavenet-H': 'Google Wavenet - Feminine H', 
+
+      'amazon_neural_Amy': 'AWS Neural - Amy',
+      'amazon_neural_Aria': 'AWS Neural - Aria',
+      'amazon_neural_Ayanda': 'AWS Neural - Ayanda',
+      'amazon_neural_Brian': 'AWS Neural - Brian',
+      'amazon_neural_Emma': 'AWS Neural - Emma',
+      'amazon_neural_Geraint': 'AWS Neural - Geraint',
+      'amazon_neural_Ivy': 'AWS Neural - Ivy',
+      'amazon_neural_Joanna': 'AWS Neural - Joanna',
+      'amazon_neural_': 'AWS Neural - Joey',
+      'amazon_neural_Joey': 'AWS Neural - Justin',
+      'amazon_neural_Kendra': 'AWS Neural - Kendra',
+      'amazon_neural_Kimberly': 'AWS Neural - Kimberly',
+      'amazon_neural_Matthew': 'AWS Neural - Matthew',
+      'amazon_neural_Olivia': 'AWS Neural - Olivia',
+      'amazon_neural_Salli': 'AWS Neural - Salli',
     }
   }
   _obs = {

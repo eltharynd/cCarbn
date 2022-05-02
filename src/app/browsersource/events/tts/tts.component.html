@@ -1,5 +1,5 @@
 <div class="container">
     <audio *ngIf="event" #ttsPlayer (loadeddata)="onLoadedData()" (ended)="onPlaybackEnded()">
-        <source *ngIf="encodedTTS" [src]="encodedTTS">
+        <source *ngIf="encodedTTS" [src]="encodedTTS" (error)="onError($event)">
     </audio>  
 </div>

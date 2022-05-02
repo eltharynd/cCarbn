@@ -224,8 +224,27 @@ input {
 
 .tts-container {
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     padding: 2rem;
+    margin-top: 2rem;
+
+    > div:nth-child(2) {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2rem;
+        
+        > .field-container {
+            width: 100%;
+            margin-right: 2rem;
+        }
+    }
+}
+.tts-separator {
+    padding-top: 1.5rem;
+    color: var(--option-disabled-text-color);
+    border-bottom: 2px solid var(--option-disabled-text-color);
 }
 
 .obs-container {

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import {  Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { EventsService } from '../events.service'
 
 @Component({
@@ -33,6 +33,11 @@ export class VideoComponent {
     }
 
     this.videoPlayer.nativeElement.play()
+  }
+
+  onError(error) {
+    console.error(error)
+    this.onPlaybackEnded()
   }
 
   onPlaybackEnded() {

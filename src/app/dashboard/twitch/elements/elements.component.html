@@ -289,16 +289,28 @@
 
                             <div #tts *ngIf="ev.type==='tts'" class="tts-container">
 
-                                <nb-select [(selected)]="ev.voice" (selectedChange)="elem.changes=true" placeholder="Select which voice to use">
-                                    <nb-option *ngFor="let v of _tts.voices | keyvalue: originalOrder" [value]="v.key">{{v.value}}</nb-option>
-                                </nb-select>
+                                <div class="field-container">
+                                    <nb-select [(selected)]="ev.voice" (selectedChange)="elem.changes=true" placeholder="Select which voice to use" fullWidth>
+                                        <nb-option disabled class="tts-separator">Free Tier Voices -</nb-option>
+                                        <nb-option *ngFor="let v of _tts.voices | keyvalue: originalOrder" [value]="v.key" >{{v.value}}</nb-option>
+                                        <nb-option disabled class="tts-separator">Supporter Tier Voices</nb-option>
+                                        <nb-option *ngFor="let v of _tts.supporterVoices | keyvalue: originalOrder" [value]="v.key" class="supporter" [disabled]="!auth.currentUser?.founder && !auth.currentUser?.supporter && !auth.currentUser?.premium">{{v.value}}</nb-option>
+                                        <nb-option disabled class="tts-separator">Premium Tier Voices</nb-option>
+                                        <nb-option *ngFor="let v of _tts.premiumVoices | keyvalue: originalOrder" [value]="v.key" class="premium" [disabled]="!auth.currentUser?.premium">{{v.value}}</nb-option>
+                                    </nb-select>
+                                    <div class="anchor"><label>what</label></div>
+                                </div>
 
-                                <nb-select [(selected)]="ev.message" (selectedChange)="elem.changes=true" placeholder="Select what to read">
-                                    <nb-option *ngFor="let o of _tts.options | keyvalue: originalOrder" [value]="o.key">{{o.value}}</nb-option>
-                                </nb-select>
+                                <div>
+                                    <div class="field-container">
+                                        <nb-select [(selected)]="ev.message" (selectedChange)="elem.changes=true" placeholder="Select what to read" fullWidth>
+                                            <nb-option *ngFor="let o of _tts.options | keyvalue: originalOrder" [value]="o.key">{{o.value}}</nb-option>
+                                        </nb-select>
+                                        <div class="anchor"><label>what</label></div>
+                                    </div>
 
-                                <nb-checkbox [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-checkbox>
-
+                                    <nb-toggle [(ngModel)]="ev.withPrevious" (checkedChange)="elem.changes=true" [disabled]="i===0">Don't wait for previous</nb-toggle>
+                                </div>
                             </div>
 
                             <div #obs *ngIf="ev.type==='obs'" class="obs-container">

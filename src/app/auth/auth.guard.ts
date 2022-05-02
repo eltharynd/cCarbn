@@ -78,6 +78,9 @@ export class AuthGuard implements CanActivate {
 export interface User {
   _id: string,
   name: string,
+  founder: boolean,
+  supporter: boolean,
+  premium: boolean,
   picture: string,
   token: string
 }

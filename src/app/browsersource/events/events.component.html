@@ -4,6 +4,8 @@
   padding: viewport.padding+'px'
 }">
   
+  <div *ngIf="cantPlay" style="color: red; font-weight: bold;">IF YOU OPEN THIS ON A BROWSER YOU NEED TO INTERACT WITH THE PAGE BEFORE IT CAN PLAY MEDIA</div>
+
   <div [@in]="event['transition IN']" [@out]="event['transition OUT']" *ngFor="let event of currentEvents">
     <app-video *ngIf="event?.type === 'video'" [event]=event [viewport]="viewport"></app-video>
     <app-audio *ngIf="event?.type === 'audio'" [event]=event></app-audio>

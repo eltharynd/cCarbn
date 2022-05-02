@@ -9,7 +9,7 @@ import { throws } from 'assert'
 })
 export class OBSService {
 
-  private obsstudio
+  isOBS
   private OBS
 
   currentScene: string 
@@ -22,7 +22,7 @@ export class OBSService {
     //@ts-ignore
     if(window?.obsstudio) {
       //@ts-ignore
-      this.obsstudio = window.obsstudio
+      this.isOBS = window.obsstudio
       this.OBS = new OBSWebSocket()
       this.OBS.connect('ws://127.0.0.1:4455', undefined, EventSubscription.All).then(conn => {
 
@@ -83,6 +83,7 @@ export class OBSService {
           this.getItems()
         })
       })
+      
     }
 
     this.data.socketIO.on('receiveOBSlist', (data) => {

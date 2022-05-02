@@ -6,11 +6,21 @@ import { ClientToken, UserToken } from "./tokens"
 
 export const userSchema: Schema = new Schema({
   token: String,
+  
   admin: Boolean,
+
+  founder: Boolean,
+  supporter: Boolean,
+  premium: Boolean,
+
   twitchId: String,
   twitchName: String,
   twitchDisplayName: String,
   twitchPic: String,
+
+  ttsStart: Date,
+  ttsCharacters: Number,
+
   created: {
     type: Date,
     default: Date.now()

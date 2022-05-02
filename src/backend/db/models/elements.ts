@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose"
 import * as merge from 'deepmerge'
 
 const ELEMENT_TEMPLATE = {
-  name: 'An element',
+  name: 'An alert',
   conditions: [{
     type: 'bit',
     operator: 'equals',

@@ -192,7 +192,7 @@ let init = async () => {
                 let connected = await new Promise((resolve) => {
                     let MONGO = JSON.parse('' + fs.readFileSync('mongo_credentials.json'))
                     Mongoose.connect(MONGO.connection)
-                    Mongoose.connection.on('error', (error) => {console.log('heeere');console.error(error);resolve(false)})
+                    Mongoose.connection.on('error', (error) => {console.error(error);resolve(false)})
                     Mongoose.connection.once('open', () => resolve(true))
                 })
                 if(connected) {
