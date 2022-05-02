@@ -60,7 +60,7 @@
 </nb-card>
 
 <nb-accordion class="centered alternate" multi>
-    <nb-accordion-item *ngFor="let elem of elements" expanded="true">
+    <nb-accordion-item *ngFor="let elem of elements">
         
         <nb-accordion-item-header class="element-header">
             <button nbButton status="primary" nbTooltip="Send test to browser source" nbTooltipStatus="primary" (click)="sendTestEvent($event, elem)"><nb-icon icon="cast"></nb-icon></button>
