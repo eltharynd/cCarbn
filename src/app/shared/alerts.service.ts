@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs'
 import { _alert } from 'src/app/dashboard/twitch/alerts/alerts.component'
-import { DataService, SERVER_URL } from 'src/app/shared/data.service'
+import { DataService } from 'src/app/shared/data.service'
 
 @Injectable({
   providedIn: 'root'

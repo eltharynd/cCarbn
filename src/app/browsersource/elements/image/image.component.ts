@@ -1,12 +1,11 @@
-
 import { Component, Input } from '@angular/core';
-import { AlertsService } from '../alerts.service'
+import { AlertsService } from '../../../shared/alerts.service'
 
 @Component({
-  selector: 'app-gif',
-  templateUrl: './gif.component.html'
+  selector: 'app-image',
+  templateUrl: './image.component.html'
 })
-export class GIFComponent {
+export class ImageComponent {
 
   @Input() viewport: any
   @Input() element: any
@@ -18,7 +17,6 @@ export class GIFComponent {
   onLoadedData() {
     this.alignItems = null
     this.justifyContent = null
-    console.log(this.element)
     if(this.element.position) {
       if(/TOP/.test(this.element.position)) {
         this.alignItems = 'flex-start'
@@ -36,7 +34,7 @@ export class GIFComponent {
     setTimeout(() => {
       console.log('ending', (+this.element.duration|0)*1000)
       this.onPlaybackEnded()
-    }, (+this.element.duration||5)*1000);
+    }, (+this.element.duration|5)*1000);
   }
 
   onPlaybackEnded() {

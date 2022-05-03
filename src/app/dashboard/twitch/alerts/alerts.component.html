@@ -8,7 +8,7 @@
     </nb-card-header>
     <nb-card-body>
         <nb-accordion>
-            <nb-accordion-item>
+            <nb-accordion-item expanded>
                 <nb-accordion-item-header>
                     BROWSER SOURCE
                 </nb-accordion-item-header>
@@ -19,6 +19,7 @@
                             &nbsp;
                             <div class="streamer-mode" [class.on]="!showBrowserSource">
                                 <nb-icon *ngIf="!showBrowserSource" (click)="showBrowserSource=true" icon="eye"></nb-icon>
+                                <nb-icon (click)="copy()" [nbPopover]="copied" icon="copy"></nb-icon>
                                 <a [href]="viewport.url" target="_blank" class>{{viewport.url}}</a>
                             </div>
                             

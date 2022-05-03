@@ -2,7 +2,7 @@ import { animate, animateChild, style, transition, trigger } from '@angular/anim
 import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs'
 import { OBSService } from 'src/app/shared/obs.service'
-import { AlertsService } from './alerts.service'
+import { AlertsService } from '../../shared/alerts.service'
 
 export enum POSITION {
   TOP_LEFT = 'TOP_LEFT',
@@ -107,8 +107,8 @@ export const ELEMENT_ANIMATIONS = [
 ]
 
 @Component({
-  selector: 'app-alerts',
-  templateUrl: './alerts.component.html',
+  selector: 'app-elements',
+  templateUrl: './elements.component.html',
   animations: ELEMENT_ANIMATIONS
 })
 export class AlertsComponent implements OnInit {

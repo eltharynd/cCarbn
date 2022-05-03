@@ -1,5 +1,5 @@
 import {  Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { AlertsService } from '../alerts.service'
+import { AlertsService } from '../../../shared/alerts.service'
 
 @Component({
   selector: 'app-video',

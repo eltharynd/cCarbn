@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
-import { AlertsService } from '../alerts.service'
+import { AlertsService } from '../../../shared/alerts.service'
 
 @Component({
   selector: 'app-tts',

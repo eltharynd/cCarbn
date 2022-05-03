@@ -1,12 +1,13 @@
 import { OnInit, Component } from '@angular/core';
 import { AuthGuard } from '../../../auth/auth.guard'
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
-import { ELEMENT_TYPES } from 'src/app/browsersource/alerts/alerts.service'
+import { ELEMENT_TYPES } from 'src/app/shared/alerts.service'
 import { filter, from, map, Subject, toArray } from 'rxjs'
 import { environment } from 'src/environments/environment'
 import { OBSService } from 'src/app/shared/obs.service'
-import { POSITION, TRANSITION } from 'src/app/browsersource/alerts/alerts.component'
+import { POSITION, TRANSITION } from 'src/app/browsersource/elements/elements.component'
 import { KeyValue } from '@angular/common'
+import { ClipboardService } from 'ngx-clipboard'
 @Component({
   selector: 'app-alerts',
   templateUrl: './alerts.component.html',
@@ -26,7 +27,7 @@ export class AlertsComponent implements OnInit {
   channelRewards: _redemption[] = []
   uploadedSubject: Subject<any> = new Subject()
 
-  constructor(private data: DataService, public auth: AuthGuard, public OBS: OBSService) {
+  constructor(private data: DataService, public auth: AuthGuard, public OBS: OBSService, public clipboardApi: ClipboardService) {
     this.data.get(`user/${this.auth.currentUser?._id}/redemptions`).then(data => this.channelRewards = data)
     this.uploadedSubject.subscribe(data => {
       this.mediaUploaded(data.reference.al, data.reference.ev, data.url.url)
@@ -43,6 +44,22 @@ export class AlertsComponent implements OnInit {
       userId: this.auth.currentUser?._id
     })
   }
+
+  copied
+  copiedHandler
+  copy() {
+    this.clipboardApi.copyFromContent(this.viewport.url)
+    this.copied = 'Browser Source URL copied!'
+    if(this.copiedHandler) {
+      clearTimeout(this.copiedHandler)
+      this.copiedHandler = null
+    }
+    this.copiedHandler = setTimeout(() => {
+      this.copied = null
+    }, 3000);
+  }
+
+
 
   sendTestAlert(pointerEvent, alert) {
     pointerEvent.stopPropagation()

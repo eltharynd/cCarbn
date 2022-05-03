@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { OBSService } from 'src/app/shared/obs.service'
-import { AlertsService } from '../alerts.service'
+import { AlertsService } from '../../../shared/alerts.service'
 
 @Component({
   selector: 'app-obs',
