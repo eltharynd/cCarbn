@@ -132,7 +132,7 @@ export class DataService {
 
   public async delete(endpoint: string): Promise<any> {
     this.busy = true
-    return new Promise<any>(resolve => {
+    return new Promise<any>((resolve, reject) => {
       axios({
         method: 'delete',
         url: `${SERVER_URL}${endpoint}`,
@@ -147,7 +147,7 @@ export class DataService {
           //AuthGuard.lastDeniedAccess = this.router.url
           this.router.navigate([`auth`])
         }
-        resolve(null)
+        reject(error)
       })
     }) 
   }

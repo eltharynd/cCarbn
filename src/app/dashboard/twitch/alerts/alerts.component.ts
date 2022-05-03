@@ -266,12 +266,16 @@ export class AlertsComponent implements OnInit {
   }
   async deleteMediaSource(alert: _alert, element, src) {
     let filePath = src.replace(SERVER_URL, '')
-    if(await this.data.delete(filePath)) {
+
+    this.data.delete(filePath).then(async () => {
       element.src = null
-      
       await this.saveAlert(alert)
-      //TODO if alert could not be saved (invalid) this can be problematic.. consider saving only new src (original intended PATCH request)
-    }
+    }).catch(async (e) => {
+      if(e.response.status === 404) {
+        element.src = null
+        await this.saveAlert(alert)
+      }
+    })
   }
   async mediaUploaded(alert: _alert, element, url) {
     element.src = `${SERVER_URL}${url}`

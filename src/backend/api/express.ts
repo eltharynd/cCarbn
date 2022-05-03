@@ -124,6 +124,7 @@ export class Api {
         if(found.metadata.usages>1) {
           found.metadata.usages--
           await found.save()
+          res.send({})
         } else {
           Mongo.Upload.unlink({ _id: found._id}, (error, unlink) => {
             if(error) {

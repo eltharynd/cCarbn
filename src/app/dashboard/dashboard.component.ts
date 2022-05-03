@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from "@angular/core"
+import { Component, OnInit } from "@angular/core"
 
 @Component({
   template: `
@@ -23,9 +23,11 @@ import { AfterViewInit, Component } from "@angular/core"
     </nb-layout>
   `
 })
-export class DashboardComponent implements AfterViewInit {
+export class DashboardComponent implements OnInit {
   loaded
-  ngAfterViewInit() {
+  ngOnInit() {
+    setTimeout(() => {
       this.loaded = true
+    }, 500);   
   }
 }
