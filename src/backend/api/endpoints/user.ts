@@ -1,5 +1,5 @@
 import { HelixUser } from "@twurple/api/lib"
-import { User as MongoUser, deleteUser } from "../../db/models/user"
+import { User, deleteUser } from "../../db/models/user"
 import { Settings } from "../../db/models/settings"
 import { Category, Chat } from "../../twitch/chat"
 import { Listeners, Twitch } from "../../twitch/twitch"
@@ -10,7 +10,7 @@ import * as merge from 'deepmerge'
 import { toJSON } from "../../socket/events/util/toJSON"
 import { from, map, toArray } from "rxjs"
 
-export class User {
+export class UserRoutes {
 
   static attach() {
 
@@ -25,7 +25,7 @@ export class User {
 
     Api.endpoints.get('/api/user/:userId/picture', async (req, res) => {
       if(req.params.userId.length>10) {
-        let found: any = await MongoUser.findById(Mongo.ObjectId(req.params.userId))
+        let found: any = await User.findById(Mongo.ObjectId(req.params.userId))
         if(found) {
           let helixUser: HelixUser|null = await Twitch.client.users.getUserById(found.twitchId)
           if(helixUser) {

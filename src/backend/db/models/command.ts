@@ -1,10 +1,20 @@
-import { Schema, model } from "mongoose"
+import { Schema, model, Types } from "mongoose"
 
+interface ICommand {
+  userId: Types.ObjectId
+  command: String
+  args: Array<string>
+  answer: string
+  mods: boolean
+  streamer: boolean
+  cooldown: number
+  cooldownPerUser: boolean
+  source: string
+}
 export const commandSchema: Schema = new Schema({
-  userId: Schema.Types.ObjectId,
+  userId: Types.ObjectId,
   command: String,
   args: Array,
-  params: Array,
   answer: String,
   mods: Boolean,
   streamer: Boolean,

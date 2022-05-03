@@ -4,14 +4,14 @@ import { createServer, Server } from 'http'
 import * as cors from 'cors'
 import * as bodyParser from 'body-parser'
 import { PORT } from '..'
-import { Auth, authMiddleware } from './endpoints/auth'
-import { User } from './endpoints/user'
+import { AuthRoutes, authMiddleware } from './endpoints/auth'
+import { UserRoutes } from './endpoints/user'
 import { AlertsRoutes } from './endpoints/alerts'
 import { Mongo } from '../db/mongo'
-import { User as MongoUser } from '../db/models/user'
-import { UploadUsage } from '../db/models/upload-usage'
+import { User } from '../db/models/user'
 import * as multer from 'multer'
 import { TTS } from '../external/tts'
+import { File } from '../db/models/files'
 const { Readable } = require('stream');
 
 export class Api {
@@ -47,8 +47,8 @@ export class Api {
     Api.server.listen(PORT)
 
 
-    Auth.attach()
-    User.attach()
+    AuthRoutes.attach()
+    UserRoutes.attach()
     AlertsRoutes.attach()
 
 
@@ -64,10 +64,9 @@ export class Api {
         let extension = req.params.filename.replace(plain+'.','')  
         let i=0
 
-        let found: any = await Mongo.Upload.findOne({ filename: req.params.filename, 'metadata.userId': Mongo.ObjectId(req.params.userId) })
+        let found = await File.findOne({ filename: req.params.filename, 'metadata.userId': Mongo.ObjectId(req.params.userId) })
         if(found) await new Promise(async (resolve, reject) => {
           if(!autoIndexing) {
-            await UploadUsage.remove({ fileId: found._id })
             await Mongo.Upload.unlink({ _id: found._id}, (error, unlink) => {
               if(error) reject(error)
               else resolve(unlink)
@@ -83,16 +82,11 @@ export class Api {
 
         await Mongo.Upload.write({
           filename: `${plain}${i>0 ? `-${i}` : ''}.${extension}`,
-          metadata: { userId: Mongo.ObjectId(req.params.userId),  },
+          metadata: { userId: Mongo.ObjectId(req.params.userId),  usages: 1 },
           contentType: file.mimetype
         }, readStream, async (error, f): Promise<any> => {
           if(error) return res.status(500).send()
-           await UploadUsage.create({
-            fileId: f._id,
-            usages: 1
-          })
           res.send({
-            //url: /image\//.test(file.mimetype) ? `uploads/${req.params.userId}/${file.originalname}` : null
             url: `uploads/${req.params.userId}/${plain}${i>0 ? `-${i}` : ''}.${extension}`
           })
         })
@@ -110,53 +104,44 @@ export class Api {
           })
           readStream.on("data", (chunk) => {
             res.write(chunk);
-          });
+          })
           readStream.on("end", () => {
             res.status(200).end();
-          });
+          })
           readStream.on("error", (err) => {
             console.error(err);
             res.status(500).send(err);
-          });
-
-
+          })
         } catch (e) {
           console.error(e)
           return res.status(500).send()
         }
       })
       .delete(authMiddleware, async (req, res): Promise<any> => {
-        let found: any = await Mongo.Upload.findOne({ filename: req.params.filename, metadata: { userId: Mongo.ObjectId(req.params.userId) } })
+        let found = await File.findOne({ filename: req.params.filename, 'metadata.userId': Mongo.ObjectId(req.params.userId) })
         if(!found) return res.status(404).send()
-        await new Promise(async (resolve, reject) => {
-          let usage: any = UploadUsage.findOne({fileId: found._id})
-          if(+usage.usages>1) {
-            usage.usages = +usage.usages -1
-            await usage.save()
-          } else 
-            await UploadUsage.remove({ fileId: found._id })
 
+        if(found.metadata.usages>1) {
+          found.metadata.usages--
+          await found.save()
+        } else {
           Mongo.Upload.unlink({ _id: found._id}, (error, unlink) => {
-            if(error) reject(error)
-            else resolve(unlink)
+            if(error) {
+              console.error(error)
+              res.status(500).send({error})
+            } else{
+              res.send({})
+            }
           })
-        })
-        res.send({})
+        }
       })
 
     Api.endpoints.get('/api/uploads/:userId/link/:filename', async (req, res): Promise<any> => {
-      let found: any = await Mongo.Upload.findOne({ filename: req.params.filename, 'metadata.userId': Mongo.ObjectId(req.params.userId) })
+      let found = await File.findOne({ filename: req.params.filename, 'metadata.userId': Mongo.ObjectId(req.params.userId)})
       if(!found) return res.status(404).send()
-      let usages: any = await UploadUsage.findOne({ fileId: found._id }) 
-      if(!usages) {
-          usages = await UploadUsage.create({
-          fileId: found._id,
-          usages: 1
-        }) 
-      } else  
-        usages.usages = +usages.usages + 1
 
-      await usages.save()
+      ++found.metadata.usages
+      await found.save()
       res.send({})
     })
 
@@ -172,7 +157,7 @@ export class Api {
     let saveLogs = async () => {
       try {
         for(let twitchName of Object.keys(logger)) {
-          let found: any = await MongoUser.findOne({twitchName: twitchName})
+          let found: any = await User.findOne({twitchName: twitchName})
           if(found) {
             if(!found.ttsStart)
               found.ttsStart = Date.now()
@@ -194,7 +179,7 @@ export class Api {
       if(!logger) {
         logger = {}
         console.log('creating logs')
-        let users = await MongoUser.find()
+        let users = await User.find()
         for(let u of users) {
           if(u.ttsStart)
             logger[u.twitchName] = +u.ttsCharacters
@@ -209,7 +194,7 @@ export class Api {
       let text = req.params.text.replace(/\&questionmark\;/gi, '?')
       if(!text || text.length<1) return res.status(400).send()
 
-      let user: any = await MongoUser.findOne({ _id: Mongo.ObjectId(req.params.userId)})
+      let user: any = await User.findOne({ _id: Mongo.ObjectId(req.params.userId)})
       if(!user)
         return res.send(403).send()
 
@@ -235,37 +220,24 @@ export class Api {
       } 
     })
 
-/*     Api.endpoints.get('/api/status', async (req, res) => {
-      res.json({ status: 'UP', test: 'working' })
-    }) */
-
-/*     Api.endpoints.get('*', async (req, res) => {
-      res.send(`No route specified... but, HEY!!! I'm working!!`)
-    }) */
-
-
-  
   }
 
   static async unlink (filename, userId, res?): Promise<any> {
-    let found: any = await Mongo.Upload.findOne({ filename: filename, 'metadata.userId': Mongo.ObjectId(userId) })
+    let found = await File.findOne({ filename: filename, 'metadata.userId': Mongo.ObjectId(userId) })
     if(!found) return res ? res.status(404).send() : null
-    let usages: any = await UploadUsage.findOne({ fileId: found._id }) 
-    if(!usages) return res ? res.send(`Nothing to do!`) : null
-    
-    if(+usages.usages<=1) {
-      await UploadUsage.deleteOne({ _id: usages._id})
-      await new Promise(async (resolve, reject) => {
-        Mongo.Upload.unlink({ _id: found._id}, (error, unlink) => {
-          if(error) reject(error)
-          else resolve(unlink)
-        })
+
+    if(found.metadata.usages<=1) {
+      Mongo.Upload.unlink({ _id: found._id}, (error, unlink) => {
+        if(error) {
+          console.error(error)
+          if(res) res.status(500).send()
+        } else if(res) res.send({})
       })
     } else {
-      usages.usages = +usages.usages - 1
-      await usages.save()
+      --found.metadata.usages
+      await found.save()
+      if(res) res.send({})
     }
-    if(res) res.send({})
-    return 
   }
+
 }

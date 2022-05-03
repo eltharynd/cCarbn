@@ -28,7 +28,7 @@ export const authMiddleware = async (req, res, next) => {
     }
   }
 }
-export class Auth {
+export class AuthRoutes {
 
   static attach() {
 

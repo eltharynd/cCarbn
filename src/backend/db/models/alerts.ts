@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose"
+import { Schema, model, Types } from "mongoose"
 import * as merge from 'deepmerge'
 
 const ALERT_TEMPLATE = {
@@ -11,8 +11,12 @@ const ALERT_TEMPLATE = {
   elements: []
 }
 
+interface IAlerts {
+  userId: Types.ObjectId,
+  alerts: object
+}
 export const alertsSchema: Schema = new Schema({
-  userId: Schema.Types.ObjectId,
+  userId: Types.ObjectId,
   alerts: {
     type: Object,
     get: (data) => {
@@ -22,4 +26,4 @@ export const alertsSchema: Schema = new Schema({
     default: {}
   }
 })
-export const Alerts = model('Alerts', alertsSchema)
+export const Alerts = model<IAlerts>('Alerts', alertsSchema)

@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose"
+import { Schema, model, Types } from "mongoose"
 import * as merge from 'deepmerge'
 
 const SETTINGS_TEMPLATE = {
@@ -137,8 +137,12 @@ const SETTINGS_TEMPLATE = {
   }
 }
 
+interface ISettings {
+  userId: Types.ObjectId
+  json: any
+}
 export const settingsSchema: Schema = new Schema({
-  userId: Schema.Types.ObjectId,
+  userId: Types.ObjectId,
   json: {
     type: Object,
     get: (data) => {
@@ -148,4 +152,4 @@ export const settingsSchema: Schema = new Schema({
     default: {}
   }
 })
-export const Settings = model('Settings', settingsSchema)
+export const Settings = model<ISettings>('Settings', settingsSchema)

@@ -1,9 +1,29 @@
-import { Schema, model, Document, ObjectId } from "mongoose"
+import { Schema, model, Types } from "mongoose"
 import { Mongo } from "../mongo"
 import { Settings } from "./settings"
 import { Command } from "./command"
 import { ClientToken, UserToken } from "./tokens"
 
+
+interface IUser {
+  token: string
+  admin: boolean
+
+  founder: boolean
+  supporter: boolean
+  premium: boolean
+
+  twitchId: string
+  twitchName: string
+  twitchDisplayName: string
+  twitchPic: string
+
+  ttsStart: Date
+  ttsCharacters: number
+
+  created: Date
+  lastLogin: Date
+}
 export const userSchema: Schema = new Schema({
   token: String,
   
@@ -30,10 +50,9 @@ export const userSchema: Schema = new Schema({
     default: Date.now()
   },
 })
-export const User = model('User', userSchema)
+export const User = model<IUser>('User', userSchema)
 
-
-export const deleteUser = async (userMongoId: string | ObjectId) => {
+export const deleteUser = async (userMongoId: string | Types.ObjectId) => {
   let userId = userMongoId.toString()
   let user: any = await User.findOne({_id: userId})
   let userTokem: any = await UserToken.deleteMany({userId: userId})
