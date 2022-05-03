@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core"
 import { Router } from "@angular/router"
-import { NbMenuItem, NbMenuService } from "@nebular/theme"
+import { NbMediaBreakpointsService, NbMenuItem, NbMenuService, NbSidebarService } from "@nebular/theme"
+import { DeviceDetectorService } from "ngx-device-detector"
 
 
 @Component({
@@ -68,6 +69,11 @@ export class SidebarComponent {
     }
   ]
 
-  constructor(private menuService: NbMenuService, private router: Router) {}
+  constructor(private menuService: NbMenuService, private device: DeviceDetectorService, private sidebarService: NbSidebarService) {
+    this.menuService.onItemClick().subscribe(ev => {
+      if(!this.device.isDesktop())
+        this.sidebarService.collapse()
+    })
+  }
 
 }
