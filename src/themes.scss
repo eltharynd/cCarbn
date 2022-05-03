@@ -205,3 +205,25 @@ nb-select.size-medium:not(.full-width) {
     pointer-events: none;
   }
 }
+
+
+nb-layout-footer {
+  z-index: 999;
+}
+
+nb-menu > ul {
+  margin-bottom: 4.1rem !important;
+}
+
+nb-sidebar.loaded.expanded {
+  transition: 0.3s ease;
+  * {
+    transition: 0.3s ease;
+  }
+} 
+nb-sidebar.loaded.collapsed {
+  transition: 0.3s ease;
+  * {
+    transition: 0.3s ease;
+  }
+}

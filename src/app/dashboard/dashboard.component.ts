@@ -1,4 +1,4 @@
-import { Component } from "@angular/core"
+import { AfterViewInit, Component } from "@angular/core"
 
 @Component({
   template: `
@@ -8,7 +8,7 @@ import { Component } from "@angular/core"
         <app-header></app-header>
       </nb-layout-header>
 
-      <nb-sidebar responsive>
+      <nb-sidebar fixed state="collapsed" [class.loaded]="loaded">
         <app-sidebar></app-sidebar>
       </nb-sidebar>
 
@@ -23,4 +23,9 @@ import { Component } from "@angular/core"
     </nb-layout>
   `
 })
-export class DashboardComponent { }
+export class DashboardComponent implements AfterViewInit {
+  loaded
+  ngAfterViewInit() {
+      this.loaded = true
+  }
+}
