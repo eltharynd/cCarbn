@@ -12,6 +12,7 @@ import * as Mongoose from 'mongoose'
 import { Command } from './db/models/command'
 import axios from 'axios'
 import { HelixUser } from '@twurple/api/lib'
+import { Alerts, Elements } from './db/models/alerts'
 
 //@ts-ignore
 export const PORT: number = process.env.PORT || 3000
@@ -27,6 +28,22 @@ let startApp = async () => {
   await Mongo.connect()
 
   console.info('CONNECTING TO TWITCH...')
+
+/*   let elements = await Elements.find()
+  for(let e of elements) {
+    console.log(`migrating alerts for ${e.userId}`)
+    let alert = await Alerts.create({
+      userId: e.userId,
+      alerts: e.json
+    })
+    await alert.save()
+  }
+  console.log('migrated all')
+  return */
+
+/*   migrating alerts for 62657fd7133898e795be21f8
+migrating alerts for 611180bbda7c789038a04a1b
+migrating alerts for 61118f4ce72d0103d112f005 */
 
   await Twitch.init()
   let admin: any = await User.findOne({admin: true})

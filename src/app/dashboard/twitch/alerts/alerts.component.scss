@@ -40,13 +40,13 @@ input {
 }
 
 
-.element-header {
+.alert-header {
     justify-content: space-between;
 }
-.element-name {
+.alert-name {
     margin-left: 1rem;
 }
-.element-details {
+.alert-details {
     font-size: smaller;
     flex-grow: 1;
     text-align: right;
@@ -64,8 +64,8 @@ input {
 }
 
 
-.element-card {
-    border-color: $inner-element-border;
+.alert-card {
+    border-color: $inner-alert-border;
 }
 
 .conditions-header {
@@ -79,8 +79,8 @@ input {
             width: 100%;
             justify-content: center;
             padding-top: 1.4rem;
-            border-color: $inner-element-border;
-            background-color: $inner-element-background-light;
+            border-color: $inner-alert-border;
+            background-color: $inner-alert-background-light;
             > * {
                 margin-left: .5rem;
                 margin-right: .5rem;
@@ -91,8 +91,8 @@ input {
         }
         > nb-list-item:last-child {
             padding-top: 1.4rem;
-            background-color: $inner-element-background;
-            border-top: 1px solid $inner-element-border;
+            background-color: $inner-alert-background;
+            border-top: 1px solid $inner-alert-border;
             border-bottom: 0
         }
     }
@@ -100,7 +100,7 @@ input {
 
 
 .events-body {
-    background-color: $inner-element-background;
+    background-color: $inner-alert-background;
     padding: 0;
 }
 .event-error {
@@ -110,18 +110,18 @@ input {
 }
 
 
-.element-footer {
+.alert-footer {
     display: flex;
     justify-content: space-between;
-    background-color: $inner-element-background-light;
-    border-color: $inner-element-border;
+    background-color: $inner-alert-background-light;
+    border-color: $inner-alert-border;
     > *:nth-child(2) {
         margin-left: 1rem;
         margin-right: 1rem;
         flex-grow: 1;
     }
 }
-.add-element-card {
+.add-alert-card {
     margin-top: 2rem;
     nb-card-body {
         padding: 0;

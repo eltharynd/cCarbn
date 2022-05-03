@@ -27,9 +27,9 @@ export class SidebarComponent {
           link: '/dashboard/twitch/api',
         },
         {
-          title: 'Elements & Alerts',
+          title: 'Alerts',
           icon: {icon: 'film', pack: 'eva'},
-          link: '/dashboard/twitch/elements',
+          link: '/dashboard/twitch/alerts',
         },
         {
           title: 'Stream Deck',

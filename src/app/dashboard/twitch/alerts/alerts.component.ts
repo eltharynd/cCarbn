@@ -8,11 +8,11 @@ import { OBSService } from 'src/app/shared/obs.service'
 import { POSITION, TRANSITION } from 'src/app/browsersource/events/events.component'
 import { KeyValue } from '@angular/common'
 @Component({
-  selector: 'app-elements',
-  templateUrl: './elements.component.html',
-  styleUrls: ['./elements.component.scss']
+  selector: 'app-alerts',
+  templateUrl: './alerts.component.html',
+  styleUrls: ['./alerts.component.scss']
 })
-export class ElementsComponent implements OnInit {
+export class AlertsComponent implements OnInit {
 
   showBrowserSource = false
   viewport = {
@@ -22,21 +22,21 @@ export class ElementsComponent implements OnInit {
     padding: 50,
   }
 
-  elements: _element[] = []
+  alerts: _alert[] = []
   channelRewards: _redemption[] = []
   uploadedSubject: Subject<any> = new Subject()
 
   constructor(private data: DataService, public auth: AuthGuard, public OBS: OBSService) {
     this.data.get(`user/${this.auth.currentUser?._id}/redemptions`).then(data => this.channelRewards = data)
     this.uploadedSubject.subscribe(data => {
-      this.mediaUploaded(data.reference.elem, data.reference.ev, data.url.url)
+      this.mediaUploaded(data.reference.al, data.reference.ev, data.url.url)
     })
   }
 
   async ngOnInit() {
-    this.elements = await this.data.get(`elements/${this.auth.currentUser?._id}`)
-    for(let elem of this.elements) {
-      elem.backup = JSON.stringify(elem)
+    this.alerts = await this.data.get(`alerts/${this.auth.currentUser?._id}`)
+    for(let al of this.alerts) {
+      al.backup = JSON.stringify(al)
     }
 
     this.data.send('requestOBSlist', {
@@ -44,17 +44,17 @@ export class ElementsComponent implements OnInit {
     })
   }
 
-  sendTestEvent(pointerEvent, element) {
+  sendTestEvent(pointerEvent, alert) {
     pointerEvent.stopPropagation()
-    for(let event of element.events) {
+    for(let event of alert.events) {
       this.data.send('test', Object.assign({ userId: this.auth.currentUser?._id }, event))
     }
   }
 
 
 
-  addElement() {
-    let element: any = {
+  addAlert() {
+    let alert: any = {
       name: 'An alert',
       conditions: [
         {
@@ -66,28 +66,28 @@ export class ElementsComponent implements OnInit {
       events: [],
       expanded: true
     }
-    element.backup = JSON.stringify(element)
-    this.elements.push(element)
+    alert.backup = JSON.stringify(alert)
+    this.alerts.push(alert)
   }
 
-  revertElement(element: _element) {
-    element.error = false
-    let backup = JSON.parse(element.backup)
-    for(let key of Object.keys(element)) {
+  revertAlert(alert: _alert) {
+    alert.error = false
+    let backup = JSON.parse(alert.backup)
+    for(let key of Object.keys(alert)) {
       if(backup.hasOwnProperty(key)) {
-        element[key] = backup[key]
+        alert[key] = backup[key]
       } else {
-        delete element[key]
+        delete alert[key]
       }
     }
   }
-  async saveElement(element: _element) {
+  async saveAlert(alert: _alert) {
     let valid = true
-    element.error = false
-    if(element.conditions.length < 1) {
+    alert.error = false
+    if(alert.conditions.length < 1) {
       valid = false
     } else {
-      for(let condition of element.conditions) {
+      for(let condition of alert.conditions) {
         //TODO finish conditions check
         let c: _condition = condition
         try {
@@ -108,87 +108,87 @@ export class ElementsComponent implements OnInit {
       }
     }
     
-    if(element.events.length < 1) {
+    if(alert.events.length < 1) {
       valid = false
     } else {
       //TODO check events
-      delete element.events[0].withPrevious
+      delete alert.events[0].withPrevious
     }
 
     if(valid) {
-      let clone = cleanElement(element)
-      let response = await this.data.post(`elements/${this.auth.currentUser?._id}`, clone)
+      let clone = cleanAlert(alert)
+      let response = await this.data.post(`alerts/${this.auth.currentUser?._id}`, clone)
       if(response) {
-        element._id = response
-        element.changes = false
-        delete element.backup
-        element.backup = JSON.stringify(element)
-        this.data.send('elementsUpdated', {
+        alert._id = response
+        alert.changes = false
+        delete alert.backup
+        alert.backup = JSON.stringify(alert)
+        this.data.send('alertsUpdated', {
           userId: this.auth.currentUser?._id,
-          elements: this.elements
+          alerts: this.alerts
         })
-        return element._id
+        return alert._id
       } else {
-        element.error = true
+        alert.error = true
         setTimeout(() => {
-          element.error = false
+          alert.error = false
         }, 3000)
         return false
       }
     } else {
-      element.error = true
+      alert.error = true
       setTimeout(() => {
-        element.error = false
+        alert.error = false
       }, 3000)
       return false
     }
   }
-  async deleteElement(element: _element) {
-    if(element._id) 
-      if(!await this.data.delete(`elements/${this.auth.currentUser?._id}/${element._id}`)) {
-        element.error = true
+  async deleteAlert(alert: _alert) {
+    if(alert._id) 
+      if(!await this.data.delete(`alerts/${this.auth.currentUser?._id}/${alert._id}`)) {
+        alert.error = true
         setTimeout(() => {
-          element.error = false
+          alert.error = false
         }, 3000)
         return false
       }
     
-    let index = this.elements.indexOf(element)
+    let index = this.alerts.indexOf(alert)
     if(index>=0) {
-      this.elements.splice(index, 1)
+      this.alerts.splice(index, 1)
     }
     return true
   }
 
-  addCondition(element: _element) {
-    element.conditions.push({
+  addCondition(alert: _alert) {
+    alert.conditions.push({
       type: 'bit',
       operator: 'equals',
       compared: null
     })
-    element.changes = true
+    alert.changes = true
   }
-  deleteCondition(element: _element, condition) {
-    element.conditions.splice(element.conditions.indexOf(condition), 1)
-    element.changes = true
+  deleteCondition(alert: _alert, condition) {
+    alert.conditions.splice(alert.conditions.indexOf(condition), 1)
+    alert.changes = true
   }
 
   selectedEventType
-  addEvent(element: _element, type) {
-    if(element.events.length>0) delete element.events[0].withPrevious
-    element.events.push({
+  addEvent(alert: _alert, type) {
+    if(alert.events.length>0) delete alert.events[0].withPrevious
+    alert.events.push({
       type: type
     })
 
     this.selectedEventType = null
-    element.changes = true
+    alert.changes = true
   }
-  deleteEvent(element: _element, index) {
-    element.events.splice(index, 1)
-    if(element.events.length>0) delete element.events[0].withPrevious
+  deleteEvent(alert: _alert, index) {
+    alert.events.splice(index, 1)
+    if(alert.events.length>0) delete alert.events[0].withPrevious
 
     this.selectedEventType = null
-    element.changes = true
+    alert.changes = true
   }
 
 
@@ -244,37 +244,37 @@ export class ElementsComponent implements OnInit {
   }
 
 
-  async videoSelected(element: _element, event) {
+  async videoSelected(alert: _alert, event) {
     let fileName = event.src.replace(SERVER_URL,'').replace(/^.+\//g, '')
     if(!await this.data.get(`uploads/${this.auth.currentUser?._id}/link/${fileName}`)) {
       event.src = null
       return
     }
-    if(!await this.saveElement(element)) {
+    if(!await this.saveAlert(alert)) {
       await this.data.get(`uploads/${this.auth.currentUser?._id}/unlink/${fileName}`)
       event.src = null
     }  
   }
-  async deleteMediaSource(element: _element, event, src) {
+  async deleteMediaSource(alert: _alert, event, src) {
     let filePath = src.replace(SERVER_URL, '')
     if(await this.data.delete(filePath)) {
       event.src = null
       
-      await this.saveElement(element)
-      //TODO if element could not be saved (invalid) this can be problematic.. consider saving only new src (original intended PATCH request)
+      await this.saveAlert(alert)
+      //TODO if alert could not be saved (invalid) this can be problematic.. consider saving only new src (original intended PATCH request)
     }
   }
-  async mediaUploaded(element: _element, event, url) {
+  async mediaUploaded(alert: _alert, event, url) {
     event.src = `${SERVER_URL}${url}`
     event.upload = false
     let fileName = event.src.replace(/^.+\//g, '')
 
-    if(element.name === 'An alert') {
-      element.name = fileName
-      element.changes = true
+    if(alert.name === 'An alert') {
+      alert.name = fileName
+      alert.changes = true
     }
 
-    if(!await this.saveElement(element)) {
+    if(!await this.saveAlert(alert)) {
       await this.data.get(`uploads/${this.auth.currentUser?._id}/unlink/${fileName}`)
       event.src = null
     }  
@@ -553,7 +553,7 @@ interface _condition {
   compared: any
 }
 
-export interface _element {
+export interface _alert {
   name: string
   conditions: _condition[]
   events: any[]
@@ -568,8 +568,8 @@ export interface _element {
   activeTab?: number
 }
 
-const cleanElement = (element: _element) => {
-  let clone = JSON.parse(JSON.stringify(element))
+const cleanAlert = (alert: _alert) => {
+  let clone = JSON.parse(JSON.stringify(alert))
   delete clone.backup
   delete clone.changes
   delete clone.error

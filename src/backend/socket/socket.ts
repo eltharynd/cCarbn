@@ -1,7 +1,7 @@
 import { filter, from, take } from 'rxjs'
 import * as socketIO from 'socket.io'
 import { Api } from '../api/express'
-import { Elements } from '../db/models/elements'
+import { Alerts } from '../db/models/alerts'
 import { User } from '../db/models/user'
 import { Mongo } from '../db/mongo'
 import { Chat, IChatClient } from '../twitch/chat'
@@ -67,8 +67,8 @@ export class Socket {
           if(data.userId) {
             let user = await User.findOne({ _id: data.userId })
             if(user) {
-              let alerts: any = await Elements.findOne({ userId: user._id })
-              let alert = await from(alerts.json).pipe(
+              let alerts: any = await Alerts.findOne({ userId: user._id })
+              let alert = await from(alerts.alerts).pipe(
                 filter((a: any) => a._id === data.alertId),
                 take(1)
               ).toPromise()
@@ -97,9 +97,9 @@ export class Socket {
         }
       })
 
-      socket.on('elementsUpdated', (data) => {
+      socket.on('alertsUpdated', (data) => {
         if(data.userId) {
-          socket.to(data.userId).emit('elementsUpdated', data.elements)
+          socket.to(data.userId).emit('alertsUpdated', data.alerts)
         }
       })
 

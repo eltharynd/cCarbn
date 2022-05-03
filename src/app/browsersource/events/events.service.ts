@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs'
-import { _element } from 'src/app/dashboard/twitch/elements/elements.component'
+import { _alert } from 'src/app/dashboard/twitch/alerts/alerts.component'
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 
 @Injectable({
@@ -8,7 +8,7 @@ import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 })
 export class EventsService {
 
-  elements: _element[] = []
+  alerts: _alert[] = []
   private eventsQueue: any[] = []
   eventsSubject: Subject<any> = new Subject()
 
@@ -25,11 +25,11 @@ export class EventsService {
     }) 
 
     this.data.userId.subscribe(async user => {
-      this.elements = await this.data.get(`elements/${user}`)
+      this.alerts = await this.data.get(`alerts/${user}`)
     })
 
-    this.data.socketIO.on('elementsUpdated', data => {
-      this.elements = data.elements
+    this.data.socketIO.on('alertsUpdated', data => {
+      this.alerts = data.alerts
     })
     
     this.data.socketIO.on('events', async data => {
@@ -37,10 +37,10 @@ export class EventsService {
 
       let user = data.user_name||null
 
-      for(let element of this.elements) {
+      for(let alert of this.alerts) {
 
         let ignore = false
-        for(let c of element.conditions) {
+        for(let c of alert.conditions) {
           if(c.type === 'bit') {
             if(data.type === 'Cheer') {
               let howMuch = 0
@@ -116,11 +116,11 @@ export class EventsService {
 
         if(ignore) continue
 
-        if(element.events?.length>0) 
-          element.events[0].withPrevious = false
+        if(alert.events?.length>0) 
+          alert.events[0].withPrevious = false
         else continue
 
-        for(let event of element.events) {
+        for(let event of alert.events) {
           if(event.type==='tts') {
             switch (event.message) {
               case 'subMessage':

@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
-import { ElementsComponent } from "./elements/elements.component"
+import { AlertsComponent } from "./alerts/alerts.component"
 import { ChatbotComponent } from "./chatbot/chatbot.component"
 import { TwitchAPIComponent } from "./twitchapi/twitchapi.component"
 import { TwitchComponent } from "./twitch.component"
@@ -18,8 +18,8 @@ const routes: Routes = [
         component: TwitchAPIComponent
       },
       {
-        path: 'elements',
-        component: ElementsComponent
+        path: 'alerts',
+        component: AlertsComponent
       },
       {
         path: 'chatbot',

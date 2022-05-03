@@ -67,15 +67,13 @@ $nb-themes: nb-register-theme((
   
 ), ccarbn, cosmic);
 
-//$inner-element-background: #8d54f733;
-//$inner-element-background-light: #a16eff63;
-$inner-element-background: #443978;
-$inner-element-background-light: #5e4a99;
-$inner-element-border: #a16eff;
-$inner-element-color: #cbafff;
+$inner-background: #443978;
+$inner-background-light: #5e4a99;
+$inner-border: #a16eff;
+$inner-color: #cbafff;
 
 .card-header {
-  background-color: $inner-element-background-light;
+  background-color: $inner-background-light;
 }
 
 .supporter {
@@ -127,18 +125,18 @@ nb-accordion.lighter {
       overflow: hidden;
   }
   nb-accordion-item-header {
-      background-color: $inner-element-background-light;
-      border: 1px solid $inner-element-border;
+      background-color: $inner-background-light;
+      border: 1px solid $inner-border;
   }
   nb-list-item {
-      background-color: $inner-element-background;
-      border-color: $inner-element-border;
-      border-left: 1px solid $inner-element-border;;
-      border-right: 1px solid $inner-element-border;;
+      background-color: $inner-background;
+      border-color: $inner-border;
+      border-left: 1px solid $inner-border;;
+      border-right: 1px solid $inner-border;;
   }
   nb-accordion-item:last-child {
     nb-list-item:last-child {
-      border-bottom: 1px solid $inner-element-border;
+      border-bottom: 1px solid $inner-border;
       border-radius: 0 0 .5rem .5rem;
     }
   }

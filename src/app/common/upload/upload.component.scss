@@ -1,20 +1,13 @@
 @import "../../../themes.scss";
 
-//$inner-element-background-light: #93a7e9bf;
-//$inner-element-border: #5158f5e0;
-//$inner-element-color: #3b41ff;
-
 * {
     box-sizing: border-box;
 }
 
 
 .form-group {
-
     position: relative;
-    background-color: $inner-element-background-light;
-    //border: 1px solid $inner-element-border;
-
+    background-color: $inner-background-light;
     border-radius: 1rem;
 }
 
@@ -48,7 +41,7 @@
 
     font-weight: bold;
     text-align: center;
-    color: $inner-element-color;
+    color: $inner-color;
     white-space: pre-line;
 }
 
@@ -66,10 +59,10 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    border: 2px solid $inner-element-border;
+    border: 2px solid $inner-border;
     &.is-active {
         background-color: rgba(#1E88E5, 0.5);
-        border: 3px solid $inner-element-border;
+        border: 3px solid $inner-border;
     }
     z-index: 3;
     border-radius: 1rem;
