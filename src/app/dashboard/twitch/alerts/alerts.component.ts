@@ -46,17 +46,9 @@ export class AlertsComponent implements OnInit {
   }
 
   copied
-  copiedHandler
   copy() {
     this.clipboardApi.copyFromContent(this.viewport.url)
     this.copied = 'Browser Source URL copied!'
-    if(this.copiedHandler) {
-      clearTimeout(this.copiedHandler)
-      this.copiedHandler = null
-    }
-    this.copiedHandler = setTimeout(() => {
-      this.copied = null
-    }, 3000);
   }
 
 
