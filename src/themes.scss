@@ -184,30 +184,34 @@ nb-select.size-medium:not(.full-width) {
 }
 
 
-.streamer-mode :not(.on) {
-  transition: 0.3s;
-}
-.on {
+.streamer-mode {
   position: relative;
-  transition: 0.3s;
-  > nb-icon:first-child {
-    position: absolute;
-    left: calc(50% - 10px);
-    top: calc(50% - 10px);
-    transition: 0.3s;
-  }
-  > nb-icon:nth-child(2) {
+  > .copy-icon {
     position: absolute;
     right: -2rem;
     top: calc(50% - 10px);
     transition: 0.3s;
   }
-  > nb-icon:hover {
+
+  > .show-icon {
+    position: absolute;
+    left: calc(50% - 10px);
+    top: calc(50% - 10px);
+    transition: 0.3s;
+  }
+  > .show-icon:hover,
+  > .copy-icon:hover {
     transform-origin: center;
     transform: scale(1.25);
     filter: drop-shadow(0 0 6px white);
     transition: 0.3s;
   }
+}
+.streamer-mode :not(.on) {
+  transition: 0.3s;
+}
+.on {
+  transition: 0.3s;
   > *:not(nb-icon) {
     filter: blur(5px) drop-shadow(2px 4px 6px #000000A0);
     pointer-events: none;

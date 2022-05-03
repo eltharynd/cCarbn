@@ -18,8 +18,8 @@
                             Browser source url:
                             &nbsp;
                             <div class="streamer-mode" [class.on]="!showBrowserSource">
-                                <nb-icon *ngIf="!showBrowserSource" (click)="showBrowserSource=true" icon="eye"></nb-icon>
-                                <nb-icon (click)="copy()" [nbPopover]="copied" icon="copy"></nb-icon>
+                                <nb-icon class="show-icon" *ngIf="!showBrowserSource" (click)="showBrowserSource=true" icon="eye"></nb-icon>
+                                <nb-icon class="copy-icon" (click)="copy()" [nbPopover]="copied" icon="copy"></nb-icon>
                                 <a [href]="viewport.url" target="_blank" class>{{viewport.url}}</a>
                             </div>
                             
