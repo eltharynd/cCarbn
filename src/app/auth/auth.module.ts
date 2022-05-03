@@ -4,7 +4,8 @@ import { AuthRoutingModule } from "./auth-routing.module"
 import { AuthComponent } from "./auth.component";
 import { LoginComponent } from './login/login.component';
 import { TokenComponent } from './token/token.component';
-import { ProfileComponent } from './profile/profile.component'
+import { ProfileComponent } from './profile/profile.component';
+import { PairingComponent } from './pairing/pairing.component'
 
 
 
@@ -17,7 +18,8 @@ import { ProfileComponent } from './profile/profile.component'
     AuthComponent,
     LoginComponent,
     TokenComponent,
-    ProfileComponent
+    ProfileComponent,
+    PairingComponent
   ],
 
  })

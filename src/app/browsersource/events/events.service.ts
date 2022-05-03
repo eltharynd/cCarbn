@@ -145,28 +145,36 @@ export class EventsService {
     })
 
     this.data.socketIO.on('test', async data => {
-      let buffer = Object.assign({
-        text: `This is a test message for a ${data.type} type event.`,
-        user_name: 'JeffBezos',
-        user_login: 'jeffbezos',
-        bits: (Math.floor(Math.random()*10)+1)*100,
-        gifted: Math.floor(Math.random()*50)+1,
-        cumulative: Math.floor(Math.random()*60)+1,
-        tier: Math.floor(Math.random()*3)+1,
-        raider: 'Pokimane',
-        raider_id: 'pokimane',
-        raiders: Math.floor(Math.random()*300)+1,
-        raid: 'PewDiePie',
-        raid_id: 'pewdiepie',
-        is_gift: 'true'
-      }, data)
-      if(buffer.type === 'tts') 
-        buffer.text = `Hello! I'm a robot reading some text!`
-      
-      if(buffer.text)
-        buffer.text = this.populateText(buffer.text, buffer)
+      let events: any = []
+      if(data.events) {
+        events = data.events
+      } else {
+        events.push(data)
+      }
+      for(let e of events) {
+        let buffer = Object.assign({
+          text: `This is a test message for a ${data.type} type event.`,
+          user_name: 'JeffBezos',
+          user_login: 'jeffbezos',
+          bits: (Math.floor(Math.random()*10)+1)*100,
+          gifted: Math.floor(Math.random()*50)+1,
+          cumulative: Math.floor(Math.random()*60)+1,
+          tier: Math.floor(Math.random()*3)+1,
+          raider: 'Pokimane',
+          raider_id: 'pokimane',
+          raiders: Math.floor(Math.random()*300)+1,
+          raid: 'PewDiePie',
+          raid_id: 'pewdiepie',
+          is_gift: 'true'
+        }, e)
+        if(buffer.type === 'tts') 
+          buffer.text = `Hello! I'm a robot reading some text!`
         
-      await this.queueUp(buffer)
+        if(buffer.text)
+          buffer.text = this.populateText(buffer.text, buffer)
+          
+        await this.queueUp(buffer)
+      }
     })
 
   }

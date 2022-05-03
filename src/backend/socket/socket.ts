@@ -1,6 +1,8 @@
 import { filter, from, Subject, take } from 'rxjs'
 import * as socketIO from 'socket.io'
 import { Api } from '../api/express'
+import { Elements } from '../db/models/elements'
+import { User } from '../db/models/user'
 import { Mongo } from '../db/mongo'
 import { Chat, IChatClient } from '../twitch/chat'
 
@@ -24,6 +26,52 @@ export class Socket {
       socket.on('bind', (data) => {
         if(data.userId) 
           socket.join(data.userId)
+      })
+
+
+      socket.on('pair-request', data => {
+        if(data.pairingKey)
+          socket.join(data.pairingKey)
+      })
+
+      socket.on('pair-successfull', data => {
+        if(data.pairingKey) {
+          socket.leave(data.pairingKey)
+          socket.to(data.pairingKey).emit('pairing-successfull', {})
+        }
+      })
+
+      socket.on('pair', (data) => {
+        if(data.userId && data.pairingKey) {
+          socket.join(data.pairingKey)
+          Socket.io.to(data.pairingKey).emit('pair', data)
+        }
+      })
+
+      socket.on('bind-streamdeck', (data) => {
+        if(data.userId) {
+          socket.emit('accept-streamdeck', {
+            accepted: true
+          })
+        }
+      })
+      socket.on('streamdeck-test', async (data) => {
+        try {
+          if(data.userId) {
+            let user = await User.findOne({ _id: data.userId })
+            if(user) {
+              let alerts: any = await Elements.findOne({ userId: user._id })
+              let alert = await from(alerts.json).pipe(
+                filter((a: any) => a._id === data.alertId),
+                take(1)
+              ).toPromise()
+              if(alert)
+                Socket.io.to(data.userId).emit('test', alert)
+            }
+          }
+        } catch(e) {
+          console.error(e)
+        }
       })
 
       socket.on('unbind', (data) => {

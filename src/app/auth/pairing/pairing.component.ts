@@ -1,63 +1,59 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router'
+import { ActivatedRoute, Router } from '@angular/router'
 import { DataService } from 'src/app/shared/data.service'
-
-import * as uuid from 'uuid'
 import { AuthGuard } from '../auth.guard'
+import { SCOPES } from '../login/login.component'
+import * as uuid from 'uuid'
 
-export const SCOPES = [
-  'bits:read',
-  'channel:edit:commercial',
-  'channel:manage:broadcast',
-  'channel:manage:polls',
-  'channel:manage:predictions',
-  'channel:manage:redemptions',
-  //'channel:manage:schedule',
-  'channel:read:hype_train',
-  'channel:read:polls',
-  'channel:read:predictions',
-  'channel:read:redemptions',
-  'channel:read:subscriptions',
-  'clips:edit',
-  'moderation:read',
-  //'user:edit',
-  //'user:manage:blocked_users',
-  //'user:read:blocked_users',
-  //'user:read:broadcast',
-  //'user:read:follows',
-  //'user:read:subscriptions',
-  'channel:moderate',
-  'chat:edit',
-  'chat:read',
-  //'whispers:read',
-  //'whispers:edit'
-]
 @Component({
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  selector: 'app-pairing',
+  templateUrl: './pairing.component.html',
+  styleUrls: ['./pairing.component.scss']
 })
-export class LoginComponent {
+export class PairingComponent {
 
-  message: string
+  message
+  pairingKey
 
-  constructor(public data: DataService, public auth: AuthGuard, private router: Router) {
+  constructor(public auth: AuthGuard, public data: DataService, private router: Router, private route: ActivatedRoute) { 
+    route.params.subscribe(params => {
+      if(params.pairingKey)
+        this.pairingKey = params.pairingKey
+      else
+        this.router.navigate([''])
+    })
+  }
+
+  pairing
+  async pair() {
+    let listener = this.data.socketIO.on('pairing-successfull', data => {
+      console.log('SUCCESS')
+      listener.close()
+      window.close()
+    })
+    this.pairing = true
+    this.data.socketIO.emit('pair', {
+      userId: this.auth.currentUser?._id,
+      pairingKey: this.pairingKey
+    })
   }
 
   async loginWithTwitch() {
 
     if(localStorage.currentUser) {
       await this.auth.resume()
-      if(this.auth.currentUser) {
+/*       if(this.auth.currentUser) {
         this.router.navigate(['/'])
         return
-      }
+      } */
     }
 
     let state = uuid.v4()
 
     let listener = this.data.socketIO.on(state, (data) => {
       if(data.token) {
-        this.auth.login(data)
+        this.auth.login(data, true)
+        this.message = null
       } else {
         this.message = 'Could not authenticate'
       }
@@ -83,4 +79,5 @@ export class LoginComponent {
 
     this.message = 'Login via the newly opened twitch window...'
   }
+
 }

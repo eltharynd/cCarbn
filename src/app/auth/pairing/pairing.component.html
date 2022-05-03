@@ -1,0 +1,51 @@
+
+
+<nb-card>
+    <nb-card-header>
+        <img src="assets/brand/logo-white.png">
+        <div>
+          <h2>Welcome to cCarbn</h2>
+          <ng-template *ngIf="false else login"></ng-template>
+        </div>
+      </nb-card-header>
+      <nb-card-body>
+        <h1>Stream Deck Pairing</h1>
+        <p>You're attempting to pair a Stream Deck to your account.</p>
+        <br/>
+        <p *ngIf="!auth.currentUser">Login to begin the pairing process...</p>
+        <p *ngIf="auth.currentUser">
+            If you would like to pair the Stream Deck to the account <strong>{{auth.currentUser.name}}</strong>
+            press this button:
+        </p>
+        <div class="button">
+            <button nbButton (click)="pair()" [nbSpinner]="pairing" [disabled]="pairing" status="success" fullWidth style="height:4rem;">PAIRING</button>
+        </div>
+      </nb-card-body>
+</nb-card>
+
+
+<ng-template #login>
+    <div *ngIf="!auth.currentUser" class="login-container" style="width: 100%;">
+      <p *ngIf="message || !data._clientId">{{message ? message : 'We seem to be experiencing server issues.. Attempting to reconnect...'}}</p>
+      <button [disabled]="(message?true:false) || !data._clientId" 
+              [nbSpinner]="message?true:false" 
+              status="primary" 
+              nbButton 
+              fullWidth
+              (click)="loginWithTwitch()" 
+              >
+        TWITCH LOGIN
+      </button>
+    </div>
+    <div *ngIf="auth.currentUser" class="login-container">
+      <button nbButton
+              status="warning" 
+              (click)="auth.logout(true)" 
+              fullWidth>
+        LOGOUT
+      </button>
+    </div>
+</ng-template>
+
+  
+<div style="height:50vh;">&nbsp;</div>
