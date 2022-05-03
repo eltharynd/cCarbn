@@ -175,8 +175,12 @@ nb-select.size-medium:not(.full-width) {
 }
 
 
-.layout {
+
+.nested > div > .layout {
   min-height: 100% !important;
+  > div > div > .columns > nb-layout-column {
+    padding: 0 !important;
+  }
 }
 
 

@@ -1,10 +1,12 @@
-import { filter, from, Subject, take } from 'rxjs'
+import { filter, from, take } from 'rxjs'
 import * as socketIO from 'socket.io'
 import { Api } from '../api/express'
 import { Elements } from '../db/models/elements'
 import { User } from '../db/models/user'
 import { Mongo } from '../db/mongo'
 import { Chat, IChatClient } from '../twitch/chat'
+
+//require("events").captureRejections = true;
 
 export class Socket {
   static io: socketIO.Server
@@ -29,7 +31,12 @@ export class Socket {
       })
 
 
-      socket.on('pair-request', data => {
+      socket.on('pair-check', data => {
+        if(data.pairingKey) {
+          socket.emit('pair-check', {waiting: Socket.io.sockets.adapter.rooms.has(data.pairingKey)})
+        }
+      })
+      socket.on('pair-request', data => { 
         if(data.pairingKey)
           socket.join(data.pairingKey)
       })
@@ -118,15 +125,7 @@ export class Socket {
       socket.on('disconnect', () => {
         Socket.connections.splice(Socket.connections.indexOf(socket), 1)
       })
-    })
-  }
-
-  public static addListener() {
+    }) 
 
   }
-
-  public static removeListener() {
-
-  }
-
 }

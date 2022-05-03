@@ -15,11 +15,18 @@ export class PairingComponent {
   message
   pairingKey
 
+  expired
+
   constructor(public auth: AuthGuard, public data: DataService, private router: Router, private route: ActivatedRoute) { 
     route.params.subscribe(params => {
-      if(params.pairingKey)
+      if(params.pairingKey) {
         this.pairingKey = params.pairingKey
-      else
+        this.data.socketIO.on('pair-check', data => { 
+          console.log('expired', data.waiting)
+          this.expired = !data.waiting
+        })
+        this.data.socketIO.emit('pair-check', { pairingKey: this.pairingKey })
+      } else
         this.router.navigate([''])
     })
   }

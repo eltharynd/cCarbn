@@ -6,6 +6,7 @@ import { LoginComponent } from './login/login.component';
 import { TokenComponent } from './token/token.component';
 import { ProfileComponent } from './profile/profile.component';
 import { PairingComponent } from './pairing/pairing.component'
+import { CommonModule } from "../common/common.module"
 
 
 
@@ -13,6 +14,7 @@ import { PairingComponent } from './pairing/pairing.component'
   imports: [
     AuthRoutingModule,
     SharedNebularModule,
+    CommonModule,
   ],
   declarations: [
     AuthComponent,

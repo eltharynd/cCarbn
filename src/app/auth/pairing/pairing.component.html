@@ -1,6 +1,6 @@
 
 
-<nb-card>
+<nb-card class="centered">
     <nb-card-header>
         <img src="assets/brand/logo-white.png">
         <div>
@@ -18,7 +18,8 @@
             press this button:
         </p>
         <div class="button">
-            <button nbButton (click)="pair()" [nbSpinner]="pairing" [disabled]="pairing" status="success" fullWidth style="height:4rem;">PAIRING</button>
+            <p *ngIf="expired">This link has expired... Please start again from the Stream Deck app</p>
+            <button nbButton (click)="pair()" [nbSpinner]="pairing" [disabled]="pairing || expired" status="success" fullWidth style="height:4rem;">{{expired ? 'EXPIRED' : 'PAIRING'}}</button>
         </div>
       </nb-card-body>
 </nb-card>
@@ -46,6 +47,3 @@
       </button>
     </div>
 </ng-template>
-
-  
-<div style="height:50vh;">&nbsp;</div>
