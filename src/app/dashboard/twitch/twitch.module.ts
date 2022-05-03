@@ -7,7 +7,8 @@ import { TwitchRoutingModule } from "./twitch-routing.module"
 import { ElementsComponent } from "./elements/elements.component"
 import { ChatbotComponent } from "./chatbot/chatbot.component";
 import { TwitchAPIComponent } from './twitchapi/twitchapi.component'
-import { TwitchComponent } from "./twitch.component"
+import { TwitchComponent } from "./twitch.component";
+import { StreamdeckComponent } from './streamdeck/streamdeck.component'
 
  @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import { TwitchComponent } from "./twitch.component"
     TwitchAPIComponent,
     ChatbotComponent,
     ElementsComponent,
+    StreamdeckComponent,
   ],
  })
  export class TwitchModule { }

@@ -4,6 +4,7 @@ import { ElementsComponent } from "./elements/elements.component"
 import { ChatbotComponent } from "./chatbot/chatbot.component"
 import { TwitchAPIComponent } from "./twitchapi/twitchapi.component"
 import { TwitchComponent } from "./twitch.component"
+import { StreamdeckComponent } from "./streamdeck/streamdeck.component"
 
 
 
@@ -23,6 +24,10 @@ const routes: Routes = [
       {
         path: 'chatbot',
         component: ChatbotComponent,
+      },
+      {
+        path: 'streamdeck',
+        component: StreamdeckComponent,
       },
     ]
   }

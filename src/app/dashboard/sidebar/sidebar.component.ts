@@ -32,6 +32,11 @@ export class SidebarComponent {
           link: '/dashboard/twitch/elements',
         },
         {
+          title: 'Stream Deck',
+          icon: {icon: 'keypad-outline', pack: 'eva'},
+          link: '/dashboard/twitch/streamdeck',
+        },
+        {
           title: 'Hype Train',
           icon: {icon: 'train', pack: 'fa'},
           url: '/browsersource/hypetrain',
