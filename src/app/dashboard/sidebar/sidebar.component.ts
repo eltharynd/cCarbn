@@ -22,7 +22,7 @@ export class SidebarComponent {
       link: '/dashboard/twitch',
       children: [
         {
-          title: 'API & Connections',
+          title: 'API',
           icon: {icon: 'link', pack: 'fa'},
           link: '/dashboard/twitch/api',
         },
