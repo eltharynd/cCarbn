@@ -65,7 +65,7 @@ input {
 
 
 .alert-card {
-    border-color: $inner-alert-border;
+    border-color: $inner-border;
 }
 
 .conditions-header {
@@ -79,8 +79,8 @@ input {
             width: 100%;
             justify-content: center;
             padding-top: 1.4rem;
-            border-color: $inner-alert-border;
-            background-color: $inner-alert-background-light;
+            border-color: $inner-border;
+            background-color: $inner-background-light;
             > * {
                 margin-left: .5rem;
                 margin-right: .5rem;
@@ -91,8 +91,8 @@ input {
         }
         > nb-list-item:last-child {
             padding-top: 1.4rem;
-            background-color: $inner-alert-background;
-            border-top: 1px solid $inner-alert-border;
+            background-color: $inner-background;
+            border-top: 1px solid $inner-border;
             border-bottom: 0
         }
     }
@@ -100,7 +100,7 @@ input {
 
 
 .events-body {
-    background-color: $inner-alert-background;
+    background-color: $inner-background;
     padding: 0;
 }
 .event-error {
@@ -113,8 +113,8 @@ input {
 .alert-footer {
     display: flex;
     justify-content: space-between;
-    background-color: $inner-alert-background-light;
-    border-color: $inner-alert-border;
+    background-color: $inner-background-light;
+    border-color: $inner-border;
     > *:nth-child(2) {
         margin-left: 1rem;
         margin-right: 1rem;
