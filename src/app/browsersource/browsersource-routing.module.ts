@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
 
-import { EventsComponent } from "./events/events.component"
+import { AlertsComponent } from "./alerts/alerts.component"
 import { HypetrainComponent } from "./hypetrain/hypetrain.component"
 import { PredictionsComponent } from "./predictions/predictions.component"
 import { BrowserSourceComponent } from "./browsersource.component"
@@ -25,7 +25,7 @@ const routes: Routes = [
       },
       {
         path: '**',
-        component: EventsComponent
+        component: AlertsComponent
       },
     ]
   }

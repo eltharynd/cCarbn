@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { EventsService } from '../events.service'
+import { AlertsService } from '../alerts.service'
 
 @Component({
   selector: 'app-image',
@@ -8,37 +8,37 @@ import { EventsService } from '../events.service'
 export class ImageComponent {
 
   @Input() viewport: any
-  @Input() event: any
+  @Input() element: any
 
-  constructor(private events: EventsService) {}
+  constructor(private alerts: AlertsService) {}
 
   alignItems
   justifyContent
   onLoadedData() {
     this.alignItems = null
     this.justifyContent = null
-    if(this.event.position) {
-      if(/TOP/.test(this.event.position)) {
+    if(this.element.position) {
+      if(/TOP/.test(this.element.position)) {
         this.alignItems = 'flex-start'
-      } else if(/BOTTOM/.test(this.event.position)) {
+      } else if(/BOTTOM/.test(this.element.position)) {
         this.alignItems = 'flex-end'
       } 
 
-      if(/LEFT/.test(this.event.position)) {
+      if(/LEFT/.test(this.element.position)) {
         this.justifyContent = 'flex-start'
-      } else if(/RIGHT/.test(this.event.position)) {
+      } else if(/RIGHT/.test(this.element.position)) {
         this.justifyContent = 'flex-end'
       } 
     }
 
     setTimeout(() => {
-      console.log('ending', (+this.event.duration|0)*1000)
+      console.log('ending', (+this.element.duration|0)*1000)
       this.onPlaybackEnded()
-    }, (+this.event.duration|5)*1000);
+    }, (+this.element.duration|5)*1000);
   }
 
   onPlaybackEnded() {
-    this.events.eventsSubject.next({
+    this.alerts.elementsSubject.next({
       type: 'gif',
       what: 'ended'
     })

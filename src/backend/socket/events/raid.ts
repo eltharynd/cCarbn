@@ -14,7 +14,7 @@ export class RaidHandler {
 
     let found: any = await User.findOne({twitchId: event.raidedBroadcasterId})
     if(found) {
-      Socket.io.to(found._id.toString()).emit('events', toJSON(event))
+      Socket.io.to(found._id.toString()).emit('alerts', toJSON(event))
     }
   }
   
@@ -25,7 +25,7 @@ export class RaidHandler {
 
     let found: any = await User.findOne({twitchId: event.raidingBroadcasterId})
     if(found) {
-      Socket.io.to(found._id.toString()).emit('events', toJSON(event))
+      Socket.io.to(found._id.toString()).emit('alerts', toJSON(event))
     }
   }
   

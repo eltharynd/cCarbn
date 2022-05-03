@@ -1,5 +1,5 @@
 import {  Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { EventsService } from '../events.service'
+import { AlertsService } from '../alerts.service'
 
 @Component({
   selector: 'app-video',
@@ -8,26 +8,26 @@ import { EventsService } from '../events.service'
 export class VideoComponent {
 
   @Input() viewport: any
-  @Input() event: any
+  @Input() element: any
   @ViewChild('videoPlayer') videoPlayer: ElementRef
 
-  constructor(private events: EventsService) {}
+  constructor(private alerts: AlertsService) {}
 
   alignItems
   justifyContent
   onLoadedData() {
     this.alignItems = null
     this.justifyContent = null
-    if(this.event.position) {
-      if(/TOP/.test(this.event.position)) {
+    if(this.element.position) {
+      if(/TOP/.test(this.element.position)) {
         this.alignItems = 'flex-start'
-      } else if(/BOTTOM/.test(this.event.position)) {
+      } else if(/BOTTOM/.test(this.element.position)) {
         this.alignItems = 'flex-end'
       } 
 
-      if(/LEFT/.test(this.event.position)) {
+      if(/LEFT/.test(this.element.position)) {
         this.justifyContent = 'flex-start'
-      } else if(/RIGHT/.test(this.event.position)) {
+      } else if(/RIGHT/.test(this.element.position)) {
         this.justifyContent = 'flex-end'
       } 
     }
@@ -41,7 +41,7 @@ export class VideoComponent {
   }
 
   onPlaybackEnded() {
-    this.events.eventsSubject.next({
+    this.alerts.elementsSubject.next({
       type: 'video',
       what: 'ended'
     })

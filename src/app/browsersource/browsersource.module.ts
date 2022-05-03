@@ -4,14 +4,14 @@ import { HypetrainModule } from "./hypetrain/hypetrain.module"
 import { PredictionsComponent } from "./predictions/predictions.component"
 import { BrowserSourceRoutingModule } from "./browsersource-routing.module"
 import { BrowserSourceComponent } from "./browsersource.component";
-import { EventsComponent } from './events/events.component';
-import { VideoComponent } from './events/video/video.component';
-import { AudioComponent } from './events/audio/audio.component';
-import { TTSComponent } from './events/tts/tts.component';
-import { ObsComponent } from './events/obs/obs.component';
-import { ChatComponent } from './events/chat/chat.component';
-import { GIFComponent } from './events/gif/gif.component';
-import { ImageComponent } from './events/image/image.component'
+import { AlertsComponent } from './alerts/alerts.component';
+import { VideoComponent } from './alerts/video/video.component';
+import { AudioComponent } from './alerts/audio/audio.component';
+import { TTSComponent } from './alerts/tts/tts.component';
+import { ObsComponent } from './alerts/obs/obs.component';
+import { ChatComponent } from './alerts/chat/chat.component';
+import { GIFComponent } from './alerts/gif/gif.component';
+import { ImageComponent } from './alerts/image/image.component'
 
  @NgModule({
   imports: [
@@ -22,7 +22,7 @@ import { ImageComponent } from './events/image/image.component'
   declarations: [
     BrowserSourceComponent,
     PredictionsComponent,
-    EventsComponent,
+    AlertsComponent,
     VideoComponent,
     AudioComponent,
     TTSComponent,

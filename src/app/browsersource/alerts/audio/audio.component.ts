@@ -1,18 +1,16 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { EVENT_ANIMATIONS } from '../events.component'
-import { EventsService } from '../events.service'
+import { AlertsService } from '../alerts.service'
 
 @Component({
   selector: 'app-audio',
-  templateUrl: './audio.component.html',
-  animations: EVENT_ANIMATIONS
+  templateUrl: './audio.component.html'
 })
 export class AudioComponent {
 
-  @Input() event: any
+  @Input() element: any
   @ViewChild('audioPlayer') audioPlayer: ElementRef
 
-  constructor(private events: EventsService) {}
+  constructor(private alerts: AlertsService) {}
 
   alignItems
   justifyContent
@@ -26,7 +24,7 @@ export class AudioComponent {
   }
 
   onPlaybackEnded() {
-    this.events.eventsSubject.next({
+    this.alerts.elementsSubject.next({
       type: 'audio',
       what: 'ended'
     })

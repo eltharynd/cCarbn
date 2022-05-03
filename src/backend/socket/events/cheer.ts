@@ -15,7 +15,7 @@ export class CheerHandler {
 
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found) {
-      Socket.io.to(found._id.toString()).emit('events', data)
+      Socket.io.to(found._id.toString()).emit('alerts', data)
     }
   }
   

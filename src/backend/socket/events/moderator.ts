@@ -14,7 +14,7 @@ export class ModeratorHandler {
 
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found) {
-      Socket.io.to(found._id.toString()).emit('events', toJSON(event))
+      Socket.io.to(found._id.toString()).emit('alerts', toJSON(event))
     }
   }
   
@@ -25,7 +25,7 @@ export class ModeratorHandler {
 
     let found: any = await User.findOne({twitchId: event.broadcasterId})
     if(found) {
-      Socket.io.to(found._id.toString()).emit('events', toJSON(event))
+      Socket.io.to(found._id.toString()).emit('alerts', toJSON(event))
     }
   }
   

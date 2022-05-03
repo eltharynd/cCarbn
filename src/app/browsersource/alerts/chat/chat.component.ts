@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DataService } from 'src/app/shared/data.service'
-import { EventsService } from '../events.service'
+import { AlertsService } from '../alerts.service'
 
 @Component({
   selector: 'app-chat',
@@ -8,21 +8,21 @@ import { EventsService } from '../events.service'
 })
 export class ChatComponent implements OnInit {
 
-  @Input() event: any
+  @Input() element: any
 
 
-  constructor(private events: EventsService, private data: DataService) { }
+  constructor(private alerts: AlertsService, private data: DataService) { }
   async ngOnInit() {
     if(this.data._userId)
       this.data.send('chat-relay', {
         userId: this.data._userId,
-        message: this.event.text
+        message: this.element.text
       })
     this.onPlaybackEnded()
   }
 
   onPlaybackEnded() {
-    this.events.eventsSubject.next({
+    this.alerts.elementsSubject.next({
       type: 'chat',
       what: 'ended'
     })

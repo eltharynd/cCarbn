@@ -2,7 +2,7 @@ import { animate, animateChild, style, transition, trigger } from '@angular/anim
 import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs'
 import { OBSService } from 'src/app/shared/obs.service'
-import { EventsService } from './events.service'
+import { AlertsService } from './alerts.service'
 
 export enum POSITION {
   TOP_LEFT = 'TOP_LEFT',
@@ -27,7 +27,7 @@ export enum TRANSITION {
   SWIPE_RIGHT = 'Swipe right',
 }
 
-export const EVENT_ANIMATIONS = [
+export const ELEMENT_ANIMATIONS = [
   trigger('in', [
 
 
@@ -107,11 +107,11 @@ export const EVENT_ANIMATIONS = [
 ]
 
 @Component({
-  selector: 'app-events',
-  templateUrl: './events.component.html',
-  animations: EVENT_ANIMATIONS
+  selector: 'app-alerts',
+  templateUrl: './alerts.component.html',
+  animations: ELEMENT_ANIMATIONS
 })
-export class EventsComponent implements OnInit {
+export class AlertsComponent implements OnInit {
 
 
   viewport = {
@@ -120,17 +120,17 @@ export class EventsComponent implements OnInit {
     padding: 50
   }
 
-  currentEvents: any[] = []
+  currentElements: any[] = []
   cantPlay = false
   
-  constructor(private events: EventsService, public OBS: OBSService) {
-    events.eventsSubject.subscribe(event => {
-      switch (event.what) {
+  constructor(private alerts: AlertsService, public OBS: OBSService) {
+    alerts.elementsSubject.subscribe(element => {
+      switch (element.what) {
         case 'start':
-          this.currentEvents.push(event)
+          this.currentElements.push(element)
           break
         case 'ended': 
-          this.currentEvents.splice(this.currentEvents.indexOf(event), 1)
+          this.currentElements.splice(this.currentElements.indexOf(element), 1)
           break
       }
     })

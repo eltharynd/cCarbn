@@ -1,0 +1,18 @@
+<div class="viewport" [ngStyle]="{
+  width: viewport.width+'px', 
+  height: viewport.height+'px',
+  padding: viewport.padding+'px'
+}">
+  
+  <div *ngIf="cantPlay" style="color: red; font-weight: bold;">IF YOU OPEN THIS ON A BROWSER YOU NEED TO INTERACT WITH THE PAGE BEFORE IT CAN PLAY MEDIA</div>
+
+  <div [@in]="element['transition IN']" [@out]="element['transition OUT']" *ngFor="let element of currentElements">
+    <app-video *ngIf="element?.type === 'video'" [element]=element [viewport]="viewport"></app-video>
+    <app-audio *ngIf="element?.type === 'audio'" [element]=element></app-audio>
+    <app-tts *ngIf="element?.type === 'tts'" [element]=element></app-tts>
+    <app-obs *ngIf="element?.type === 'obs'" [element]=element></app-obs>
+    <app-chat *ngIf="element?.type === 'chat'" [element]=element></app-chat>
+    <app-gif *ngIf="element?.type === 'gif'" [element]=element [viewport]="viewport"></app-gif>
+  </div>
+
+</div>

@@ -1,11 +1,11 @@
 import { OnInit, Component } from '@angular/core';
 import { AuthGuard } from '../../../auth/auth.guard'
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
-import { EVENT_TYPES } from 'src/app/browsersource/events/events.service'
+import { ELEMENT_TYPES } from 'src/app/browsersource/alerts/alerts.service'
 import { filter, from, map, Subject, toArray } from 'rxjs'
 import { environment } from 'src/environments/environment'
 import { OBSService } from 'src/app/shared/obs.service'
-import { POSITION, TRANSITION } from 'src/app/browsersource/events/events.component'
+import { POSITION, TRANSITION } from 'src/app/browsersource/alerts/alerts.component'
 import { KeyValue } from '@angular/common'
 @Component({
   selector: 'app-alerts',
@@ -44,10 +44,10 @@ export class AlertsComponent implements OnInit {
     })
   }
 
-  sendTestEvent(pointerEvent, alert) {
+  sendTestAlert(pointerEvent, alert) {
     pointerEvent.stopPropagation()
-    for(let event of alert.events) {
-      this.data.send('test', Object.assign({ userId: this.auth.currentUser?._id }, event))
+    for(let element of alert.elements) {
+      this.data.send('test', Object.assign({ userId: this.auth.currentUser?._id }, element))
     }
   }
 
@@ -63,7 +63,7 @@ export class AlertsComponent implements OnInit {
           compared: null
         }
       ],
-      events: [],
+      elements: [],
       expanded: true
     }
     alert.backup = JSON.stringify(alert)
@@ -108,11 +108,11 @@ export class AlertsComponent implements OnInit {
       }
     }
     
-    if(alert.events.length < 1) {
+    if(alert.elements.length < 1) {
       valid = false
     } else {
-      //TODO check events
-      delete alert.events[0].withPrevious
+      //TODO check alerts
+      delete alert.elements[0].withPrevious
     }
 
     if(valid) {
@@ -173,21 +173,21 @@ export class AlertsComponent implements OnInit {
     alert.changes = true
   }
 
-  selectedEventType
-  addEvent(alert: _alert, type) {
-    if(alert.events.length>0) delete alert.events[0].withPrevious
-    alert.events.push({
+  selectedElementType
+  addElement(alert: _alert, type) {
+    if(alert.elements.length>0) delete alert.elements[0].withPrevious
+    alert.elements.push({
       type: type
     })
 
-    this.selectedEventType = null
+    this.selectedElementType = null
     alert.changes = true
   }
-  deleteEvent(alert: _alert, index) {
-    alert.events.splice(index, 1)
-    if(alert.events.length>0) delete alert.events[0].withPrevious
+  deleteElement(alert: _alert, index) {
+    alert.elements.splice(index, 1)
+    if(alert.elements.length>0) delete alert.elements[0].withPrevious
 
-    this.selectedEventType = null
+    this.selectedElementType = null
     alert.changes = true
   }
 
@@ -196,7 +196,7 @@ export class AlertsComponent implements OnInit {
   userAudios
   userGIFS
   userImages
-  async getUserSelectableFiles(event) {
+  async getUserSelectableFiles(element) {
     let files = await this.data.get(`user/${this.auth.currentUser?._id}/uploads`)
     
     this.userVideos = await from(files).pipe(
@@ -239,35 +239,35 @@ export class AlertsComponent implements OnInit {
       toArray(),
     ).toPromise()
     
-    event.select = true
-    event.upload = false;
+    element.select = true
+    element.upload = false;
   }
 
 
-  async videoSelected(alert: _alert, event) {
-    let fileName = event.src.replace(SERVER_URL,'').replace(/^.+\//g, '')
+  async videoSelected(alert: _alert, element) {
+    let fileName = element.src.replace(SERVER_URL,'').replace(/^.+\//g, '')
     if(!await this.data.get(`uploads/${this.auth.currentUser?._id}/link/${fileName}`)) {
-      event.src = null
+      element.src = null
       return
     }
     if(!await this.saveAlert(alert)) {
       await this.data.get(`uploads/${this.auth.currentUser?._id}/unlink/${fileName}`)
-      event.src = null
+      element.src = null
     }  
   }
-  async deleteMediaSource(alert: _alert, event, src) {
+  async deleteMediaSource(alert: _alert, element, src) {
     let filePath = src.replace(SERVER_URL, '')
     if(await this.data.delete(filePath)) {
-      event.src = null
+      element.src = null
       
       await this.saveAlert(alert)
       //TODO if alert could not be saved (invalid) this can be problematic.. consider saving only new src (original intended PATCH request)
     }
   }
-  async mediaUploaded(alert: _alert, event, url) {
-    event.src = `${SERVER_URL}${url}`
-    event.upload = false
-    let fileName = event.src.replace(/^.+\//g, '')
+  async mediaUploaded(alert: _alert, element, url) {
+    element.src = `${SERVER_URL}${url}`
+    element.upload = false
+    let fileName = element.src.replace(/^.+\//g, '')
 
     if(alert.name === 'An alert') {
       alert.name = fileName
@@ -276,24 +276,24 @@ export class AlertsComponent implements OnInit {
 
     if(!await this.saveAlert(alert)) {
       await this.data.get(`uploads/${this.auth.currentUser?._id}/unlink/${fileName}`)
-      event.src = null
+      element.src = null
     }  
   }
-  onLoadedData(event, data) {
+  onLoadedData(element, data) {
     let file = data.srcElement
     let mediaInformation = {
       width: file.videoWidth||file.naturalWidth||null,
       height: file.videoHeight||file.naturalHeight||null,
       duration: file.duration||null
     }
-    event.mediaInformation = mediaInformation
+    element.mediaInformation = mediaInformation
   }
 
   originalOrder = (a: KeyValue<string,string>, b: KeyValue<string,string>): number => {
     return 0;
   }
 
-  EventTypes = EVENT_TYPES
+  ElementTypes = ELEMENT_TYPES
   _conditionTypes = {
     bit: 'Bits cheered',
     redeem: 'Channel redemption',
@@ -519,8 +519,8 @@ export class AlertsComponent implements OnInit {
   }
   _chat = {
     keywords: {
-      "$user": "The display name of the user triggered the event",
-      "$user_id": "The user that triggered the event",
+      "$user": "The display name of the user triggered the alert",
+      "$user_id": "The user that triggered the alert",
 
       "$bits": "The amount of bits cheered",
 
@@ -556,7 +556,7 @@ interface _condition {
 export interface _alert {
   name: string
   conditions: _condition[]
-  events: any[]
+  elements: any[]
 
   _id?: string
   backup?: any
@@ -570,12 +570,14 @@ export interface _alert {
 
 const cleanAlert = (alert: _alert) => {
   let clone = JSON.parse(JSON.stringify(alert))
+  for(let el of alert.elements) {
+    delete el.select
+    delete el.upload
+  }
   delete clone.backup
   delete clone.changes
   delete clone.error
   delete clone.expanded
-  delete clone.select
-  delete clone.upload
   return clone
 }
 

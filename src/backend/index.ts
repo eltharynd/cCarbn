@@ -29,22 +29,6 @@ let startApp = async () => {
 
   console.info('CONNECTING TO TWITCH...')
 
-/*   let elements = await Elements.find()
-  for(let e of elements) {
-    console.log(`migrating alerts for ${e.userId}`)
-    let alert = await Alerts.create({
-      userId: e.userId,
-      alerts: e.json
-    })
-    await alert.save()
-  }
-  console.log('migrated all')
-  return */
-
-/*   migrating alerts for 62657fd7133898e795be21f8
-migrating alerts for 611180bbda7c789038a04a1b
-migrating alerts for 61118f4ce72d0103d112f005 */
-
   await Twitch.init()
   let admin: any = await User.findOne({admin: true})
   let defaultUserToken: any = await UserToken.findOne({userId: admin._id})

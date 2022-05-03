@@ -99,11 +99,11 @@ input {
 }
 
 
-.events-body {
+.elements-body {
     background-color: $inner-background;
     padding: 0;
 }
-.event-error {
+.element-error {
     background-color: var(--card-header-danger-background-color);
     text-align: center;
     font-weight: bold;

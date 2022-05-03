@@ -110,11 +110,9 @@ const SETTINGS_TEMPLATE = {
       update: {
         enabled: false
       },
-      //EventSubExtensionBitsTransactionCreateEvent ???
       online: {
         enabled: false
       }
-      //EventSubUserUpdateEvent
     }
   },
   chatbot: {

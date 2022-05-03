@@ -6,16 +6,16 @@ import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 @Injectable({
   providedIn: 'root'
 })
-export class EventsService {
+export class AlertsService {
 
   alerts: _alert[] = []
-  private eventsQueue: any[] = []
-  eventsSubject: Subject<any> = new Subject()
+  private elementsQueue: any[] = []
+  elementsSubject: Subject<any> = new Subject()
 
   constructor(private data: DataService) { 
 
-    this.eventsSubject.subscribe(event => {
-      switch (event.what) {
+    this.elementsSubject.subscribe(element => {
+      switch (element.what) {
         case 'ended':
           this.playing--
           setTimeout(async () => {
@@ -32,8 +32,8 @@ export class EventsService {
       this.alerts = data.alerts
     })
     
-    this.data.socketIO.on('events', async data => {
-      console.info('event received', data)
+    this.data.socketIO.on('alerts', async data => {
+      console.info('alert received', data)
 
       let user = data.user_name||null
 
@@ -116,44 +116,44 @@ export class EventsService {
 
         if(ignore) continue
 
-        if(alert.events?.length>0) 
-          alert.events[0].withPrevious = false
+        if(alert.elements?.length>0) 
+          alert.elements[0].withPrevious = false
         else continue
 
-        for(let event of alert.events) {
-          if(event.type==='tts') {
-            switch (event.message) {
+        for(let element of alert.elements) {
+          if(element.type==='tts') {
+            switch (element.message) {
               case 'subMessage':
-                event.text = null
+                element.text = null
                 break
               case 'cheerMessage':
-                event.text = data.message
+                element.text = data.message
                 break
               case 'redemptionMessage':
               default:
-                event.text = data.user_input
+                element.text = data.user_input
                 break
             }
           }
-          if(event.text) {
-            event.text = this.populateText(event.text, data)
+          if(element.text) {
+            element.text = this.populateText(element.text, data)
           }
-          await this.queueUp(event)
+          await this.queueUp(element)
         }
 
       }
     })
 
     this.data.socketIO.on('test', async data => {
-      let events: any = []
-      if(data.events) {
-        events = data.events
+      let elements: any = []
+      if(data.elements) {
+        elements = data.elements
       } else {
-        events.push(data)
+        elements.push(data)
       }
-      for(let e of events) {
+      for(let e of elements) {
         let buffer = Object.assign({
-          text: `This is a test message for a ${data.type} type event.`,
+          text: `This is a test message for a ${data.type} type element.`,
           user_name: 'JeffBezos',
           user_login: 'jeffbezos',
           bits: (Math.floor(Math.random()*10)+1)*100,
@@ -179,55 +179,55 @@ export class EventsService {
 
   }
 
-  async queueUp(event) {
-    this.eventsQueue.push(event)
+  async queueUp(element) {
+    this.elementsQueue.push(element)
     await this.playNext()
   } 
   
   currentlyPlaying
   private playing = 0
   private async playNext() {
-    if(this.eventsQueue.length<1 || (this.playing>0 && !this.eventsQueue[0].withPrevious))
+    if(this.elementsQueue.length<1 || (this.playing>0 && !this.elementsQueue[0].withPrevious))
       return
     this.playing++
-    let buffer = this.eventsQueue.splice(0, 1)[0]
+    let buffer = this.elementsQueue.splice(0, 1)[0]
 
     this.currentlyPlaying = Object.assign(buffer, { what: 'start' })
-    this.eventsSubject.next(this.currentlyPlaying)
+    this.elementsSubject.next(this.currentlyPlaying)
 
-    if(this.eventsQueue.length>0 && this.eventsQueue[0].withPrevious)
+    if(this.elementsQueue.length>0 && this.elementsQueue[0].withPrevious)
       return this.playNext()
     else 
       return true
   } 
 
-  private populateText(text: string, event: any) {
+  private populateText(text: string, element: any) {
     return text
-      .replace(/\$user_id/g, event.is_anonymous ? 'Anonymous' : event.last_contribution ? event.last_contribution.user_login :  event.user_login)
-      .replace(/\$user/g, event.is_anonymous ? 'Anonymous' : event.last_contribution ? event.last_contribution.user_name :  event.user_name)
+      .replace(/\$user_id/g, element.is_anonymous ? 'Anonymous' : element.last_contribution ? element.last_contribution.user_login :  element.user_login)
+      .replace(/\$user/g, element.is_anonymous ? 'Anonymous' : element.last_contribution ? element.last_contribution.user_name :  element.user_name)
 
-      .replace(/\$bits/g, event.bits)
+      .replace(/\$bits/g, element.bits)
 
-      .replace(/\$gifted/g, event.total)
-      .replace(/\$cumulative/g, event.cumulative_total)
-      .replace(/\$tier/g, event.tier)
-      .replace(/\$is_gift/g, event.is_gift ? 'true' : 'false')
+      .replace(/\$gifted/g, element.total)
+      .replace(/\$cumulative/g, element.cumulative_total)
+      .replace(/\$tier/g, element.tier)
+      .replace(/\$is_gift/g, element.is_gift ? 'true' : 'false')
 
-      .replace(/\$raider/g, event.from_broadcaster_user_name)
-      .replace(/\$raider_id/g, event.from_broadcaster_user_login)
-      .replace(/\$raiders/g, event.viewers)
+      .replace(/\$raider/g, element.from_broadcaster_user_name)
+      .replace(/\$raider_id/g, element.from_broadcaster_user_login)
+      .replace(/\$raiders/g, element.viewers)
 
-      .replace(/\$raid/g, event.to_broadcaster_user_name)
-      .replace(/\$raid_id/g, event.to_broadcaster_user_login)
+      .replace(/\$raid/g, element.to_broadcaster_user_name)
+      .replace(/\$raid_id/g, element.to_broadcaster_user_login)
 
 
-      .replace(/\$ban_by/g, event.moderator_user_name)
-      .replace(/\$ban_by_id/g, event.moderator_user_login)
-      .replace(/\$reason/g, event.reason ? event.reason : 'Not specified.')
-      .replace(/\$duration/g, event.left > 60*1000 ? 
-                                `${Math.floor(event.left/600)/100} minutes` :
-                                event.left > 0 ?
-                                  `${Math.floor(event.left/10)/100} seconds` :
+      .replace(/\$ban_by/g, element.moderator_user_name)
+      .replace(/\$ban_by_id/g, element.moderator_user_login)
+      .replace(/\$reason/g, element.reason ? element.reason : 'Not specified.')
+      .replace(/\$duration/g, element.left > 60*1000 ? 
+                                `${Math.floor(element.left/600)/100} minutes` :
+                                element.left > 0 ?
+                                  `${Math.floor(element.left/10)/100} seconds` :
                                   ''
 
       )
@@ -237,7 +237,7 @@ export class EventsService {
 }
 
 
-export enum EVENT_TYPES {
+export enum ELEMENT_TYPES {
   video = 'Video',
   audio = 'Audio',
   tts = 'TTS',

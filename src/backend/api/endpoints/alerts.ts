@@ -64,9 +64,9 @@ export class AlertsRoutes {
         res.send({})
 
         if(removed.length>0)
-          for(let event of removed[0].events) {
-            if(event.src) {
-              let fileName = event.src.replace(/^.+\//g, '')
+          for(let element of removed[0].elements) {
+            if(element.src) {
+              let fileName = element.src.replace(/^.+\//g, '')
               await Api.unlink(fileName, req.params.userId)
             }
           }

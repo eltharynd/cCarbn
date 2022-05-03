@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
-import { filter, from, map, Subject, take, toArray } from 'rxjs'
-import OBSWebSocket, { OBSRequestTypes, OBSEventTypes, EventSubscription } from 'obs-websocket-js';
+import OBSWebSocket, { EventSubscription } from 'obs-websocket-js';
 import { DataService } from './data.service'
-import { throws } from 'assert'
-
 @Injectable({
   providedIn: 'root'
 })
@@ -15,8 +12,6 @@ export class OBSService {
   currentScene: string 
   scenes: any[] = []
   sources: any[] = []
-
-  events: Subject<any> = new Subject()
 
   constructor(private data: DataService) { 
     //@ts-ignore
@@ -40,46 +35,46 @@ export class OBSService {
           })
         })
 
-        this.OBS.on('ConnectionOpened ', (event) => {
+        this.OBS.on('ConnectionOpened ', (data) => {
           this.getItems()
         })
-        this.OBS.on('SceneCreated', (event) => {
+        this.OBS.on('SceneCreated', (data) => {
           this.getItems()
         })
-        this.OBS.on('SceneRemoved', (event) => {
+        this.OBS.on('SceneRemoved', (data) => {
           this.getItems()
         })
-        this.OBS.on('SceneNameChanged', (event) => {
+        this.OBS.on('SceneNameChanged', (data) => {
           this.getItems()
         })
-        this.OBS.on('CurrentProgramSceneChanged', (event) => {
+        this.OBS.on('CurrentProgramSceneChanged', (data) => {
           this.getItems()
         })
-        this.OBS.on('SceneListChanged', (event) => {
+        this.OBS.on('SceneListChanged', (data) => {
           this.getItems()
         })
-        this.OBS.on('SceneItemCreated', (event) => {
+        this.OBS.on('SceneItemCreated', (data) => {
           this.getItems()
         })
-        this.OBS.on('SceneItemRemoved', (event) => {
+        this.OBS.on('SceneItemRemoved', (data) => {
           this.getItems()
         })
-        this.OBS.on('InputCreated', (event) => {
+        this.OBS.on('InputCreated', (data) => {
           this.getItems()
         })
-        this.OBS.on('InputRemoved', (event) => {
+        this.OBS.on('InputRemoved', (data) => {
           this.getItems()
         })
-        this.OBS.on('InputNameChanged', (event) => {
+        this.OBS.on('InputNameChanged', (data) => {
           this.getItems()
         })
-        this.OBS.on('SourceFilterCreated', (event) => {
+        this.OBS.on('SourceFilterCreated', (data) => {
           this.getItems()
         })
-        this.OBS.on('SourceFilterRemoved', (event) => {
+        this.OBS.on('SourceFilterRemoved', (data) => {
           this.getItems()
         })
-        this.OBS.on('SourceFilterNameChanged', (event) => {
+        this.OBS.on('SourceFilterNameChanged', (data) => {
           this.getItems()
         })
       })

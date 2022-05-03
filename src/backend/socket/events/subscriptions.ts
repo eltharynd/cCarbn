@@ -13,7 +13,7 @@ export class SubscriptionHandler {
 
         let found: any = await User.findOne({twitchId: event.broadcasterId})
         if(found)
-            Socket.io.to(found._id.toString()).emit('events', data)
+            Socket.io.to(found._id.toString()).emit('alerts', data)
     }
 
     static subscriptionEndEvent = async (event: EventSubChannelSubscriptionEndEvent) => {
@@ -23,7 +23,7 @@ export class SubscriptionHandler {
 
         let found: any = await User.findOne({twitchId: event.broadcasterId})
         if(found)
-            Socket.io.to(found._id.toString()).emit('events', data)
+            Socket.io.to(found._id.toString()).emit('alerts', data)
     }
 
     static subscriptionGiftEvent = async (event: EventSubChannelSubscriptionGiftEvent) => {
@@ -33,7 +33,7 @@ export class SubscriptionHandler {
 
         let found: any = await User.findOne({twitchId: event.broadcasterId})
         if(found)
-            Socket.io.to(found._id.toString()).emit('events', data)
+            Socket.io.to(found._id.toString()).emit('alerts', data)
     }
 
     static subscriptionMessageEvent = async (event: EventSubChannelSubscriptionMessageEvent) => {
@@ -43,7 +43,7 @@ export class SubscriptionHandler {
 
         let found: any = await User.findOne({twitchId: event.broadcasterId})
         if(found)
-            Socket.io.to(found._id.toString()).emit('events', data)
+            Socket.io.to(found._id.toString()).emit('alerts', data)
     }
 
 }

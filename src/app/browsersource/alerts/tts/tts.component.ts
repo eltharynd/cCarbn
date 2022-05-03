@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
-import { EventsService } from '../events.service'
+import { AlertsService } from '../alerts.service'
 
 @Component({
   selector: 'app-tts',
@@ -8,13 +8,13 @@ import { EventsService } from '../events.service'
 })
 export class TTSComponent implements OnInit {
 
-  @Input() event: any
+  @Input() element: any
   @ViewChild('ttsPlayer') ttsPlayer: ElementRef
   encodedTTS
 
-  constructor(private events: EventsService, private data: DataService) { }
+  constructor(private alerts: AlertsService, private data: DataService) { }
   async ngOnInit() {
-    this.encodedTTS = `${SERVER_URL}tts/${this.data._userId}/${this.event.voice ? this.event.voice : 'us'}/${encodeURI(this.event.text.replace(/\?/g, '&questionmark;'))}`
+    this.encodedTTS = `${SERVER_URL}tts/${this.data._userId}/${this.element.voice ? this.element.voice : 'us'}/${encodeURI(this.element.text.replace(/\?/g, '&questionmark;'))}`
   }
 
   alignItems
@@ -29,7 +29,7 @@ export class TTSComponent implements OnInit {
   }
 
   onPlaybackEnded() {
-    this.events.eventsSubject.next({
+    this.alerts.elementsSubject.next({
       type: 'tts',
       what: 'ended'
     })

@@ -6,8 +6,6 @@ import { User } from '../db/models/user'
 import { Mongo } from '../db/mongo'
 import { Chat, IChatClient } from '../twitch/chat'
 
-//require("events").captureRejections = true;
-
 export class Socket {
   static io: socketIO.Server
   private static connections: socketIO.Socket[] = []

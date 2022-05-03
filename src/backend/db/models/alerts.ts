@@ -8,7 +8,7 @@ const ALERT_TEMPLATE = {
     operator: 'equals',
     compared: 1
   }],
-  events: []
+  elements: []
 }
 
 export const alertsSchema: Schema = new Schema({
