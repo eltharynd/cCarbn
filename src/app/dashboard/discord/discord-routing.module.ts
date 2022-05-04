@@ -14,10 +14,16 @@ const routes: Routes = [
       {
         path: 'api',
         component: DiscordAPIComponent,
+        data: {
+          title: 'Discord API Connections',
+        },
       },
       {
         path: 'functions',
         component: FunctionsComponent,
+        data: {
+          title: 'Discord functions',
+        },
       },
     ]
   }

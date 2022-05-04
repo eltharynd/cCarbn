@@ -17,15 +17,24 @@ const routes: Routes = [
     children: [
       {
         path: 'hypetrain',
-        component: HypetrainComponent
+        component: HypetrainComponent,
+        data: {
+          title: 'Hype Train',
+        },
       },
       {
         path: 'predictions',
-        component: PredictionsComponent
+        component: PredictionsComponent,
+        data: {
+          title: 'Predictions',
+        },
       },
       {
         path: '**',
-        component: AlertsComponent
+        component: AlertsComponent,
+        data: {
+          title: 'Browser Source',
+        },
       },
     ]
   }

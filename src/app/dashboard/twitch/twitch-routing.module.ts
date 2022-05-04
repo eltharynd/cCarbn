@@ -13,26 +13,37 @@ const routes: Routes = [
     path: '',
     component: TwitchComponent,
     data: {
-      title: 'cCarbn - Dashboard',
-      description: 'cCarbn is a cloud based All-in-One bot that allows you to interact with Twitch events and chat via Browser Source ready dynamic pages and chat.',
-      ogTitle: 'Interact with Twitch events and chat via Browser Source ready dynamic pages and chat.'
+      title: 'Dashboard',
+      description: 'In here you can customize and control all of your Settings, Alerts and Commands'
     },
     children: [
       {
         path: 'api',
-        component: TwitchAPIComponent
+        component: TwitchAPIComponent,
+        data: {
+          title: 'Twitch API connections',
+        },
       },
       {
         path: 'alerts',
-        component: AlertsComponent
+        component: AlertsComponent,
+        data: {
+          title: 'Alerts',
+        },
       },
       {
         path: 'chatbot',
         component: ChatbotComponent,
+        data: {
+          title: 'Chatbot',
+        },
       },
       {
         path: 'streamdeck',
         component: StreamdeckComponent,
+        data: {
+          title: 'Stream Deck plugin',
+        },
       },
     ]
   }

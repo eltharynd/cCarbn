@@ -16,22 +16,27 @@ const routes: Routes = [
         path: 'login',
         component: LoginComponent,
         data: {
-          title: 'cCarbn - Login',
-          description: 'cCarbn is a cloud based All-in-One bot that allows you to interact with Twitch events and chat via Browser Source ready dynamic pages and chat.',
-          ogTitle: 'Interact with Twitch events and chat via Browser Source ready dynamic pages and chat.'
+          title: 'Login',
+          description: 'Login with your Twitch account in order to use cCarbn.'
         },
       },
       {
         path: 'pairing/:pairingKey',
-        component: PairingComponent
+        component: PairingComponent,
+        data: {
+          title: 'Pairing',
+        },
       },
       {
         path: 'profile',
-        component: ProfileComponent
+        component: ProfileComponent,
+        data: {
+          title: 'Profile',
+        },
       },
       {
         path: 'token',
-        component: TokenComponent
+        component: TokenComponent,
       },
       {path: '**', redirectTo: 'login'}
     ]
