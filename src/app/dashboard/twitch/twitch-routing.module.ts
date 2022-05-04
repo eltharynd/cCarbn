@@ -12,6 +12,11 @@ const routes: Routes = [
   {
     path: '',
     component: TwitchComponent,
+    data: {
+      title: 'cCarbn - Dashboard',
+      description: 'cCarbn is a cloud based All-in-One bot that allows you to interact with Twitch events and chat via Browser Source ready dynamic pages and chat.',
+      ogTitle: 'Interact with Twitch events and chat via Browser Source ready dynamic pages and chat.'
+    },
     children: [
       {
         path: 'api',

@@ -12,11 +12,21 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: HomeComponent
+        component: HomeComponent,
+        data: {
+          title: 'cCarbn - About Us',
+          description: 'cCarbn is a cloud based All-in-One bot that allows you to interact with Twitch events and chat via Browser Source ready dynamic pages and chat.',
+          ogTitle: 'Interact with Twitch events and chat via Browser Source ready dynamic pages and chat.'
+        }
       },
       {
         path: 'privacy',
-        component: PrivacyComponent
+        component: PrivacyComponent,
+        data: {
+          title: 'cCarbn - Privacy policy',
+          description: 'cCarbn is a cloud based All-in-One bot that allows you to interact with Twitch events and chat via Browser Source ready dynamic pages and chat.',
+          ogTitle: 'Interact with Twitch events and chat via Browser Source ready dynamic pages and chat.'
+        }
       },
     ]
   }

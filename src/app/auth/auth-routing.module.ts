@@ -14,7 +14,12 @@ const routes: Routes = [
     children: [
       {
         path: 'login',
-        component: LoginComponent
+        component: LoginComponent,
+        data: {
+          title: 'cCarbn - Login',
+          description: 'cCarbn is a cloud based All-in-One bot that allows you to interact with Twitch events and chat via Browser Source ready dynamic pages and chat.',
+          ogTitle: 'Interact with Twitch events and chat via Browser Source ready dynamic pages and chat.'
+        },
       },
       {
         path: 'pairing/:pairingKey',
