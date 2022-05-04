@@ -29,6 +29,7 @@ export class CorporateComponent implements OnInit {
 
     if(this.auth.currentUser && this.auth.instanceResumed) {
       this.auth.instanceResumed = false
+      this.router.navigate(['/dashboard'])
     }
   }
 
