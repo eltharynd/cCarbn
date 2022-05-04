@@ -1,0 +1,11 @@
+
+<div class="logo-container" [routerLink]="['/']">   
+    <img src="assets/brand/logo-white.svg" alt="cCarbn">
+</div>
+  
+<div class="button-container">
+    <button nbButton status="primary" [routerLink]="[auth.currentUser ? '/dashboard' : '/auth/login']">
+        <nb-icon icon="arrow-circle-right"></nb-icon>
+        {{auth.currentUser ?'GO TO DASHBOARD' : 'LOGIN'}}
+    </button>
+</div>

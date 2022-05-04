@@ -8,6 +8,12 @@ const routes: Routes = [
   {path: 'websource/:any', component: MessageComponent},
   {path: 'websource/:any/:any2', component: MessageComponent},
   {
+    path: '',
+    loadChildren: () => import('./corporate/corporate.module').then(
+      m => m.CorporateModule
+    )
+  },
+  {
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then(
       m => m.AuthModule
@@ -15,7 +21,6 @@ const routes: Routes = [
   },
   {
     path: 'dashboard',
-    canActivate: [AuthGuard],
     loadChildren: () => import('./dashboard/dashboard.module').then(
       m => m.DashboardModule
     ),
@@ -27,7 +32,7 @@ const routes: Routes = [
       m => m.BrowserSourceModule
     ),
   },
-  {path: '**', redirectTo: 'dashboard'},
+  {path: '**', redirectTo: ''},
 ];
 
 @NgModule({

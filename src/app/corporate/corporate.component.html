@@ -1,0 +1,11 @@
+<nb-layout [class.no-background]="noBackground" [class.no-padding]="noPadding">
+    <nb-layout-header *ngIf="!noHeaders" fixed>
+        <app-plain-header></app-plain-header>
+    </nb-layout-header>
+    <nb-layout-column>
+        <router-outlet></router-outlet>
+    </nb-layout-column>
+    <nb-layout-footer>
+        <app-footer></app-footer>
+    </nb-layout-footer>
+</nb-layout>

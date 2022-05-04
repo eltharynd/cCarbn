@@ -72,7 +72,7 @@ export class AuthRoutes {
           twitchId: tokenInfo.userId,
           twitchName: tokenInfo.userName,
         }
-        let registered: any = await User.findOne({ twitchId: user.twitchId })
+        let registered = await User.findOne({ twitchId: user.twitchId })
         if(!registered) {
 
           let helixUser: HelixUser = await twitch.users.getUserById(user.twitchId)
@@ -120,7 +120,8 @@ export class AuthRoutes {
           supporter: registered.supporter,
           premium: registered.premium,
           token: registered.token,
-          picture: registered.twitchPic
+          picture: registered.twitchPic,
+          settings: registered.navigationSettings
         })
         res.send('token saved')
       } catch (err) {
@@ -137,7 +138,7 @@ export class AuthRoutes {
         return
       }
 
-      let registered: any = await User.findOne({token: { $eq: req.body.token }})
+      let registered = await User.findOne({token: { $eq: req.body.token }})
       if(!registered) 
         res.status(401).send('Could not resume session...')
       else {
@@ -159,7 +160,8 @@ export class AuthRoutes {
           supporter: registered.supporter,
           premium: registered.premium,
           token: registered.token,
-          picture: registered.twitchPic
+          picture: registered.twitchPic,
+          settings: registered.navigationSettings
         })
       }
     })

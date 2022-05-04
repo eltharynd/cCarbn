@@ -13,7 +13,7 @@
 </div>
 
 <div class="header-container">
-  <nb-actions size="small">
+  <nb-actions size="small" *ngIf="auth.currentUser">
     <nb-action class="control-item" icon="email-outline"></nb-action>
     <nb-action class="control-item" icon="bell-outline"></nb-action>
     <nb-action class="user-action">
@@ -26,4 +26,11 @@
       </nb-user>
     </nb-action>
   </nb-actions>
+
+  <div *ngIf="!auth.currentUser" class="button-container">
+    <button nbButton status="primary" [routerLink]="[auth.currentUser ? '/dashboard' : '/auth/login']">
+        <nb-icon icon="arrow-circle-right"></nb-icon>
+        {{auth.currentUser ?'GO TO DASHBOARD' : 'LOGIN'}}
+    </button>
+</div>
 </div>

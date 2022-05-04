@@ -3,6 +3,7 @@ import { Mongo } from "../mongo"
 import { Settings } from "./settings"
 import { Command } from "./command"
 import { ClientToken, UserToken } from "./tokens"
+import * as merge from 'deepmerge'
 
 
 interface IUser {
@@ -20,6 +21,8 @@ interface IUser {
 
   ttsStart: Date
   ttsCharacters: number
+
+  navigationSettings: object
 
   created: Date
   lastLogin: Date
@@ -40,6 +43,13 @@ export const userSchema: Schema = new Schema({
 
   ttsStart: Date,
   ttsCharacters: Number,
+
+  navigationSettings: {
+    type: Object,
+    default: {
+      homeToDashboard: true
+    }
+  },
 
   created: {
     type: Date,

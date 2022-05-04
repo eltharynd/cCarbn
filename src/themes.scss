@@ -69,6 +69,10 @@ $nb-themes: nb-register-theme((
   
 ), ccarbn, cosmic);
 
+html {
+  scroll-behavior: smooth !important;
+}
+
 $inner-background: #443978;
 $inner-background-light: #5e4a99;
 $inner-border: #a16eff;
@@ -99,18 +103,24 @@ $inner-color: #cbafff;
   flex-direction: column;
   > .text-title {
     font-size: 1.5rem;
+    line-height: 1.5rem;
     font-weight: bold;
   }
   > .text-description {
+    font-size: 1rem;
+    line-height: 1rem;
     color: rgba(white, .75);
     font-weight: 300;
+    margin: 0;
   }
   > .text-title-sub {
     font-size: 1.2rem;
+    line-height: 1.2rem;
     font-weight: bold;
   }
   > .text-description-sub {
     font-size: 0.8rem;
+    line-height: 0.8rem;
     color: rgba(white, .75);
     font-weight: 300;
   }
@@ -160,7 +170,7 @@ nb-select.size-medium:not(.full-width) {
 
 
 .centered {
-  max-width: 900px;
+  max-width: 1120px;
   margin: auto;
   margin-bottom: 2rem;
 }
@@ -184,6 +194,15 @@ nb-select.size-medium:not(.full-width) {
 }
 
 
+.no-background > div > .layout {
+  background-color: white;
+}
+
+.no-padding > div > .layout {
+  > div > div > .columns > nb-layout-column {
+    padding: 0 !important;
+  }
+}
 
 .nested > div > .layout {
   min-height: 100% !important;

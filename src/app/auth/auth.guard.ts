@@ -9,16 +9,17 @@ import { SERVER_URL } from '../shared/data.service'
 })
 export class AuthGuard implements CanActivate {
 
-  public currentUser: User|null
-  public userChanged: Subject<User|null> = new Subject()
+  public currentUser: User
+  public userChanged: Subject<User> = new Subject()
 
-  public static resumed: Subject<boolean> = new Subject<boolean>()
+  public instanceResumed: boolean = false
+  public resumedDone: Subject<boolean> = new Subject<boolean>()
 
   constructor(private router: Router) {
     if (localStorage.currentUser) {
       this.resume()
     } else {
-      AuthGuard.resumed.complete()
+      this.resumedDone.complete()
     }
   }
 
@@ -26,7 +27,7 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
       return new Promise(async resolve => {
-        await AuthGuard.resumed.toPromise()
+        await this.resumedDone.toPromise()
         if(this.currentUser) {
           resolve(true)
           return
@@ -43,7 +44,7 @@ export class AuthGuard implements CanActivate {
     localStorage.currentUser = JSON.stringify(user)
     this.userChanged.next(this.currentUser)
     if(!noRedirect)
-      this.router.navigate([''])
+      this.router.navigate(['/dashboard'])
   }
 
   public logout(noRedirect?: boolean) {
@@ -62,6 +63,7 @@ export class AuthGuard implements CanActivate {
       this.currentUser = response.data
       this.userChanged.next(this.currentUser)
       localStorage.currentUser = JSON.stringify(response.data)
+      this.instanceResumed = true
     }).catch(error => {
       this.currentUser = null
       this.userChanged.next(null)
@@ -71,7 +73,7 @@ export class AuthGuard implements CanActivate {
         this.logout()
     })
 
-    AuthGuard.resumed.complete()
+    this.resumedDone.complete()
   }
   
 }
@@ -85,4 +87,5 @@ export interface User {
   premium: boolean,
   picture: string,
   token: string
+  settings: object
 }

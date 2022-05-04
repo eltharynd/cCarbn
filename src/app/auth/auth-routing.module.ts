@@ -13,7 +13,7 @@ const routes: Routes = [
     component: AuthComponent,
     children: [
       {
-        path: '',
+        path: 'login',
         component: LoginComponent
       },
       {
@@ -27,7 +27,8 @@ const routes: Routes = [
       {
         path: 'token',
         component: TokenComponent
-      }
+      },
+      {path: '**', redirectTo: 'login'}
     ]
   }
 ]

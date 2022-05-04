@@ -1,4 +1,5 @@
 import { Component } from "@angular/core"
+import { Router } from "@angular/router"
 
 
 @Component({
@@ -8,4 +9,10 @@ import { Component } from "@angular/core"
 })
 export class FooterComponent {
   year = new Date().getFullYear()
+
+  constructor(private router: Router) {}
+
+  privacy() {
+    this.router.navigate(['/privacy'])
+  }
 }

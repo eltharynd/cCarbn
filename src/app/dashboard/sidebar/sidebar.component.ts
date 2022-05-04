@@ -12,7 +12,7 @@ export class SidebarComponent {
 
   menu: NbMenuItem[]  = [
     {
-      title: 'Home',
+      title: 'Dashboard',
       icon: {icon: 'home', pack:'fa'},
       link: '/dashboard',
       home: true,

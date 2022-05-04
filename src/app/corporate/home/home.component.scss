@@ -1,0 +1,194 @@
+
+
+.hero {
+    width: 100%;
+
+    > div {
+        min-height: 60vh;
+        background-color: #1d1826;
+        background-image: url("/assets/brand/background.png");
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        
+        >img {
+            width: 100%;
+            height: 100%;
+            max-width: 500px;
+            max-height: 500px;
+            padding:1.5rem;
+        }
+
+        > div {
+            padding: 3.5rem;
+            > div {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+                text-align: center;
+
+                > .buttons-container {
+                    margin-top: 2rem;
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    >button:not(:first-child) {
+                        margin-left: 1rem
+                    }
+                    >button:not(:last-child) {
+                        margin-right: 1rem
+                    }
+                }
+                
+               
+
+            }
+        }
+    }  
+}
+
+@media only screen and (max-width: 360px) {
+    .hero > div {
+        > div {
+            padding-top: 0;
+        }
+    }
+    .buttons-container {
+        flex-wrap: wrap;
+        > button {
+            margin: 1rem;
+        }
+    }   
+}
+
+
+.subhero {
+    max-width: 1120px;
+    margin-top: 4rem;
+    * {
+        color: #26212e;
+    }
+
+    .whatitcando {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+
+        > div {
+            margin: 1rem !important;
+            position: relative;
+            width: 30%;
+
+            min-width: 330px;
+            min-height: 330px;
+
+            height: 0;
+            padding-bottom: 30%;
+
+            display: flex;
+            
+            background-color: #ddd4ed;
+            border-radius: 0.5rem;
+            box-shadow: 3px 1px 10px 5px #3131321f;
+
+            > div {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 2rem;
+                > nb-icon {
+                    font-size: 6rem;
+                }
+                > h3 {
+                    font-size: 1.5rem;
+                    text-align: center;
+                    margin: 1rem 0;
+                }
+                > p {
+                    margin: 0;
+                    text-align: center;
+                }
+            }
+        }
+    }
+}
+
+.text-subhero {
+    h3,
+    p {
+        padding-left: 1.5rem;
+    }
+}
+
+@media only screen and (max-width: 1120px) {
+    .subhero {
+        > h2 {
+            padding-left: 1rem; 
+        }
+
+    }  
+    .text-subhero {
+        h3,
+        p {
+            padding-left: 2.5rem;
+        }
+    }
+}
+
+@media only screen and (max-width: 995px) {
+    .subhero {
+        .whatitcando {
+            > div {
+                min-width: 440px;
+                min-height: 440px;
+            }
+        }  
+    }
+}
+
+@media only screen and (max-width: 885px) {
+    .subhero {
+        .whatitcando {
+            > div {
+                min-width: 340px;
+                min-height: 340px;
+            }
+        }  
+    }
+}
+
+@media only screen and (max-width: 690px) {
+    .subhero {
+        .whatitcando {
+            > div {
+                min-width: 500px;
+                min-height: 500px;
+            }
+        }  
+    }
+}
+
+@media only screen and (max-width: 505px) {
+    .subhero {
+        .whatitcando {
+            > div {
+                min-width: calc(100vw - 1rem);
+                max-width: 300px;
+                min-height: calc(100vw - 1rem);
+                max-height: 300px;
+            }
+        }  
+    }
+}
+
