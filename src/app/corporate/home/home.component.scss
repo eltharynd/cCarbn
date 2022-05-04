@@ -85,6 +85,7 @@
         justify-content: center;
 
         > div {
+            transition: .3s ease;
             margin: 1rem !important;
             position: relative;
             width: 30%;
@@ -125,6 +126,12 @@
                     text-align: center;
                 }
             }
+        }
+
+        > div:hover {
+            transition: .3s ease;
+            transform: scale(1.15);
+            z-index: 1;;
         }
     }
 }
