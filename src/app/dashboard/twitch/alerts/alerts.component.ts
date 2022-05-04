@@ -124,7 +124,7 @@ export class AlertsComponent implements OnInit {
       delete alert.elements[0].withPrevious
     }
 
-    if(valid) {
+    if(true || valid) {
       let clone = cleanAlert(alert)
       let response = await this.data.post(`alerts/${this.auth.currentUser?._id}`, clone)
       if(response) {

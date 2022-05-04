@@ -14,6 +14,6 @@
         marginBottom: element.marginBottom ? element.marginBottom+'px' : null,
         marginLeft: element.marginLeft ? element.marginLeft+'px' : null
     }">
-        <source *ngIf="element.src" [src]="element.src">
+        <source [src]="element.src" (error)="onError($event)">
     </video>  
 </div>
