@@ -62,7 +62,7 @@ export class AlertsService {
                   ignore = +data.bits !== +howMuch
                   break
               }
-            } else ignore
+            } else ignore = true
           } else if(c.type === 'user') {
             switch (c.operator) {
               case 'is':
