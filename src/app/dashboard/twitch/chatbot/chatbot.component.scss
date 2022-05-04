@@ -1,14 +1,5 @@
 @import '../../../../themes.scss';
 
-nb-accordion-item-header {
-  display: flex;
-  align-items: center;
-  > *:not(:last-child) {
-    margin-right: 2rem
-  }
-  border-radius: 5px
-}
-
 .storeable-header {
   margin: 1rem auto;
 }

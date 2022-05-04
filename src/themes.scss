@@ -77,6 +77,15 @@ $inner-color: #cbafff;
 .card-header {
   background-color: $inner-background-light;
 }
+.accordion-header {
+  background-color: $inner-background-light;
+  display: flex;
+  align-items: center;
+  > *:not(:last-child) {
+    margin-right: 2rem
+  }
+  border-radius: 5px
+}
 
 .supporter {
   color: #916c3f;

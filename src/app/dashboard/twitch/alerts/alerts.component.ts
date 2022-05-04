@@ -77,6 +77,9 @@ export class AlertsComponent implements OnInit {
     }
     alert.backup = JSON.stringify(alert)
     this.alerts.push(alert)
+    setTimeout(() => {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+    }, 100);
   }
 
   revertAlert(alert: _alert) {

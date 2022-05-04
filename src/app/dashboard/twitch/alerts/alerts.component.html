@@ -1,67 +1,68 @@
 <!-- nb-select does not work without these (the router blocks the styling) -->
 <nb-layout class="nested"><nb-layout-column>
 
+<nb-accordion class="centered" style="margin-bottom: 2rem;">
+    <nb-accordion-item>
+        <nb-accordion-item-header class="accordion-header">
+            <div class="composed-title">
+                <strong class="text-title">OBS SETTINGS</strong>
+                <span class="text-description">Here you can find the settings for your Browser Source as well as other OBS functionalities</span>
+              </div>
+        </nb-accordion-item-header>
+        <nb-accordion-item-body>
+            <nb-list>
+                <nb-list-item>
+                    URL:
+                    &nbsp;
+                    <div class="streamer-mode" [class.on]="!showBrowserSource">
+                        <nb-icon class="show-icon" *ngIf="!showBrowserSource" (click)="showBrowserSource=true" icon="eye"></nb-icon>
+                        <nb-icon class="copy-icon" (click)="copy()" [nbPopover]="copied" icon="copy"></nb-icon>
+                        <a [href]="viewport.url" target="_blank" class>{{viewport.url}}</a>
+                    </div>
+                    
+                </nb-list-item>
+                <nb-list-item>
+                    Size:
+                    &nbsp;
+                    {{viewport.width}}&nbsp;x&nbsp;{{viewport.height}}&nbsp;px
+                </nb-list-item>
+                <nb-list-item>
+                    Padding:
+                    &nbsp;
+                    {{viewport.padding}}&nbsp;px
+                </nb-list-item>
+                <nb-list-item>
+                    <div>
+                        In order for cCarbn to control your scenes/sources in OBS you must install the latest <a href="https://github.com/obsproject/obs-websocket/releases" target="_blank">OBS-websocket plugin</a> (version 5.0.0 or higher). Then set your browser source permissions to <strong>Advanced</strong> or higher
+                    </div>
+                </nb-list-item>
+                <nb-list-item>
+                    obs-websocket:
+                    &nbsp;
+                    port 4455, no authentication (will change in the future)
+                </nb-list-item>
+                <nb-list-item>
+                    <div>
+                        Two very useful plugins for obs are <a href="https://obsproject.com/forum/resources/move-transition.913/" target="_blank">Move transition</a> and <a href="https://obsproject.com/forum/resources/streamfx-for-obs%C2%AE-studio.578/" target="_blank">StreamFX</a>.
+                        <br>
+                        These aren't required but they allow you to create animations and effects attached to sources as filters, which can be interacted with via cCarbn.
+                        <br>
+                        <a href="https://www.youtube.com/watch?v=6eSgiowHTCc" target="_blank">Here</a>'s a brief tutorial on how to setup those filters.
+                    </div>
+                </nb-list-item>
+            </nb-list>
+        </nb-accordion-item-body>
+    </nb-accordion-item>
+</nb-accordion>
 
-<nb-card class="global-card centered">
-    <nb-card-header class="card-header">
-        GLOBAL SETTINGS
-    </nb-card-header>
+<nb-card class="add-alert-card centered">
     <nb-card-body>
-        <nb-accordion>
-            <nb-accordion-item expanded>
-                <nb-accordion-item-header>
-                    BROWSER SOURCE
-                </nb-accordion-item-header>
-                <nb-accordion-item-body>
-                    <nb-list>
-                        <nb-list-item>
-                            Browser source url:
-                            &nbsp;
-                            <div class="streamer-mode" [class.on]="!showBrowserSource">
-                                <nb-icon class="show-icon" *ngIf="!showBrowserSource" (click)="showBrowserSource=true" icon="eye"></nb-icon>
-                                <nb-icon class="copy-icon" (click)="copy()" [nbPopover]="copied" icon="copy"></nb-icon>
-                                <a [href]="viewport.url" target="_blank" class>{{viewport.url}}</a>
-                            </div>
-                            
-                        </nb-list-item>
-                        <nb-list-item>
-                            Browser source size:
-                            &nbsp;
-                            {{viewport.width}}&nbsp;x&nbsp;{{viewport.height}}&nbsp;px
-                        </nb-list-item>
-                        <nb-list-item>
-                            Browser source padding:
-                            &nbsp;
-                            {{viewport.padding}}&nbsp;px
-                        </nb-list-item>
-                        <nb-list-item>
-                            obs-websocket:
-                            &nbsp;
-                            port 4455, no authentication (will change in the future)
-                        </nb-list-item>
-                        <nb-list-item>
-                            <div>
-                                In order for cCarbn to control your scenes/sources in OBS you must install the latest <a href="https://github.com/obsproject/obs-websocket/releases" target="_blank">OBS-websocket plugin</a> (version 5.0.0 or higher). Then set your browser source permissions to <strong>Advanced</strong> or higher
-                            </div>
-                        </nb-list-item>
-                        <nb-list-item>
-                            <div>
-                                Two very useful plugins for obs are <a href="https://obsproject.com/forum/resources/move-transition.913/" target="_blank">Move transition</a> and <a href="https://obsproject.com/forum/resources/streamfx-for-obs%C2%AE-studio.578/" target="_blank">StreamFX</a>.
-                                <br>
-                                These aren't required but they allow you to create animations and effects attached to sources as filters, which can be interacted with via cCarbn.
-                                <br>
-                                <a href="https://www.youtube.com/watch?v=6eSgiowHTCc" target="_blank">Here</a>'s a brief tutorial on how to setup those filters.
-                            </div>
-                        </nb-list-item>
-                    </nb-list>
-                </nb-accordion-item-body>
-            </nb-accordion-item>
-        </nb-accordion>
+        <button nbButton status="success" fullWidth (click)="addAlert()">ADD NEW alert</button>
     </nb-card-body>
 </nb-card>
 
 <nb-accordion class="centered alternate" multi>
-    <nb-accordion-item *ngFor="let al of alerts">
+    <nb-accordion-item *ngFor="let al of alerts" [expanded]="al.expanded">
         
         <nb-accordion-item-header class="alert-header">
             <button nbButton status="primary" nbTooltip="Send test to browser source" nbTooltipStatus="primary" (click)="sendTestAlert($event, al)"><nb-icon icon="cast"></nb-icon></button>
