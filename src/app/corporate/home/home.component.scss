@@ -128,7 +128,7 @@
             }
         }
 
-        > div:hover {
+        > .expanding:hover {
             transition: .3s ease;
             transform: scale(1.08);
             z-index: 1;

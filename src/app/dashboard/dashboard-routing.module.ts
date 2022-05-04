@@ -15,7 +15,7 @@ const routes: Routes = [
         component: HomeComponent,
         data: {
           title: 'Dashboard',
-          description: 'In here you can customize and control all of your Settings, Alerts and Commands'
+          description: 'In here you can customize and control all of your Settings, Alerts and Commands.'
         },
       },
       {

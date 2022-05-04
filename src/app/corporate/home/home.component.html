@@ -28,7 +28,7 @@
 <div @fadeIn class="centered subhero">
   <h2 id="what-it-can-do">What it can do</h2>
   <div class="whatitcando">
-    <div>
+    <div [class.expanding]="isDesktop">
       <div>
         <nb-icon icon="flip-2-outline"></nb-icon>
         <h3>
@@ -39,7 +39,7 @@
         </p>
       </div>
     </div>
-    <div>
+    <div [class.expanding]="isDesktop">
       <div>
         <nb-icon icon="message-square-outline"></nb-icon>
         <h3>
@@ -50,7 +50,7 @@
         </p>
       </div>
     </div>
-    <div>
+    <div [class.expanding]="isDesktop">
       <div>
         <nb-icon icon="code-outline"></nb-icon>
         <h3>
@@ -61,7 +61,7 @@
         </p>
       </div>
     </div>
-    <div>
+    <div [class.expanding]="isDesktop">
       <div>
         <nb-icon icon="film-outline"></nb-icon>
         <h3>
@@ -72,7 +72,7 @@
         </p>
       </div>
     </div>
-    <div>
+    <div [class.expanding]="isDesktop">
       <div>
         <nb-icon icon="bell-outline"></nb-icon>
         <h3>
@@ -83,7 +83,7 @@
         </p>
       </div>
     </div>
-    <div>
+    <div [class.expanding]="isDesktop">
       <div>
         <nb-icon icon="keypad-outline"></nb-icon>
         <h3>

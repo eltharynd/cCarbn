@@ -41,7 +41,6 @@ export class AppComponent implements OnInit {
       this.router.events.pipe(
         filter((event => event instanceof NavigationEnd)),
         map(() => {
-          console.log('mapping')
           let route: ActivatedRoute = this.router.routerState.root
           let routeData: any = {
 
@@ -52,7 +51,6 @@ export class AppComponent implements OnInit {
             routeData.title = route!.snapshot.data['title']
           if(route.snapshot.data['description'])
             routeData.description = route!.snapshot.data['description']
-          console.log(routeData)
           return routeData
         })
       )

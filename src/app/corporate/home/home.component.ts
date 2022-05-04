@@ -1,5 +1,6 @@
 import { animate, style, transition, trigger } from '@angular/animations'
 import { Component } from '@angular/core';
+import { DeviceDetectorService } from 'ngx-device-detector'
 import { AuthGuard } from 'src/app/auth/auth.guard'
 
 @Component({
@@ -16,6 +17,6 @@ import { AuthGuard } from 'src/app/auth/auth.guard'
   ]
 })
 export class HomeComponent {
-
-  constructor(public auth: AuthGuard) { }
+  isDesktop
+  constructor(public auth: AuthGuard, public device: DeviceDetectorService) { this.isDesktop = this.device.isDesktop() }
 }

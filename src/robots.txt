@@ -5,5 +5,8 @@ Allow: /dashboard
 Allow: /privacy
 Allow: /auth/login
 Disallow: /dashboard/
+Disallow: /auth/
+Disallow: /browsersource/
+Disallow: /api
 
 Sitemap: https://ccarbn.io/sitemap.xml
