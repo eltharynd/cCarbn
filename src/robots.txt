@@ -2,6 +2,7 @@
 User-agent: *
 Allow: /
 Allow: /dashboard
+Allow: /privacy
 Allow: /auth/login
 Disallow: /dashboard/
 
