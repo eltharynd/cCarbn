@@ -6,6 +6,7 @@
     <img src="assets/brand/logo-white.png">
     <div>
       <h1>Log into cCarbn</h1>
+      <p>Log in with twitch and start using cCarbn immediately</p>
       <ng-template *ngIf="false else login"></ng-template>
     </div>
   </nb-card-header>
@@ -78,7 +79,8 @@
 
 <ng-template #login>
   <div *ngIf="!auth.currentUser" class="login-container" style="width: 100%;">
-    <p *ngIf="message || !data._clientId">{{message ? message : 'We seem to be experiencing server issues.. Attempting to reconnect...'}}</p>
+    <!-- <p *ngIf="message || !data._clientId">{{message ? message : 'We seem to be experiencing server issues.. Attempting to reconnect...'}}</p> -->
+    <p *ngIf="message" style="color: red;">{{message ? message : 'We seem to be experiencing server issues.. Attempting to reconnect...'}}</p>
     <button [disabled]="(message?true:false) || !data._clientId" 
             [nbSpinner]="message?true:false" 
             status="primary" 
