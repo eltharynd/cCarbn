@@ -14,7 +14,7 @@ const routes: Routes = [
         path: '',
         component: HomeComponent,
         data: {
-          title: 'About Us'
+          title: 'An All-in-One Twitch bot'
         }
       },
       {

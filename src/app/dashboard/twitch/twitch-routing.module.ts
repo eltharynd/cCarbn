@@ -12,10 +12,6 @@ const routes: Routes = [
   {
     path: '',
     component: TwitchComponent,
-    data: {
-      title: 'Dashboard',
-      description: 'In here you can customize and control all of your Settings, Alerts and Commands'
-    },
     children: [
       {
         path: 'api',

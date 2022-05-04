@@ -41,6 +41,7 @@ export class AppComponent implements OnInit {
       this.router.events.pipe(
         filter((event => event instanceof NavigationEnd)),
         map(() => {
+          console.log('mapping')
           let route: ActivatedRoute = this.router.routerState.root
           let routeData: any = {
 
@@ -50,14 +51,15 @@ export class AppComponent implements OnInit {
           if(route.snapshot.data['title'])
             routeData.title = route!.snapshot.data['title']
           if(route.snapshot.data['description'])
-            routeData.title = route!.snapshot.data['description']
+            routeData.description = route!.snapshot.data['description']
+          console.log(routeData)
           return routeData
         })
       )
       .subscribe((routeData: any) => {
         if(routeData.title) {
           this.titleService.setTitle(`cCarbn - ${routeData.title}`)
-          this.metaService.updateTag({name:'og:title', content: `cCarbn - ${routeData.ogTItle}`})
+          this.metaService.updateTag({name:'og:title', content: `cCarbn - ${routeData.title}`})
         } else {
           this.titleService.setTitle(`cCarbn`)
           this.metaService.updateTag({name:'og:title', content: `cCarbn`})
@@ -69,8 +71,6 @@ export class AppComponent implements OnInit {
           this.metaService.updateTag({name:'og:description', content: `cCarbn is a cloud based All-in-One bot that allows you to interact with Twitch events and chat via Browser Source ready dynamic pages and chat.`})
           this.metaService.updateTag({name:'og:description', content: `cCarbn is a cloud based All-in-One bot that allows you to interact with Twitch events and chat via Browser Source ready dynamic pages and chat.`})
         }
-
-
       })
   }
 

@@ -12,7 +12,11 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        component: HomeComponent
+        component: HomeComponent,
+        data: {
+          title: 'Dashboard',
+          description: 'In here you can customize and control all of your Settings, Alerts and Commands'
+        },
       },
       {
         path: 'twitch',
