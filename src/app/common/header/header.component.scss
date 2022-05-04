@@ -48,10 +48,10 @@
 
       display: flex;
       align-items: center;
-      img {
+      //img {
         height: 3rem;
         padding-right: calc(#{nb-theme(header-padding)} / 2);
-      }
+      //}
     }
   }
 

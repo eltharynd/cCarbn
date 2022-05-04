@@ -6,6 +6,17 @@
 
 $nb-enable-css-custom-properties: true;
 
+$clear-background-color: #e2dbe7;
+$clear-background-color-dark: #bfb5c7;
+
+$deep-background-color: #26212e;
+$deep-background-shadow: #16131ab8;
+
+$inner-background: #443978;
+$inner-background-light: #5e4a99;
+$inner-border: #a16eff;
+$inner-color: #cbafff;
+
 $nb-themes: nb-register-theme((
 
   font-family-primary: 'Poppins, sans-serif',
@@ -19,18 +30,36 @@ $nb-themes: nb-register-theme((
 
   // add your variables here like:
 
-/*   color-basic-100: white,
-  color-basic-200: #eefafc,
-  color-basic-300: #e8f5fa,
-  color-basic-400: #d6e6f2,
-  color-basic-500: #c7dbeb,
-  color-basic-600: #a9c0db,
-  color-basic-700: #4f969e,
-  color-basic-800: #336a77,
-  color-basic-900: #295c66,
-  color-basic-1000: #244555,
-  color-basic-1100: #121a2b, */
+  //#26212e
 
+  /*   
+  color-basic-100: #ffffff,
+  color-basic-200: #f7f7fc,
+  color-basic-300: #f0f0fa,
+  color-basic-400: #e1e1f2,
+  color-basic-500: #ceceeb,
+  color-basic-600: #b4b4db,
+  color-basic-700: #6a6a94,
+  color-basic-800: #323259,
+  color-basic-900: #252547,
+  color-basic-1000: #1b1b38,
+  color-basic-1100: #13132b,
+  */
+  
+
+/*   color-basic-800: #45375e,
+
+  color-basic-1000: #26212e, */
+
+
+/*   background-basic-color-1: color-basic-800,
+  background-basic-color-2: color-basic-900,
+  background-basic-color-3: color-basic-1000,
+  background-basic-color-4: color-basic-1100, */
+
+  layout-background-color: $deep-background-color,
+
+  //background-basic-color-3: color-basic-700,
 /*   background-basic-color-1: color-basic-700,
   background-basic-color-2: color-basic-800,
   background-basic-color-3: color-basic-900,
@@ -59,6 +88,7 @@ $nb-themes: nb-register-theme((
 /*   card-header-primary-background-color: #3366ff,
   card-header-info-background-color: #3366ff, */
 
+  color-basic-800: #393554,
   
   select-outline-small-padding: 0.4375rem 1rem,
   select-min-width: 100px,
@@ -66,6 +96,9 @@ $nb-themes: nb-register-theme((
   select-medium-max-width: 180px,
 
   popover-background-color: #00d68f,
+
+  shadow: 0 .5rem 1rem 0 $deep-background-shadow,
+  card-shadow: 0 .5rem 1rem 0 $deep-background-shadow,
   
 ), ccarbn, cosmic);
 
@@ -73,10 +106,6 @@ html {
   scroll-behavior: smooth !important;
 }
 
-$inner-background: #443978;
-$inner-background-light: #5e4a99;
-$inner-border: #a16eff;
-$inner-color: #cbafff;
 
 .card-header {
   background-color: $inner-background-light;
@@ -129,7 +158,7 @@ $inner-color: #cbafff;
 
 
 nb-accordion.alternate > nb-accordion-item:nth-child(2n) {
-  background-color: var(--background-basic-color-2);
+  background-color: #2e2a46;//var(--background-basic-color-2);
 }
 
 
@@ -184,18 +213,41 @@ nb-select.size-medium:not(.full-width) {
 }
 
 ::-webkit-scrollbar-thumb {
-  background:  nb-theme(background-basic-color-4);
+  background: nb-theme(background-basic-color-1);
   cursor: pointer;
   border-radius: 0.4rem;
 }
 
 ::-webkit-scrollbar-track {
-  background: nb-theme(background-basic-color-2);
+  background: $deep-background-color;
 }
 
 
 .no-background > div > .layout {
-  background-color: white;
+  background-color: $clear-background-color;
+
+  h1, h2, h3, h4, h5, p, ul>li, ol>li {
+    color: #26212e;
+  }
+  nb-card {
+    margin: 3rem 4rem;
+    margin-bottom: 6rem;
+    nb-card-header {
+      background-color: var(--color-basic-800);
+      h1, h2, h3, h4, h5, p, ul, ol>li {
+        color: $clear-background-color
+      }
+    }
+    nb-card-body,
+    nb-card-footer {
+      background-color: $deep-background-color;
+      h1, h2, h3, h4, h5, p, ul, ol>li {
+        color: $clear-background-color-dark
+      }
+
+    }
+
+  }
 }
 
 .no-padding > div > .layout {

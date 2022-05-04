@@ -15,7 +15,7 @@ export class CorporateComponent implements OnInit {
   constructor(public auth: AuthGuard, public router: Router) {
     router.events.subscribe(event => {
       if(event instanceof NavigationEnd) {
-        this.noBackground = /^\/(\#.*|$)/.test(event.url)
+        this.noBackground = /^\/(\#.*|$)/.test(event.url) || /^\/privacy/.test(event.url)
         this.noPadding = /^\/(\#.*|$)/.test(event.url)
         this.noHeaders = /^\/(\#.*|$)/.test(event.url)
       }

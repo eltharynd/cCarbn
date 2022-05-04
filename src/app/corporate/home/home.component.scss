@@ -1,8 +1,13 @@
-
+@import "../../../themes.scss";
 
 .hero {
     width: 100%;
+    box-shadow: var(--shadow);
 
+    h1, p {
+        color: $clear-background-color;
+    }
+    
     > div {
         min-height: 60vh;
         background-color: #1d1826;
@@ -92,9 +97,9 @@
 
             display: flex;
             
-            background-color: #ddd4ed;
+            background-color: #ada1c5;
             border-radius: 0.5rem;
-            box-shadow: 3px 1px 10px 5px #3131321f;
+            box-shadow: var(--shadow);//3px 1px 10px 5px #3131321f;
 
             > div {
                 position: absolute;
