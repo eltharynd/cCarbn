@@ -52,7 +52,7 @@ export class AuthGuard implements CanActivate {
     delete localStorage.currentUser
     this.userChanged.next(null)
     if(!noRedirect)
-      this.router.navigate(['auth'])
+      this.router.navigate(['/'])
   }
 
   public async resume() {
