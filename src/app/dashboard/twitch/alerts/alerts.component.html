@@ -64,6 +64,7 @@
 <nb-accordion class="centered alternate" multi>
     <nb-accordion-item *ngFor="let al of alerts;" [expanded]="al.expanded">  
         
+        <!-- HEADER -->
         <nb-accordion-item-header class="alert-header">
             <button nbButton status="primary" nbTooltip="Send test to browser source" nbTooltipStatus="primary" (click)="sendTestAlert($event, al)"><nb-icon icon="cast"></nb-icon></button>
             <div class="alert-name">
@@ -77,14 +78,16 @@
             </div>
         </nb-accordion-item-header>
 
+        <!-- OPERATORS AND ELEMENTS -->
         <nb-accordion-item-body class="centered-nested">
             <nb-card class="alert-card">
 
+                <!-- TRIGGERS -->
                 <nb-card-header class="conditions-header lighter">                      
                     <nb-list>
                         <nb-list-item *ngFor="let c of al.conditions; let i = index" class="conditions-entry">
 
-                            <!-- TRIGGERS -->
+                            <!-- OPERATORS -->
                             <div class="field-container">
                                 <nb-select [(selected)]="c.type" (selectedChange)="al.changes=true; c.operator=null; c.compared=null" fullWidth>
                                     <nb-option disabled>-- Primary --</nb-option>
@@ -104,7 +107,6 @@
                                 </nb-select>
                                 <div class="anchor"><label>{{i==0 ? 'When' : 'AND'}}</label></div>
                             </div>
-
 
                             <!-- OPERATORS PRIMARY -->
                             <div *ngIf="c.type==='bits'" class="field-container">
@@ -169,13 +171,18 @@
                                 </nb-select>
                                 <div class="anchor"><label>which</label></div>
                             </div>
-                            <div *ngIf="c.type === 'subscription' && c.operator==='sub'" class="field-container">
-                                <nb-select [(selected)]="c.compared" [placeholder]="_subOptions[c.compared]||''" (selectedChange)="al.changes=true" fullWidth>
+                            <div *ngIf="c.type === 'subscription' && (c.operator==='sub' || c.operator==='subEnd')" class="field-container">
+                                <nb-select [(selected)]="c.compared" [placeholder]="_subOptions[c.compared]||'Any'" (selectedChange)="al.changes=true" fullWidth>
                                     <nb-option *ngFor="let o of _subOptions | keyvalue: originalOrder" [value]=o.key>{{o.value}}</nb-option>
                                 </nb-select>
-                                <div class="anchor"><label>Condition</label></div>
+                                <div class="anchor"><label>real/gift</label></div>
                             </div>
-
+                            <div *ngIf="c.type === 'subscription'" class="field-container">
+                                <nb-select [(selected)]="c.tier" [placeholder]="_subTiers[c.tier]||'All Tiers'" (selectedChange)="al.changes=true" fullWidth>
+                                    <nb-option *ngFor="let o of _subTiers | keyvalue: originalOrder" [value]=o.key>{{o.value}}</nb-option>
+                                </nb-select>
+                                <div class="anchor"><label>Tiers</label></div>
+                            </div>
 
                             <button nbButton status="danger" [disabled]="al.conditions.length<2 || i===0" (click)="deleteCondition(al, c)"><nb-icon icon="trash-2"></nb-icon></button>
                             <button nbButton status="success" (click)="addCondition(al)" [disabled]="i<al.conditions.length-1 || al.conditions.length>=2"><nb-icon icon="plus"></nb-icon></button>
@@ -190,6 +197,7 @@
                     </nb-list>
                 </nb-card-header>
 
+                <!-- ELEMENTS -->
                 <nb-card-body class="elements-body">
                     <nb-tabset fullWidth class="elements-tabs">
                         <nb-tab *ngFor="let elem of al.elements; let i = index" [tabTitle]="elem.type" style="padding: 0;">
@@ -339,7 +347,7 @@
                                     <nb-toggle [(ngModel)]="elem.withPrevious" (checkedChange)="al.changes=true" [disabled]="i===0">Don't wait for previous</nb-toggle>
                                 </div>
 
-                                <div *ngIf="elem.message">
+                                <div *ngIf="elem.message === 'customMessage'">
                                     <div class="field-container">
                                         <input nbInput type="text" [(ngModel)]="elem.customMessage" placeholder="Type your custom message ($user gets replaced by the user name)." fullWidth>
                                         <div class="anchor"><label>message</label></div>

@@ -387,6 +387,12 @@ export class AlertsComponent implements OnInit, OnDestroy {
     real: 'Only real',
     gifted: 'Only gifted'
   }
+  _subTiers = {
+    all: 'All Tiers',
+    one: 'Tier 1',
+    two: 'Tier 2',
+    three: 'Tier 3'
+  }
   
   _POSITION = POSITION
   _TRANSITION = TRANSITION
@@ -577,6 +583,7 @@ interface _condition {
   type: string,
   operator: string,
   compared: any
+  tier?: any
 }
 
 export interface _alert {

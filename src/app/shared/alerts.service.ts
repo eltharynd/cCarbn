@@ -86,22 +86,94 @@ export class AlertsService {
                   ignore = true
                   break
                 }
-                if(c.operator === 'sub')
-                  ignore = (c.compared === 'real' && data.is_gift) ||
-                            (c.compared === 'gifted' && !data.is_gift)
+                if((c.compared === 'real' && data.is_gift) ||
+                    (c.compared === 'gifted' && !data.is_gift)) {
+                  ignore = true 
+                  break
+                }
+                if(c.tier && c.tier!=='all') {
+                  if(c.tier==='one' && +data.tier !== 1000) {
+                    ignore = true
+                    break
+                  }
+                  if(c.tier==='one' && +data.tier !== 2000) {
+                    ignore = true
+                    break
+                  }
+                  if(c.tier==='one' && +data.tier !== 3000) {
+                    ignore = true
+                    break
+                  }
+                }
                 break
               case 'subEnd':
-                if(data.type !== 'Subscription End') ignore = true
+                if(data.type !== 'Subscription End') {
+                  ignore = true
+                  break
+                }
+                if((c.compared === 'real' && data.is_gift) ||
+                    (c.compared === 'gifted' && !data.is_gift)) {
+                  ignore = true 
+                  break
+                }
+                if(c.tier && c.tier!=='all') {
+                  if(c.tier==='one' && +data.tier !== 1000) {
+                    ignore = true
+                    break
+                  }
+                  if(c.tier==='one' && +data.tier !== 2000) {
+                    ignore = true
+                    break
+                  }
+                  if(c.tier==='one' && +data.tier !== 3000) {
+                    ignore = true
+                    break
+                  }
+                }
                 break
               case 'gift':
-                if(data.type !== 'Subscription Gift') ignore = true
+                if(data.type !== 'Subscription Gift') {
+                  ignore = true
+                  break
+                }
+                if(c.tier && c.tier!=='all') {
+                  if(c.tier==='one' && +data.tier !== 1000) {
+                    ignore = true
+                    break
+                  }
+                  if(c.tier==='one' && +data.tier !== 2000) {
+                    ignore = true
+                    break
+                  }
+                  if(c.tier==='one' && +data.tier !== 3000) {
+                    ignore = true
+                    break
+                  }
+                }
                 break
               case 'subMessage':
-                if(data.type !== 'Subscription Message') ignore = true
+                if(data.type !== 'Subscription Message') {
+                  ignore = true
+                  break
+                }
+                if(c.tier && c.tier!=='all') {
+                  if(c.tier==='one' && +data.tier !== 1000) {
+                    ignore = true
+                    break
+                  }
+                  if(c.tier==='one' && +data.tier !== 2000) {
+                    ignore = true
+                    break
+                  }
+                  if(c.tier==='one' && +data.tier !== 3000) {
+                    ignore = true
+                    break
+                  }
+                }
                 break
               default:
                 ignore = true
-            }
+            }      
           } else if(c.type === 'raid') {
             ignore = (c.operator === 'received' && data.type !== 'Raid from') ||
                       (c.operator === 'launched' && data.type !== 'Raid to')
@@ -163,7 +235,7 @@ export class AlertsService {
           bits: (Math.floor(Math.random()*10)+1)*100,
           gifted: Math.floor(Math.random()*50)+1,
           cumulative: Math.floor(Math.random()*60)+1,
-          tier: Math.floor(Math.random()*3)+1,
+          tier: (Math.floor(Math.random()*3)+1)*1000,
           raider: 'Pokimane',
           raider_id: 'pokimane',
           raiders: Math.floor(Math.random()*300)+1,
@@ -214,7 +286,7 @@ export class AlertsService {
 
       .replace(/\$gifted/g, element.total)
       .replace(/\$cumulative/g, element.cumulative_total)
-      .replace(/\$tier/g, element.tier)
+      .replace(/\$tier/g, `${+element.tier / 1000}`)
       .replace(/\$is_gift/g, element.is_gift ? 'true' : 'false')
 
       .replace(/\$raider/g, element.from_broadcaster_user_name)
