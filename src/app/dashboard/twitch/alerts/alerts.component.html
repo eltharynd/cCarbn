@@ -62,7 +62,7 @@
 </nb-card>
 
 <nb-accordion class="centered alternate" multi>
-    <nb-accordion-item *ngFor="let al of alerts; let TMP = index" [expanded]="TMP===0 || al.expanded">  <!-- remove TMP only -->
+    <nb-accordion-item *ngFor="let al of alerts;" [expanded]="al.expanded">  
         
         <nb-accordion-item-header class="alert-header">
             <button nbButton status="primary" nbTooltip="Send test to browser source" nbTooltipStatus="primary" (click)="sendTestAlert($event, al)"><nb-icon icon="cast"></nb-icon></button>
@@ -80,7 +80,7 @@
         <nb-accordion-item-body class="centered-nested">
             <nb-card class="alert-card">
 
-                <nb-card-header class="conditions-header lighter" *ngIf="TMP===0 || al.expanded">  <!-- remove all ngIf -->                         
+                <nb-card-header class="conditions-header lighter">                      
                     <nb-list>
                         <nb-list-item *ngFor="let c of al.conditions; let i = index" class="conditions-entry">
 
