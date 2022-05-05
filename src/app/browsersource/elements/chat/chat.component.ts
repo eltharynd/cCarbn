@@ -24,7 +24,8 @@ export class ChatComponent implements OnInit {
   onPlaybackEnded() {
     this.alerts.elementsSubject.next({
       type: 'chat',
-      what: 'ended'
+      what: 'ended',
+      element: this.element
     })
   }
 

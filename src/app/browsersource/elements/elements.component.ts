@@ -198,7 +198,7 @@ export class ElementsComponent implements OnInit {
           this.currentElements.push(element)
           break
         case 'ended': 
-          this.currentElements.splice(this.currentElements.indexOf(element), 1)
+          this.currentElements.splice(this.currentElements.indexOf(element.element), 1)
           break
       }
     })

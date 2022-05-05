@@ -76,7 +76,8 @@ export class GIFComponent implements OnInit {
   onPlaybackEnded() {
     this.alerts.elementsSubject.next({
       type: 'gif',
-      what: 'ended'
+      what: 'ended',
+      element: this.element
     })
   }
 

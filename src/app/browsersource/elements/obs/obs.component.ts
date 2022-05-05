@@ -54,7 +54,8 @@ export class ObsComponent implements OnInit {
   onPlaybackEnded() {
     this.alerts.elementsSubject.next({
       type: 'obs',
-      what: 'ended'
+      what: 'ended',
+      element: this.element
     })
   }
 

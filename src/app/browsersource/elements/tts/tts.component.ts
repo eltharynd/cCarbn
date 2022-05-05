@@ -32,7 +32,8 @@ export class TTSComponent implements OnInit {
   onPlaybackEnded() {
     this.alerts.elementsSubject.next({
       type: 'tts',
-      what: 'ended'
+      what: 'ended',
+      element: this.element
     })
   }
 

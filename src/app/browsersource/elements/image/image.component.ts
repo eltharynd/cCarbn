@@ -77,7 +77,8 @@ export class ImageComponent implements OnInit {
   onPlaybackEnded() {
     this.alerts.elementsSubject.next({
       type: 'image',
-      what: 'ended'
+      what: 'ended',
+      element: this.element
     })
   }
 

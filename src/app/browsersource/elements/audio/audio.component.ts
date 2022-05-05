@@ -25,7 +25,8 @@ export class AudioComponent {
   onPlaybackEnded() {
     this.alerts.elementsSubject.next({
       type: 'audio',
-      what: 'ended'
+      what: 'ended',
+      element: this.element
     })
   }
 
