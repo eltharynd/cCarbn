@@ -79,7 +79,7 @@ export class Api {
           }
         })
 
-        await Mongo.Upload.write({
+        Mongo.Upload.write({
           filename: `${plain}${i>0 ? `-${i}` : ''}.${extension}`,
           metadata: { userId: Mongo.ObjectId(req.params.userId),  usages: 1 },
           contentType: file.mimetype
