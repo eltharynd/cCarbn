@@ -1,3 +1,4 @@
+@import '../../themes.scss';
 
 .container-v {
     display: flex;
@@ -8,7 +9,7 @@
 }
 
 .overlay-bottom {
-    background-color: #222b45;
+    background-color: $deep-background-color;
     flex-grow: 1;
     flex-shrink: 0;
     z-index: 1;
@@ -22,12 +23,8 @@
 }
 
 .overlay-right {
-    background-color: #222b45;
+    background-color: $deep-background-color;
     flex-grow: 1;
     flex-shrink: 0;
     z-index: 1;
-}
-
-::ng-deep body {
-    
 }
