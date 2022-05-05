@@ -65,16 +65,17 @@ export class AuthGuard implements CanActivate {
       this.userChanged.next(this.currentUser)
       localStorage.currentUser = JSON.stringify(response.data)
       this.instanceResumed = true
-    }).catch(error => {
+      this.resumedDone.complete()
+    }).catch(async error => {
       this.currentUser = null
       this.userChanged.next(null)
       if(!error.response) {
         console.error(error)
       } else if(error?.response?.status === 401)
-        this.logout()
+        await this.logout()
+      this.resumedDone.complete()
     })
 
-    this.resumedDone.complete()
   }
   
 }

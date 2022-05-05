@@ -8,8 +8,12 @@ import { BrowserSourceComponent } from "./browsersource.component"
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'hypetrain',
     component: BrowserSourceComponent,
+    data: {
+      title: 'test',
+      route: 'hypetrain'
+    }
   },
   {
     path: ':userId',
@@ -37,7 +41,11 @@ const routes: Routes = [
         },
       },
     ]
-  }
+  },
+  {
+    path: '',
+    redirectTo: '/dashboard'
+  },
 ]
 
 @NgModule({
