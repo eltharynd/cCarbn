@@ -251,6 +251,37 @@ input {
             flex-grow: 1;
         }
     }
+    > .keywords {
+        display: grid;
+        grid-template-columns: 1fr;
+        margin-top: 2rem;
+        > div {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            > div {
+                padding-right: 0.5rem;
+                color: rgba(white, 0.8);
+            }
+            > div:first-child {
+                font-weight: bold;
+                color: white;
+                text-align: right;
+                padding-right: 1rem;
+            }
+            margin-bottom: 2rem;
+        }
+    }
+    @media only screen and (min-width: 825px) {
+        > .keywords {
+            grid-template-columns: 1fr 1fr;
+            > div:nth-child(1n) {
+                margin-right: 0.1rem;
+            }
+            > div:nth-child(2n) {
+                margin-left: 0.1rem;
+            }
+        }
+    }
 }
 .tts-separator {
     padding-top: 1.5rem;

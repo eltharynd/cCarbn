@@ -389,9 +389,13 @@
                                 </div>
 
                                 <div *ngIf="elem.message === 'customMessage'">
-                                    <div class="field-container">
-                                        <input nbInput type="text" [(ngModel)]="elem.customMessage" placeholder="Type your custom message ($user gets replaced by the user name)." fullWidth>
-                                        <div class="anchor"><label>message</label></div>
+                                    <textarea nbInput type="text" (change)="al.changes=true" placeholder="Custom message. Use the keywords below and they will be replaced accordingly." [(ngModel)]="elem.customMessage" fullWidth></textarea>
+                                </div>
+
+                                <div *ngIf="elem.message === 'customMessage'" class="keywords">
+                                    <div *ngFor="let keyword of _chat.keywords | keyvalue: originalOrder;">
+                                        <div>{{keyword.key}}:</div>
+                                        <div>{{keyword.value}}</div>
                                     </div>
                                 </div>
                             </div>
@@ -454,7 +458,7 @@
                             </div>
                             
                             <div #chat *ngIf="elem.type==='chat'" class="chat-container">
-                                <textarea nbInput type="text" (change)="al.changes=true" placeholder="Chat message. You can type the keywords below and they will be replaced accordingly." [(ngModel)]="elem.text" fullWidth></textarea>
+                                <textarea nbInput type="text" (change)="al.changes=true" placeholder="Chat message. Use type the keywords below and they will be replaced accordingly." [(ngModel)]="elem.text" fullWidth></textarea>
                                 <div class="keywords">
                                     <div *ngFor="let keyword of _chat.keywords | keyvalue: originalOrder;">
                                         <div>{{keyword.key}}:</div>
