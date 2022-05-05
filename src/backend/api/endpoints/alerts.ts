@@ -3,6 +3,7 @@ import { Api } from "../express"
 import { authMiddleware } from "./auth"
 import { Mongo } from "../../db/mongo"
 import { filter, from, retryWhen, take } from "rxjs"
+import { File } from "../../db/models/files"
 const uuid = require('uuid')
 
 export class AlertsRoutes {
@@ -57,19 +58,31 @@ export class AlertsRoutes {
             break
           }
         }  
+        if(!found) return res.status(404).send()
 
         let removed = alerts.splice(alerts.indexOf(found), 1)
         userAlerts.alerts = alerts
         await userAlerts.save()
-        res.send({})
+        
 
         if(removed.length>0)
           for(let element of removed[0].elements) {
             if(element.src) {
-              let fileName = element.src.replace(/^.+\//g, '')
-              await Api.unlink(fileName, req.params.userId)
+              let fileName = decodeURI(element.src.replace(/^.+\//g, ''))
+              let file = await File.findOne({filename: fileName, 'metadata.userId': Mongo.ObjectId(req.params.userId)})
+              if(file) {
+                if(file.metadata.usages>1) {
+                  --file.metadata.usages 
+                  await file.save()
+                } else {
+                  await Api.unlink(fileName, req.params.userId, res)
+                  return
+                }
+              }
+              
             }
           }
+        res.send({})
       })
   }
 

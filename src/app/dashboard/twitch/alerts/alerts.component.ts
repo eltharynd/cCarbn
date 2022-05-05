@@ -161,7 +161,6 @@ export class AlertsComponent implements OnInit, OnDestroy {
     }
   }
 
-  //TODO SHOULD UNLINK IMAGES FROM DB
   async deleteAlert(alert: _alert) {
     if(alert._id) 
       if(!await this.data.delete(`alerts/${this.auth.currentUser?._id}/${alert._id}`)) {

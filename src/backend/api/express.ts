@@ -233,6 +233,7 @@ export class Api {
           if(res) res.status(500).send()
         } else if(res) res.send({})
       })
+
     } else {
       --found.metadata.usages
       await found.save()
