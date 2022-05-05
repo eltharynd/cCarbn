@@ -77,7 +77,7 @@ for(let i=0;i<_shakeKeyframes;i++) states.push(
     ]
 })
 export class TrainComponent implements OnInit, OnChanges {
-    @Input() viewport: {width: number, height: number} = {width: 1280, height: 720}
+    @Input() viewport: {width: number, height: number} = {width: 1920, height: 1080}
     @Input() coordinates: {x: number, y: number}
     @Input() size: {width: number, height: number} = {width: 128, height: 128}
     @Input() scale: number = 1
