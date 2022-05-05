@@ -289,11 +289,52 @@
 
                                         <nb-accordion-item>
                                             <nb-accordion-item-header>
-                                                More Settings
+                                                Border Settings
                                             </nb-accordion-item-header>
                                             <nb-accordion-item-body class="unpadded">
                                                 <nb-list>
-                                                    <nb-list-item *ngFor="let o of _options[elem.type].optional | keyvalue: originalOrder">
+                                                    <nb-list-item>
+                                                        <div class="key">Border:</div>
+                                                        <div class="value">
+                                                            <nb-select [placeholder]="_BORDER.types[elem.borderRadius]||'None'" [(selected)]="elem.borderRadius" (selectedChange)="al.changes=true" fullWidth>
+                                                                <nb-option [value]="null">None</nb-option>
+                                                                <nb-option *ngFor="let type of _BORDER.types | keyvalue : originalOrder" [value]="type.key">{{type.value}}</nb-option>
+                                                            </nb-select>
+                                                        </div>
+                                                    </nb-list-item>
+                                                    <nb-list-item>
+                                                        <div class="key">Thickness:</div>
+                                                        <div class="value">
+                                                            <nb-select [disabled]="!elem.borderRadius" [placeholder]="_BORDER.thickness[elem.border]||'Regular'" [(selected)]="elem.border" (selectedChange)="al.changes=true" fullWidth>
+                                                                <nb-option *ngFor="let type of _BORDER.thickness | keyvalue : originalOrder" [value]="type.key">{{type.value}}</nb-option>
+                                                            </nb-select>
+                                                        </div>
+                                                    </nb-list-item>
+                                                    <nb-list-item>
+                                                        <div class="key">Color:</div>
+                                                        <div class="value">
+                                                            <nb-select [disabled]="!elem.borderRadius" [placeholder]="_BORDER.color[elem.borderColor]||'Black'" [(selected)]="elem.borderColor" (selectedChange)="al.changes=true" fullWidth>
+                                                                <nb-option *ngFor="let type of _BORDER.color | keyvalue : originalOrder" [value]="type.key">{{type.value}}</nb-option>
+                                                            </nb-select>
+                                                        </div>
+                                                    </nb-list-item>
+                                                    <nb-list-item *ngIf="elem.borderRadius && elem.borderColor === 'custom'">
+                                                        <div class="key">Custom Color: </div>
+                                                        <div class="value">
+                                                            <input nbInput type="text" placeholder="#daa520" [(ngModel)]="elem.borderCustom" (change)="al.changes=true" fullWidth>
+                                                        </div>
+                                                    </nb-list-item>
+                                                </nb-list>
+                                            </nb-accordion-item-body>
+                                        </nb-accordion-item>
+      
+                                        <nb-accordion-item>
+                                            <nb-accordion-item-header>
+                                                Additional Settings
+                                            </nb-accordion-item-header>
+                                            <nb-accordion-item-body class="unpadded">
+                                                <nb-list>
+                                                    <nb-list-item *ngFor="let o of _options[elem.type].additional | keyvalue: originalOrder">
                                                         <div class="key">{{o.key}}:</div>
                                                         <div class="value" *ngIf="o.value==='pixel' || o.value==='seconds'">
                                                             <input nbInput type="number" [(ngModel)]="elem[o.key]" (change)="al.changes=true" fullWidth>

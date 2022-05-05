@@ -1,5 +1,4 @@
 <div class="container" [ngStyle]="{
-    position: 'absolute',
     display: 'flex',
     width: (+viewport.width - (+viewport.padding*2))+'px',
     height: (+viewport.height - (+viewport.padding*2))+'px',
@@ -8,12 +7,5 @@
 }">
     <img    [src]="element.src"
             (load)="onLoadedData()"
-            [ngStyle]="{
-                width: element.width ? element.width+'px' : 'fit-content',
-                height: element.height ? element.height+'px' : 'fit-content',
-                marginTop: element.marginTop ? element.marginTop+'px' : null,
-                marginRight: element.marginRight ? element.marginRight+'px' : null,
-                marginBottom: element.marginBottom ? element.marginBottom+'px' : null,
-                marginLeft: element.marginLeft ? element.marginLeft+'px' : null
-            }">
+            [ngStyle]="style">
 </div>

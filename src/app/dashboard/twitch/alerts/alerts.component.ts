@@ -5,7 +5,7 @@ import { ELEMENT_TYPES } from 'src/app/shared/alerts.service'
 import { filter, from, map, Subject, toArray } from 'rxjs'
 import { environment } from 'src/environments/environment'
 import { OBSService } from 'src/app/shared/obs.service'
-import { POSITION, TRANSITION } from 'src/app/browsersource/elements/elements.component'
+import { BORDER, POSITION, TRANSITION } from 'src/app/browsersource/elements/elements.component'
 import { KeyValue } from '@angular/common'
 import { ClipboardService } from 'ngx-clipboard'
 @Component({
@@ -408,7 +408,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
         "transition IN": TRANSITION.NONE,
         "transition OUT": TRANSITION.NONE,
       },
-      optional: {
+      additional: {
         width: 'pixel',
         height: 'pixel',
         marginTop: 'pixel',
@@ -422,7 +422,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
       },
       default: {
       },
-      optional: {
+      additional: {
       }
     },
     gif: {
@@ -438,7 +438,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
         "transition IN": TRANSITION.NONE,
         "transition OUT": TRANSITION.NONE,
       },
-      optional: {
+      additional: {
         width: 'pixel',
         height: 'pixel',
         marginTop: 'pixel',
@@ -460,7 +460,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
         "transition IN": TRANSITION.NONE,
         "transition OUT": TRANSITION.NONE,
       },
-      optional: {
+      additional: {
         width: 'pixel',
         height: 'pixel',
         marginTop: 'pixel',
@@ -575,6 +575,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
     }
   }
 
+  _BORDER = BORDER
 }
 
 

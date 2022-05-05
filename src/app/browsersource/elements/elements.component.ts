@@ -16,9 +16,36 @@ export enum POSITION {
   BOTTOM_RIGHT = 'BOTTOM_RIGHT'
 }
 
+export const BORDER ={
+  types: {
+    squared: 'Squared',
+    ellipse: 'Ellipse', 
+    rounded: 'Rounded',
+    rounded2: 'Rounded More', 
+  },
+  thickness: {
+    regular: 'Regular',
+    thin: 'Thin',
+    thinner: 'Thinner',
+    thick: 'Thick',
+    thicker: 'Thicker',
+    thiccboi: 'Thiccboi',
+  },
+  color: {
+    black: 'Black',
+    white: 'White',
+    rainbow: 'Rainbow',
+    custom: 'Custom',
+  }
+}
+
+
 export enum TRANSITION {
   NONE = 'None',
   FADE = 'Fade',
+  EXPAND = 'Expand',
+  EXPAND_HOR = 'Expand Horizontally',
+  EXPAND_VER = 'Expand Vertically',
   POP_UP = 'Pop upwards',
   POP_DOWN = 'Pop downwards',
   UNPOP_UP = 'Unpop upwards',
@@ -64,6 +91,18 @@ export const ELEMENT_ANIMATIONS = [
       animate('500ms ease', style({}))
     ]),
 
+    transition(`void => EXPAND`, [
+      style({opacity: 0, transform: 'scale(0)'}),
+      animate('500ms ease', style({}))
+    ]),
+    transition(`void => EXPAND_HOR`, [
+      style({opacity: 0, transform: 'scaleX(0)'}),
+      animate('500ms ease', style({}))
+    ]),
+    transition(`void => EXPAND_VER`, [
+      style({opacity: 0, transform: 'scaleY(0)'}),
+      animate('500ms ease', style({}))
+    ]),
 
   ]),
   trigger('out', [
@@ -100,6 +139,19 @@ export const ELEMENT_ANIMATIONS = [
     transition('SWIPE_RIGHT => void', [
       style({}),
       animate('500ms ease', style({opacity: 0, transform: 'rotate(-90deg) translateX(2000px)'})),
+    ]),
+
+    transition(`EXPAND => void`, [
+      style({}),
+      animate('500ms ease', style({opacity: 0, transform: 'scale(0)'}))
+    ]),
+    transition(`EXPAND_HOR => void`, [
+      style({}),
+      animate('500ms ease', style({opacity: 0, transform: 'scaleX(0)'}))
+    ]),
+    transition(`EXPAND_VER => void`, [
+      style({}),
+      animate('500ms ease', style({opacity: 0, transform: 'scaleY(0)'}))
     ]),
 
 
