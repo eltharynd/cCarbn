@@ -356,3 +356,16 @@ nb-sidebar.loaded.collapsed {
     transition: 0.3s ease;
   }
 } 
+
+
+nb-layout-footer > nav {
+  > app-footer {
+    align-items: center !important;
+  }
+}
+@media only screen and (max-width:350px) {
+  nb-layout-footer > nav {
+    padding-left: .5rem !important;
+    padding-right: .5rem !important;
+  }
+}
