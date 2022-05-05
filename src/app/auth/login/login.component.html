@@ -79,7 +79,7 @@
 
 <ng-template #login>
   <div *ngIf="!auth.currentUser" class="login-container" style="width: 100%;">
-    <span *ngIf="message || !data._clientId" style="font-size: 0.8rem; line-height: 0.9rem; color: red; margin: 0.4rem 0;">{{message ? message : 'We seem to be experiencing server issues.. Attempting to reconnect...'}}</span>
+    <span *ngIf="message || !data._clientId" style="font-size: 0.8rem; line-height: 0.9rem; margin: 0.4rem 0;" [style.color]="!data._clientId ? 'red' : 'inherit'">{{message ? message : 'We seem to be experiencing server issues.. Attempting to reconnect...'}}</span>
     <button [disabled]="(message?true:false) || !data._clientId" 
             [nbSpinner]="message?true:false" 
             status="primary" 

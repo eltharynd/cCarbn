@@ -41,7 +41,7 @@ export class AlertsService {
 
         let ignore = false
         for(let c of alert.conditions) {
-          if(c.type === 'bit') {
+          if(c.type === 'bits') {
             if(data.type === 'Cheer') {
               let howMuch = 0
               try { howMuch = parseInt(c.compared) } catch(e) { ignore = true; continue; }
@@ -123,8 +123,12 @@ export class AlertsService {
         for(let element of alert.elements) {
           if(element.type==='tts') {
             switch (element.message) {
+              case 'customMessage':
+                if(element.text)
+                  element.text.replace(/\$user/gi, user)
+                break
               case 'subMessage':
-                element.text = null
+                element.text = data.message?.text ? data.message.text : data.message
                 break
               case 'cheerMessage':
                 element.text = data.message
@@ -240,9 +244,9 @@ export class AlertsService {
 export enum ELEMENT_TYPES {
   video = 'Video',
   audio = 'Audio',
-  tts = 'TTS',
-  obs = 'OBS',
-  chat = 'Chat Message',
   gif = 'GIF',
   image = 'Image',
+  tts = 'TTS',
+  chat = 'Chat Message',
+  obs = 'OBS',
 }

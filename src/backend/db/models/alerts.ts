@@ -4,9 +4,9 @@ import * as merge from 'deepmerge'
 const ALERT_TEMPLATE = {
   name: 'An alert',
   conditions: [{
-    type: 'bit',
-    operator: 'equals',
-    compared: 1
+    type: null,
+    operator: null,
+    compared: null
   }],
   elements: []
 }

@@ -90,10 +90,10 @@ $nb-themes: nb-register-theme((
 
   color-basic-800: #393554,
   
-  select-outline-small-padding: 0.4375rem 1rem,
+/*   select-outline-small-padding: 0.4375rem 1rem,
   select-min-width: 100px,
   select-small-max-width: 100px,
-  select-medium-max-width: 180px,
+  select-medium-max-width: 350px, */
 
   popover-background-color: #00d68f,
 
@@ -101,6 +101,14 @@ $nb-themes: nb-register-theme((
   card-shadow: 0 .5rem 1rem 0 $deep-background-shadow,
   
 ), ccarbn, cosmic);
+
+input.size-medium {
+  min-width: var(--select-min-width);
+}
+
+/* nb-select.size-medium:not(.full-width) {
+  min-width: 180px;
+} */
 
 html {
   scroll-behavior: smooth !important;
@@ -160,16 +168,12 @@ html {
 nb-accordion.alternate > nb-accordion-item:nth-child(2n) {
   background-color: #2e2a46;//var(--background-basic-color-2);
 }
-
-
 nb-accordion-item-body.unpadded > div > div {
   padding: 0;
   > nb-list > nb-list-item:first-child {
     border-top:0
   }
 }
-
-
 nb-accordion.lighter {
   nb-accordion-item {
       overflow: hidden;
@@ -193,17 +197,57 @@ nb-accordion.lighter {
 }
 
 
-nb-select.size-medium:not(.full-width) {
-  min-width: 180px;
-}
+
 
 
 .centered {
+  min-width: 320px;
   max-width: 1120px;
   margin: auto;
   margin-bottom: 2rem;
-}
 
+  .centered-nested {
+    .item-body {
+      nb-card {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+@media only screen and (max-width: 1000px) {
+  .columns > nb-layout-column {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .centered {
+
+    > nb-accordion-item > nb-accordion-item-header,
+    > nb-accordion-item > nb-accordion-item-body,
+    > nb-card-header,
+    > nb-card-body,
+    > nb-card-footer {
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+
+    .centered-nested {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      .item-body {
+        padding-left: .2rem;
+        padding-right: .2rem;
+      }
+      nb-list-item {
+        padding-left: .2rem;
+        padding-right: .2rem;
+      }
+      .content-active {
+        padding-left: .2rem;
+        padding-right: .2rem;
+      }
+    }
+  }
+}
 
 
 
@@ -211,13 +255,11 @@ nb-select.size-medium:not(.full-width) {
 ::-webkit-scrollbar {
   width: 0.4rem;
 }
-
 ::-webkit-scrollbar-thumb {
   background: nb-theme(background-basic-color-1);
   cursor: pointer;
   border-radius: 0.4rem;
 }
-
 ::-webkit-scrollbar-track {
   background: $deep-background-color;
 }

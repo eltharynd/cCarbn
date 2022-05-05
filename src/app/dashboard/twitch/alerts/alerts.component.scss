@@ -68,13 +68,24 @@ input {
         > nb-list-item.conditions-entry {
             display: flex;
             width: 100%;
-            justify-content: center;
             padding-top: 1.4rem;
             border-color: $inner-border;
             background-color: $inner-background-light;
-            > * {
-                margin-left: .5rem;
-                margin-right: .5rem;
+
+            justify-content: flex-end;
+            flex-wrap: wrap;
+            gap: 1rem 0.5rem;
+            > *:not(button) {
+                flex-grow: 1;
+                max-width: 256px;
+                * {
+                    max-width: 100%;
+                } 
+            }
+            @media only screen and (max-width:1000px) {
+                > *:not(button) {
+                    max-width: 320px;
+                }
             }
         }
         > nb-list-item.conditions-entry:nth-last-child(2) {
@@ -87,6 +98,9 @@ input {
             border-bottom: 0
         }
     }
+}
+@media only screen and (max-width:123px) {
+    
 }
 
 
@@ -129,10 +143,15 @@ input {
 
     min-height: 300px;
 
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+
     .media-preview,
     .media-uploader {
-        width: 50%;
-        height: 350px;
+        width: 48%;
+        min-width: 320px;
+        height: 320px;
         margin: 0.5rem;
         position: relative;
         display: flex;
@@ -170,7 +189,8 @@ input {
 
     .media-settings {
         flex-grow: 1;
-        width: 50%;
+        //width: 48%;
+        min-width: 320px;
         align-self: stretch;
 
         display: flex;
@@ -183,7 +203,7 @@ input {
         }
 
         nb-accordion {
-
+            width: 100%;
             nb-list-item {
                 display: flex;
                 justify-content: space-between;
@@ -222,13 +242,13 @@ input {
 
     > div:nth-child(2) {
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
-        padding: 2rem;
-        
-        > .field-container {
-            width: 100%;
-            margin-right: 2rem;
+        padding: 2rem 0;
+        flex-wrap: wrap;
+        gap: 1rem;
+        > * {
+            flex-grow: 1;
         }
     }
 }
@@ -236,6 +256,11 @@ input {
     padding-top: 1.5rem;
     color: var(--option-disabled-text-color);
     border-bottom: 2px solid var(--option-disabled-text-color);
+}
+@media only screen and (max-width:700px) {
+    .tts-container {
+        padding: 2rem 0.2rem;
+    }
 }
 
 .obs-container {
@@ -264,6 +289,11 @@ input {
     }
     .obs-inner:last-child {
         margin-bottom: 2rem;
+    }
+}
+@media only screen and (max-width:700px) {
+    .obs-container {
+        padding: 2rem 0.2rem;
     }
 }
 
@@ -302,6 +332,27 @@ input {
             > div:nth-child(2n) {
                 margin-left: 0.1rem;
             }
+        }
+    }
+}
+@media only screen and (max-width:700px) {
+    .chat-container {
+        padding: 1rem 0.2rem;
+    }
+}
+
+
+::ng-deep {
+    .settings-unpadded {
+        > div > .item-body {
+            padding: 0 !important;
+        }
+    }
+
+    .elements-tabs {
+        > ul {
+            flex-wrap: wrap;
+            row-gap: 0.2rem;
         }
     }
 }

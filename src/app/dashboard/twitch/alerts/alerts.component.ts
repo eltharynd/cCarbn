@@ -67,8 +67,8 @@ export class AlertsComponent implements OnInit {
       name: 'An alert',
       conditions: [
         {
-          type: 'bit',
-          operator: 'equals',
+          type: null,
+          operator: null,
           compared: null
         }
       ],
@@ -104,7 +104,7 @@ export class AlertsComponent implements OnInit {
         let c: _condition = condition
         try {
           if(
-            (c.type === 'bit' && 
+            (c.type === 'bits' && 
               (!this._operators.comparison.hasOwnProperty(c.operator) || parseInt(c.compared+'')<1)
             ) ||
             (c.type === 'user' && !(
@@ -174,8 +174,8 @@ export class AlertsComponent implements OnInit {
 
   addCondition(alert: _alert) {
     alert.conditions.push({
-      type: 'bit',
-      operator: 'equals',
+      type: null,
+      operator: null,
       compared: null
     })
     alert.changes = true
@@ -310,14 +310,16 @@ export class AlertsComponent implements OnInit {
   }
 
   ElementTypes = ELEMENT_TYPES
-  _conditionTypes = {
-    bit: 'Bits cheered',
+  _primaryConditions = {
+    bits: 'Bits cheered',
     redeem: 'Channel redemption',
     follow: 'Follow',
-    raid: 'Raid',
     subscription: 'Subscription',
-    user: 'User',
+    raid: 'Raid',
     ban: 'Ban or Timeout',
+  }
+  _secondaryConditions = {
+    user: 'User',
   }
 
   _operators = {
@@ -337,7 +339,9 @@ export class AlertsComponent implements OnInit {
       typeisnt: 'type isn\'t',
     },
     redemption: {
-      redeemed: 'redeemed'
+      redeemed: 'redeemed',
+      approved: 'approved',
+      declined: 'declined'
     },
     subscription: {
       sub: 'User subscribed',
@@ -458,9 +462,10 @@ export class AlertsComponent implements OnInit {
 
   _tts = {
     options: {
+      customMessage: 'Custom Message',
       redemptionMessage: 'Redemption message',
       cheerMessage: 'Cheer message',
-      //subMessage: 'Sub message',
+      subMessage: 'Sub message',
     },
     voices: {
       'en-au': 'Australian english',

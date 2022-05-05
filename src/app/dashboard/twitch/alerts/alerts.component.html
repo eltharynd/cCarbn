@@ -62,7 +62,7 @@
 </nb-card>
 
 <nb-accordion class="centered alternate" multi>
-    <nb-accordion-item *ngFor="let al of alerts" [expanded]="al.expanded">
+    <nb-accordion-item *ngFor="let al of alerts; let TMP = index" [expanded]="TMP===0 || al.expanded">  <!-- remove TMP only -->
         
         <nb-accordion-item-header class="alert-header">
             <button nbButton status="primary" nbTooltip="Send test to browser source" nbTooltipStatus="primary" (click)="sendTestAlert($event, al)"><nb-icon icon="cast"></nb-icon></button>
@@ -71,22 +71,34 @@
             </div>
             <div class="alert-details">
                 <div *ngFor="let c of al.conditions; let i = index" style="white-space: pre-line;">
-                    <strong>{{_conditionTypes[c.type]}}</strong> - {{_operators.all()[c.operator]}} {{c.compared?.title ? c.compared.title : _userTypes.hasOwnProperty(c.compared+'') ? _userTypes[c.compared] : c.compared}}
+                    <strong>{{_primaryConditions[c.type]}}</strong> - {{_operators.all()[c.operator]}} {{c.compared?.title ? c.compared.title : _userTypes.hasOwnProperty(c.compared+'') ? _userTypes[c.compared] : c.compared}}
                     <strong *ngIf="i+1 < al.conditions.length">&nbsp;AND&nbsp;</strong>
                 </div>
             </div>
         </nb-accordion-item-header>
 
-        <nb-accordion-item-body>
+        <nb-accordion-item-body class="centered-nested">
             <nb-card class="alert-card">
 
-                <nb-card-header class="conditions-header lighter">                           
+                <nb-card-header class="conditions-header lighter" *ngIf="TMP===0 || al.expanded">  <!-- remove all ngIf -->                         
                     <nb-list>
                         <nb-list-item *ngFor="let c of al.conditions; let i = index" class="conditions-entry">
 
+                            <!-- TRIGGERS -->
                             <div class="field-container">
-                                <nb-select [(selected)]="c.type" (selectedChange)="al.changes=true; c.compared = null">
-                                    <nb-option  *ngFor="let type of _conditionTypes | keyvalue: originalOrder" [value]=type.key >
+                                <nb-select [(selected)]="c.type" (selectedChange)="al.changes=true; c.operator=null; c.compared=null" fullWidth>
+                                    <nb-option disabled>-- Primary --</nb-option>
+                                    <nb-option  *ngFor="let type of _primaryConditions | keyvalue: originalOrder" 
+                                                [value]="type.key"
+                                                [disabled]="i>0"
+                                                >
+                                        {{type.value}}
+                                    </nb-option>
+                                    <nb-option disabled>-- Secondary --</nb-option>
+                                    <nb-option  *ngFor="let type of _secondaryConditions | keyvalue: originalOrder"
+                                                [value]="type.key"
+                                                [disabled]="i<1"
+                                                >
                                         {{type.value}}
                                     </nb-option>
                                 </nb-select>
@@ -94,60 +106,65 @@
                             </div>
 
 
-
-                            <div *ngIf="c.type==='bit'" class="field-container">
-                                <nb-select [(selected)]="c.operator" (selectedChange)="al.changes=true" size="small">
+                            <!-- OPERATORS PRIMARY -->
+                            <div *ngIf="c.type==='bits'" class="field-container">
+                                <nb-select [(selected)]="c.operator" (selectedChange)="al.changes=true" fullWidth>
                                     <nb-option *ngFor="let op of _operators.comparison | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
                                 </nb-select>
                                 <div class="anchor"><label>is</label></div>
                             </div>
-                            <nb-select *ngIf="c.type==='user'" [(selected)]="c.operator" (selectedChange)="al.changes=true" size="small">
-                                <nb-option *ngFor="let op of _operators.user | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                                <nb-option *ngFor="let op of _operators.userType | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                            </nb-select>
                             <div *ngIf="c.type==='redeem'" class="field-container">
-                                <nb-select [(selected)]="c.operator" (selectedChange)="al.changes=true" size="small">
+                                <nb-select [(selected)]="c.operator" (selectedChange)="al.changes=true" fullWidth>
                                     <nb-option *ngFor="let op of _operators.redemption | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
                                 </nb-select>
                                 <div class="anchor"><label>is</label></div>
                             </div>
-                            <div *ngIf="c.type==='subscription'" class="field-container" >
-                                <nb-select [(selected)]="c.operator" (selectedChange)="al.changes=true">
+                            <div *ngIf="c.type==='subscription'" class="field-container">
+                                <nb-select [(selected)]="c.operator" (selectedChange)="al.changes=true" fullWidth>
                                     <nb-option *ngFor="let op of _operators.subscription | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
                                 </nb-select>
                                 <div class="anchor"><label>what</label></div>
                             </div>
-                            <div *ngIf="c.type==='raid'" class="field-container" >
-                                <nb-select [(selected)]="c.operator" [placeholder]="_operators.raid[c.operator]" (selectedChange)="al.changes=true">
+                            <div *ngIf="c.type==='raid'" class="field-container">
+                                <nb-select [(selected)]="c.operator" [placeholder]="_operators.raid[c.operator]" (selectedChange)="al.changes=true" fullWidth>
                                     <nb-option *ngFor="let op of _operators.raid | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
                                 </nb-select>
                                 <div class="anchor"><label>what</label></div>
                             </div>
-                            <div *ngIf="c.type==='ban'" class="field-container" >
-                                <nb-select [(selected)]="c.operator" [placeholder]="_operators.ban[c.operator]" (selectedChange)="al.changes=true">
+                            <div *ngIf="c.type==='ban'" class="field-container">
+                                <nb-select [(selected)]="c.operator" [placeholder]="_operators.ban[c.operator]" (selectedChange)="al.changes=true" fullWidth>
                                     <nb-option *ngFor="let op of _operators.ban | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
                                 </nb-select>
                                 <div class="anchor"><label>what</label></div>
                             </div>
 
+                            <!-- OPERATORS SECONDARY -->
+                            <div *ngIf="c.type==='user'" class="field-container">
+                                <nb-select [(selected)]="c.operator" (selectedChange)="al.changes=true" fullWidth>
+                                    <nb-option *ngFor="let op of _operators.user | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+                                    <nb-option *ngFor="let op of _operators.userType | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+                                </nb-select>
+                                <div class="anchor"><label>what</label></div>
+                            </div>
 
 
-                            <div *ngIf="c.type === 'bit'" class="field-container">
-                                <input nbInput type="number" [(ngModel)]="c.compared" (change)="al.changes=true">
+                            <!-- COMPARED -->
+                            <div *ngIf="c.type === 'bits'" class="field-container">
+                                <input nbInput type="number" [(ngModel)]="c.compared" (change)="al.changes=true" fullWidth>
                                 <div class="anchor"><label>how many</label></div>
                             </div>
-                            <div *ngIf="c.type === 'user' && c.operator[0]!=='t'" class="field-container">
-                                <input nbInput type="text" [(ngModel)]="c.compared" (change)="al.changes=true">
+                            <div *ngIf="c.type === 'user' && c.operator?.length>0 && c.operator[0]!=='t'" class="field-container">
+                                <input nbInput type="text" [(ngModel)]="c.compared" (change)="al.changes=true" fullWidth>
                                 <div class="anchor"><label>username</label></div>
                             </div>
-                            <div *ngIf="c.type === 'user' && c.operator[0]==='t'"class="field-container">
-                                <nb-select [(selected)]="c.compared" (selectedChange)="al.changes=true">
+                            <div *ngIf="c.type === 'user' && c.operator?.length>0 && c.operator[0]==='t'"class="field-container">
+                                <nb-select [(selected)]="c.compared" (selectedChange)="al.changes=true" fullWidth>
                                     <nb-option *ngFor="let ut of _userTypes | keyvalue: originalOrder" [value]=ut.key>{{ut.value}}</nb-option>
                                 </nb-select>
                                 <div class="anchor"><label>what</label></div>
                             </div>
                             <div *ngIf="c.type === 'redeem'" class="field-container">
-                                <nb-select [(selected)]="c.compared" [placeholder]="c.compared?.title||''" (selectedChange)="al.changes=true">
+                                <nb-select [(selected)]="c.compared" [placeholder]="c.compared?.title||''" (selectedChange)="al.changes=true" fullWidth>
                                     <nb-option *ngFor="let r of channelRewards" [value]=r>{{r.title}}</nb-option>
                                 </nb-select>
                                 <div class="anchor"><label>which</label></div>
@@ -160,8 +177,8 @@
                             </div>
 
 
-                            <button nbButton status="danger" [disabled]="al.conditions.length<2" (click)="deleteCondition(al, c)"><nb-icon icon="trash-2"></nb-icon></button>
-                            <button nbButton status="success" (click)="addCondition(al)" [disabled]="i<al.conditions.length-1"><nb-icon icon="plus"></nb-icon></button>
+                            <button nbButton status="danger" [disabled]="al.conditions.length<2 || i===0" (click)="deleteCondition(al, c)"><nb-icon icon="trash-2"></nb-icon></button>
+                            <button nbButton status="success" (click)="addCondition(al)" [disabled]="i<al.conditions.length-1 || al.conditions.length>=2"><nb-icon icon="plus"></nb-icon></button>
                         </nb-list-item>
                 
                         <nb-list-item>
@@ -174,7 +191,7 @@
                 </nb-card-header>
 
                 <nb-card-body class="elements-body">
-                    <nb-tabset fullWidth>
+                    <nb-tabset fullWidth class="elements-tabs">
                         <nb-tab *ngFor="let elem of al.elements; let i = index" [tabTitle]="elem.type" style="padding: 0;">
 
                             <div #media *ngIf="elem.type==='video' || elem.type==='audio' || elem.type==='gif' || elem.type==='image'" class="media-container">
@@ -239,7 +256,7 @@
                                             <nb-accordion-item-header>
                                                 Primary Settings
                                             </nb-accordion-item-header>
-                                            <nb-accordion-item-body class="unpadded">
+                                            <nb-accordion-item-body class="settings-unpadded">
                                                 <nb-list>
                                                     <nb-list-item *ngFor="let o of _options[elem.type].mandatory | keyvalue: originalOrder">
                                                         <div class="key">{{o.key}}</div>
@@ -290,7 +307,6 @@
                             </div>
 
                             <div #tts *ngIf="elem.type==='tts'" class="tts-container">
-
                                 <div class="field-container">
                                     <nb-select [(selected)]="elem.voice" (selectedChange)="al.changes=true" placeholder="Select which voice to use" fullWidth>
                                         <nb-option disabled class="tts-separator">Free Tier Voices -</nb-option>
@@ -300,18 +316,34 @@
                                         <nb-option disabled class="tts-separator">Premium Tier Voices</nb-option>
                                         <nb-option *ngFor="let v of _tts.premiumVoices | keyvalue: originalOrder" [value]="v.key" class="premium" [disabled]="!auth.currentUser?.premium">{{v.value}}</nb-option>
                                     </nb-select>
-                                    <div class="anchor"><label>what</label></div>
+                                    <div class="anchor"><label>voice</label></div>
                                 </div>
 
                                 <div>
                                     <div class="field-container">
                                         <nb-select [(selected)]="elem.message" (selectedChange)="al.changes=true" placeholder="Select what to read" fullWidth>
-                                            <nb-option *ngFor="let o of _tts.options | keyvalue: originalOrder" [value]="o.key">{{o.value}}</nb-option>
+                                            <nb-option  *ngFor="let o of _tts.options | keyvalue: originalOrder" 
+                                                        [value]="o.key"
+                                                        [disabled]="
+                                                            (o.key==='redemptionMessage' && al.conditions[0].type!=='redeem') ||
+                                                            (o.key==='cheerMessage' && al.conditions[0].type!=='bits') ||
+                                                            (o.key==='subMessage' && al.conditions[0].type!=='subscription' && (!al.conditions[0].operator || al.conditions[0].operator!=='subMessage'))
+                                                        "
+                                                        >
+                                                {{o.value}}
+                                            </nb-option>
                                         </nb-select>
                                         <div class="anchor"><label>what</label></div>
                                     </div>
 
                                     <nb-toggle [(ngModel)]="elem.withPrevious" (checkedChange)="al.changes=true" [disabled]="i===0">Don't wait for previous</nb-toggle>
+                                </div>
+
+                                <div *ngIf="elem.message">
+                                    <div class="field-container">
+                                        <input nbInput type="text" [(ngModel)]="elem.customMessage" placeholder="Type your custom message ($user gets replaced by the user name)." fullWidth>
+                                        <div class="anchor"><label>message</label></div>
+                                    </div>
                                 </div>
                             </div>
 
