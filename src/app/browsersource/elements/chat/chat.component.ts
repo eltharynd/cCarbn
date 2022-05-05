@@ -10,8 +10,8 @@ export class ChatComponent implements OnInit {
 
   @Input() element: any
 
-
   constructor(private alerts: AlertsService, private data: DataService) { }
+  
   async ngOnInit() {
     if(this.data._userId)
       this.data.send('chat-relay', {

@@ -1,4 +1,4 @@
-<div class="container">
+<div class="viewport-flex">
     <audio *ngIf="element" #ttsPlayer (loadeddata)="onLoadedData()" (ended)="onPlaybackEnded()">
         <source *ngIf="encodedTTS" [src]="encodedTTS" (error)="onError($event)">
     </audio>  

@@ -3,7 +3,8 @@ import { AlertsService } from '../../../shared/alerts.service'
 
 @Component({
   selector: 'app-audio',
-  templateUrl: './audio.component.html'
+  templateUrl: './audio.component.html',
+  styleUrls: ['../elements.component.scss'],
 })
 export class AudioComponent {
 
@@ -12,8 +13,6 @@ export class AudioComponent {
 
   constructor(private alerts: AlertsService) {}
 
-  alignItems
-  justifyContent
   onLoadedData() {
     this.audioPlayer.nativeElement.play()
   }

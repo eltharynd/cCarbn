@@ -10,8 +10,8 @@ export class ObsComponent implements OnInit {
 
   @Input() element: any
 
-
   constructor(private alerts: AlertsService, private OBS: OBSService) { }
+  
   async ngOnInit() {
 
     if(this.element.duration)

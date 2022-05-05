@@ -1,10 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertsService } from '../../../shared/alerts.service'
-import { ELEMENT_ANIMATIONS_IN, ELEMENT_ANIMATIONS_OUT_INNER } from '../elements.component'
+import { ElementsComponent, ELEMENT_ANIMATIONS_IN, ELEMENT_ANIMATIONS_OUT_INNER } from '../elements.component'
 
 @Component({
   selector: 'app-image',
   templateUrl: './image.component.html',
+  styleUrls: ['../elements.component.scss'],
   animations: [ ...ELEMENT_ANIMATIONS_IN, ...ELEMENT_ANIMATIONS_OUT_INNER]
 })
 export class ImageComponent implements OnInit {
@@ -14,83 +15,60 @@ export class ImageComponent implements OnInit {
 
   constructor(private alerts: AlertsService) {}
 
-  ready
-  style: any = {}
+  viewportStyle: any = {}
+  outerStyle: any = {}
+  innerStyle: any = {}
   ngOnInit() {
-    this.style = {
-      width: this.element.width ? this.element.width+'px' : this.element.mediaInformation?.width ? this.element.mediaInformation?.width+'px' : 'fit-content',
-      height: this.element.height ? this.element.height+'px' : this.element.mediaInformation?.height ? this.element.mediaInformation?.height+'px' : 'fit-content',
 
-      marginTop: this.element.marginTop ? this.element.marginTop+'px' : 0,
-      marginRight: this.element.marginRight ? this.element.marginRight+'px' : 0,
-      marginBottom: this.element.marginBottom ? this.element.marginBottom+'px' : 0,
-      marginLeft: this.element.marginLeft ? this.element.marginLeft+'px' : 0,
-    }
-    this.processBorder()
-  }
+    this.innerStyle.width = this.element.width ? this.element.width+'px' : this.element.mediaInformation?.width ? this.element.mediaInformation?.width+'px' : 'fit-content'
+    this.innerStyle.height = this.element.height ? this.element.height+'px' : this.element.mediaInformation?.height ? this.element.mediaInformation?.height+'px' : 'fit-content'
 
-  processBorder() {
-    if(this.element.borderRadius) {
-      let thickness = this.element.border
-      thickness = thickness === 'thinner' ? 
-                  '2px' :
-                    thickness === 'thin' ?
-                    '4px' :
-                      thickness === 'regular' ?
-                      '6px' :
-                        thickness === 'thick' ?
-                        '8px' :
-                          thickness === 'thicker' ?
-                          '12px' : 
-                            thickness === 'thiccboi' ?
-                            '20px' : 
-                              '6px'
-      if(this.element.borderColor==='rainbow') {
+    if(this.element.border) {
+      let stroke = this.element.borderStroke === 'thinner' ? 4 :
+                      this.element.borderStroke === 'thin' ? 8 :
+                        this.element.borderStroke === 'regular' ? 12 :
+                          this.element.borderStroke === 'thick' ? 16 :
+                            this.element.borderStroke === 'thicker' ? 20 : 
+                              this.element.borderStroke === 'thiccboi' ? 24 : 
+                                12
 
-      } else if(this.element.borderColor==='custom') {
-        this.element.borderColor = this.element.borderCustom||'#daa520'
-      } else {
-        this.element.borderColor = 'black'
+      this.outerStyle.width = +(+(this.element.width||this.element.mediaInformation?.width||1000) + 2*stroke) + 'px'
+      this.outerStyle.height = +(+(this.element.height||this.element.mediaInformation?.height||1000) + 2*stroke) + 'px'
+
+      if(this.element.borderColor) {
+        if(/rainbow/.test(this.element.borderColor)) {
+          this.outerStyle.rainbow = true
+        } if(/vaporwave/.test(this.element.borderColor)) {
+          this.outerStyle.vaporwave = true
+        } if(/custom/.test(this.element.borderColor)) {
+          this.outerStyle.backgroundColor = this.element.borderCustomColor||'#daa520'
+        } else {
+          this.outerStyle.backgroundColor = this.element.borderColor||'black'
+        }
       }
-      let radius = this.element.borderRadius
-      radius = radius === 'squared' ?
-              null :
-                radius === 'ellipse' ?
-                '50%' :
-                  radius === 'rounded' ?
-                  '8px' :
-                    radius === 'rounded2' ?
-                    '20px' :
-                      null 
-      
-      if(radius) {
-        this.style.borderRadius = radius
+      this.outerStyle.padding = `${+stroke}px`
+
+      if(/roundedMore/.test(this.element.border)) {
+        this.outerStyle.borderRadius = `${stroke*1.5}px`
+        this.innerStyle.borderRadius = `${stroke}px`
+      } else if(/rounded/.test(this.element.border)) {
+        this.outerStyle.borderRadius = `${Math.max(5, stroke/2)}px`
+        this.innerStyle.borderRadius = `${Math.max(4, stroke/2)}px`
+      } else if(/ellipse/.test(this.element.border)) {
+        
       }
-      this.style.border = `${thickness} solid ${this.element.borderColor}`
+    } else {
+      this.outerStyle.width = this.outerStyle.width
+      this.outerStyle.height = this.outerStyle.height
     }
+
+    this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element)
   }
 
 
-  alignItems
-  justifyContent
+  loaded: boolean
   onLoadedData() {
-    this.alignItems = null
-    this.justifyContent = null
-    if(this.element.position) {
-      if(/TOP/.test(this.element.position)) {
-        this.alignItems = 'flex-start'
-      } else if(/BOTTOM/.test(this.element.position)) {
-        this.alignItems = 'flex-end'
-      } 
-
-      if(/LEFT/.test(this.element.position)) {
-        this.justifyContent = 'flex-start'
-      } else if(/RIGHT/.test(this.element.position)) {
-        this.justifyContent = 'flex-end'
-      } 
-    }
-
-    this.ready = true
+    this.loaded = true
     setTimeout(() => {
       this.onPlaybackEnded()
     }, (+this.element.duration|5)*1000);

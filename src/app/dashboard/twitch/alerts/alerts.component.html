@@ -253,7 +253,6 @@
                                 </div>
 
                                 <div class="media-settings">
-
                                     <nb-toggle [(ngModel)]="elem.withPrevious" (checkedChange)="al.changes=true" [disabled]="i==0">
                                         Don't wait for previous
                                     </nb-toggle>
@@ -296,7 +295,7 @@
                                                     <nb-list-item>
                                                         <div class="key">Border:</div>
                                                         <div class="value">
-                                                            <nb-select [placeholder]="_BORDER.types[elem.borderRadius]||'None'" [(selected)]="elem.borderRadius" (selectedChange)="al.changes=true" fullWidth>
+                                                            <nb-select [placeholder]="_BORDER.types[elem.border]||'None'" [(selected)]="elem.border" (selectedChange)="al.changes=true" fullWidth>
                                                                 <nb-option [value]="null">None</nb-option>
                                                                 <nb-option *ngFor="let type of _BORDER.types | keyvalue : originalOrder" [value]="type.key">{{type.value}}</nb-option>
                                                             </nb-select>
@@ -305,7 +304,7 @@
                                                     <nb-list-item>
                                                         <div class="key">Thickness:</div>
                                                         <div class="value">
-                                                            <nb-select [disabled]="!elem.borderRadius" [placeholder]="_BORDER.thickness[elem.border]||'Regular'" [(selected)]="elem.border" (selectedChange)="al.changes=true" fullWidth>
+                                                            <nb-select [disabled]="!elem.border" [placeholder]="_BORDER.thickness[elem.borderStroke]||'Regular'" [(selected)]="elem.borderStroke" (selectedChange)="al.changes=true" fullWidth>
                                                                 <nb-option *ngFor="let type of _BORDER.thickness | keyvalue : originalOrder" [value]="type.key">{{type.value}}</nb-option>
                                                             </nb-select>
                                                         </div>
@@ -313,15 +312,15 @@
                                                     <nb-list-item>
                                                         <div class="key">Color:</div>
                                                         <div class="value">
-                                                            <nb-select [disabled]="!elem.borderRadius" [placeholder]="_BORDER.color[elem.borderColor]||'Black'" [(selected)]="elem.borderColor" (selectedChange)="al.changes=true" fullWidth>
+                                                            <nb-select [disabled]="!elem.border" [placeholder]="_BORDER.color[elem.borderColor]||'Black'" [(selected)]="elem.borderColor" (selectedChange)="al.changes=true" fullWidth>
                                                                 <nb-option *ngFor="let type of _BORDER.color | keyvalue : originalOrder" [value]="type.key">{{type.value}}</nb-option>
                                                             </nb-select>
                                                         </div>
                                                     </nb-list-item>
-                                                    <nb-list-item *ngIf="elem.borderRadius && elem.borderColor === 'custom'">
+                                                    <nb-list-item *ngIf="elem.border && elem.borderColor==='custom'">
                                                         <div class="key">Custom Color: </div>
                                                         <div class="value">
-                                                            <input nbInput type="text" placeholder="#daa520" [(ngModel)]="elem.borderCustom" (change)="al.changes=true" fullWidth>
+                                                            <input nbInput type="text" placeholder="#daa520" [(ngModel)]="elem.borderCustomColor" (change)="al.changes=true" fullWidth>
                                                         </div>
                                                     </nb-list-item>
                                                 </nb-list>
@@ -351,8 +350,7 @@
                                         </nb-accordion-item>
 
                                     </nb-accordion>
-                            </div>
-
+                                </div>
                             </div>
 
                             <div #tts *ngIf="elem.type==='tts'" class="tts-container">

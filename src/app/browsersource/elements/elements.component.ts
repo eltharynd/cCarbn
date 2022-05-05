@@ -19,14 +19,14 @@ export enum POSITION {
 export const BORDER ={
   types: {
     squared: 'Squared',
-    ellipse: 'Ellipse', 
     rounded: 'Rounded',
-    rounded2: 'Rounded More', 
+    roundedMore: 'Rounded More', 
+    ellipse: 'Ellipse', 
   },
   thickness: {
-    regular: 'Regular',
-    thin: 'Thin',
     thinner: 'Thinner',
+    thin: 'Thin',
+    regular: 'Regular',
     thick: 'Thick',
     thicker: 'Thicker',
     thiccboi: 'Thiccboi',
@@ -35,6 +35,7 @@ export const BORDER ={
     black: 'Black',
     white: 'White',
     rainbow: 'Rainbow',
+    vaporwave: 'Vaporwave',
     custom: 'Custom',
   }
 }
@@ -171,8 +172,7 @@ export const ELEMENT_ANIMATIONS_OUT_INNER = [
   templateUrl: './elements.component.html',
   animations: [...ELEMENT_ANIMATIONS_IN, ...ELEMENT_ANIMATIONS_OUT]
 })
-export class AlertsComponent implements OnInit {
-
+export class ElementsComponent implements OnInit {
 
   viewport = {
     width: 1920,
@@ -181,7 +181,7 @@ export class AlertsComponent implements OnInit {
   }
 
   currentElements: any[] = []
-  cantPlay = false
+
   
   constructor(private alerts: AlertsService, public OBS: OBSService) {
     alerts.elementsSubject.subscribe(element => {
@@ -204,6 +204,7 @@ export class AlertsComponent implements OnInit {
     })
   }
 
+  cantPlay = false
   async ngOnInit() {
     if(!this.OBS.isOBS) {
       let audio = new Audio()
@@ -215,5 +216,41 @@ export class AlertsComponent implements OnInit {
         }
       })
     }
+  }
+
+  public static elementViewportStyle(viewport, element): any {
+    let style: any = {}
+    style.width = (+viewport.width - (+viewport.padding*2))+'px'
+    style.height =(+viewport.height - (+viewport.padding*2))+'px'
+
+    if(element.position) {
+
+      if(/MANUAL/.test(element.position)) {
+        //TODO HANDLE MANUAL POSITIONING
+      } else {
+        style.display = 'flex'
+        style.alignItems = 'center'
+        style.justifyContent = 'center' 
+      }
+
+      if(/TOP/.test(element.position)) {
+        style.alignItems = 'flex-start'
+      } else if(/BOTTOM/.test(element.position)) {
+        style.alignItems = 'flex-end'
+      } 
+
+      if(/LEFT/.test(element.position)) {
+        style.justifyContent = 'flex-start'
+      } else if(/RIGHT/.test(element.position)) {
+        style.justifyContent = 'flex-end'
+      } 
+
+    } else {
+      style.display = 'flex'
+      style.alignItems = 'center'
+      style.justifyContent = 'center' 
+    }
+    
+    return style
   }
 }

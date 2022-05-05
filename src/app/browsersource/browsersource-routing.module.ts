@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core"
 import { RouterModule, Routes } from "@angular/router"
 
-import { AlertsComponent } from "./elements/elements.component"
+import { ElementsComponent } from "./elements/elements.component"
 import { HypetrainComponent } from "./hypetrain/hypetrain.component"
 import { PredictionsComponent } from "./predictions/predictions.component"
 import { BrowserSourceComponent } from "./browsersource.component"
@@ -35,7 +35,7 @@ const routes: Routes = [
       },
       {
         path: '**',
-        component: AlertsComponent,
+        component: ElementsComponent,
         data: {
           title: 'Browser Source',
         },

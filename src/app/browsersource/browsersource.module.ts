@@ -4,7 +4,7 @@ import { HypetrainModule } from "./hypetrain/hypetrain.module"
 import { PredictionsComponent } from "./predictions/predictions.component"
 import { BrowserSourceRoutingModule } from "./browsersource-routing.module"
 import { BrowserSourceComponent } from "./browsersource.component";
-import { AlertsComponent } from './elements/elements.component';
+import { ElementsComponent } from './elements/elements.component';
 import { VideoComponent } from './elements/video/video.component';
 import { AudioComponent } from './elements/audio/audio.component';
 import { TTSComponent } from './elements/tts/tts.component';
@@ -22,7 +22,7 @@ import { ImageComponent } from './elements/image/image.component'
   declarations: [
     BrowserSourceComponent,
     PredictionsComponent,
-    AlertsComponent,
+    ElementsComponent,
     VideoComponent,
     AudioComponent,
     TTSComponent,

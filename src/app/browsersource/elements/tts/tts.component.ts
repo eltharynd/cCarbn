@@ -4,7 +4,8 @@ import { AlertsService } from '../../../shared/alerts.service'
 
 @Component({
   selector: 'app-tts',
-  templateUrl: './tts.component.html'
+  templateUrl: './tts.component.html',
+  styleUrls: ['../elements.component.scss'],
 })
 export class TTSComponent implements OnInit {
 
