@@ -1,4 +1,4 @@
-import { OnInit, Component } from '@angular/core';
+import { OnInit, Component, OnDestroy } from '@angular/core';
 import { AuthGuard } from '../../../auth/auth.guard'
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 import { ELEMENT_TYPES } from 'src/app/shared/alerts.service'
@@ -13,7 +13,7 @@ import { ClipboardService } from 'ngx-clipboard'
   templateUrl: './alerts.component.html',
   styleUrls: ['./alerts.component.scss']
 })
-export class AlertsComponent implements OnInit {
+export class AlertsComponent implements OnInit, OnDestroy {
 
   showBrowserSource = false
   viewport = {
@@ -35,6 +35,7 @@ export class AlertsComponent implements OnInit {
   }
 
   async ngOnInit() {
+    document.documentElement.classList.remove('smooth-scrolling')
     this.alerts = await this.data.get(`alerts/${this.auth.currentUser?._id}`)
     for(let al of this.alerts) {
       al.backup = JSON.stringify(al)
@@ -43,6 +44,10 @@ export class AlertsComponent implements OnInit {
     this.data.send('requestOBSlist', {
       userId: this.auth.currentUser?._id
     })
+  }
+
+  async ngOnDestroy() {
+    document.documentElement.classList.add('smooth-scrolling')
   }
 
   copied
