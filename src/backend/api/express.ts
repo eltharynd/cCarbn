@@ -67,11 +67,10 @@ export class Api {
         let found = await File.findOne({ filename: req.params.filename, 'metadata.userId': Mongo.ObjectId(req.params.userId) })
         if(found) await new Promise(async (resolve, reject) => {
           if(!autoIndexing) {
-            await Mongo.Upload.unlink({ _id: found._id}, (error, unlink) => {
+            Mongo.Upload.unlink({ _id: found._id, filename: req.params.filename}, (error, unlink) => {
               if(error) reject(error)
               else resolve(unlink)
             })
-            
           } else {
             while(found) {
               found = await Mongo.Upload.findOne({ filename: `${plain}-${++i}.${extension}`, 'metadata.userId': Mongo.ObjectId(req.params.userId) })
