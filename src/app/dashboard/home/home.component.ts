@@ -13,6 +13,6 @@ export class HomeComponent implements OnInit {
     if(this.devide.isDesktop())
       setTimeout(() => {
         this.sidebarService.expand()
-      }, 1000);
+      }, 500);
   }
 }
