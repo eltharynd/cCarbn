@@ -1,9 +1,10 @@
 import {  Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { AlertsService } from '../../../shared/alerts.service'
-
+import { ELEMENT_ANIMATIONS_IN, ELEMENT_ANIMATIONS_OUT_INNER } from '../elements.component'
 @Component({
   selector: 'app-video',
-  templateUrl: './video.component.html'
+  templateUrl: './video.component.html',
+  animations: [ ...ELEMENT_ANIMATIONS_IN, ...ELEMENT_ANIMATIONS_OUT_INNER]
 })
 export class VideoComponent implements OnInit {
 
@@ -13,6 +14,7 @@ export class VideoComponent implements OnInit {
 
   constructor(private alerts: AlertsService) {}
 
+  ready
   style: any = {}
   ngOnInit() {
     this.style = {
@@ -88,6 +90,7 @@ export class VideoComponent implements OnInit {
       } 
     }
 
+    this.ready = true
     this.videoPlayer.nativeElement.play()
   }
 

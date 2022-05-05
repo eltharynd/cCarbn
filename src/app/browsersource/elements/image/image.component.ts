@@ -1,9 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertsService } from '../../../shared/alerts.service'
+import { ELEMENT_ANIMATIONS_IN, ELEMENT_ANIMATIONS_OUT_INNER } from '../elements.component'
 
 @Component({
   selector: 'app-image',
-  templateUrl: './image.component.html'
+  templateUrl: './image.component.html',
+  animations: [ ...ELEMENT_ANIMATIONS_IN, ...ELEMENT_ANIMATIONS_OUT_INNER]
 })
 export class ImageComponent implements OnInit {
 
@@ -12,16 +14,17 @@ export class ImageComponent implements OnInit {
 
   constructor(private alerts: AlertsService) {}
 
+  ready
   style: any = {}
   ngOnInit() {
     this.style = {
-      width: this.element.width ? this.element.width+'px' : 'fit-content',
-      height: this.element.height ? this.element.height+'px' : 'fit-content',
+      width: this.element.width ? this.element.width+'px' : this.element.mediaInformation?.width ? this.element.mediaInformation?.width+'px' : 'fit-content',
+      height: this.element.height ? this.element.height+'px' : this.element.mediaInformation?.height ? this.element.mediaInformation?.height+'px' : 'fit-content',
 
-      marginTop: this.element.marginTop ? this.element.marginTop+'px' : null,
-      marginRight: this.element.marginRight ? this.element.marginRight+'px' : null,
-      marginBottom: this.element.marginBottom ? this.element.marginBottom+'px' : null,
-      marginLeft: this.element.marginLeft ? this.element.marginLeft+'px' : null,
+      marginTop: this.element.marginTop ? this.element.marginTop+'px' : 0,
+      marginRight: this.element.marginRight ? this.element.marginRight+'px' : 0,
+      marginBottom: this.element.marginBottom ? this.element.marginBottom+'px' : 0,
+      marginLeft: this.element.marginLeft ? this.element.marginLeft+'px' : 0,
     }
     this.processBorder()
   }
@@ -87,15 +90,15 @@ export class ImageComponent implements OnInit {
       } 
     }
 
+    this.ready = true
     setTimeout(() => {
-      console.log('ending', (+this.element.duration|0)*1000)
       this.onPlaybackEnded()
     }, (+this.element.duration|5)*1000);
   }
 
   onPlaybackEnded() {
     this.alerts.elementsSubject.next({
-      type: 'gif',
+      type: 'image',
       what: 'ended'
     })
   }

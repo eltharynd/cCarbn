@@ -4,8 +4,9 @@
     height: (+viewport.height - (+viewport.padding*2))+'px',
     alignItems: alignItems ? alignItems : 'center',
     justifyContent: justifyContent ? justifyContent : 'center'
-}">
-    <img    [src]="element.src"
+}" [style.opacity]="!ready ? '0' : 'initial'">
+    <img    [@innerOUT]="element.innerTransitionOUT" [@in]="element.innerTransitionIN" 
+            [src]="element.src"
             (load)="onLoadedData()"
             [ngStyle]="style">
 </div>

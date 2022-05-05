@@ -1,4 +1,4 @@
-import { animate, animateChild, style, transition, trigger } from '@angular/animations'
+import { animate, animateChild, group, query, style, transition, trigger } from '@angular/animations'
 import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs'
 import { OBSService } from 'src/app/shared/obs.service'
@@ -53,8 +53,7 @@ export enum TRANSITION {
   SWIPE_LEFT = 'Swipe left',
   SWIPE_RIGHT = 'Swipe right',
 }
-
-export const ELEMENT_ANIMATIONS = [
+export const ELEMENT_ANIMATIONS_IN = [
   trigger('in', [
 
 
@@ -104,9 +103,10 @@ export const ELEMENT_ANIMATIONS = [
       animate('500ms ease', style({}))
     ]),
 
-  ]),
+  ])
+]
+export const ELEMENT_ANIMATIONS_OUT = [
   trigger('out', [
-
 
     transition('FADE => void', [
       style({}),
@@ -140,7 +140,17 @@ export const ELEMENT_ANIMATIONS = [
       style({}),
       animate('500ms ease', style({opacity: 0, transform: 'rotate(-90deg) translateX(2000px)'})),
     ]),
-
+    transition(`:leave`, [
+      group([
+        query('@innerOUT', [
+          animateChild(),
+        ]),
+      ])
+    ])
+  ])
+]
+export const ELEMENT_ANIMATIONS_OUT_INNER = [
+  trigger('innerOUT', [
     transition(`EXPAND => void`, [
       style({}),
       animate('500ms ease', style({opacity: 0, transform: 'scale(0)'}))
@@ -153,15 +163,13 @@ export const ELEMENT_ANIMATIONS = [
       style({}),
       animate('500ms ease', style({opacity: 0, transform: 'scaleY(0)'}))
     ]),
-
-
   ])
 ]
 
 @Component({
   selector: 'app-elements',
   templateUrl: './elements.component.html',
-  animations: ELEMENT_ANIMATIONS
+  animations: [...ELEMENT_ANIMATIONS_IN, ...ELEMENT_ANIMATIONS_OUT]
 })
 export class AlertsComponent implements OnInit {
 
@@ -179,6 +187,14 @@ export class AlertsComponent implements OnInit {
     alerts.elementsSubject.subscribe(element => {
       switch (element.what) {
         case 'start':
+          if(/(EXPAND)/.test(element['transition IN'])) {
+            element.innerTransitionIN = element['transition IN']
+            delete element['transition IN']
+          }
+          if(/(EXPAND)/.test(element['transition OUT'])) {
+            element.innerTransitionOUT = element['transition OUT']
+            delete element['transition OUT']
+          }
           this.currentElements.push(element)
           break
         case 'ended': 
