@@ -37,6 +37,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     document.documentElement.classList.remove('smooth-scrolling')
     this.alerts = await this.data.get(`alerts/${this.auth.currentUser?._id}`)
+    console.log(this.alerts)
     for(let al of this.alerts) {
       al.backup = JSON.stringify(al)
     }
@@ -63,7 +64,18 @@ export class AlertsComponent implements OnInit, OnDestroy {
     }
   }
 
-
+  async toggleEnabled(alert) {
+    let response = await this.data.patch(`alerts/${this.auth.currentUser?._id}`, cleanAlert(alert)) 
+    if(response) {
+      alert._id = response
+      this.data.send('alertsUpdated', {
+        userId: this.auth.currentUser?._id,
+        alerts: this.alerts
+      })
+    } else {
+      alert.enabled = !alert.enabled
+    }
+  }
 
   addAlert() {
     let alert: any = {
@@ -98,7 +110,6 @@ export class AlertsComponent implements OnInit, OnDestroy {
     }
   }
   async saveAlert(alert: _alert) {
-    console.log(alert)
     let valid = true
     alert.error = false
     if(alert.conditions.length < 1) {

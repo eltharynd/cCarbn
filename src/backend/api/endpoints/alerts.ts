@@ -45,6 +45,32 @@ export class AlertsRoutes {
         await userAlerts.save()
         res.send(alert._id)
       })
+      .patch(authMiddleware, async (req,res) => {
+        let alert = req.body
+        
+        let userAlerts: any = await Alerts.findOne({ userId: Mongo.ObjectId(req.params.userId) })
+        if(!userAlerts) userAlerts = await Alerts.create({ userId: Mongo.ObjectId(req.params.userId), alerts: []})
+        let alerts = userAlerts.alerts
+        
+        let found
+        if(alert._id) {
+          found = await from(alerts).pipe(
+            filter((e: any) => e._id === alert._id),
+            take(1)
+          ).toPromise()
+        }
+
+        if(found) {
+          alert._id = found._id ? found._id : uuid.v4()
+          alerts[alerts.indexOf(found)].enabled = !alert.enabled
+        } else {
+          alert._id = uuid.v4()
+          alerts.push(alert)
+        }
+        userAlerts.alerts = alerts
+        await userAlerts.save()
+        res.send(alert._id)
+      })
     Api.endpoints.route('/api/alerts/:userId/:alertId')
       .delete(authMiddleware, async (req,res) => {
         let userAlerts: any = await Alerts.findOne({ userId: Mongo.ObjectId(req.params.userId) })
