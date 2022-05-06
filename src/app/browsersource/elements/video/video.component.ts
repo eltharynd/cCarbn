@@ -39,9 +39,9 @@ export class VideoComponent implements OnInit {
       if(this.element.borderColor) {
         if(/rainbow/.test(this.element.borderColor)) {
           this.outerStyle.rainbow = true
-        } if(/vaporwave/.test(this.element.borderColor)) {
+        } else if(/vaporwave/.test(this.element.borderColor)) {
           this.outerStyle.vaporwave = true
-        } if(/custom/.test(this.element.borderColor)) {
+        } else if(/custom/.test(this.element.borderColor)) {
           this.outerStyle.backgroundColor = this.element.borderCustomColor||'#daa520'
         } else {
           this.outerStyle.backgroundColor = this.element.borderColor||'black'

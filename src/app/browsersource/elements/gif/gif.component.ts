@@ -30,7 +30,7 @@ export class GIFComponent implements OnInit {
                           this.element.borderStroke === 'thick' ? 16 :
                             this.element.borderStroke === 'thicker' ? 20 : 
                               this.element.borderStroke === 'thiccboi' ? 24 : 
-                                12
+                                  12
 
       this.outerStyle.width = +(+(this.element.width||this.element.mediaInformation?.width||1000) + 2*stroke) + 'px'
       this.outerStyle.height = +(+(this.element.height||this.element.mediaInformation?.height||1000) + 2*stroke) + 'px'
@@ -38,9 +38,9 @@ export class GIFComponent implements OnInit {
       if(this.element.borderColor) {
         if(/rainbow/.test(this.element.borderColor)) {
           this.outerStyle.rainbow = true
-        } if(/vaporwave/.test(this.element.borderColor)) {
+        } else if(/vaporwave/.test(this.element.borderColor)) {
           this.outerStyle.vaporwave = true
-        } if(/custom/.test(this.element.borderColor)) {
+        } else if(/custom/.test(this.element.borderColor)) {
           this.outerStyle.backgroundColor = this.element.borderCustomColor||'#daa520'
         } else {
           this.outerStyle.backgroundColor = this.element.borderColor||'black'

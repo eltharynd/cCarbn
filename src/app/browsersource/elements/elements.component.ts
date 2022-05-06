@@ -35,6 +35,7 @@ export const BORDER ={
   color: {
     black: 'Black',
     white: 'White',
+    transparent: 'Transparent',
     rainbow: 'Rainbow',
     vaporwave: 'Vaporwave',
     custom: 'Custom',
