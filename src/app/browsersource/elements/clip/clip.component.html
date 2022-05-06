@@ -10,10 +10,8 @@
                 (ended)="onPlaybackEnded()" 
                 (error)="onError($event)" allowfullscreen style="border:0">
         </iframe>  
-        <div class="cant-play" *ngIf="cantDisplay" [ngStyle]="innerStyle" >
-            Clips can't be played as tests...<br/>
-            This is a placeholder
+        <div class="cant-play" *ngIf="cantDisplay" [ngStyle]="innerStyle">
+            No clips found...
         </div>
-        <!-- <div id="clipPlayer"></div> -->
     </div>
 </div>
