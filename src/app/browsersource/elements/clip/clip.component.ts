@@ -37,10 +37,9 @@ export class ClipComponent implements OnInit {
     if(this.element.which === 'random') this.clip = this.element.alertData?.randomClip
     else if(this.element.which === 'topClip') this.clip = this.element.alertData?.topClip
 
+    console.log((+this.element.delay || 0 ))
     if(!this.clip) {
-      setTimeout(() => {
-        this.cantDisplay = true
-      }, (+this.element.delay || 0 ) * 1000);
+
       this.innerStyle.backgroundColor = '#0b0b0c'
       this.innerStyle.color = 'white'
       this.innerStyle.display = 'flex'
@@ -51,12 +50,17 @@ export class ClipComponent implements OnInit {
       this.innerStyle.textAlign = 'center';
       this.innerStyle.fontFamily = 'monospace';
       
+
       setTimeout(() => {
-        this.loaded = true
-      }, 500);
-      setTimeout(() => {
-        this.onPlaybackEnded()
-      }, 5 * 1000);
+        this.cantDisplay = true
+        setTimeout(() => {
+          this.loaded = true
+        }, 500);
+        setTimeout(() => {
+          this.onPlaybackEnded()
+        }, 5 * 1000);
+
+      }, (+this.element.delay || 0 ) * 1000);
     } else {
       setTimeout(() => {
         this.element.src = this.sanitizer.bypassSecurityTrustResourceUrl(this.clip.embed_url + 
@@ -116,7 +120,6 @@ export class ClipComponent implements OnInit {
   loaded: boolean
   onLoadedData() {
     this.loaded = true
-    console.log('loaded', this.clipPlayer.nativeElement)
     setTimeout(() => {
       this.onPlaybackEnded()
     }, +this.clip.duration * 1000);
@@ -128,7 +131,6 @@ export class ClipComponent implements OnInit {
   }
 
   onPlaybackEnded() {
-    console.log('ended')
     this.alerts.elementsSubject.next({
       type: 'clip',
       what: 'ended',
