@@ -77,7 +77,7 @@ export class Storeable extends Message {
         let cooldownPerUser: any = /\-\-cdpu/gi.test(buffer)
         if(cooldownPerUser) buffer = buffer.replace(/\-\-cdpu\s*/gi, '')
 
-        let modsOnly: any = /\-\-modsonly/gi.test(buffer)
+        let modsOnly: any = /\-\-mods/gi.test(buffer)
         if(modsOnly) buffer = buffer.replace(/\-\-mods\s*/gi, '')
 
         let streamerOnly: any = /\-\-streamer/gi.test(buffer)
