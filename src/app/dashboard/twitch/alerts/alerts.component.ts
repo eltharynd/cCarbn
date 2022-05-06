@@ -68,6 +68,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
   addAlert() {
     let alert: any = {
       name: 'An alert',
+      enabled: true,
       conditions: [
         {
           type: null,
@@ -97,6 +98,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
     }
   }
   async saveAlert(alert: _alert) {
+    console.log(alert)
     let valid = true
     alert.error = false
     if(alert.conditions.length < 1) {
@@ -623,7 +625,7 @@ export interface _alert {
   select?: boolean
   upload?: boolean
   activeTab?: number
-  disabled?: boolean
+  enabled?: boolean
 }
 
 const cleanAlert = (alert: _alert) => {
@@ -636,6 +638,7 @@ const cleanAlert = (alert: _alert) => {
   delete clone.changes
   delete clone.error
   delete clone.expanded
+  delete clone.disabled
   return clone
 }
 

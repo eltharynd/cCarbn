@@ -3,6 +3,7 @@ import * as merge from 'deepmerge'
 
 const ALERT_TEMPLATE = {
   name: 'An alert',
+  enabled: true,
   conditions: [{
     type: null,
     operator: null,

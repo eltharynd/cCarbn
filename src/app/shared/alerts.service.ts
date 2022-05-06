@@ -39,7 +39,7 @@ export class AlertsService {
 
       for(let alert of this.alerts) {
         
-        if(alert.disabled) continue
+        if(!alert.enabled) continue
 
         let ignore = false
         for(let c of alert.conditions) {

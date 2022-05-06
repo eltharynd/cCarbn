@@ -67,7 +67,7 @@
         <!-- HEADER -->
         <nb-accordion-item-header class="alert-header">
             <button nbButton status="primary" nbTooltip="Send test to browser source" nbTooltipStatus="primary" (click)="sendTestAlert($event, al)"><nb-icon icon="cast"></nb-icon></button>
-            <nb-toggle class="alert-toggle" (checkedChange)="saveAlert(al)" [(ngModel)]="!al.disabled" (click)="$event.stopPropagation()"></nb-toggle>
+            <nb-toggle class="alert-toggle" (checkedChange)="saveAlert(al)" [(ngModel)]="al.enabled" (click)="$event.stopPropagation()"></nb-toggle>
             <div class="alert-name">
                 {{al.name}}
             </div>
