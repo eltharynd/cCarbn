@@ -11,7 +11,8 @@ import { TTSComponent } from './elements/tts/tts.component';
 import { ObsComponent } from './elements/obs/obs.component';
 import { ChatComponent } from './elements/chat/chat.component';
 import { GIFComponent } from './elements/gif/gif.component';
-import { ImageComponent } from './elements/image/image.component'
+import { ImageComponent } from './elements/image/image.component';
+import { ClipComponent } from './elements/clip/clip.component'
 
  @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import { ImageComponent } from './elements/image/image.component'
     ChatComponent,
     GIFComponent,
     ImageComponent,
+    ClipComponent,
   ],
  })
  export class BrowserSourceModule {}

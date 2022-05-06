@@ -6,6 +6,7 @@
   
   <div [@in]="element.transitionIN" [@out]="element.transitionOUT" *ngFor="let element of currentElements">
     <app-video *ngIf="element?.type === 'video'" [element]=element [viewport]="viewport"></app-video>
+    <app-clip *ngIf="element?.type === 'clip'" [element]=element [viewport]="viewport"></app-clip>
     <app-audio *ngIf="element?.type === 'audio'" [element]=element></app-audio>
     <app-tts *ngIf="element?.type === 'tts'" [element]=element></app-tts>
     <app-obs *ngIf="element?.type === 'obs'" [element]=element></app-obs>

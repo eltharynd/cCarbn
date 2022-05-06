@@ -1,9 +1,11 @@
-import { HelixChannel } from '@twurple/api/lib'
+import { HelixChannel, HelixClip } from '@twurple/api/lib'
 import { TwitchPrivateMessage } from '@twurple/chat/lib/commands/TwitchPrivateMessage'
 import { from } from 'rxjs'
 import { filter, map, take, toArray } from 'rxjs/operators'
 import { Command } from '../../db/models/command'
 import { Mongo } from '../../db/mongo'
+import { toJSON } from '../../socket/events/util/toJSON'
+import { Socket } from '../../socket/socket'
 import { Twitch } from '../../twitch/twitch'
 import { MAX_CHAT_MESSAGE_LENGTH, Message } from '../message'
 
@@ -67,6 +69,11 @@ export class Storeable extends Message {
           buffer = buffer.replace(/\-\-cd\=\d+\s*/gi, '')
         } else cooldown = 0
 
+        let alertable: boolean = /\-\-alert/gi.test(buffer)
+        if(alertable) {
+          buffer = buffer.replace(/\-\-alert\s*/, '')
+        }
+
         let cooldownPerUser: any = /\-\-cdpu/gi.test(buffer)
         if(cooldownPerUser) buffer = buffer.replace(/\-\-cdpu\s*/gi, '')
 
@@ -106,6 +113,7 @@ export class Storeable extends Message {
           exists.answer = buffer
           exists.args = args
           exists.source = message
+          exists.alertable = alertable
           exists.cooldown = cooldown
           exists.cooldownPerUser = cooldownPerUser,
           exists.mods = modsOnly
@@ -128,6 +136,7 @@ export class Storeable extends Message {
             answer: buffer,
             args: args,
             source: message,
+            alertable: alertable,
             cooldown: cooldown,
             cooldownPerUser: cooldownPerUser,
             mods: modsOnly,
@@ -246,6 +255,8 @@ export class Storeable extends Message {
           return inputs.shift()
         }
 
+        let alertData: any = {}
+
         try {
           for (let i = 0; i < command.args.length; i++) {
             let arg = command.args[i]
@@ -275,6 +286,9 @@ export class Storeable extends Message {
                   answer = answer.replace(/\$streamer_id/, channel.displayName)
                   answer = answer.replace(/\$last_game/, lastGame)
                   answer = answer.replace(/\$status/, status)
+
+                  alertData.stream = stream
+                  alertData.channel = channel
                 } catch (err) {
                   this.client.say(channel, '/me I couldn\'t find that streamer...')
                   return
@@ -291,6 +305,31 @@ export class Storeable extends Message {
             this.client.timeout(channel, user, this.settings?.storeable?.timeout|1).catch(e => {})
           } 
 
+          if(command.alertable) {
+            //Socket.io
+            alertData.clips = (await Twitch.client.clips.getClipsForBroadcaster(alertData.channel.id)).data
+            alertData.randomClip = alertData.clips[Math.floor(Math.random()*alertData.clips.length)]
+            alertData.topClip = {views: -1}
+            for(let c of alertData.clips) {
+              let clip: HelixClip = c
+              clip.views > alertData.topClip.views
+              alertData.topClip = clip
+            }
+
+            if(alertData.topClip.views<0) delete alertData.topClip
+
+            if(alertData.clips) alertData.clips = toJSON(alertData.clips)
+            if(alertData.stream) alertData.stream = toJSON(alertData.stream)
+            if(alertData.randomClip) alertData.randomClip = toJSON(alertData.randomClip)
+            if(alertData.topClip) alertData.topClip = toJSON(alertData.topClip)
+
+            Socket.io.to(this.iClient.userId).emit('alerts', {
+              type: 'Command',
+              command: command.command,
+              alertData: alertData
+            })
+          }
+          
           if(answer?.length>0) {
 
             let random = answer.match(new RegExp(RGX_RAND))

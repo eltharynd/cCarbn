@@ -73,7 +73,7 @@
             </div>
             <div class="alert-details">
                 <div *ngFor="let c of al.conditions; let i = index" style="white-space: pre-line;">
-                    <strong>{{_primaryConditions[c.type]}}</strong> - {{_operators.all()[c.operator]}} {{c.compared?.title ? c.compared.title : _userTypes.hasOwnProperty(c.compared+'') ? _userTypes[c.compared] : c.compared}}
+                    <strong>{{_primaryConditions[c.type]}}</strong> - {{_operators.all()[c.operator]}} {{c.compared?.command ? c.compared.command : c.compared?.title ? c.compared.title : _userTypes.hasOwnProperty(c.compared+'') ? _userTypes[c.compared] : c.compared}}
                     <strong *ngIf="i+1 < al.conditions.length">&nbsp;AND&nbsp;</strong>
                 </div>
             </div>
@@ -90,7 +90,7 @@
 
                             <!-- OPERATORS -->
                             <div class="field-container">
-                                <nb-select [(selected)]="c.type" (selectedChange)="al.changes=true; c.operator=null; c.compared=null" fullWidth>
+                                <nb-select [(selected)]="c.type" (selectedChange)="al.changes=true; c.operator=null; c.compared=null; al.buffer = (c.type==='' ? getUserCommands() : null);" fullWidth>
                                     <nb-option disabled>-- Primary --</nb-option>
                                     <nb-option  *ngFor="let type of _primaryConditions | keyvalue: originalOrder" 
                                                 [value]="type.key"
@@ -183,6 +183,12 @@
                                     <nb-option *ngFor="let o of _subTiers | keyvalue: originalOrder" [value]=o.key>{{o.value}}</nb-option>
                                 </nb-select>
                                 <div class="anchor"><label>Tiers</label></div>
+                            </div>
+                            <div *ngIf="c.type === 'command'" class="field-container">
+                                <nb-select [(selected)]="c.compared" [placeholder]="userCommands && c.compared?._id && userCommands[c.compared?._id] ? userCommands[c.compared._id].command : 'Select a command'" (selectedChange)="al.changes=true" fullWidth>
+                                    <nb-option *ngFor="let c of userCommands | keyvalue: originalOrder" [value]=c.value>{{c.value!.command}}</nb-option>
+                                </nb-select>
+                                <div class="anchor"><label>Which</label></div>
                             </div>
 
                             <button nbButton status="danger" [disabled]="al.conditions.length<2 || i===0" (click)="deleteCondition(al, c)"><nb-icon icon="trash-2"></nb-icon></button>
@@ -481,6 +487,21 @@
                                     <div *ngFor="let keyword of _chat.keywords | keyvalue: originalOrder;">
                                         <div>{{keyword.key}}:</div>
                                         <div>{{keyword.value}}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div #clip *ngIf="elem.type==='clip'" class="clip-container">
+                                <div class="clip-inner">
+                                    <div class="field-container">
+                                        <nb-select [placeholder]="elem.which||_clip.which.random" [(selected)]="elem.which" (selectedChange)="al.changes=true;" fullWidth>
+                                            <nb-option *ngFor="let t of _clip.which | keyvalue: originalOrder" [value]="t.key">{{t.value}}</nb-option>
+                                        </nb-select>
+                                        <div class="anchor"><label>Which</label></div>
+                                    </div>
+                                    <div class="field-container">
+                                        <input nbInput type="number" [placeholder]="'Delay in seconds'" [(ngModel)]="elem.delay" ((change))="al.changes=true;" fullWidth>
+                                        <div class="anchor"><label>Delay execution</label></div>
                                     </div>
                                 </div>
                             </div>

@@ -44,6 +44,8 @@ export class AlertsComponent implements OnInit, OnDestroy {
     this.data.send('requestOBSlist', {
       userId: this.auth.currentUser?._id
     })
+
+    this.getUserCommands()
   }
 
   async ngOnDestroy() {
@@ -271,6 +273,17 @@ export class AlertsComponent implements OnInit, OnDestroy {
     element.upload = false;
   }
 
+  userCommands = {}
+  async getUserCommands() {
+    let response = await this.data.get(`user/${this.auth.currentUser?._id}/commands/alertable`)
+    if(response) {
+      let buffer = {}
+      for(let c of response) {
+        buffer[c._id] = c
+      }
+      this.userCommands = buffer
+    }
+  }
 
   async videoSelected(alert: _alert, element) {
     let fileName = element.src.replace(SERVER_URL,'').replace(/^.+\//g, '')
@@ -321,7 +334,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
     element.mediaInformation = mediaInformation
   }
 
-  originalOrder = (a: KeyValue<string,string>, b: KeyValue<string,string>): number => {
+  originalOrder = (a: KeyValue<string,any>, b: KeyValue<string,any>): number => {
     return 0;
   }
 
@@ -333,6 +346,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
     subscription: 'Subscription',
     raid: 'Raid',
     ban: 'Ban or Timeout',
+    command: 'Chat command'
   }
   _secondaryConditions = {
     user: 'User',
@@ -609,6 +623,12 @@ export class AlertsComponent implements OnInit, OnDestroy {
       "$duration": "The time left for timeout",
     }
   }
+  _clip = {
+    which: {
+      random: 'A random recent clip from the user (or @streamer)',
+      topClip: 'The top recent clip from the user (or @streamer)',
+    }
+  }
 
   _BORDER = BORDER
 }
@@ -636,6 +656,7 @@ export interface _alert {
   upload?: boolean
   activeTab?: number
   enabled?: boolean
+  buffer?: any
 }
 
 const cleanAlert = (alert: _alert) => {
@@ -649,6 +670,7 @@ const cleanAlert = (alert: _alert) => {
   delete clone.error
   delete clone.expanded
   delete clone.disabled
+  delete clone.buffer
   return clone
 }
 

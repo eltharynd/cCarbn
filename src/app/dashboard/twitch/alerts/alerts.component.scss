@@ -332,6 +332,40 @@ input {
     }
 }
 
+.clip-container {
+    padding: 2rem;
+    
+    > .field-container:first-child {
+        margin-top: 1rem;
+        margin-bottom: 4rem;
+    }
+    .clip-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 2rem;
+        > * {
+            width: 100%;
+            margin-left: .5rem;
+            margin-right: .5rem;
+        }
+        > *:first-child {
+            margin-left: 0;
+        }
+        > *:last-child {
+            margin-right: 0;
+        }
+    }
+    .obs-inner:last-child {
+        margin-bottom: 2rem;
+    }
+}
+@media only screen and (max-width:700px) {
+    .clip-container {
+        padding: 2rem 0.2rem;
+    }
+}
+
 .chat-container {
     padding: 1rem;
 

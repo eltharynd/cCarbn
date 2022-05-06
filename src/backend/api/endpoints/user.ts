@@ -9,6 +9,7 @@ import { Mongo } from "../../db/mongo"
 import * as merge from 'deepmerge'
 import { toJSON } from "../../socket/events/util/toJSON"
 import { from, map, toArray } from "rxjs"
+import { Command } from "../../db/models/command"
 
 export class UserRoutes {
 
@@ -60,6 +61,10 @@ export class UserRoutes {
       res.send(uploads)
     })
 
+    Api.endpoints.get('/api/user/:userId/commands/alertable', authMiddleware, async (req, res) => {
+      let commands: any = await Command.find({userId: Mongo.ObjectId(req.params.userId), alertable: true})
+      res.send(commands)
+    })
 
     Api.endpoints.get('/api/user/:userId/settings', authMiddleware,  async (req, res) => {
       let found: any = await Settings.findOne({userId: req.params.userId})

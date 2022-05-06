@@ -33,8 +33,6 @@ export class AlertsService {
     })
     
     this.data.socketIO.on('alerts', async data => {
-      console.info('alert received', data)
-
       let user = data.user_name||null
 
       for(let alert of this.alerts) {
@@ -183,6 +181,8 @@ export class AlertsService {
             ignore = (c.operator === 'banned' && (data.type !== 'Ban' || !data.is_permanent)) ||
                       (c.operator === 'timeout' && (data.type !== 'Ban' || data.is_permanent)) ||
                       (c.operator === 'unbanned' && data.type !== 'Unban')
+          } else if(c.type === 'command') {
+            ignore = data.type!=='Command' || c.compared?.command!==data.command
           }
 
           if(ignore) break
@@ -212,6 +212,8 @@ export class AlertsService {
                 element.text = data.user_input
                 break
             }
+          } else if(element.type === 'clip') {
+            element.alertData = data.alertData
           }
           if(element.text) {
             element.text = this.populateText(element.text, data)
@@ -323,4 +325,5 @@ export enum ELEMENT_TYPES {
   tts = 'TTS',
   chat = 'Chat Message',
   obs = 'OBS',
+  clip = 'Clip',
 }

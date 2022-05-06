@@ -86,6 +86,10 @@ export class ChatbotComponent {
         key: '--streamer',
         description: 'Only the streamer is allowed to exceute this command. (default false)'
       },
+      {
+        key: '--alert',
+        description: 'Will be flagged to be capturable as an alert (default false)'
+      },
     ]
   }
 
