@@ -187,6 +187,10 @@ export class AlertsComponent implements OnInit, OnDestroy {
     if(index>=0) {
       this.alerts.splice(index, 1)
     }
+    this.data.send('alertsUpdated', {
+      userId: this.auth.currentUser?._id,
+      alerts: this.alerts
+    })
     return true
   }
 
