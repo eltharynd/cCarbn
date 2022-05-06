@@ -37,7 +37,6 @@ export class AlertsComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     document.documentElement.classList.remove('smooth-scrolling')
     this.alerts = await this.data.get(`alerts/${this.auth.currentUser?._id}`)
-    console.log(this.alerts)
     for(let al of this.alerts) {
       al.backup = JSON.stringify(al)
     }
