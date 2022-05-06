@@ -1,6 +1,6 @@
 <div class="viewport-flex" [ngStyle]="viewportStyle" [style.opacity]="!element.loaded ? '0' : 'initial'">
     
-    <div [@innerIN]="element.loaded ? element.innerTransitionIN : 'loading'" [@innerOUT]="element.innerTransitionOUT" [ngStyle]="outerStyle" class="outer-container" [class.rainbow]="outerStyle.rainbow" [class.vaporwave]="outerStyle.vaporwave" style="background-color: red;">
+    <div [@innerIN]="element.loaded ? element.innerTransitionIN : 'loading'" [@innerOUT]="element.innerTransitionOUT" [ngStyle]="outerStyle" class="outer-container" [class.rainbow]="outerStyle.rainbow" [class.vaporwave]="outerStyle.vaporwave">
         <iframe [ngStyle]="innerStyle"
                 [src]="element.src"
                 (error)="onError($event)"
