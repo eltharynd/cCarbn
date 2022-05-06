@@ -8,7 +8,7 @@
                 #clipPlayer 
                 (load)="onLoadedData()" 
                 (ended)="onPlaybackEnded()" 
-                (error)="onError($event)" allowfullscreen>
+                (error)="onError($event)" allowfullscreen style="border:0">
         </iframe>  
         <div class="cant-play" *ngIf="cantDisplay" [ngStyle]="innerStyle">
             Clips can't be played as tests...<br/>
