@@ -1,13 +1,21 @@
+import { animate, style, transition, trigger } from '@angular/animations'
 import {  Component, ElementRef, Input, OnInit, SecurityContext, ViewChild } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser'
 import { AlertsService } from '../../../shared/alerts.service'
-import { ElementsComponent, ELEMENT_ANIMATIONS_IN, ELEMENT_ANIMATIONS_OUT_INNER } from '../elements.component'
+import { ElementsComponent, ELEMENT_ANIMATIONS_IN_INNER, ELEMENT_ANIMATIONS_OUT_INNER } from '../elements.component'
 
 @Component({
   selector: 'app-clip',
   templateUrl: './clip.component.html',
   styleUrls: ['../elements.component.scss'],
-  animations: [ ...ELEMENT_ANIMATIONS_IN, ...ELEMENT_ANIMATIONS_OUT_INNER]
+  animations: [ ...ELEMENT_ANIMATIONS_IN_INNER, ...ELEMENT_ANIMATIONS_OUT_INNER,
+    trigger('delayed', [
+      transition('void => FADE', [
+        style({opacity: 0}),
+        animate('5000ms ease', style({}))
+      ])
+    ])
+  ]
 })
 export class ClipComponent implements OnInit {
 
@@ -24,8 +32,7 @@ export class ClipComponent implements OnInit {
   outerStyle: any = {}
   innerStyle: any = {}
   ngOnInit() {
-    console.log('clip', this.element)
-  
+
     if(!this.element.playerScale) this.element.playerScale = 100
 
     let width = +this.element.playerScale/100 * 512
@@ -37,7 +44,6 @@ export class ClipComponent implements OnInit {
     if(this.element.which === 'random') this.clip = this.element.alertData?.randomClip
     else if(this.element.which === 'topClip') this.clip = this.element.alertData?.topClip
 
-    console.log((+this.element.delay || 0 ))
     if(!this.clip) {
 
       this.innerStyle.backgroundColor = '#0b0b0c'
@@ -54,7 +60,7 @@ export class ClipComponent implements OnInit {
       setTimeout(() => {
         this.cantDisplay = true
         setTimeout(() => {
-          this.loaded = true
+          this.element.loaded = true
         }, 500);
         setTimeout(() => {
           this.onPlaybackEnded()
@@ -117,9 +123,8 @@ export class ClipComponent implements OnInit {
     this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element, this.outerStyle)
   }
 
-  loaded: boolean
   onLoadedData() {
-    this.loaded = true
+    this.element.loaded = true
     setTimeout(() => {
       this.onPlaybackEnded()
     }, +this.clip.duration * 1000);

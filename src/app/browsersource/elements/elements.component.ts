@@ -56,58 +56,72 @@ export enum TRANSITION {
   SWIPE_LEFT = 'Swipe left',
   SWIPE_RIGHT = 'Swipe right',
 }
+
 export const ELEMENT_ANIMATIONS_IN = [
   trigger('in', [
 
+    transition('void => loading', []),
 
-    transition(`void => FADE`, [
+    transition(`loading => FADE`, [
       style({opacity: 0}),
       animate('500ms ease', style({}))
     ]),
    
-    transition(`void => POP_UP`, [
+    transition(`loading => POP_UP`, [
       style({opacity: 0, transform: 'translateX(-10px) translateY(30px)'}),
       animate('500ms ease', style({}))
     ]),
-    transition(`void => POP_DOWN`, [
+    transition(`loading => POP_DOWN`, [
       style({opacity: 0, transform: 'translateX(-10px) translateY(-30px)'}),
       animate('500ms ease', style({}))
     ]),
 
-    transition(`void => UNPOP_UP`, [
+    transition(`loading => UNPOP_UP`, [
       style({opacity: 0, transform: 'translateX(10px) translateY(30px)'}),
       animate('500ms ease', style({}))
     ]),
 
-    transition(`void => UNPOP_DOWN`, [
+    transition(`loading => UNPOP_DOWN`, [
       style({opacity: 0, transform: 'translateX(10px) translateY(-30px)'}),
       animate('500ms ease', style({}))
     ]),
 
-    transition(`void => SWIPE_RIGHT`, [
+    transition(`loading => SWIPE_RIGHT`, [
       style({opacity: 0, transform: 'rotate(90deg) translateX(-2000px)'}),
       animate('500ms ease', style({}))
     ]),
-    transition(`void => SWIPE_LEFT`, [
+    transition(`loading => SWIPE_LEFT`, [
       style({opacity: 0, transform: 'rotate(-90deg) translateX(2000px)'}),
       animate('500ms ease', style({}))
     ]),
+    transition(`:enter`, [
+      group([
+        query('@*', [
+          animateChild(),
+        ]),
+      ])
+    ])
+  ])
+]
+export const ELEMENT_ANIMATIONS_IN_INNER = [
+  trigger('innerIN', [
 
-    transition(`void => EXPAND`, [
+    transition(`loading => EXPAND`, [
       style({opacity: 0, transform: 'scale(0)'}),
       animate('500ms ease', style({}))
     ]),
-    transition(`void => EXPAND_HOR`, [
+    transition(`loading => EXPAND_HOR`, [
       style({opacity: 0, transform: 'scaleX(0)'}),
       animate('500ms ease', style({}))
     ]),
-    transition(`void => EXPAND_VER`, [
+    transition(`loading => EXPAND_VER`, [
       style({opacity: 0, transform: 'scaleY(0)'}),
       animate('500ms ease', style({}))
     ]),
 
   ])
 ]
+
 export const ELEMENT_ANIMATIONS_OUT = [
   trigger('out', [
 
@@ -145,7 +159,7 @@ export const ELEMENT_ANIMATIONS_OUT = [
     ]),
     transition(`:leave`, [
       group([
-        query('@innerOUT', [
+        query('@*', [
           animateChild(),
         ]),
       ])
@@ -154,6 +168,7 @@ export const ELEMENT_ANIMATIONS_OUT = [
 ]
 export const ELEMENT_ANIMATIONS_OUT_INNER = [
   trigger('innerOUT', [
+
     transition(`EXPAND => void`, [
       style({}),
       animate('500ms ease', style({opacity: 0, transform: 'scale(0)'}))
@@ -166,6 +181,7 @@ export const ELEMENT_ANIMATIONS_OUT_INNER = [
       style({}),
       animate('500ms ease', style({opacity: 0, transform: 'scaleY(0)'}))
     ]),
+
   ])
 ]
 
@@ -189,13 +205,13 @@ export class ElementsComponent implements OnInit {
     alerts.elementsSubject.subscribe(element => {
       switch (element.what) {
         case 'start':
-          if(/(EXPAND)/.test(element.transitionIN)) {
+          if(/EXPAND/.test(element.transitionIN)) {
             element.innerTransitionIN = element.transitionIN
-            delete element.transitionIN
+            //delete element.transitionIN
           }
-          if(/(EXPAND)/.test(element.transitionOUT)) {
+          if(/EXPAND/.test(element.transitionOUT)) {
             element.innerTransitionOUT = element.transitionOUT
-            delete element.transitionOUT
+            //delete element.transitionOUT
           }
           this.currentElements.push(element)
           break

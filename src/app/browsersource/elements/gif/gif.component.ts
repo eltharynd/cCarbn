@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertsService } from '../../../shared/alerts.service'
-import { ElementsComponent, ELEMENT_ANIMATIONS_IN, ELEMENT_ANIMATIONS_OUT_INNER } from '../elements.component'
+import { ElementsComponent, ELEMENT_ANIMATIONS_IN_INNER, ELEMENT_ANIMATIONS_OUT_INNER } from '../elements.component'
 
 @Component({
   selector: 'app-gif',
   templateUrl: './gif.component.html',
   styleUrls: ['../elements.component.scss'],
-  animations: [ ...ELEMENT_ANIMATIONS_IN, ...ELEMENT_ANIMATIONS_OUT_INNER]
+  animations: [ ...ELEMENT_ANIMATIONS_IN_INNER, ...ELEMENT_ANIMATIONS_OUT_INNER]
 })
 export class GIFComponent implements OnInit {
 
@@ -65,9 +65,8 @@ export class GIFComponent implements OnInit {
     this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element, this.outerStyle)
   }
 
-  loaded: boolean
   onLoadedData() {
-    this.loaded = true
+    this.element.loaded = true
     setTimeout(() => {
       this.onPlaybackEnded()
     }, (+this.element.duration||5)*1000);

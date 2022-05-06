@@ -4,7 +4,7 @@
   padding: viewport.padding+'px'
 }">
   
-  <div [@in]="element.transitionIN" [@out]="element.transitionOUT" *ngFor="let element of currentElements">
+  <div [@in]="element.loaded ? element.transitionIN : 'loading'" [@out]="element.transitionOUT" *ngFor="let element of currentElements">
     <app-video *ngIf="element?.type === 'video'" [element]=element [viewport]="viewport"></app-video>
     <app-clip *ngIf="element?.type === 'clip'" [element]=element [viewport]="viewport"></app-clip>
     <app-audio *ngIf="element?.type === 'audio'" [element]=element></app-audio>
