@@ -97,7 +97,7 @@ export class Socket {
 
       socket.on('alertsUpdated', (data) => {
         if(data.userId) {
-          socket.to(data.userId).emit('alertsUpdated', data.alerts)
+          socket.to(data.userId).emit('alertsUpdated', data)
         }
       })
 
