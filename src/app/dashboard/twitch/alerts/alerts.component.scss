@@ -33,26 +33,30 @@ input {
 
 .alert-header {
     justify-content: space-between;
-}
-.alert-name {
-    margin-left: 1rem;
-}
-.alert-details {
-    font-size: smaller;
-    flex-grow: 1;
-    text-align: right;
-    margin-left: 1rem;
-    padding-left: 1rem;
-    padding-right: 3rem;
-    
-    > * {
-        color: rgb(226, 226, 226);
-        > strong {
-            color: white;
-            text-transform: uppercase;
+    .alert-toggle {
+        margin-left: 1rem;
+    }
+    >.alert-name {
+        margin-left: 1rem;
+    }
+    >.alert-details {
+        font-size: smaller;
+        flex-grow: 1;
+        text-align: right;
+        margin-left: 1rem;
+        padding-left: 1rem;
+        padding-right: 3rem;
+        
+        > * {
+            color: rgb(226, 226, 226);
+            > strong {
+                color: white;
+                text-transform: uppercase;
+            }
         }
     }
 }
+
 
 
 .alert-card {

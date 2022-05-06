@@ -67,6 +67,7 @@
         <!-- HEADER -->
         <nb-accordion-item-header class="alert-header">
             <button nbButton status="primary" nbTooltip="Send test to browser source" nbTooltipStatus="primary" (click)="sendTestAlert($event, al)"><nb-icon icon="cast"></nb-icon></button>
+            <nb-toggle class="alert-toggle" (checkedChange)="saveAlert(al)" [(ngModel)]="!al.disabled" (click)="$event.stopPropagation()"></nb-toggle>
             <div class="alert-name">
                 {{al.name}}
             </div>
@@ -78,7 +79,7 @@
             </div>
         </nb-accordion-item-header>
 
-        <!-- OPERATORS AND ELEMENTS -->
+        <!-- TRIGGERS AND ELEMENTS -->
         <nb-accordion-item-body class="centered-nested">
             <nb-card class="alert-card">
 
@@ -259,6 +260,7 @@
 
                                     <nb-accordion class="lighter">
 
+                                        <!-- MANDATORY SETTINGS -->
                                         <nb-accordion-item expanded>
                                             <nb-accordion-item-header>
                                                 Primary Settings
@@ -266,26 +268,48 @@
                                             <nb-accordion-item-body class="settings-unpadded">
                                                 <nb-list>
                                                     <nb-list-item *ngFor="let o of _options[elem.type].mandatory | keyvalue: originalOrder">
-                                                        <div class="key">{{o.key}}</div>
-                                                        <div class="value" *ngIf="o.value==='pixel' || o.value==='seconds'">
+                                                        <div class="key">{{o.value}}</div>
+                                                        <div class="value" *ngIf="_options[elem.type].units[o.key]==='px' || _options[elem.type].units[o.key]==='s'">
                                                             <input nbInput type="number" [placeholder]="_options[elem.type].default.hasOwnProperty(o.key) ? _options[elem.type].default[o.key] : null" [(ngModel)]="elem[o.key]" (change)="al.changes=true" fullWidth>
-                                                            <div class="unit">{{o.value}}</div>
+                                                            <div class="unit">{{_options[elem.type].units[o.key]}}</div>
                                                         </div>
-                                                        <div class="value" *ngIf="o.value === 'POSITION'">
+                                                        <div class="value" *ngIf="_options[elem.type].units[o.key]==='POSITION'">
                                                             <nb-select [placeholder]="_options[elem.type].default[o.key] ? _options[elem.type].default[o.key] : 'Select one'" [(selected)]="elem.position" (selectedChange)="al.changes=true" fullWidth>
-                                                                <nb-option *ngFor="let p of _POSITION | keyvalue : originalOrder" [value]="p.value">{{p.value}}</nb-option>
+                                                                <nb-option *ngFor="let p of _POSITION | keyvalue : originalOrder" [value]="p.key">{{p.value}}</nb-option>
                                                             </nb-select>
                                                         </div>
-                                                        <div class="value" *ngIf="o.value === 'TRANSITION'">
+                                                        <div class="value" *ngIf="_options[elem.type].units[o.key]==='TRANSITION'">
                                                             <nb-select [placeholder]="_TRANSITION[elem[o.key]] ? _TRANSITION[elem[o.key]] :  _options[elem.type].default[o.key] ? _options[elem.type].default[o.key] : 'Select one'" [(selected)]="elem[o.key]" (selectedChange)="al.changes=true" fullWidth>
                                                                 <nb-option *ngFor="let t of _TRANSITION | keyvalue : originalOrder" [value]="t.key">{{t.value}}</nb-option>
                                                             </nb-select>
+                                                        </div>
+                                                    </nb-list-item>
+                                                    <nb-list-item *ngIf="elem.position==='MANUAL'">
+                                                        <div class="key">Position X</div>
+                                                        <div class="value">
+                                                            <input nbInput type="number" [(ngModel)]="elem.targetX" placeholder="Center point X" (change)="al.changes=true" fullWidth>
+                                                            <div class="unit">px</div>
+                                                        </div>
+                                                    </nb-list-item>
+                                                    <nb-list-item *ngIf="elem.position==='MANUAL'">
+                                                        <div class="key">Position Y</div>
+                                                        <div class="value">
+                                                            <input nbInput type="number" [(ngModel)]="elem.targetY" placeholder="Center point Y" (change)="al.changes=true" fullWidth>
+                                                            <div class="unit">px</div>
+                                                        </div>
+                                                    </nb-list-item>
+                                                    <nb-list-item *ngIf="elem.position==='MANUAL'">
+                                                        <div class="key">Position padding</div>
+                                                        <div class="value" style="justify-content: flex-end;">
+                                                            <nb-toggle [(ngModel)]="elem.ignorePadding" style="margin-right: 0.5rem;"></nb-toggle>
+                                                            <div class="unit">{{elem.ignorePadding ? 'Ignore viewport padding' : 'Within viewport padding'}}</div>
                                                         </div>
                                                     </nb-list-item>
                                                 </nb-list>
                                             </nb-accordion-item-body>
                                         </nb-accordion-item>
 
+                                        <!-- BORDER SETTINGS -->
                                         <nb-accordion-item>
                                             <nb-accordion-item-header>
                                                 Border Settings
@@ -327,6 +351,7 @@
                                             </nb-accordion-item-body>
                                         </nb-accordion-item>
       
+                                        <!-- ADDITIONAL SETTINGS -->
                                         <nb-accordion-item>
                                             <nb-accordion-item-header>
                                                 Additional Settings
@@ -334,15 +359,10 @@
                                             <nb-accordion-item-body class="unpadded">
                                                 <nb-list>
                                                     <nb-list-item *ngFor="let o of _options[elem.type].additional | keyvalue: originalOrder">
-                                                        <div class="key">{{o.key}}:</div>
-                                                        <div class="value" *ngIf="o.value==='pixel' || o.value==='seconds'">
+                                                        <div class="key">{{o.value}}:</div>
+                                                        <div class="value" *ngIf="_options[elem.type].units[o.key]==='px' || o.value==='s'">
                                                             <input nbInput type="number" [(ngModel)]="elem[o.key]" (change)="al.changes=true" fullWidth>
-                                                            <div class="unit">{{o.value}}</div>
-                                                        </div>
-                                                        <div class="value" *ngIf="o.value === 'POSITION'">
-                                                            <nb-select placeholder="Select one" [(selected)]="elem.position" (selectedChange)="al.changes=true" fullWidth>
-                                                                <nb-option *ngFor="let p of _POSITION | keyvalue : originalOrder" [value]="p.key">{{p.value}}</nb-option>
-                                                            </nb-select>
+                                                            <div class="unit">{{_options[elem.type].units[o.key]}}</div>
                                                         </div>
                                                     </nb-list-item>
                                                 </nb-list>

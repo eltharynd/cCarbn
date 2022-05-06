@@ -13,7 +13,8 @@ export enum POSITION {
   RIGHT = 'RIGHT',
   BOTTOM_LEFT = 'BOTTOM_LEFT',
   BOTTOM = 'BOTTOM',
-  BOTTOM_RIGHT = 'BOTTOM_RIGHT'
+  BOTTOM_RIGHT = 'BOTTOM_RIGHT',
+  MANUAL = 'Manual XY'
 }
 
 export const BORDER ={
@@ -187,13 +188,13 @@ export class ElementsComponent implements OnInit {
     alerts.elementsSubject.subscribe(element => {
       switch (element.what) {
         case 'start':
-          if(/(EXPAND)/.test(element['transition IN'])) {
-            element.innerTransitionIN = element['transition IN']
-            delete element['transition IN']
+          if(/(EXPAND)/.test(element.transitionIN)) {
+            element.innerTransitionIN = element.transitionIN
+            delete element.transitionIN
           }
-          if(/(EXPAND)/.test(element['transition OUT'])) {
-            element.innerTransitionOUT = element['transition OUT']
-            delete element['transition OUT']
+          if(/(EXPAND)/.test(element.transitionOUT)) {
+            element.innerTransitionOUT = element.transitionOUT
+            delete element.transitionOUT
           }
           this.currentElements.push(element)
           break
@@ -218,7 +219,7 @@ export class ElementsComponent implements OnInit {
     }
   }
 
-  public static elementViewportStyle(viewport, element): any {
+  public static elementViewportStyle(viewport, element, outerStyle?): any {
     let style: any = {}
     style.width = (+viewport.width - (+viewport.padding*2))+'px'
     style.height =(+viewport.height - (+viewport.padding*2))+'px'
@@ -227,6 +228,18 @@ export class ElementsComponent implements OnInit {
 
       if(/MANUAL/.test(element.position)) {
         //TODO HANDLE MANUAL POSITIONING
+        try {
+          let _width = parseInt(outerStyle.width.replace('px', ''))
+          let _height = parseInt(outerStyle.height.replace('px', ''))
+          console.log(`Outer: ${_width} by ${_height}`)
+
+          let _targetX = +element.targetX
+          let _targetY = +element.targetY
+
+          style.paddingLeft = `${_targetX - _width/2 - (element.ignorePadding ? +viewport.padding : 0)}px`
+          style.paddingTop = `${_targetY - _height/2 - (element.ignorePadding ? +viewport.padding : 0)}px`
+        } catch(e) { }
+        
       } else {
         style.display = 'flex'
         style.alignItems = 'center'
@@ -250,6 +263,9 @@ export class ElementsComponent implements OnInit {
       style.alignItems = 'center'
       style.justifyContent = 'center' 
     }
+
+    outerStyle.marginLeft = `${element.offsetX}px`
+    outerStyle.marginTop = `${element.offsetY}px`
     
     return style
   }

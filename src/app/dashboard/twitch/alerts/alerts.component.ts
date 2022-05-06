@@ -56,8 +56,6 @@ export class AlertsComponent implements OnInit, OnDestroy {
     this.copied = 'Browser Source URL copied!'
   }
 
-
-
   sendTestAlert(pointerEvent, alert) {
     pointerEvent.stopPropagation()
     for(let element of alert.elements) {
@@ -400,22 +398,30 @@ export class AlertsComponent implements OnInit, OnDestroy {
   _options = {
     video: {
       mandatory: {
-        position: 'POSITION',
-        "transition IN": 'TRANSITION',
-        "transition OUT": 'TRANSITION',
+        position: 'Position',
+        transitionIN: 'Transition IN',
+        transitionOUT: 'Transition OUT',
       },
       default: {
         position: POSITION.CENTER,
-        "transition IN": TRANSITION.NONE,
-        "transition OUT": TRANSITION.NONE,
+        transitionIN: TRANSITION.NONE,
+        transitionOUT: TRANSITION.NONE,
       },
       additional: {
-        width: 'pixel',
-        height: 'pixel',
-        marginTop: 'pixel',
-        marginRight: 'pixel',
-        marginBottom: 'pixel',
-        marginLeft: 'pixel',
+        width: 'Width override',
+        height: 'Height override',
+        offsetX: 'X offset',
+        offsetY: 'Y offset',
+      },
+      units: {
+        duration: 's',
+        position: 'POSITION',
+        transitionIN: 'TRANSITION',
+        transitionOUT: 'TRANSITION',
+        width: 'px',
+        height: 'px',
+        offsetX: 'px',
+        offsetY: 'px',
       }
     },
     audio: {
@@ -428,46 +434,62 @@ export class AlertsComponent implements OnInit, OnDestroy {
     },
     gif: {
       mandatory: {
-        duration: 'seconds',
-        position: 'POSITION',
-        "transition IN": 'TRANSITION',
-        "transition OUT": 'TRANSITION',
+        duration: 'Duration',
+        position: 'Position',
+        transitionIN: 'Transition IN',
+        transitionOUT: 'Transition OUT',
       },
       default: {
         duration: 5,
         position: POSITION.CENTER,
-        "transition IN": TRANSITION.NONE,
-        "transition OUT": TRANSITION.NONE,
+        transitionIN: TRANSITION.NONE,
+        transitionOUT: TRANSITION.NONE,
       },
       additional: {
-        width: 'pixel',
-        height: 'pixel',
-        marginTop: 'pixel',
-        marginRight: 'pixel',
-        marginBottom: 'pixel',
-        marginLeft: 'pixel',
+        width: 'Width override',
+        height: 'Height override',
+        offsetX: 'X offset',
+        offsetY: 'Y offset',
+      },
+      units: {
+        duration: 's',
+        position: 'POSITION',
+        transitionIN: 'TRANSITION',
+        transitionOUT: 'TRANSITION',
+        width: 'px',
+        height: 'px',
+        offsetX: 'px',
+        offsetY: 'px',
       }
     },
     image: {
       mandatory: {
-        duration: 'seconds',
-        position: 'POSITION',
-        "transition IN": 'TRANSITION',
-        "transition OUT": 'TRANSITION',
+        duration: 'Duration',
+        position: 'Position',
+        transitionIN: 'Transition IN',
+        transitionOUT: 'Transition OUT',
       },
       default: {
         duration: 5,
         position: POSITION.CENTER,
-        "transition IN": TRANSITION.NONE,
-        "transition OUT": TRANSITION.NONE,
+        transitionIN: TRANSITION.NONE,
+        transitionOUT: TRANSITION.NONE,
       },
       additional: {
-        width: 'pixel',
-        height: 'pixel',
-        marginTop: 'pixel',
-        marginRight: 'pixel',
-        marginBottom: 'pixel',
-        marginLeft: 'pixel',
+        width: 'Width override',
+        height: 'Height override',
+        offsetX: 'X offset',
+        offsetY: 'Y offset',
+      },
+      units: {
+        duration: 's',
+        position: 'POSITION',
+        transitionIN: TRANSITION.NONE,
+        transitionOUT: TRANSITION.NONE,
+        width: 'px',
+        height: 'px',
+        offsetX: 'px',
+        offsetY: 'px',
       }
     }
   }
@@ -601,6 +623,7 @@ export interface _alert {
   select?: boolean
   upload?: boolean
   activeTab?: number
+  disabled?: boolean
 }
 
 const cleanAlert = (alert: _alert) => {

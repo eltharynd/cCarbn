@@ -25,7 +25,7 @@ let startApp = async () => {
 
   console.info('CONNECTING TO TWITCH...')
 
-  await Twitch.init()
+  //await Twitch.init()
   let admin: any = await User.findOne({admin: true})
   let defaultUserToken: any = await UserToken.findOne({userId: admin._id})
   Chat.defaultUserProvider = new RefreshingAuthProvider(
@@ -53,6 +53,7 @@ let startApp = async () => {
 
   let users = await User.find().sort({ lastLogin: -1 }) 
   for(let user of users) {
+    continue
     let s = await Settings.findOne({userId: user._id})
     if(!s) continue
 

@@ -23,7 +23,7 @@ export class VideoComponent implements OnInit {
 
     this.innerStyle.width = this.element.width ? this.element.width+'px' : this.element.mediaInformation?.width ? this.element.mediaInformation?.width+'px' : 'fit-content'
     this.innerStyle.height = this.element.height ? this.element.height+'px' : this.element.mediaInformation?.height ? this.element.mediaInformation?.height+'px' : 'fit-content'
-    console.log(this.innerStyle)
+
     if(this.element.border) {
       let stroke = this.element.borderStroke === 'thinner' ? 4 :
                       this.element.borderStroke === 'thin' ? 8 :
@@ -63,7 +63,7 @@ export class VideoComponent implements OnInit {
       this.outerStyle.height = this.outerStyle.height
     }
 
-    this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element)
+    this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element, this.outerStyle)
   }
 
   loaded: boolean

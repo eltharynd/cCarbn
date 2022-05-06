@@ -38,6 +38,8 @@ export class AlertsService {
       let user = data.user_name||null
 
       for(let alert of this.alerts) {
+        
+        if(alert.disabled) continue
 
         let ignore = false
         for(let c of alert.conditions) {
