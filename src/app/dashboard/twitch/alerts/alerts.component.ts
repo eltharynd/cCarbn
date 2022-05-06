@@ -536,13 +536,14 @@ export class AlertsComponent implements OnInit, OnDestroy {
         playerScale: 100
       },
       additional: {
+        delay: 'Delay execution'
       },
       units: {
-        duration: 's',
         position: 'POSITION',
         transitionIN: 'TRANSITION',
         transitionOUT: 'TRANSITION',
-        playerScale: '%'
+        playerScale: '%',
+        delay: 's'
       }
     },
   }

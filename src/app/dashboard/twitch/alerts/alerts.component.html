@@ -260,15 +260,14 @@
                                 </div>
 
                                 <div *ngIf="elem.type==='clip'" class="clip-inner">
+                                    <div style="text-align: center;">
+                                        Note: Clips currently only work with chat commands!!!
+                                    </div>
                                     <div class="field-container">
                                         <nb-select [placeholder]="elem.which||_clip.which.random" [(selected)]="elem.which" (selectedChange)="al.changes=true;" fullWidth>
                                             <nb-option *ngFor="let t of _clip.which | keyvalue: originalOrder" [value]="t.key">{{t.value}}</nb-option>
                                         </nb-select>
                                         <div class="anchor"><label>Which</label></div>
-                                    </div>
-                                    <div class="field-container">
-                                        <input nbInput type="number" [placeholder]="'Delay in seconds'" [(ngModel)]="elem.delay" ((change))="al.changes=true;" fullWidth>
-                                        <div class="anchor"><label>Delay execution</label></div>
                                     </div>
                                 </div>
 
@@ -379,7 +378,7 @@
                                                 <nb-list>
                                                     <nb-list-item *ngFor="let o of _options[elem.type].additional | keyvalue: originalOrder">
                                                         <div class="key">{{o.value}}:</div>
-                                                        <div class="value" *ngIf="_options[elem.type].units[o.key]==='px' || o.value==='s'">
+                                                        <div class="value" *ngIf="_options[elem.type].units[o.key]==='px' || _options[elem.type].units[o.key]==='s'">
                                                             <input nbInput type="number" [(ngModel)]="elem[o.key]" (change)="al.changes=true" fullWidth>
                                                             <div class="unit">{{_options[elem.type].units[o.key]}}</div>
                                                         </div>

@@ -38,8 +38,9 @@ export class ClipComponent implements OnInit {
     else if(this.element.which === 'topClip') this.clip = this.element.alertData?.topClip
 
     if(!this.clip) {
-      this.cantDisplay = true
-      console.log('not a clip')
+      setTimeout(() => {
+        this.cantDisplay = true
+      }, (+this.element.delay || 0 ) * 1000);
       this.innerStyle.backgroundColor = '#0b0b0c'
       this.innerStyle.color = 'white'
       this.innerStyle.display = 'flex'
@@ -57,20 +58,21 @@ export class ClipComponent implements OnInit {
         this.onPlaybackEnded()
       }, 5 * 1000);
     } else {
-      this.element.src = this.sanitizer.bypassSecurityTrustResourceUrl(this.clip.embed_url + 
-        `&width=${this.element.playerScale/100*512}` + 
-        `&height=${this.element.playerScale/100*288}` +
-        '&parent=external.eltharynd.com' +
-        '&parent=ccarbn.io' +
-        '&autoplay=true' +
-        '&muted=false' +
-        '&preload=auto' +
-        '&controls=false'
-      )
+      setTimeout(() => {
+        this.element.src = this.sanitizer.bypassSecurityTrustResourceUrl(this.clip.embed_url + 
+          `&width=${this.element.playerScale/100*512}` + 
+          `&height=${this.element.playerScale/100*288}` +
+          '&parent=ccarbn.io' +
+          '&autoplay=true' +
+          '&muted=false' +
+          '&preload=auto' +
+          '&controls=false'
+        )
+      }, (+this.element.delay || 0 ) * 1000);
+
     }
     
     if(this.element.border) {
-      console.log(1)
       let stroke = this.element.borderStroke === 'thinner' ? 4 :
                       this.element.borderStroke === 'thin' ? 8 :
                         this.element.borderStroke === 'regular' ? 12 :
@@ -108,9 +110,7 @@ export class ClipComponent implements OnInit {
       this.outerStyle.width = this.innerStyle.width
       this.outerStyle.height = this.innerStyle.height
     }
-    console.log('here', this.viewport, this.element, this.outerStyle)
     this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element, this.outerStyle)
-    console.log(this.viewportStyle)
   }
 
   loaded: boolean
