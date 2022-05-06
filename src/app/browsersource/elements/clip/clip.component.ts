@@ -15,21 +15,62 @@ export class ClipComponent implements OnInit {
   @Input() element: any
   @ViewChild('clipPlayer') clipPlayer: ElementRef
 
+  clip
+  cantDisplay
+
   constructor(private alerts: AlertsService, private sanitizer: DomSanitizer) {}
 
   viewportStyle: any = {}
   outerStyle: any = {}
   innerStyle: any = {}
   ngOnInit() {
-
     console.log('clip', this.element)
+  
+    if(!this.element.playerScale) this.element.playerScale = 100
+
+    let width = +this.element.playerScale/100 * 512
+    let height = +this.element.playerScale/100 * 288
     
-    this.element.src = this.sanitizer.bypassSecurityTrustResourceUrl(this.element.alertData.randomClip.embed_url + '&parent=ccarbn.io&parent=localhost')
+    this.innerStyle.width = `${width}px`
+    this.innerStyle.height = `${height}px`
 
-    this.innerStyle.width = this.element.width ? this.element.width+'px' : this.element.mediaInformation?.width ? this.element.mediaInformation?.width+'px' : 'fit-content'
-    this.innerStyle.height = this.element.height ? this.element.height+'px' : this.element.mediaInformation?.height ? this.element.mediaInformation?.height+'px' : 'fit-content'
+    if(this.element.which === 'random') this.clip = this.element.alertData?.randomClip
+    else if(this.element.which === 'topClip') this.clip = this.element.alertData?.topClip
 
+    if(!this.clip) {
+      this.cantDisplay = true
+      console.log('not a clip')
+      this.innerStyle.backgroundColor = '#0b0b0c'
+      this.innerStyle.color = 'white'
+      this.innerStyle.display = 'flex'
+      this.innerStyle.justifyContent = 'center'
+      this.innerStyle.alignItems = 'center'
+      this.innerStyle.fontSize = '1.2rem';
+      this.innerStyle.lineHeight = '1.4rem';
+      this.innerStyle.textAlign = 'center';
+      this.innerStyle.fontFamily = 'monospace';
+      
+      setTimeout(() => {
+        this.loaded = true
+      }, 500);
+      setTimeout(() => {
+        this.onPlaybackEnded()
+      }, 5 * 1000);
+    } else {
+      this.element.src = this.sanitizer.bypassSecurityTrustResourceUrl(this.clip.embed_url + 
+        `&width=${this.element.playerScale/100*512}` + 
+        `&height=${this.element.playerScale/100*288}` +
+        '&parent=external.eltharynd.com' +
+        '&parent=ccarbn.io' +
+        '&autoplay=true' +
+        '&muted=false' +
+        '&preload=auto' +
+        '&controls=false'
+      )
+    }
+    
     if(this.element.border) {
+      console.log(1)
       let stroke = this.element.borderStroke === 'thinner' ? 4 :
                       this.element.borderStroke === 'thin' ? 8 :
                         this.element.borderStroke === 'regular' ? 12 :
@@ -38,8 +79,8 @@ export class ClipComponent implements OnInit {
                               this.element.borderStroke === 'thiccboi' ? 24 : 
                                 12
 
-      this.outerStyle.width = +(+(this.element.width||this.element.mediaInformation?.width||1000) + 2*stroke) + 'px'
-      this.outerStyle.height = +(+(this.element.height||this.element.mediaInformation?.height||1000) + 2*stroke) + 'px'
+      this.outerStyle.width = (width + 2*stroke) + 'px'
+      this.outerStyle.height = (height + 2*stroke) + 'px'
 
       if(this.element.borderColor) {
         if(/rainbow/.test(this.element.borderColor)) {
@@ -64,27 +105,30 @@ export class ClipComponent implements OnInit {
         
       }
     } else {
-      this.outerStyle.width = this.outerStyle.width
-      this.outerStyle.height = this.outerStyle.height
+      this.outerStyle.width = this.innerStyle.width
+      this.outerStyle.height = this.innerStyle.height
     }
-
+    console.log('here', this.viewport, this.element, this.outerStyle)
     this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element, this.outerStyle)
+    console.log(this.viewportStyle)
   }
 
   loaded: boolean
   onLoadedData() {
     this.loaded = true
-    this.clipPlayer.nativeElement.play()
+    console.log('loaded', this.clipPlayer.nativeElement)
+    setTimeout(() => {
+      this.onPlaybackEnded()
+    }, +this.clip.duration * 1000);
   }
 
   onError(error) {
-    return
     console.error(error)
     this.onPlaybackEnded()
   }
 
   onPlaybackEnded() {
-    return
+    console.log('ended')
     this.alerts.elementsSubject.next({
       type: 'clip',
       what: 'ended',

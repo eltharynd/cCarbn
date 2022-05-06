@@ -1,15 +1,19 @@
 <div class="viewport-flex" [ngStyle]="viewportStyle" [style.opacity]="!loaded ? '0' : 'initial'">
     
     <div [ngStyle]="outerStyle" class="outer-container" [class.rainbow]="outerStyle.rainbow" [class.vaporwave]="outerStyle.vaporwave" [@innerOUT]="element.innerTransitionOUT" [@in]="element.innerTransitionIN">
-        <iframe [ngStyle]="innerStyle" 
+        <iframe [ngStyle]="innerStyle"
                 [src]="element.src"
                 (error)="onError($event)"
-                *ngIf="element" 
+                *ngIf="element?.src" 
                 #clipPlayer 
-                (loadeddata)="onLoadedData()" 
+                (load)="onLoadedData()" 
                 (ended)="onPlaybackEnded()" 
-                (error)="onError($event)">
+                (error)="onError($event)" allowfullscreen>
         </iframe>  
+        <div class="cant-play" *ngIf="cantDisplay" [ngStyle]="innerStyle">
+            Clips can't be played as tests...<br/>
+            This is a placeholder
+        </div>
+        <!-- <div id="clipPlayer"></div> -->
     </div>
-
 </div>

@@ -517,7 +517,30 @@ export class AlertsComponent implements OnInit, OnDestroy {
         offsetX: 'px',
         offsetY: 'px',
       }
-    }
+    },
+    clip: {
+      mandatory: {
+        position: 'Position',
+        transitionIN: 'Transition IN',
+        transitionOUT: 'Transition OUT',
+        playerScale: 'Player scale',
+      },
+      default: {
+        position: POSITION.CENTER,
+        transitionIN: TRANSITION.NONE,
+        transitionOUT: TRANSITION.NONE,
+        playerScale: 100
+      },
+      additional: {
+      },
+      units: {
+        duration: 's',
+        position: 'POSITION',
+        transitionIN: 'TRANSITION',
+        transitionOUT: 'TRANSITION',
+        playerScale: '%'
+      }
+    },
   }
 
   _tts = {

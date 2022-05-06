@@ -260,6 +260,7 @@ export class ElementsComponent implements OnInit {
       } 
 
     } else {
+      console.log('flexing')
       style.display = 'flex'
       style.alignItems = 'center'
       style.justifyContent = 'center' 

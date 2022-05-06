@@ -209,9 +209,9 @@
                     <nb-tabset fullWidth class="elements-tabs">
                         <nb-tab *ngFor="let elem of al.elements; let i = index" [tabTitle]="elem.type" style="padding: 0;">
 
-                            <div #media *ngIf="elem.type==='video' || elem.type==='audio' || elem.type==='gif' || elem.type==='image'" class="media-container">
+                            <div #media *ngIf="elem.type==='video' || elem.type==='audio' || elem.type==='gif' || elem.type==='image' || elem.type==='clip'" class="media-container">
                                 
-                                <div *ngIf="elem.src" class="media-preview">
+                                <div *ngIf="elem.src && elem.type!=='clip'" class="media-preview">
 
                                     <video *ngIf="elem.type==='video'" style="width: 100%; height: 100%;" (loadeddata)="onLoadedData(elem, $event)" autoplay loop [muted]="'muted'">
                                         <source [src]="elem.src">
@@ -226,7 +226,7 @@
                                     <button nbButton class="media-delete-button" status="danger" (click)="deleteMediaSource(al, elem, elem.src)"><nb-icon icon="trash-2"></nb-icon></button>
                                 </div>
 
-                                <div *ngIf="!elem.src" class="media-uploader">
+                                <div *ngIf="!elem.src && elem.type!=='clip'" class="media-uploader">
 
                                     <nb-select placeholder="Select a video" *ngIf="elem.select && elem.type==='video'" [(selected)]="elem.src" (selectedChange)="videoSelected(al, elem);al.changes=true" fullWidth>
                                         <nb-option *ngIf="!userVideos || userVideos.length<1" disabled>No valid file exists</nb-option>
@@ -253,10 +253,23 @@
                                     <button nbButton *ngIf="elem.select" class="media-upload-button" status="warning" nbTooltip="Upload a new file" nbTooltipStatus="warning" (click)="elem.upload=true; elem.select = false"><nb-icon icon="cloud-upload"></nb-icon></button>
                                 </div>
 
-                                <div *ngIf="elem.src && elem.mediaInformation" class="media-details">
+                                <div *ngIf="elem.src && elem.mediaInformation && elem.type!=='clip'" class="media-details">
                                     <div *ngIf="elem.mediaInformation.width">Width: {{elem.mediaInformation.width}}px</div>
                                     <div *ngIf="elem.mediaInformation.height">Height: {{elem.mediaInformation.height}}px</div>
                                     <div *ngIf="elem.mediaInformation.duration">Duration: {{elem.mediaInformation.duration | number: '1.1-1'}}s</div>
+                                </div>
+
+                                <div *ngIf="elem.type==='clip'" class="clip-inner">
+                                    <div class="field-container">
+                                        <nb-select [placeholder]="elem.which||_clip.which.random" [(selected)]="elem.which" (selectedChange)="al.changes=true;" fullWidth>
+                                            <nb-option *ngFor="let t of _clip.which | keyvalue: originalOrder" [value]="t.key">{{t.value}}</nb-option>
+                                        </nb-select>
+                                        <div class="anchor"><label>Which</label></div>
+                                    </div>
+                                    <div class="field-container">
+                                        <input nbInput type="number" [placeholder]="'Delay in seconds'" [(ngModel)]="elem.delay" ((change))="al.changes=true;" fullWidth>
+                                        <div class="anchor"><label>Delay execution</label></div>
+                                    </div>
                                 </div>
 
                                 <div class="media-settings">
@@ -275,7 +288,7 @@
                                                 <nb-list>
                                                     <nb-list-item *ngFor="let o of _options[elem.type].mandatory | keyvalue: originalOrder">
                                                         <div class="key">{{o.value}}</div>
-                                                        <div class="value" *ngIf="_options[elem.type].units[o.key]==='px' || _options[elem.type].units[o.key]==='s'">
+                                                        <div class="value" *ngIf="_options[elem.type].units[o.key]==='px' || _options[elem.type].units[o.key]==='s' || _options[elem.type].units[o.key]==='%'">
                                                             <input nbInput type="number" [placeholder]="_options[elem.type].default.hasOwnProperty(o.key) ? _options[elem.type].default[o.key] : null" [(ngModel)]="elem[o.key]" (change)="al.changes=true" fullWidth>
                                                             <div class="unit">{{_options[elem.type].units[o.key]}}</div>
                                                         </div>
@@ -487,21 +500,6 @@
                                     <div *ngFor="let keyword of _chat.keywords | keyvalue: originalOrder;">
                                         <div>{{keyword.key}}:</div>
                                         <div>{{keyword.value}}</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div #clip *ngIf="elem.type==='clip'" class="clip-container">
-                                <div class="clip-inner">
-                                    <div class="field-container">
-                                        <nb-select [placeholder]="elem.which||_clip.which.random" [(selected)]="elem.which" (selectedChange)="al.changes=true;" fullWidth>
-                                            <nb-option *ngFor="let t of _clip.which | keyvalue: originalOrder" [value]="t.key">{{t.value}}</nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>Which</label></div>
-                                    </div>
-                                    <div class="field-container">
-                                        <input nbInput type="number" [placeholder]="'Delay in seconds'" [(ngModel)]="elem.delay" ((change))="al.changes=true;" fullWidth>
-                                        <div class="anchor"><label>Delay execution</label></div>
                                     </div>
                                 </div>
                             </div>

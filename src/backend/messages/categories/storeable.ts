@@ -318,6 +318,7 @@ export class Storeable extends Message {
 
             if(alertData.topClip.views<0) delete alertData.topClip
 
+            if(alertData.channel) alertData.channel = toJSON(alertData.channel)
             if(alertData.clips) alertData.clips = toJSON(alertData.clips)
             if(alertData.stream) alertData.stream = toJSON(alertData.stream)
             if(alertData.randomClip) alertData.randomClip = toJSON(alertData.randomClip)
