@@ -1,10 +1,10 @@
 import { animate, animateChild, group, query, style, transition, trigger } from '@angular/animations'
 import { Component, OnInit } from '@angular/core';
-import { Subject } from 'rxjs'
 import { OBSService } from 'src/app/shared/obs.service'
 import { AlertsService } from '../../shared/alerts.service'
 
 export enum POSITION {
+
   TOP_LEFT = 'TOP_LEFT',
   TOP = 'TOP',
   TOP_RIGHT = 'TOP_RIGHT',
@@ -14,6 +14,9 @@ export enum POSITION {
   BOTTOM_LEFT = 'BOTTOM_LEFT',
   BOTTOM = 'BOTTOM',
   BOTTOM_RIGHT = 'BOTTOM_RIGHT',
+
+  COVER = 'Cover',
+  FIT = 'Fit',
   MANUAL = 'Manual XY'
 }
 
@@ -236,14 +239,59 @@ export class ElementsComponent implements OnInit {
     }
   }
 
-  public static elementViewportStyle(viewport, element, outerStyle?): any {
+  public static elementViewportStyle(viewport, element, outerStyle?, innerStyle?): any {
     let style: any = {}
     style.width = (+viewport.width - (+viewport.padding*2))+'px'
     style.height =(+viewport.height - (+viewport.padding*2))+'px'
 
     if(element.position) {
+      if(/COVER/.test(element.position) || /FIT/.test(element.position)) {
+        try {
+          style.width = `${+viewport.width }px`
+          style.height = `${+viewport.height }px`
 
-      if(/MANUAL/.test(element.position)) {
+          outerStyle.width = `${+viewport.width}px`
+          outerStyle.height = `${+viewport.height }px`
+          outerStyle.left = `-${viewport.padding}px`
+          outerStyle.top = `-${viewport.padding}px`
+
+          if(/COVER/.test(element.position)) {
+
+            
+            let _sourceWidth = +(element.width||element.mediaInformation?.width||1280)
+            let _sourceHeight = +(element.width||element.mediaInformation?.height||1280)
+            let _targetWidth = +viewport.width
+            let _targetHeight = +viewport.height
+            let _newWidth
+            let _newHeight
+
+            let ratio = _sourceWidth / _sourceHeight
+
+            if(_sourceWidth >= _sourceHeight) {
+              _newHeight = _targetHeight 
+              _newWidth = _targetHeight * ratio
+
+              style.width = `${_newWidth}px`
+              outerStyle.width = `${_newWidth}px`
+              outerStyle.left = `-${viewport.padding + (_newWidth - _targetWidth)/2}px`
+            } else {
+              _newWidth = _targetWidth 
+              _newHeight = _targetWidth * ratio
+
+              style.height = `${_newHeight}px`
+              outerStyle.height = `${_newHeight}px`
+              outerStyle.top = `-${viewport.padding + (_newHeight - _targetHeight)/2}px`
+            }
+
+            innerStyle.width = `${_newWidth}px`
+            innerStyle.height = `${_newHeight}px`
+          } else {
+            innerStyle.width = `${+viewport.width}px`
+            innerStyle.height = `${+viewport.height}px`
+          }
+
+        } catch(e) {}
+      } else if(/MANUAL/.test(element.position)) {
         //TODO HANDLE MANUAL POSITIONING
         try {
           let _width = parseInt(outerStyle.width.replace('px', ''))
@@ -256,7 +304,6 @@ export class ElementsComponent implements OnInit {
           style.paddingLeft = `${_targetX - _width/2 - (element.ignorePadding ? +viewport.padding : 0)}px`
           style.paddingTop = `${_targetY - _height/2 - (element.ignorePadding ? +viewport.padding : 0)}px`
         } catch(e) { }
-        
       } else {
         style.display = 'flex'
         style.alignItems = 'center'

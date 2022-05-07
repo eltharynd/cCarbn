@@ -33,8 +33,8 @@ export class VideoComponent implements OnInit {
                               this.element.borderStroke === 'thiccboi' ? 24 : 
                                 12
 
-      this.outerStyle.width = +(+(this.element.width||this.element.mediaInformation?.width||1000) + 2*stroke) + 'px'
-      this.outerStyle.height = +(+(this.element.height||this.element.mediaInformation?.height||1000) + 2*stroke) + 'px'
+      this.outerStyle.width = +(+(this.element.width||this.element.mediaInformation?.width||1280) + 2*stroke) + 'px'
+      this.outerStyle.height = +(+(this.element.height||this.element.mediaInformation?.height||720) + 2*stroke) + 'px'
 
       if(this.element.borderColor) {
         if(/rainbow/.test(this.element.borderColor)) {
@@ -63,7 +63,8 @@ export class VideoComponent implements OnInit {
       this.outerStyle.height = this.outerStyle.height
     }
 
-    this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element, this.outerStyle)
+    this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element, this.outerStyle, this.innerStyle)
+    console.log(this.element, this.viewportStyle, this.outerStyle, this.innerStyle)
   }
 
   onLoadedData() {

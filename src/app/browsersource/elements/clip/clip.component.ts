@@ -120,7 +120,7 @@ export class ClipComponent implements OnInit {
       this.outerStyle.width = this.innerStyle.width
       this.outerStyle.height = this.innerStyle.height
     }
-    this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element, this.outerStyle)
+    this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element, this.outerStyle, this.innerStyle)
   }
 
   onLoadedData() {

@@ -62,7 +62,7 @@ export class ImageComponent implements OnInit {
       this.outerStyle.height = this.outerStyle.height
     }
 
-    this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element, this.outerStyle)
+    this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element, this.outerStyle, this.innerStyle)
   }
 
 
