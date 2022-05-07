@@ -90,8 +90,8 @@
 
                             <!-- TYPES -->
                             <div class="field-container">
-                                <nb-select [(selected)]="c.type" (selectedChange)="al.changes=true; c.operator=null; c.compared=null; al.buffer = (c.type==='' ? getUserCommands() : null);" fullWidth>
-                                    <nb-option disabled>-- Primary --</nb-option>
+                                <nb-select [(selected)]="c.type" (selectedChange)="al.changes=true; c.operator=null; c.compared=null; al.buffer = (c.type==='' ? getUserCommands() : null); al.buffer = (i===0 && al.conditions.length>1) ? deleteCondition(al, al.conditions[1]) : null" fullWidth>
+                                    <nb-option disabled>-- Common --</nb-option>
                                     <nb-option  *ngFor="let type of _primaryConditions | keyvalue: originalOrder" 
                                                 [value]="type.key"
                                                 [disabled]="i>0"
@@ -101,10 +101,43 @@
                                     <nb-option disabled>-- Secondary --</nb-option>
                                     <nb-option  *ngFor="let type of _secondaryConditions | keyvalue: originalOrder"
                                                 [value]="type.key"
-                                                [disabled]="i<1"
+                                                [disabled]="
+                                                    i<1 ||
+                                                    (al.conditions[0].type==='moderatorAdd') ||
+                                                    (al.conditions[0].type==='moderatorRemoved') ||
+                                                    (al.conditions[0].type==='streamOnline') ||
+                                                    (al.conditions[0].type==='streamOffline') ||
+                                                    (al.conditions[0].type==='pollStarted') ||
+                                                    (al.conditions[0].type==='pollProgress') ||
+                                                    (al.conditions[0].type==='pollEnd') ||
+                                                    (al.conditions[0].type==='predicitonStart') ||
+                                                    (al.conditions[0].type==='predicitonProgress') ||
+                                                    (al.conditions[0].type==='predicitonLocked') ||
+                                                    (al.conditions[0].type==='predicitonEnd') ||
+                                                    (al.conditions[0].type==='rewardAdd') ||
+                                                    (al.conditions[0].type==='rewardUpdate') ||
+                                                    (al.conditions[0].type==='rewardDelete') ||
+                                                    (al.conditions[0].type==='titleChanged') ||
+                                                    (al.conditions[0].type==='categoryChanged')
+                                                "
                                                 >
                                         {{type.value}}
                                     </nb-option>
+                                    <nb-option disabled>-- Interactions --</nb-option>
+                                    <nb-option  *ngFor="let type of _interactionConditions | keyvalue: originalOrder" 
+                                                [value]="type.key"
+                                                [disabled]="i>0"
+                                                >
+                                        {{type.value}}
+                                    </nb-option>
+                                    <nb-option disabled>-- Strean --</nb-option>
+                                    <nb-option  *ngFor="let type of _streamConditions | keyvalue: originalOrder" 
+                                                [value]="type.key"
+                                                [disabled]="i>0"
+                                                >
+                                        {{type.value}}
+                                    </nb-option>
+                                    
                                 </nb-select>
                                 <div class="anchor"><label>{{i==0 ? 'When' : 'AND'}}</label></div>
                             </div>
@@ -150,6 +183,14 @@
                                 <div class="anchor"><label>what</label></div>
                             </div>
 
+                            <!-- OPERATORS UPDATE -->
+                            <div *ngIf="c.type==='update'" class="field-container">
+                                <nb-select [placeholder]="_operators.update[c.operator]||'Any'" [(selected)]="c.operator" (selectedChange)="al.changes=true" fullWidth>
+                                    <nb-option *ngFor="let op of _operators.update | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+                                </nb-select>
+                                <div class="anchor"><label>what</label></div>
+                            </div>
+
 
                             <!-- COMPARED -->
                             <div *ngIf="c.type === 'bits'" class="field-container">
@@ -189,6 +230,10 @@
                                     <nb-option *ngFor="let c of userCommands | keyvalue: originalOrder" [value]=c.value>{{c.value!.command}}</nb-option>
                                 </nb-select>
                                 <div class="anchor"><label>Which</label></div>
+                            </div>
+                            <div *ngIf="c.type === 'update' && c.operator && c.operator!=='any'" class="field-container">
+                                <input nbInput type="text" [(ngModel)]="c.compared" (change)="al.changes=true" fullWidth>
+                                <div class="anchor"><label>text</label></div>
                             </div>
 
                             <!-- BUTTONS -->

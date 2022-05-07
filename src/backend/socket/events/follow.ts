@@ -1,7 +1,7 @@
 import { EventSubChannelFollowEvent } from "@twurple/eventsub/lib"
 import { User } from "../../db/models/user"
 import { Socket } from "../socket"
-import { toJSON } from "./util/toJSON"
+import { toJSON, getUserInfo } from "./util/toJSON"
 
 
 
@@ -10,6 +10,7 @@ export class FollowHandler {
   static followEvent = async (event: EventSubChannelFollowEvent) => {
     let data = toJSON(event)
     data.type = 'Follow'
+    data.userInfo = getUserInfo(await event.getUser())
     console.log(data)
 
     let found: any = await User.findOne({twitchId: event.broadcasterId})

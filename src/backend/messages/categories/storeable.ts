@@ -1,4 +1,4 @@
-import { HelixChannel, HelixClip } from '@twurple/api/lib'
+import { HelixChannel, HelixClip, HelixFollow } from '@twurple/api/lib'
 import { TwitchPrivateMessage } from '@twurple/chat/lib/commands/TwitchPrivateMessage'
 import { from } from 'rxjs'
 import { filter, map, take, toArray } from 'rxjs/operators'
@@ -258,6 +258,7 @@ export class Storeable extends Message {
         let alertData: any = {}
 
         try {
+
           for (let i = 0; i < command.args.length; i++) {
             let arg = command.args[i]
 
@@ -306,27 +307,42 @@ export class Storeable extends Message {
           } 
 
           if(command.alertable) {
-            //Socket.io
-            alertData.clips = (await Twitch.client.clips.getClipsForBroadcaster(alertData.channel.id)).data
-            alertData.randomClip = alertData.clips[Math.floor(Math.random()*alertData.clips.length)]
-            alertData.topClip = {views: -1}
-            for(let c of alertData.clips) {
-              let clip: HelixClip = c
-              clip.views > alertData.topClip.views
-              alertData.topClip = clip
+
+            if(alertData.channel) {
+              alertData.clips = (await Twitch.client.clips.getClipsForBroadcaster(alertData.channel.id)).data
+              alertData.randomClip = alertData.clips[Math.floor(Math.random()*alertData.clips.length)]
+              alertData.topClip = {views: -1}
+              for(let c of alertData.clips) {
+                let clip: HelixClip = c
+                clip.views > alertData.topClip.views
+                alertData.topClip = clip
+              }
+
+              if(alertData.topClip.views<0) delete alertData.topClip
+
+              if(alertData.channel) alertData.channel = toJSON(alertData.channel)
+              if(alertData.clips) alertData.clips = toJSON(alertData.clips)
+              if(alertData.stream) alertData.stream = toJSON(alertData.stream)
+              if(alertData.randomClip) alertData.randomClip = toJSON(alertData.randomClip)
+              if(alertData.topClip) alertData.topClip = toJSON(alertData.topClip)
             }
 
-            if(alertData.topClip.views<0) delete alertData.topClip
-
-            if(alertData.channel) alertData.channel = toJSON(alertData.channel)
-            if(alertData.clips) alertData.clips = toJSON(alertData.clips)
-            if(alertData.stream) alertData.stream = toJSON(alertData.stream)
-            if(alertData.randomClip) alertData.randomClip = toJSON(alertData.randomClip)
-            if(alertData.topClip) alertData.topClip = toJSON(alertData.topClip)
+            let userInfo: IUserInfo = {
+              mod: msg.userInfo.isMod,
+              streamer: msg.userInfo.isBroadcaster,
+              sub: msg.userInfo.isSubscriber,
+              vip: msg.userInfo.isVip,
+              welcome: this.usersThatTalkedSinceStreamStarted.hasOwnProperty(msg.userInfo.userName)
+            }
+            
+            let followData: HelixFollow = await Twitch.client.users.getFollowFromUserToBroadcaster(msg.userInfo.userId, this.user.twitchId)
+            userInfo.follower = followData?.followDate && true
 
             Socket.io.to(this.iClient.userId).emit('alerts', {
               type: 'Command',
               command: command.command,
+              user_name: msg.userInfo.displayName,
+              userInfo: userInfo,
               alertData: alertData
             })
           }
@@ -382,6 +398,14 @@ export class Storeable extends Message {
   }
 }
 
+export interface IUserInfo {
+  mod?: boolean
+  streamer?: boolean
+  follower?: boolean
+  sub?: boolean
+  vip?: boolean
+  welcome?: boolean
+}
 
 /* private justice = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
   if (/!justice/.test(message)) {

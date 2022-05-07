@@ -63,18 +63,6 @@ export class AlertsService {
                   break
               }
             } else ignore = true
-          } else if(c.type === 'user') {
-            switch (c.operator) {
-              case 'is':
-                ignore = `${c.compared}`.toLowerCase().replace(/\s/g, '') !== `${user}`.toLowerCase()
-                break
-              case 'isnt':
-                ignore = `${c.compared}`.toLowerCase().replace(/\s/g, '') === `${user}`.toLowerCase()
-                break
-              default:
-                ignore = true
-            }
-            continue
           } else if(c.type === 'redeem') {
             ignore = (data.type !== 'Redemption Add') || (c.compared.id !== data.reward.id)
           } else if(c.type === 'follow') {
@@ -177,13 +165,78 @@ export class AlertsService {
           } else if(c.type === 'raid') {
             ignore = (c.operator === 'received' && data.type !== 'Raid from') ||
                       (c.operator === 'launched' && data.type !== 'Raid to')
+          } else if(c.type === 'command') {
+            ignore = data.type!=='Command' || c.compared?.command!==data.command
+          } else if(c.type === 'pollStarted') {
+            ignore = data.type !== 'Poll Begin'
+          } else if(c.type === 'pollProgress') {
+            ignore = data.type !== 'Poll Progress'
+          } else if(c.type === 'pollEnd') {
+            ignore = data.type !== 'Poll End'
+          } else if(c.type === 'predicitonStart') {
+            ignore = data.type !== 'Prediction Begin'
+          } else if(c.type === 'predicitonProgress') {
+            ignore = data.type !== 'Prediction Progress'
+          } else if(c.type === 'predicitonLocked') {
+            ignore = data.type !== 'Prediction Lock'
+          } else if(c.type === 'predicitonEnd') {
+            ignore = data.type !== 'Prediction End'
+          } else if(c.type === 'streamOnline') {
+            ignore = data.type !== 'Online'
+          } else if(c.type === 'streamOffline') {
+            ignore = data.type !== 'Offline'
+          } else if(c.type === 'moderatorAdded') {
+            ignore = data.type !== 'Moderator Add'
+          } else if(c.type === 'moderatorRemoved') {
+            ignore = data.type !== 'Moderator Remove'
+          } else if(c.type === 'rewardAdded') {
+            ignore = data.type !== 'Reward Add'
+          } else if(c.type === 'rewardUpdate') {
+            ignore = data.type !== 'Reward Update'
+          } else if(c.type === 'rewardDelete') {
+            ignore = data.type !== 'Reward Remove'
+          } else if(c.type === 'update') {
+            ignore = data.type !== 'Update'
+            console.log('here')
+            if(c.operator && c.operator!=='any') {
+              if(/^title/gi.test(c.operator)) {
+                let contains = new RegExp(c.compared||'', 'gi').test(data.title)
+                if(/DoesntContain$/.test(c.operator))
+                  ignore = contains
+                else 
+                  ignore = !contains
+              } else if(/^category/gi.test(c.operator)) {
+                let contains = new RegExp(c.compared||'', 'gi').test(data.category_name)
+                if(/DoesntContain$/.test(c.operator))
+                  ignore = contains
+                else 
+                  ignore = !contains
+              }
+            }
+
           } else if(c.type === 'ban') {
             ignore = (c.operator === 'banned' && (data.type !== 'Ban' || !data.is_permanent)) ||
                       (c.operator === 'timeout' && (data.type !== 'Ban' || data.is_permanent)) ||
                       (c.operator === 'unbanned' && data.type !== 'Unban')
-          } else if(c.type === 'command') {
-            ignore = data.type!=='Command' || c.compared?.command!==data.command
-          }
+          } else if(c.type === 'user') {
+            switch (c.operator) {
+              case 'is':
+                ignore = `${c.compared}`.toLowerCase().replace(/\s/g, '') !== `${user}`.toLowerCase()
+                break
+              case 'isnt':
+                ignore = `${c.compared}`.toLowerCase().replace(/\s/g, '') === `${user}`.toLowerCase()
+                break
+              case 'typeis':
+
+                break
+              case 'typeisnt':
+                
+                break
+              default:
+                ignore = true
+            }
+            continue
+          } 
 
           if(ignore) break
         }

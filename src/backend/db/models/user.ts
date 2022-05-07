@@ -6,7 +6,7 @@ import { ClientToken, UserToken } from "./tokens"
 import * as merge from 'deepmerge'
 
 
-interface IUser {
+export interface IUser {
   token: string
   admin: boolean
 

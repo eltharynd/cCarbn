@@ -1,11 +1,9 @@
 import { HelixUser } from "@twurple/api/lib"
 import { EventSubChannelHypeTrainBeginEvent, EventSubChannelHypeTrainEndEvent, EventSubChannelHypeTrainProgressEvent } from "@twurple/eventsub/lib"
-import * as socketIO from "socket.io"
-import { Api } from "../../api/express"
 import { User } from "../../db/models/user"
 import { Twitch } from "../../twitch/twitch"
 import { Socket } from "../socket"
-import { toJSON } from "./util/toJSON"
+import { toJSON, getUserInfo } from "./util/toJSON"
 
 export class HypetrainHandler {
 
@@ -37,6 +35,8 @@ export class HypetrainHandler {
   static hypeTrainProgress = async (event: EventSubChannelHypeTrainProgressEvent) => {
     let data = toJSON(event)
     data.type = 'Hype Train Progress'
+    data.userInfo = getUserInfo(await event.lastContribution.getUser())
+    
     console.log(data)
 
     if(data.last_contribution) {

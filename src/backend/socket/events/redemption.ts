@@ -1,13 +1,14 @@
 import { EventSubChannelRedemptionAddEvent, EventSubChannelRedemptionUpdateEvent } from "@twurple/eventsub/lib"
 import { User } from "../../db/models/user"
 import { Socket } from "../socket"
-import { toJSON } from "./util/toJSON"
+import { toJSON, getUserInfo } from "./util/toJSON"
 
 export class RedemptionHandler {
 
   static redemptionAddEvent = async (event: EventSubChannelRedemptionAddEvent) => {
     let data = toJSON(event)
     data.type = 'Redemption Add'
+    data.userInfo = getUserInfo(await event.getUser())
     console.log(data)
 
     let found: any = await User.findOne({twitchId: event.broadcasterId})
@@ -18,6 +19,7 @@ export class RedemptionHandler {
   static redemptionUpdateEvent = async (event: EventSubChannelRedemptionUpdateEvent) => {
     let data = toJSON(event)
     data.type = 'Redemption Update'
+    data.userInfo = getUserInfo(await event.getUser())
     console.log(data)
 
     let found: any = await User.findOne({twitchId: event.broadcasterId})

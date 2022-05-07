@@ -1,7 +1,7 @@
 import { EventSubChannelBanEvent, EventSubChannelUnbanEvent } from "@twurple/eventsub/lib"
 import { User } from "../../db/models/user"
 import { Socket } from "../socket"
-import { toJSON } from "./util/toJSON"
+import { toJSON, getUserInfo } from "./util/toJSON"
 
 
 
@@ -10,6 +10,7 @@ export class BanHandler {
   static banEvent = async (event: EventSubChannelBanEvent) => {
     let data = toJSON(event)
     data.type = 'Ban'
+    data.userInfo = getUserInfo(await event.getUser())
     console.log(data)
 
     if(event.endDate)
@@ -24,6 +25,7 @@ export class BanHandler {
   static unbanEvent = async (event: EventSubChannelUnbanEvent) => {
     let data = toJSON(event)
     data.type = 'Unban'
+    data.userInfo = getUserInfo(await  event.getUser())
     console.log(data)
 
     let found: any = await User.findOne({twitchId: event.broadcasterId})

@@ -333,12 +333,39 @@ export class AlertsComponent implements OnInit, OnDestroy {
   ElementTypes = ELEMENT_TYPES
   _primaryConditions = {
     bits: 'Bits cheered',
+
     redeem: 'Channel redemption',
+
     follow: 'Follow',
     subscription: 'Subscription',
+
     raid: 'Raid',
+    command: 'Chat command',
+  }
+  _interactionConditions = {
+    pollStarted: 'Poll started',
+    pollProgress: 'Poll progress',
+    pollEnd: 'Poll ended',
+
+    predicitonStart: 'Prediction started',
+    predicitonProgress: 'Prediction progress',
+    predicitonLocked: 'Prediction locked',
+    predicitonEnd: 'Prediction ended',
+  }
+  _streamConditions = {
+    streamOnline: 'Stream online',
+    streamOffline: 'Stream offline',
+
+    moderatorAdded: 'Mod Added',
+    moderatorRemoved: 'Mod Removed',
+
+    rewardAdded: 'Channel reward created',
+    rewardUpdate: 'Channel reward updated',
+    rewardDelete: 'Channel reward deleted',
+
+    update: 'Title/category changed',
+
     ban: 'Ban or Timeout',
-    command: 'Chat command'
   }
   _secondaryConditions = {
     user: 'User',
@@ -380,6 +407,13 @@ export class AlertsComponent implements OnInit, OnDestroy {
       timeout: 'User timed out',
       unbanned: 'Ban/TO ended'
     },
+    update: {
+      any: 'Any change',
+      titleContains: 'title contains',
+      titleDoesntContain: 'title doesn\'t contain',
+      categoryContains: 'category contains',
+      categoryDoesntContain: 'category doesn\'t contain',
+    },
     all : () => Object.assign({}, 
       this._operators.comparison, 
       this._operators.user, 
@@ -393,11 +427,11 @@ export class AlertsComponent implements OnInit, OnDestroy {
 
   _userTypes = {
     mod: 'Mod',
-    new: 'New',
     streamer: 'Streamer',
+    follower: 'Follower',
     sub: 'Sub',
     vip: 'VIP',
-    welcome: 'Just joined'
+    welcome: 'First message of stream'
   }
   _subOptions = {
     any: 'Any',

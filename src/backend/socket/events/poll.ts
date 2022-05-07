@@ -20,7 +20,7 @@ export class PollHandler {
   
   static pollProgressEvent = async (event: EventSubChannelPollProgressEvent) => {
     let data = toJSON(event)
-    data.type = 'Poll Begin'
+    data.type = 'Poll Progress'
     console.log(data)
 
     let found: any = await User.findOne({twitchId: event.broadcasterId})
@@ -31,7 +31,7 @@ export class PollHandler {
 
   static pollEndEvent = async (event: EventSubChannelPollEndEvent) => {
     let data = toJSON(event)
-    data.type = 'Poll Begin'
+    data.type = 'Poll End'
     console.log(data)
 
     let found: any = await User.findOne({twitchId: event.broadcasterId})

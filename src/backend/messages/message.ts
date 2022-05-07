@@ -1,5 +1,7 @@
 import { ChatClient } from '@twurple/chat/lib'
-import { Chat, IChatClient } from '../twitch/chat'
+import { IChatClient } from '../twitch/chat'
+import { User, IUser} from '../db/models/user'
+import { Mongo } from '../db/mongo'
 
 export const MAX_CHAT_MESSAGE_LENGTH: number = 500;
 
@@ -13,11 +15,16 @@ export class Message {
 
   iClient: IChatClient
   client: ChatClient
+  user: IUser
   settings
+
+  usersThatTalkedSinceStreamStarted: Object = {}
+
   constructor(iClient) {
     this.iClient = iClient
     this.client = iClient.client
     this.settings = iClient.settings.chatbot.categories
+    User.findById(Mongo.ObjectId(this.iClient.userId)).then(user => this.user = user.toJSON())
   }
 
   private cooldowns = {}

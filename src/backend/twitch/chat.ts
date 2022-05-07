@@ -106,6 +106,7 @@ export class Chat {
 
 
 export class IChatClient {
+  /** cCarbn clientId */
   userId: string
   channel: string
   client: ChatClient
