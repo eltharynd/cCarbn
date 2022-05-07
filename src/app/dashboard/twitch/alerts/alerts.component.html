@@ -15,7 +15,7 @@
                     URL:
                     &nbsp;
                     <div class="streamer-mode" [class.on]="!showBrowserSource">
-                        <nb-icon class="show-icon" *ngIf="!showBrowserSource" (click)="showBrowserSource=true" icon="eye"></nb-icon>
+                        <nb-icon class="show-icon" *ngIf="!showBrowserSource" (click)="showBrowserSource=true;cdr.detectChanges()" icon="eye"></nb-icon>
                         <nb-icon class="copy-icon" (click)="copy()" [nbPopover]="copied" icon="copy"></nb-icon>
                         <a [href]="viewport.url" target="_blank" class>{{viewport.url}}</a>
                     </div>
@@ -88,7 +88,7 @@
                     <nb-list>
                         <nb-list-item *ngFor="let c of al.conditions; let i = index" class="conditions-entry">
 
-                            <!-- OPERATORS -->
+                            <!-- TYPES -->
                             <div class="field-container">
                                 <nb-select [(selected)]="c.type" (selectedChange)="al.changes=true; c.operator=null; c.compared=null; al.buffer = (c.type==='' ? getUserCommands() : null);" fullWidth>
                                     <nb-option disabled>-- Primary --</nb-option>
@@ -191,6 +191,7 @@
                                 <div class="anchor"><label>Which</label></div>
                             </div>
 
+                            <!-- BUTTONS -->
                             <button nbButton status="danger" [disabled]="al.conditions.length<2 || i===0" (click)="deleteCondition(al, c)"><nb-icon icon="trash-2"></nb-icon></button>
                             <button nbButton status="success" (click)="addCondition(al)" [disabled]="i<al.conditions.length-1 || al.conditions.length>=2"><nb-icon icon="plus"></nb-icon></button>
                         </nb-list-item>

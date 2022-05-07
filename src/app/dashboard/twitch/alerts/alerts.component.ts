@@ -1,4 +1,4 @@
-import { OnInit, Component, OnDestroy } from '@angular/core';
+import { OnInit, Component, OnDestroy, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { AuthGuard } from '../../../auth/auth.guard'
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 import { ELEMENT_TYPES } from 'src/app/shared/alerts.service'
@@ -11,7 +11,8 @@ import { ClipboardService } from 'ngx-clipboard'
 @Component({
   selector: 'app-alerts',
   templateUrl: './alerts.component.html',
-  styleUrls: ['./alerts.component.scss']
+  styleUrls: ['./alerts.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlertsComponent implements OnInit, OnDestroy {
 
@@ -27,8 +28,11 @@ export class AlertsComponent implements OnInit, OnDestroy {
   channelRewards: _redemption[] = []
   uploadedSubject: Subject<any> = new Subject()
 
-  constructor(private data: DataService, public auth: AuthGuard, public OBS: OBSService, public clipboardApi: ClipboardService) {
-    this.data.get(`user/${this.auth.currentUser?._id}/redemptions`).then(data => this.channelRewards = data)
+  constructor(private data: DataService, public auth: AuthGuard, public OBS: OBSService, public clipboardApi: ClipboardService, public cdr: ChangeDetectorRef) {
+    this.data.get(`user/${this.auth.currentUser?._id}/redemptions`).then(data => {
+      this.channelRewards = data
+      this.cdr.detectChanges()
+    })
     this.uploadedSubject.subscribe(data => {
       this.mediaUploaded(data.reference.al, data.reference.ev, data.url.url)
     })
@@ -37,6 +41,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     document.documentElement.classList.remove('smooth-scrolling')
     this.alerts = await this.data.get(`alerts/${this.auth.currentUser?._id}`)
+    this.cdr.detectChanges()
     for(let al of this.alerts) {
       al.backup = JSON.stringify(al)
     }
@@ -76,6 +81,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
     } else {
       alert.enabled = !alert.enabled
     }
+    this.cdr.detectChanges()
   }
 
   addAlert() {
@@ -94,6 +100,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
     }
     alert.backup = JSON.stringify(alert)
     this.alerts.push(alert)
+    this.cdr.detectChanges()
     setTimeout(() => {
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
     }, 100);
@@ -109,76 +116,46 @@ export class AlertsComponent implements OnInit, OnDestroy {
         delete alert[key]
       }
     }
+    this.cdr.detectChanges()
   }
   async saveAlert(alert: _alert) {
-    let valid = true
     alert.error = false
-    if(alert.conditions.length < 1) {
-      valid = false
-    } else {
-      for(let condition of alert.conditions) {
-        //TODO finish conditions check
-        let c: _condition = condition
-        try {
-          if(
-            (c.type === 'bits' && 
-              (!this._operators.comparison.hasOwnProperty(c.operator) || parseInt(c.compared+'')<1)
-            ) ||
-            (c.type === 'user' && !(
-              (this._operators.user.hasOwnProperty(c.operator) && !this._userTypes.hasOwnProperty(c.compared)) ||
-              (this._operators.userType.hasOwnProperty(c.operator) && this._userTypes.hasOwnProperty(c.compared)))
-            ) ||
-            false
-          )
-            valid = false
-        } catch (e) {
-          valid = false
-        }
-      }
-    }
     
-    if(alert.elements.length < 1) {
-      valid = false
-    } else {
-      //TODO check alerts
+    if(alert.elements.length >0) {
       delete alert.elements[0].withPrevious
     }
 
-    if(true || valid) {
-      let clone = cleanAlert(alert)
-      let response = await this.data.post(`alerts/${this.auth.currentUser?._id}`, clone)
-      if(response) {
-        alert._id = response
-        alert.changes = false
-        delete alert.backup
-        alert.backup = JSON.stringify(alert)
-        this.data.send('alertsUpdated', {
-          userId: this.auth.currentUser?._id,
-          alerts: this.alerts
-        })
-        return alert._id
-      } else {
-        alert.error = true
-        setTimeout(() => {
-          alert.error = false
-        }, 3000)
-        return false
-      }
+    let clone = cleanAlert(alert)
+    let response = await this.data.post(`alerts/${this.auth.currentUser?._id}`, clone)
+    if(response) {
+      alert._id = response
+      alert.changes = false
+      delete alert.backup
+      alert.backup = JSON.stringify(alert)
+      this.data.send('alertsUpdated', {
+        userId: this.auth.currentUser?._id,
+        alerts: this.alerts
+      })
+      this.cdr.detectChanges()
+      return alert._id
     } else {
       alert.error = true
+      this.cdr.detectChanges()
       setTimeout(() => {
         alert.error = false
+        this.cdr.detectChanges()
       }, 3000)
       return false
     }
   }
-
   async deleteAlert(alert: _alert) {
     if(alert._id) 
       if(!await this.data.delete(`alerts/${this.auth.currentUser?._id}/${alert._id}`)) {
         alert.error = true
+        this.cdr.detectChanges()
         setTimeout(() => {
           alert.error = false
+          this.cdr.detectChanges()
         }, 3000)
         return false
       }
@@ -186,6 +163,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
     let index = this.alerts.indexOf(alert)
     if(index>=0) {
       this.alerts.splice(index, 1)
+      this.cdr.detectChanges()
     }
     this.data.send('alertsUpdated', {
       userId: this.auth.currentUser?._id,
@@ -201,10 +179,12 @@ export class AlertsComponent implements OnInit, OnDestroy {
       compared: null
     })
     alert.changes = true
+    this.cdr.detectChanges()
   }
   deleteCondition(alert: _alert, condition) {
     alert.conditions.splice(alert.conditions.indexOf(condition), 1)
     alert.changes = true
+    this.cdr.detectChanges()
   }
 
   selectedElementType
@@ -216,6 +196,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
 
     this.selectedElementType = null
     alert.changes = true
+    this.cdr.detectChanges()
   }
   deleteElement(alert: _alert, index) {
     alert.elements.splice(index, 1)
@@ -223,6 +204,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
 
     this.selectedElementType = null
     alert.changes = true
+    this.cdr.detectChanges()
   }
 
 
@@ -275,6 +257,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
     
     element.select = true
     element.upload = false;
+    this.cdr.detectChanges()
   }
 
   userCommands = {}
@@ -287,17 +270,20 @@ export class AlertsComponent implements OnInit, OnDestroy {
       }
       this.userCommands = buffer
     }
+    this.cdr.detectChanges()
   }
 
   async videoSelected(alert: _alert, element) {
     let fileName = element.src.replace(SERVER_URL,'').replace(/^.+\//g, '')
     if(!await this.data.get(`uploads/${this.auth.currentUser?._id}/link/${fileName}`)) {
       element.src = null
+      this.cdr.detectChanges()
       return
     }
     if(!await this.saveAlert(alert)) {
       await this.data.get(`uploads/${this.auth.currentUser?._id}/unlink/${fileName}`)
       element.src = null
+      this.cdr.detectChanges()
     }  
   }
   async deleteMediaSource(alert: _alert, element, src) {
@@ -326,6 +312,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
     if(!await this.saveAlert(alert)) {
       await this.data.get(`uploads/${this.auth.currentUser?._id}/unlink/${fileName}`)
       element.src = null
+      this.cdr.detectChanges()
     }  
   }
   onLoadedData(element, data) {
@@ -336,6 +323,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
       duration: file.duration||null
     }
     element.mediaInformation = mediaInformation
+    this.cdr.detectChanges()
   }
 
   originalOrder = (a: KeyValue<string,any>, b: KeyValue<string,any>): number => {
