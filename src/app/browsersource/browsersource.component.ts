@@ -7,20 +7,23 @@ import { OBSService } from '../shared/obs.service'
 
 @Component({
   template: `
-    <div class="container-v">
-      <div class="container-h">
+    <div class="container-v" [class.unloaded]="!loaded">
+      <div class="container-h" [class.unloaded]="!loaded">
         <router-outlet></router-outlet>
         <div class="overlay-right"></div>
       </div>
       <div class="overlay-bottom">&nbsp;</div>
     </div>
   `,
-  styleUrls: ['./browsersource.component.scss']
+  styleUrls: ['./browsersource.component.scss'],
+  styles: [
+    ".unloaded {overflow: hidden}"
+  ]
 })
 export class BrowserSourceComponent implements OnInit {
 
   userId: string
-
+  loaded = false
   constructor(private route: ActivatedRoute, private router: Router, private data: DataService, private auth: AuthGuard, private OBS: OBSService) {
     
     this.router.events.pipe(
@@ -45,12 +48,13 @@ export class BrowserSourceComponent implements OnInit {
       let userId = /^(?=[a-f\d]{24}$)(\d+[a-f]|[a-f]+\d)/i.test(params.userId) ? params.userId : null
       if(userId) {
         this.userId = params.userId
-      }
+      } 
     })
   }
 
   async ngOnInit() {
     if(this.userId) 
       this.data.userId.next(this.userId)
+    this.loaded = true
   }
 }
