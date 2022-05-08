@@ -345,7 +345,7 @@ nb-layout-footer {
   z-index: 999;
 }
 
-nb-menu > ul {
+*:not(.nb-overlay-bottom-start) > nb-menu > ul {
   margin-bottom: 4.1rem !important;
 }
 
