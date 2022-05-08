@@ -79,7 +79,6 @@ export class VideoComponent implements OnInit {
   }
 
   onPlaybackEnded() {
-    return
     this.alerts.elementsSubject.next({
       type: 'video',
       what: 'ended',
