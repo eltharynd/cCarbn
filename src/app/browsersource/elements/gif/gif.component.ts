@@ -55,7 +55,8 @@ export class GIFComponent implements OnInit {
         this.outerStyle.borderRadius = `${Math.max(5, stroke/2)}px`
         this.innerStyle.borderRadius = `${Math.max(4, stroke/2)}px`
       } else if(/ellipse/.test(this.element.border)) {
-        
+        this.outerStyle.borderRadius = `50%`
+        this.innerStyle.borderRadius = `50%`
       }
     } else {
       this.outerStyle.width = this.outerStyle.width
