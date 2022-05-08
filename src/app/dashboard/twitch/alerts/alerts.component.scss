@@ -32,9 +32,12 @@ input {
 }
 
 .alert-header {
+    overflow: hidden;
     justify-content: space-between;
-    .alert-toggle {
-        margin-left: 1rem;
+    .alert-controls {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
     }
     >.alert-name {
         margin-left: 1rem;
@@ -56,6 +59,14 @@ input {
         }
     }
 }
+@media only screen and (max-width:600px) {
+    .alert-header {
+        .alert-controls {
+            flex-direction: column;
+        }
+    }
+}
+
 
 
 
