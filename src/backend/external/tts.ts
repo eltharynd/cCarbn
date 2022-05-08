@@ -33,7 +33,8 @@ export class TTS {
                     let request: any = {
                         input: { text: text },
                         voice: { languageCode: 'en-US', name: _voice },
-                        audioConfig: { audioEncoding: 'MP3', speakingRate: 1.1 }
+                        audioConfig: { audioEncoding: 'MP3', speakingRate: 1 },
+                        
                     }
                     let [response] = await TTS.googleClient.synthesizeSpeech(request)
                     if(response.audioContent instanceof Uint8Array) {

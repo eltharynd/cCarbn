@@ -301,7 +301,7 @@ export class AlertsService {
           is_gift: 'true'
         }, e)
         if(buffer.type === 'tts') 
-          buffer.text = `Hello! I'm a robot reading some text!`
+          buffer.text = buffer.customMessage||`Hello! I'm a robot reading some text!`
         
         if(buffer.text)
           buffer.text = this.populateText(buffer.text, buffer)
