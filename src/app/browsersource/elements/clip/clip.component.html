@@ -1,6 +1,9 @@
 <div class="viewport-flex" [ngStyle]="viewportStyle" [style.opacity]="!element.loaded ? '0' : 'initial'">
     
     <div [@innerIN]="element.loaded ? element.innerTransitionIN : 'loading'" [@innerOUT]="element.innerTransitionOUT" [ngStyle]="outerStyle" class="outer-container" [class.rainbow]="outerStyle.rainbow" [class.vaporwave]="outerStyle.vaporwave">
+        <div class="cant-play" [ngStyle]="innerStyle">
+            {{message}}
+        </div>
         <iframe [ngStyle]="innerStyle"
                 [src]="element.src"
                 (error)="onError($event)"
@@ -10,8 +13,6 @@
                 (ended)="onPlaybackEnded()" 
                 (error)="onError($event)" allowfullscreen style="border:0">
         </iframe>  
-        <div class="cant-play" *ngIf="cantDisplay" [ngStyle]="innerStyle">
-            No clips found...
-        </div>
+
     </div>
 </div>

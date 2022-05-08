@@ -24,7 +24,7 @@ export class ClipComponent implements OnInit {
   @ViewChild('clipPlayer') clipPlayer: ElementRef
 
   clip
-  cantDisplay
+  message
 
   constructor(private alerts: AlertsService, private sanitizer: DomSanitizer) {}
 
@@ -44,13 +44,14 @@ export class ClipComponent implements OnInit {
     if(this.element.which === 'random') this.clip = this.element.alertData?.randomClip
     else if(this.element.which === 'topClip') this.clip = this.element.alertData?.topClip
 
+    this.innerStyle.backgroundColor = '#0b0b0c'
+    this.innerStyle.color = 'white'
+    this.innerStyle.display = 'flex'
+    this.innerStyle.justifyContent = 'center'
+    this.innerStyle.alignItems = 'center'
+
     if(!this.clip) {
 
-      this.innerStyle.backgroundColor = '#0b0b0c'
-      this.innerStyle.color = 'white'
-      this.innerStyle.display = 'flex'
-      this.innerStyle.justifyContent = 'center'
-      this.innerStyle.alignItems = 'center'
       this.innerStyle.fontSize = '1.2rem';
       this.innerStyle.lineHeight = '1.4rem';
       this.innerStyle.textAlign = 'center';
@@ -59,7 +60,7 @@ export class ClipComponent implements OnInit {
 
       setTimeout(() => {
 
-        this.cantDisplay = true
+        this.message = 'Clips goes here'
         this.element.loaded = true
         
         setTimeout(() => {
