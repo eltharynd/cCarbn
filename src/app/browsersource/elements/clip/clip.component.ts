@@ -56,11 +56,11 @@ export class ClipComponent implements OnInit {
       this.innerStyle.lineHeight = '1.4rem';
       this.innerStyle.textAlign = 'center';
       this.innerStyle.fontFamily = 'monospace';
-      
+      this.message = 'Clips goes here'
 
       setTimeout(() => {
 
-        this.message = 'Clips goes here'
+
         this.element.loaded = true
         
         setTimeout(() => {
