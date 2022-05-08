@@ -184,7 +184,7 @@ export class Common extends Message {
 
   private dadjokes = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!dadjoke/i.test(message)) {
-      if (this._timeout(5)) return
+      if (user!==channel.replace('#', '') && this._timeout(5)) return
       let response: any = axios.get(`https://icanhazdadjoke.com/`, {
         headers: {
           Accept: 'application/json',
@@ -197,7 +197,7 @@ export class Common extends Message {
 
   private darkjokes = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!darkjoke/i.test(message)) {
-      if (this._timeout(5)) return
+      if (user!==channel.replace('#', '') && this._timeout(5)) return
       let result = (
         await axios.get(`https://v2.jokeapi.dev/joke/Dark` + '?blacklistFlags=racist,sexist', {
           headers: {

@@ -239,7 +239,7 @@ export class Storeable extends Message {
       let tester = command.command
       if (new RegExp('^' + tester, 'i').test(message)) {
 
-        if (command.cooldown && this._timeout(command.cooldown, `${tester}${command.cooldownPerUser ? user : ''}`)) return
+        if (command.cooldown && user!==channel.replace('#', '') && this._timeout(command.cooldown, `${tester}${command.cooldownPerUser ? user : ''}`)) return
 
         if(command.streamer && !msg.userInfo.isBroadcaster) 
           return this.client.say(channel, `/me This command is for the streamer only...`)
