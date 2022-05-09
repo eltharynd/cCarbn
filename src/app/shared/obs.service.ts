@@ -154,27 +154,29 @@ export class OBSService {
   }
 
   async toggleSource(visibile: boolean, scene: string, source: string) {
-
-    let response = await this.OBS.call('GetSceneItemId', {
-      sceneName : scene,
-      sourceName: source
-    })
-
-    if(response)
-      await this.OBS.call('SetSceneItemEnabled', {
-        sceneName: scene,
-        sceneItemId: response.sceneItemId,
-        sceneItemEnabled: visibile
+    try {
+      let response = await this.OBS.call('GetSceneItemId', {
+        sceneName : scene,
+        sourceName: source
       })
+
+      if(response)
+        await this.OBS.call('SetSceneItemEnabled', {
+          sceneName: scene,
+          sceneItemId: response.sceneItemId,
+          sceneItemEnabled: visibile
+        })
+    } catch(e) {console.error(e)}
   }
 
   async toggleFilter(visible: boolean, source: string, filter: string) {
-    await this.OBS.call('SetSourceFilterEnabled', {
-      sourceName: source,
-      filterName: filter,
-      filterEnabled: visible
-    })
-
+    try {
+      await this.OBS.call('SetSourceFilterEnabled', {
+        sourceName: source,
+        filterName: filter,
+        filterEnabled: visible
+      })
+    } catch(e) {console.error(e)}
   }
 
 }
