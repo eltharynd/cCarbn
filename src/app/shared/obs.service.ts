@@ -164,7 +164,7 @@ export class OBSService {
         await this.OBS.call('SetSceneItemEnabled', {
           sceneName: scene,
           sceneItemId: response.sceneItemId,
-          sceneItemEnabled: visibile&&true
+          sceneItemEnabled: visibile ? 'true' : 'false'
         })
     } catch(e) {console.error(e)}
   }
@@ -174,7 +174,7 @@ export class OBSService {
       await this.OBS.call('SetSourceFilterEnabled', {
         sourceName: source,
         filterName: filter,
-        filterEnabled: visible&&true
+        filterEnabled: visible ? 'true' : 'false'
       })
     } catch(e) {console.error(e)}
   }
