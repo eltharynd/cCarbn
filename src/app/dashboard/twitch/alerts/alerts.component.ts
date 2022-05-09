@@ -30,7 +30,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
 
   constructor(private data: DataService, public auth: AuthGuard, public OBS: OBSService, public clipboardApi: ClipboardService, public cdr: ChangeDetectorRef) {
     this.data.get(`user/${this.auth.currentUser?._id}/redemptions`).then(data => {
-      this.channelRewards = data
+      this.channelRewards = data.sort((a, b) => a.title.localeCompare(b.title))
       this.cdr.detectChanges()
     })
     this.uploadedSubject.subscribe(data => {
