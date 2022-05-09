@@ -236,7 +236,9 @@ export class AlertsService {
                 ignore = true
             }
             continue
-          } 
+          } else {
+            ignore = true
+          }
 
           if(ignore) break
         }
