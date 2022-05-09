@@ -14,13 +14,13 @@ export class AlertsService {
 
   constructor(private data: DataService) { 
 
-    this.elementsSubject.subscribe(element => {
+    this.elementsSubject.subscribe(async element => {
       switch (element.what) {
         case 'ended':
           this.playing--
-          setTimeout(async () => {
+          //setTimeout(async () => {
             await this.playNext()
-          }, 500);
+          //}, 500);
       }
     }) 
 
