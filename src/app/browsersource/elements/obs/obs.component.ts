@@ -20,7 +20,7 @@ export class ObsComponent implements OnInit {
     if(!this.OBS.isOBS) {
       setTimeout(() => {
         this.onPlaybackEnded()
-      }, ((+this.element.duration)|500) * 1000);
+      }, ((+this.element.duration)||0.5) * 1000);
       return
     }
     
@@ -32,7 +32,7 @@ export class ObsComponent implements OnInit {
           if(this.element.revert)
             this.OBS.toggleSource(!this.element.toggleTo, this.element.scene.sceneName ? this.element.scene.sceneName : this.element.scene, this.element.source.sourceName? this.element.source.sourceName : this.element.source)
           this.onPlaybackEnded()
-        }, ((+this.element.duration)|500) * 1000);
+        }, ((+this.element.duration)||0.5) * 1000);
         break
       case 'filterVisibility':
         this.OBS.toggleFilter(this.element.toggleTo, this.element.input.inputName? this.element.input.inputName : this.element.input, this.element.filter.filterName? this.element.filter.filterName : this.element.filter)
@@ -41,7 +41,7 @@ export class ObsComponent implements OnInit {
           if(this.element.revert)
             this.OBS.toggleFilter(!this.element.toggleTo, this.element.input.inputName? this.element.input.inputName : this.element.input, this.element.filter.filterName? this.element.filter.filterName : this.element.filter)
           this.onPlaybackEnded()
-        }, ((+this.element.duration)|0) * 1000);
+        }, ((+this.element.duration)||0) * 1000);
         break
       default:
         setTimeout(() => {
