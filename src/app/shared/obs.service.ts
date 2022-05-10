@@ -85,8 +85,6 @@ export class OBSService {
       this.currentScene = data.currentScene
       this.scenes = data.scenes
       this.sources = data.sources
-      console.log(this.scenes)
-      console.log(this.sources)
     })
   }
 
@@ -102,14 +100,14 @@ export class OBSService {
         })
         s.sources = sources.sceneItems
 
-        /* for(let source of s.sources) {
+        for(let source of s.sources) {
           if(source.isGroup) {
-            let inner = await this.OBS.call('GetGroupItemList', {
+            let inner = await this.OBS.call('GetGroupSceneItemList', {
               sceneName: source.sourceName
             })
             source.items = inner.sceneItems
           }
-        } */
+        }
       }
     }
   

@@ -413,4 +413,10 @@ input {
             row-gap: 0.2rem;
         }
     }
+
+    .option-header:hover,
+    .option-header:active,
+    .option-header {
+        color: dimgray;
+    }
 }

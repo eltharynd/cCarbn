@@ -26,11 +26,15 @@ export class ObsComponent implements OnInit {
     
     switch (this.element.trigger) {
       case 'sourceVisibility':
-        this.OBS.toggleSource(this.element.toggleTo, this.element.scene.sceneName ? this.element.scene.sceneName : this.element.scene, this.element.source.sourceName? this.element.source.sourceName : this.element.source)
+
+        let sceneName = this.element.sourceNested ? this.element.source.sourceName : this.element.scene?.sceneName
+        let sourceName =this.element.sourceNested ? this.element.sourceNested.sourceName : this.element.source?.sourceName 
+
+        this.OBS.toggleSource(this.element.toggleTo, sceneName, sourceName)
 
         setTimeout(() => {
           if(this.element.revert)
-            this.OBS.toggleSource(!this.element.toggleTo, this.element.scene.sceneName ? this.element.scene.sceneName : this.element.scene, this.element.source.sourceName? this.element.source.sourceName : this.element.source)
+            this.OBS.toggleSource(!this.element.toggleTo, sceneName, sourceName)
           this.onPlaybackEnded()
         }, ((+this.element.duration)||0) * 1000);
         break

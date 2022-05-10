@@ -501,9 +501,16 @@
                                         </nb-select>
                                         <div class="anchor"><label>Scene</label></div>
                                     </div>
-                                    <div class="field-container" >
-                                        <nb-select [placeholder]="elem.source?.sourceName" [(selected)]="elem.source" (selectedChange)="al.changes=true" fullWidth [disabled]="!elem.scene || !elem.scene.sources">
+                                    <div class="field-container">
+                                        <nb-select [placeholder]="elem.source?.sourceName" [(selected)]="elem.source" (selectedChange)="al.changes=true; elem.sourceNested = null;" fullWidth [disabled]="!elem.scene || !elem.scene.sources">
                                             <nb-option *ngFor="let s of elem.scene?.sources||[]" [value]="s">{{s.sourceName}}</nb-option>
+                                        </nb-select>
+                                        <div class="anchor"><label>{{elem.source?.isGroup ? 'Group' : 'Source'}}</label></div>
+                                    </div>
+                                    <div class="field-container" *ngIf="elem.source?.isGroup">
+                                        <nb-select [placeholder]="elem.sourceNested?.sourceName||'Whole Group'" [(selected)]="elem.sourceNested" (selectedChange)="al.changes=true" fullWidth [disabled]="!elem.scene || !elem.scene.sources || !elem.source">
+                                            <nb-option class="option-header">Whole Group</nb-option>
+                                            <nb-option *ngFor="let s of elem.source?.items||[]" [value]="s">{{s.sourceName}}</nb-option>
                                         </nb-select>
                                         <div class="anchor"><label>Source</label></div>
                                     </div>
