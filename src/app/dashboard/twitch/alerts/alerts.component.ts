@@ -41,6 +41,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     document.documentElement.classList.remove('smooth-scrolling')
     this.alerts = await this.data.get(`alerts/${this.auth.currentUser?._id}`)
+    console.log(this.alerts)
     this.cdr.detectChanges()
     for(let al of this.alerts) {
       al.backup = JSON.stringify(al)
@@ -84,7 +85,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
     this.cdr.detectChanges()
   }
 
-  addAlert() {
+  async addAlert() {
     let alert: any = {
       name: 'An alert',
       enabled: true,
@@ -104,6 +105,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
     }, 100);
+    await this.saveAlert(alert)
   }
 
   revertAlert(alert: _alert) {
@@ -172,8 +174,9 @@ export class AlertsComponent implements OnInit, OnDestroy {
     return true
   }
   async moveAlert(alert: _alert, upwards: boolean) {
+    if(!alert._id) await this.saveAlert(alert)
     let index = this.alerts.indexOf(alert)
-    if(!index) return
+    if(index<0) return
     
     if(await this.data.get(`alerts/${this.auth.currentUser?._id}/move/${upwards?'upwards':'downwards'}/${index}`)) {
       this.alerts.splice(index+(upwards?-1:1), 0, this.alerts.splice(index, 1)[0])

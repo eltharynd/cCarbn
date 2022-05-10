@@ -75,12 +75,10 @@ export class AlertsRoutes {
 
       let userAlerts = await Alerts.findOne({userId: Mongo.ObjectId(req.params.userId)})
       if(!userAlerts) return res.status(404).send()
-
-      let alerts: any = userAlerts.alerts
-      let index = req.params.index
+      let alerts = userAlerts.alerts
+      let index = parseInt(req.params.index)
       let upward = req.params.direction==='upwards' ? true : false
-      alerts.splice(index+(upward?-1:1), 0, alerts.splice(index, 1)[0])
-      userAlerts.alerts = alerts
+      alerts.splice(+index+(upward?-1:1), 0, alerts.splice(index, 1)[0])
       await userAlerts.save()
       res.send({})
     })
