@@ -254,7 +254,7 @@ export class AlertsService {
             switch (element.message) {
               case 'customMessage':
                 if(element.text)
-                  element.text.replace(/\$user/gi, user)
+                  element.text = this.populateText(element.text, data)
                 break
               case 'subMessage':
                 element.text = data.message?.text ? data.message.text : data.message
