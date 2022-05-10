@@ -174,10 +174,9 @@ export class AlertsComponent implements OnInit, OnDestroy {
   async moveAlert(alert: _alert, upwards: boolean) {
     let index = this.alerts.indexOf(alert)
     if(!index) return
+    await this.data.get(`alerts/${this.auth.currentUser?._id}/move/${upwards?'upwards':'downwards'}/${index}`)
     this.alerts.splice(index+(upwards?-1:1), 0, this.alerts.splice(index, 1)[0])
     this.cdr.detectChanges()
-
-    await this.data.get(`alerts/${this.auth.currentUser?._id}/move/${upwards?'upwards':'downwards'}/${index}`)
   }
 
   addCondition(alert: _alert) {
