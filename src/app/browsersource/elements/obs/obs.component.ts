@@ -39,11 +39,15 @@ export class ObsComponent implements OnInit {
         }, ((+this.element.duration)||0) * 1000);
         break
       case 'filterVisibility':
-        this.OBS.toggleFilter(this.element.toggleTo, this.element.input.inputName? this.element.input.inputName : this.element.input, this.element.filter.filterName? this.element.filter.filterName : this.element.filter)
+
+        let inputName = this.element.input?.sceneName ? this.element.input.sceneName : this.element.input?.inputName
+        let filterName = this.element.filter?.filterName
+    
+        this.OBS.toggleFilter(this.element.toggleTo, inputName, filterName)
 
         setTimeout(() => {
           if(this.element.revert)
-            this.OBS.toggleFilter(!this.element.toggleTo, this.element.input.inputName? this.element.input.inputName : this.element.input, this.element.filter.filterName? this.element.filter.filterName : this.element.filter)
+            this.OBS.toggleFilter(!this.element.toggleTo, inputName, filterName)
           this.onPlaybackEnded()
         }, ((+this.element.duration)||0) * 1000);
         break

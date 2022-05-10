@@ -519,6 +519,9 @@
                                 <div *ngIf="elem.trigger==='filterVisibility'" class="obs-inner">
                                     <div class="field-container" >
                                         <nb-select [placeholder]="elem.input?.inputName" [(selected)]="elem.input" (selectedChange)="al.changes=true" fullWidth>
+                                            <nb-option class="option-header">Scenes</nb-option>
+                                            <nb-option *ngFor="let i of OBS.scenes" [value]="i">{{i.sceneName}}</nb-option>
+                                            <nb-option class="option-header">Sources</nb-option>
                                             <nb-option *ngFor="let i of OBS.sources" [value]="i">{{i.inputName}}</nb-option>
                                         </nb-select>
                                         <div class="anchor"><label>Input</label></div>

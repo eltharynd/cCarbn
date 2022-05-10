@@ -108,20 +108,25 @@ export class OBSService {
             source.items = inner.sceneItems
           }
         }
+
+        let filters = await this.OBS.call('GetSourceFilterList', {
+          sourceName: s.sceneName
+        })
+        s.filters = filters.filters
       }
+
+      this.scenes.sort((a, b) => {
+        if(a.sceneName.toLowerCase() < b.sceneName.toLowerCase())
+          return -1
+        else if (a.sceneName.toLowerCase() > b.sceneName.toLowerCase())
+          return 1
+        else return 0
+      })
     }
   
     response = await this.OBS.call('GetInputList')
     if(response) {
       this.sources = response.inputs
-      let groups = await this.OBS.call('GetGroupList')
-      if(groups) {
-        for(let g of groups.groups) {
-          this.sources.push({
-            inputKind: 'group', inputName: g
-          })
-        }  
-      }
       this.sources.sort((a, b) => {
         if(a.inputName.toLowerCase() < b.inputName.toLowerCase())
           return -1
