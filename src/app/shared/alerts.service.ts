@@ -295,11 +295,11 @@ export class AlertsService {
           gifted: Math.floor(Math.random()*50)+1,
           cumulative: Math.floor(Math.random()*60)+1,
           tier: (Math.floor(Math.random()*3)+1)*1000,
-          raider: 'Pokimane',
-          raider_id: 'pokimane',
-          raiders: Math.floor(Math.random()*300)+1,
-          raid: 'PewDiePie',
-          raid_id: 'pewdiepie',
+          from_broadcaster_user_name: 'Pokimane',
+          from_broadcaster_user_login: 'Pokimane',
+          viewers: Math.floor(Math.random()*300)+1,
+          to_broadcaster_user_name: 'PewDiePie',
+          to_broadcaster_user_login: 'pewdiepie',
           is_gift: 'true'
         }, e)
         if(buffer.type === 'tts') 
