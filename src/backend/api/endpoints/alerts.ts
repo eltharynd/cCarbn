@@ -71,6 +71,19 @@ export class AlertsRoutes {
         await userAlerts.save()
         res.send(alert._id)
       })
+    Api.endpoints.get('/api/alerts/:userId/move/:direction/:index',authMiddleware, async (req, res) => {
+
+      let userAlerts = await Alerts.findOne({userId: Mongo.ObjectId(req.params.userId)})
+      if(!userAlerts) return res.status(404).send()
+
+      let alerts: any = userAlerts.alerts
+      let index = req.params.index
+      let upward = req.params.direction==='upwards' ? true : false
+      alerts.splice(index+(upward?-1:1), 0, alerts.splice(index, 1)[0])
+      userAlerts.alerts = alerts
+      await userAlerts.save()
+      res.send({})
+    })
     Api.endpoints.route('/api/alerts/:userId/:alertId')
       .delete(authMiddleware, async (req,res) => {
         let userAlerts: any = await Alerts.findOne({ userId: Mongo.ObjectId(req.params.userId) })

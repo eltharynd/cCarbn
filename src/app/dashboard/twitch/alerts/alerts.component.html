@@ -62,7 +62,7 @@
 </nb-card>
 
 <nb-accordion class="centered alternate" multi>
-    <nb-accordion-item *ngFor="let al of alerts;" [expanded]="al.expanded">  
+    <nb-accordion-item *ngFor="let al of alerts; let alIndex = index;" [expanded]="al.expanded">  
         
         <!-- HEADER -->
         <nb-accordion-item-header class="alert-header">
@@ -79,7 +79,13 @@
                     <strong *ngIf="i+1 < al.conditions.length">&nbsp;AND&nbsp;</strong>
                 </div>
             </div>
+            <div class="alert-mover">
+                <nb-icon icon="arrow-up-outline" [class.disabled]="alIndex<=0" (click)="moveAlert(al, true);$event.stopPropagation()"></nb-icon>
+                <nb-icon icon="arrow-down-outline" [class.disabled]="alIndex>=alerts.length-1" (click)="moveAlert(al, false);$event.stopPropagation()"></nb-icon>
+            </div>
         </nb-accordion-item-header>
+
+
 
         <!-- TRIGGERS AND ELEMENTS -->
         <nb-accordion-item-body class="centered-nested">
