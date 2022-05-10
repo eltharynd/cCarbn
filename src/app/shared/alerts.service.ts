@@ -295,11 +295,11 @@ export class AlertsService {
           gifted: Math.floor(Math.random()*50)+1,
           cumulative: Math.floor(Math.random()*60)+1,
           tier: (Math.floor(Math.random()*3)+1)*1000,
-          from_broadcaster_user_name: 'Pokimane',
-          from_broadcaster_user_login: 'Pokimane',
+          from_broadcaster_user_name: 'eltharynd',
+          from_broadcaster_user_login: 'eltharynd',
           viewers: Math.floor(Math.random()*300)+1,
-          to_broadcaster_user_name: 'PewDiePie',
-          to_broadcaster_user_login: 'pewdiepie',
+          to_broadcaster_user_name: 'eltharynd',
+          to_broadcaster_user_login: 'eltharynd',
           is_gift: 'true'
         }, e)
         if(buffer.type === 'tts') 
@@ -348,16 +348,18 @@ export class AlertsService {
       .replace(/\$tier/g, `${+element.tier / 1000}`)
       .replace(/\$is_gift/g, element.is_gift ? 'true' : 'false')
 
-      .replace(/\$raider/g, element.from_broadcaster_user_name)
-      .replace(/\$raider_id/g, element.from_broadcaster_user_login)
       .replace(/\$raiders/g, element.viewers)
+      .replace(/\$raider_id/g, element.from_broadcaster_user_login)
+      .replace(/\$raider/g, element.from_broadcaster_user_name)
 
-      .replace(/\$raid/g, element.to_broadcaster_user_name)
+
       .replace(/\$raid_id/g, element.to_broadcaster_user_login)
+      .replace(/\$raid/g, element.to_broadcaster_user_name)
 
 
-      .replace(/\$ban_by/g, element.moderator_user_name)
       .replace(/\$ban_by_id/g, element.moderator_user_login)
+      .replace(/\$ban_by/g, element.moderator_user_name)
+
       .replace(/\$reason/g, element.reason ? element.reason : 'Not specified.')
       .replace(/\$duration/g, element.left > 60*1000 ? 
                                 `${Math.floor(element.left/600)/100} minutes` :
