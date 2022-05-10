@@ -1,5 +1,8 @@
+import { HelixClip } from "@twurple/api/lib"
 import { EventSubChannelRaidEvent } from "@twurple/eventsub/lib"
+import { filter, from, take } from "rxjs"
 import { User } from "../../db/models/user"
+import { Twitch } from "../../twitch/twitch"
 import { Socket } from "../socket"
 import { toJSON, getUserInfo } from "./util/toJSON"
 
@@ -12,6 +15,36 @@ export class RaidHandler {
     data.type = 'Raid From'
     data.userInfo = getUserInfo(await event.getRaidingBroadcaster())
     console.log(data)
+
+    try {
+      let alertData: any = {
+        channel: (await Twitch.client.search.searchChannels(data.from_broadcaster_user_id)).data
+      }
+      alertData.channel = await from(alertData.channel).pipe(
+        filter((channel: any) => channel.name === data.from_broadcaster_user_id),
+        take(1)
+      ).toPromise()
+      if(alertData.channel) {
+        alertData.clips = (await Twitch.client.clips.getClipsForBroadcaster(alertData.channel.id)).data
+        alertData.randomClip = alertData.clips[Math.floor(Math.random()*alertData.clips.length)]
+        alertData.topClip = {views: -1}
+        for(let c of alertData.clips) {
+          let clip: HelixClip = c
+          clip.views > alertData.topClip.views
+          alertData.topClip = clip
+        }
+
+        if(alertData.topClip.views<0) delete alertData.topClip
+
+        if(alertData.channel) alertData.channel = toJSON(alertData.channel)
+        if(alertData.clips) alertData.clips = toJSON(alertData.clips)
+        if(alertData.stream) alertData.stream = toJSON(alertData.stream)
+        if(alertData.randomClip) alertData.randomClip = toJSON(alertData.randomClip)
+        if(alertData.topClip) alertData.topClip = toJSON(alertData.topClip)
+
+        data.alertData = alertData
+      }
+    } catch(e) {console.error(e)}
 
     let found: any = await User.findOne({twitchId: event.raidedBroadcasterId})
     if(found) {
