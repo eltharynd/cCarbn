@@ -129,7 +129,7 @@ export class ClipComponent implements OnInit {
     this.element.loaded = true
     setTimeout(() => {
       this.onPlaybackEnded()
-    }, +this.clip.duration * 1000);
+    }, (+this.clip.duration + 1) * 1000);
   }
 
   onError(error) {
