@@ -145,7 +145,29 @@ input {
     
 }
 
-
+.element-tab-header{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    margin-right: 3rem;
+    margin-left: 3rem;
+    border-radius: 0 0 1rem 1rem;
+    background-color: rgba(white,0.1);
+    > .element-arrows {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+    }
+}
+.element-body-placeholder{
+    height: 5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 .elements-body {
     background-color: $inner-background;
     padding: 0;

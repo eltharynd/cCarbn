@@ -257,11 +257,35 @@
                         </nb-list-item>
                     </nb-list>
                 </nb-card-header>
-
                 <!-- ELEMENTS -->
                 <nb-card-body class="elements-body">
-                    <nb-tabset fullWidth class="elements-tabs">
-                        <nb-tab *ngFor="let elem of al.elements; let i = index" [tabTitle]="elem.type" style="padding: 0;">
+                    <nb-tabset fullWidth class="elements-tabs" (changeTab)="al.manualSelect = false">
+                        <nb-tab *ngFor="let elem of al.elements; let i = index" [tabTitle]="elem.type||'ALERT ELEMENTS'" style="padding: 0;" [active]="al.manualSelect ? elem.selectThis : i===0">
+                            <div class="element-tab-header">
+                                <button nbButton status="primary" (click)="moveElement(al, elem, false)" [disabled]="i===0"><nb-icon icon="arrow-left"></nb-icon></button>
+                                <div style="width: 3rem;"></div>
+
+                                <nb-select status="success" placeholder="Add an element" [(selected)]="al.selectedElementToAdd">
+                                    <nb-option *ngFor="let type of ElementTypes | keyvalue: originalOrder" [value]="type.key">{{type.value}}</nb-option>
+                                </nb-select>
+                                <button nbButton status="success" (click)="addElement(al, al.selectedElementToAdd)"><nb-icon icon="plus"></nb-icon></button>
+
+                                <div style="width: 1rem;"></div>
+
+                                <nb-select status="danger" placeholder="Delete an element" [(selected)]="al.selectedElementToDelete" [disabled]="al.elements.length<1 || elem.placeholder">
+                                    <nb-option *ngFor="let ev of al.elements; let i = index" [value]="i">{{ev.type}}</nb-option>
+                                </nb-select>
+                                <button nbButton status="danger" (click)="deleteElement(al, al.selectedElementToDelete)" [disabled]="al.elements.length<1 || elem.placeholder"><nb-icon icon="trash-2"></nb-icon></button>
+                                
+                                <div style="width: 3rem;"></div>
+                                <button nbButton status="primary" (click)="moveElement(al, elem, true)" [disabled]="al.elements.length<1 || i+1===al.elements.length"><nb-icon icon="arrow-right"></nb-icon></button>
+                            </div>
+
+                            <div *ngIf="elem.placeholder" class="element-body-placeholder">
+                                <p>
+                                    THIS ALERT HAS NO ELEMENTS YET
+                                </p>
+                            </div>
 
                             <div #media *ngIf="elem.type==='video' || elem.type==='audio' || elem.type==='gif' || elem.type==='image' || elem.type==='clip'" class="media-container">
                                 
@@ -568,7 +592,7 @@
                             </div>
 
                         </nb-tab>
-                        <nb-tab tabTitle="Add" tabIcon="file-add">
+<!--                         <nb-tab tabTitle="Add" tabIcon="file-add">
                             <nb-select placeholder="Select type of element to add" fullWidth [(selected)]="selectedElementType" (selectedChange)="addElement(al, $event)">
                                 <nb-option *ngFor="let type of ElementTypes | keyvalue: originalOrder" [value]="type.key">{{type.value}}</nb-option>
                             </nb-select>
@@ -577,7 +601,7 @@
                             <nb-select placeholder="Select the element to delete" fullWidth [(selected)]="selectedElementType" (selectedChange)="deleteElement(al, $event)">
                                 <nb-option *ngFor="let ev of al.elements; let i = index" [value]="i">{{ev.type}}</nb-option>
                             </nb-select>
-                        </nb-tab>
+                        </nb-tab> -->
                     </nb-tabset>
                 </nb-card-body>
 

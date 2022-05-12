@@ -41,7 +41,6 @@ export class AlertsComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     document.documentElement.classList.remove('smooth-scrolling')
     this.alerts = await this.data.get(`alerts/${this.auth.currentUser?._id}`)
-    console.log(this.alerts)
     this.cdr.detectChanges()
     for(let al of this.alerts) {
       al.backup = JSON.stringify(al)
@@ -96,7 +95,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
           compared: null
         }
       ],
-      elements: [],
+      elements: [{placeholder: true, selectThis: true}],
       expanded: true
     }
     alert.backup = JSON.stringify(alert)
@@ -202,19 +201,39 @@ export class AlertsComponent implements OnInit, OnDestroy {
   selectedElementType
   addElement(alert: _alert, type) {
     if(alert.elements.length>0) delete alert.elements[0].withPrevious
+    for(let e of alert.elements)
+      delete e.selectThis
     alert.elements.push({
-      type: type
+      type: type,
+      selectThis: true
     })
+    alert.manualSelect = true
 
     this.selectedElementType = null
     alert.changes = true
+    if(alert.elements[0].placeholder)
+      alert.elements.splice(0,1)
     this.cdr.detectChanges()
   }
   deleteElement(alert: _alert, index) {
     alert.elements.splice(index, 1)
     if(alert.elements.length>0) delete alert.elements[0].withPrevious
 
+    delete alert.manualSelect
+    
     this.selectedElementType = null
+    alert.changes = true
+    if(alert.elements.length<1) 
+      alert.elements.push({placeholder:true, selectThis: true})
+    this.cdr.detectChanges()
+  }
+  async moveElement(alert: _alert, element, right: boolean) {
+    let index = alert.elements.indexOf(element)
+    if(index<0) return
+    
+    alert.elements.splice(index+(right?1:-1), 0, alert.elements.splice(index, 1)[0])
+    if(alert.elements[0].withPrevious)
+      delete alert.elements[0].withPrevious
     alert.changes = true
     this.cdr.detectChanges()
   }
@@ -719,6 +738,10 @@ export interface _alert {
   activeTab?: number
   enabled?: boolean
   buffer?: any
+
+  manualSelect?: any
+  selectedElementToAdd?: any
+  selectedElementToDelete?: any
 }
 
 const cleanAlert = (alert: _alert) => {
@@ -726,6 +749,7 @@ const cleanAlert = (alert: _alert) => {
   for(let el of alert.elements) {
     delete el.select
     delete el.upload
+    //delete el.selectThis
   }
   delete clone.backup
   delete clone.changes
@@ -733,6 +757,9 @@ const cleanAlert = (alert: _alert) => {
   delete clone.expanded
   delete clone.disabled
   delete clone.buffer
+  //delete clone.manualSelect
+  delete clone.selectedElementToAdd
+  delete clone.selectedElementToDelete
   return clone
 }
 

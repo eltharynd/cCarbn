@@ -8,7 +8,7 @@ const ALERT_TEMPLATE = {
     operator: null,
     compared: null
   }],
-  elements: []
+  elements: [{placeholder: true}]
 }
 
 interface IAlerts {
