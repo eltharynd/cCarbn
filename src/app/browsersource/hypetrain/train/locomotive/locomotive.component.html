@@ -8,8 +8,8 @@
       [@shake]="shakeState"
       (@shake.done)="shakeState = +shakeState + 1 === shakeKeyframes ? 0 : +shakeState + 1"
       [ngStyle]="{
-        width: size.width * (scale || 1) + 'px',
-        height: size.height * (scale || 1) + 'px',
+        width: (size.width * (scale || 100)) / 100 + 'px',
+        height: (size.height * (scale || 100)) / 100 + 'px',
         'background-image': backgroundPic ? 'url(' + backgroundPic + '#)' : ''
       }"
     >
@@ -26,10 +26,10 @@
       <div
         class="top"
         [ngStyle]="{
-          top: pictureBounds.top! * scale + 'px',
-          width: pictureBounds.width! * scale + 'px',
-          left: pictureBounds.left! * scale + 'px',
-          height: pictureBounds.height! * scale + 'px',
+          top: (pictureBounds.top! * scale) / 100 + 'px',
+          width: (pictureBounds.width! * scale) / 100 + 'px',
+          left: (pictureBounds.left! * scale) / 100 + 'px',
+          height: (pictureBounds.height! * scale) / 100 + 'px',
           'background-image': foregroundPic ? 'url(' + foregroundPic + '#)' : ''
         }"
       ></div>

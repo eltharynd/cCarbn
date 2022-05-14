@@ -93,6 +93,12 @@ export class HypetrainService {
     })
     this.data.socketIO.on('hypetrain-test-add-carriage', (data) => this.addCarriage())
     this.data.socketIO.on('hypetrain-test-stop', (data) => this.stop())
+
+    this.currentLocomotiveScale = this.settings.hypetrain.train.locomotive.scale
+    this.currentCarriageScale = this.settings.hypetrain.train.carriage.scale
+    this.settings.updated.subscribe(() => {
+      this.resizeToFit()
+    })
   }
 
   async fetchUser() {
@@ -118,6 +124,7 @@ export class HypetrainService {
   start() {
     if (this.currentLevel > 0) return
     this.onLevelChange.next(++this.currentLevel)
+    this.resizeToFit()
   }
   changeLevel(level) {
     if (level === this.currentLevel) return
@@ -165,6 +172,7 @@ export class HypetrainService {
       })
     }
 
+    this.resizeToFit()
     this.onProgress.next(this.currentLevel)
   }
   stop() {
@@ -201,6 +209,41 @@ export class HypetrainService {
     this.stop()
     this.data.socketIO.emit('hypetrain-test-stop', {
       userId: this.auth.currentUser?._id,
+    })
+  }
+
+  currentLocomotiveScale = this.settings.hypetrain.train.locomotive.scale
+  currentCarriageScale = this.settings.hypetrain.train.carriage.scale
+
+  async resizeToFit() {
+    console.log('resizing')
+
+    let locomotiveWidth = (+this.settings.hypetrain.train.locomotive.size.width * +this.settings.hypetrain.train.locomotive.scale) / 100
+    let carriageWidth = (+this.settings.hypetrain.train.carriage.size.width * +this.settings.hypetrain.train.carriage.scale) / 100
+
+    let viewportWidth = +this.settings.viewport.width - +this.settings.hypetrain.train.start.x
+
+    let carriagesThatFit = Math.floor((viewportWidth - locomotiveWidth) / carriageWidth)
+
+    if (this.carriages.length > carriagesThatFit + (carriagesThatFit + 1) * (this.settings.hypetrain.train.maxRows - 1)) {
+      let a = this.settings.hypetrain.train.maxRows * carriageWidth
+      let b = locomotiveWidth + carriageWidth * this.carriages.length
+      let c = -(viewportWidth * this.settings.hypetrain.train.maxRows)
+      let delta = b * b - 4 * a * c
+      let newScale = (-b + Math.sqrt(delta)) / (2 * a)
+
+      newScale = newScale * 0.95
+
+      this.currentLocomotiveScale = newScale * this.settings.hypetrain.train.locomotive.scale
+      this.currentCarriageScale = newScale * this.settings.hypetrain.train.carriage.scale
+    } else {
+      this.currentLocomotiveScale = this.settings.hypetrain.train.locomotive.scale
+      this.currentCarriageScale = this.settings.hypetrain.train.carriage.scale
+    }
+
+    this.carriages.forEach((c) => {
+      c.scale = this.currentCarriageScale
+      c = c
     })
   }
 }

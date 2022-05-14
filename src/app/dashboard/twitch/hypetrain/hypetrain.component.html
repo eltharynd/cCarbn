@@ -1,57 +1,242 @@
-<app-global></app-global>
+<nb-layout class="nested">
+  <nb-layout-column>
+    <app-global></app-global>
 
-<nb-card class="centered">
-  <nb-card-header class="card-header">
-    <div class="composed-title">
-      <h1 class="text-title">Hypetrain</h1>
-      <p class="text-description">
-        This component display a train on your browsersource.<br />
-        It gets progressively longer with carriages containing profile picture of the users that contributed.<br />
-        It also plays a music that gets progressively more intense as the hypetrain goes through levels levels.
-      </p>
-    </div>
-  </nb-card-header>
-
-  <nb-card-body>
-    <h2>MONITOR</h2>
-    <div class="monitor">
-      <nb-stepper #trainStepper orientation="horizontal" [disableStepNavigation]="true">
-        <nb-step *ngFor="let s of steps" [label]="s.label" [hidden]="s.hidden"></nb-step>
-      </nb-stepper>
-      <div>
-        <div>
-          Expires in:
-          <app-timediff *ngIf="hypetrain.expiresAt" [target]="hypetrain.expiresAt"></app-timediff>
-          <span *ngIf="!hypetrain.expiresAt">--:--</span>
+    <nb-card class="centered">
+      <nb-card-header class="card-header">
+        <div class="composed-title">
+          <h1 class="text-title">Hypetrain</h1>
+          <p class="text-description">
+            This component display a train on your browsersource.<br />
+            It gets progressively longer with carriages containing profile picture of the users that contributed.<br />
+            It also plays a music that gets progressively more intense as the hypetrain goes through levels levels.
+          </p>
         </div>
-        <div>
-          Level progress:
-          {{ hypetrain.progress }}%
+      </nb-card-header>
+
+      <nb-card-body>
+        <h2>MONITOR</h2>
+        <div class="monitor">
+          <nb-stepper #trainStepper orientation="horizontal" [disableStepNavigation]="true">
+            <nb-step *ngFor="let s of steps" [label]="s.label" [hidden]="s.hidden"></nb-step>
+          </nb-stepper>
+          <div>
+            <div>
+              Expires in:
+              <app-timediff *ngIf="hypetrain.expiresAt" [target]="hypetrain.expiresAt"></app-timediff>
+              <span *ngIf="!hypetrain.expiresAt">--:--</span>
+            </div>
+            <div>
+              Level progress:
+              {{ hypetrain.progress }}%
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
 
-    <h2>TEST</h2>
-    <div class="test">
-      <button nbButton status="success" (click)="hypetrain.testStart()" [disabled]="hypetrain.currentLevel > 0">START TRAIN</button>
-      <button nbButton status="warning" (click)="hypetrain.testAddCarriage()" [disabled]="hypetrain.currentLevel === 0 || hypetrain.ending">ADD CARRIAGE</button>
-      <button
-        nbButton
-        status="PRIMARY"
-        [disabled]="hypetrain.currentLevel === 0 || hypetrain.currentLevel === 5 || hypetrain.ending"
-        (click)="hypetrain.testChangeLevel(hypetrain.currentLevel + 1)"
-      >
-        NEXT LEVEL
-      </button>
-      <button nbButton status="danger" (click)="hypetrain.testStop()" [disabled]="hypetrain.currentLevel === 0">STOP</button>
-    </div>
+        <h2>TEST</h2>
+        <div class="test">
+          <button nbButton status="success" (click)="hypetrain.testStart()" [disabled]="hypetrain.currentLevel > 0">START TRAIN</button>
+          <button nbButton status="warning" (click)="hypetrain.testAddCarriage()" [disabled]="hypetrain.currentLevel === 0 || hypetrain.ending">ADD CARRIAGE</button>
+          <button
+            nbButton
+            status="PRIMARY"
+            [disabled]="hypetrain.currentLevel === 0 || hypetrain.currentLevel === 5 || hypetrain.ending"
+            (click)="hypetrain.testChangeLevel(hypetrain.currentLevel + 1)"
+          >
+            NEXT LEVEL
+          </button>
+          <button nbButton status="danger" (click)="hypetrain.testStop()" [disabled]="hypetrain.currentLevel === 0">STOP</button>
+        </div>
 
-    <h2>AUDIO</h2>
-    <div class="audio">
-      Enabled <nb-toggle [(ngModel)]="settings.hypetrain.audio.enabled" (change)="settings.onUpdated()">{{ settings.hypetrain.audio.enabled ? 'ON' : 'OFF' }}</nb-toggle>
-    </div>
-  </nb-card-body>
-</nb-card>
+        <h2>AUDIO</h2>
+        <div class="audio">
+          <div>
+            <nb-toggle [(ngModel)]="settings.hypetrain.audio.enabled" (change)="settings.onUpdated()">{{ settings.hypetrain.audio.enabled ? 'ENABLED' : 'DISABLED' }}</nb-toggle>
+          </div>
+        </div>
 
-<button nbButton status="PRIMARY" (click)="startTest()">FULL TEST</button>
-<button nbButton status="PRIMARY" (click)="stopTest()">STOP TEST</button>
+        <h2>TRAIN</h2>
+        <div class="train" [class.disabled]="settings.hypetrain.train.enabled">
+          <div class="main-toggle">
+            <nb-toggle [(ngModel)]="settings.hypetrain.train.enabled" (change)="settings.onUpdated()">{{ settings.hypetrain.train.enabled ? 'ENABLED' : 'DISABLED' }}</nb-toggle>
+          </div>
+
+          <div>
+            <div>Anchor (the point there your train starts):&nbsp;</div>
+            <div class="field-container">
+              <input nbInput placeholder="0" type="number" />
+              <div class="anchor"><label>left</label></div>
+              <div class="unit">px</div>
+            </div>
+            <div class="field-container">
+              <input nbInput type="number" placeholder="0" />
+              <div class="anchor"><label>top</label></div>
+              <div class="unit">px</div>
+            </div>
+          </div>
+
+          <div>
+            <nb-toggle [(checked)]="settings.hypetrain.train.reverseDirection" (change)="settings.onUpdated()">{{
+              settings.hypetrain.train.reverseDirection ? 'Grow leftwards' : 'Grow rightwards'
+            }}</nb-toggle>
+            <nb-toggle [(checked)]="settings.hypetrain.train.reverseWrap" (change)="settings.onUpdated()">{{
+              settings.hypetrain.train.reverseWrap ? 'Grop upwards' : 'Grow downwards'
+            }}</nb-toggle>
+            <div class="field-container">
+              <input nbInput placeholder="1" [(ngModel)]="settings.hypetrain.train.maxRows" (change)="settings.onUpdated()" type="number" />
+              <div class="anchor"><label>maximum rows</label></div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngFor="let part of ['locomotive', 'carriage']" [class]="part">
+          <h2>{{ part.toUpperCase() }}</h2>
+          <div class="pictures">
+            <div class="pictures-column">
+              <div class="pictures-uploader">
+                <app-uploader
+                  [name]="part + '-background'"
+                  [displayTextOverride]="'DRAG OR CLICK TO CHANGE\n' + part.toUpperCase() + ' BACKGROUND'"
+                  [allowedTypes]="['image']"
+                  [url]="settings.hypetrain.train[part].pictures.background"
+                  [uploaded]="pictureChangeSubject"
+                  [height]="'8rem'"
+                ></app-uploader>
+                <button *ngIf="settings.hypetrain.train[part].pictures.background" (click)="defaultPicture(part + '-background')" nbButton status="danger">
+                  <nb-icon icon="trash-2"></nb-icon>
+                </button>
+              </div>
+
+              <div>Size</div>
+              <div class="pictures-row">
+                <div class="field-container">
+                  <input
+                    [(ngModel)]="settings.hypetrain.train[part].size.width"
+                    (change)="settings.onUpdated()"
+                    disabled
+                    nbInput
+                    placeholder="1"
+                    type="number"
+                    class="input-number"
+                  />
+                  <div class="unit">px</div>
+                  <div class="anchor"><label>width</label></div>
+                </div>
+                <div class="field-container">
+                  <input
+                    [(ngModel)]="settings.hypetrain.train[part].size.height"
+                    (change)="settings.onUpdated()"
+                    disabled
+                    nbInput
+                    placeholder="1"
+                    type="number"
+                    class="input-number"
+                  />
+                  <div class="unit">px</div>
+                  <div class="anchor"><label>height</label></div>
+                </div>
+              </div>
+
+              <div class="field-container" style="margin-top: 1rem">
+                <input [(ngModel)]="settings.hypetrain.train[part].scale" (change)="settings.onUpdated()" nbInput placeholder="100" type="number" class="input-number" />
+                <div class="unit">%</div>
+                <div class="anchor"><label>scale</label></div>
+              </div>
+            </div>
+
+            <div class="pictures-column">
+              <div class="pictures-uploader">
+                <app-uploader
+                  [name]="part + '-foreground'"
+                  [displayTextOverride]="'DRAG OR CLICK TO CHANGE\n' + part.toUpperCase() + ' FOREGROUND'"
+                  [allowedTypes]="['image']"
+                  [url]="settings.hypetrain.train[part].pictures.foreground"
+                  [uploaded]="pictureChangeSubject"
+                  [height]="'8rem'"
+                ></app-uploader>
+                <button *ngIf="settings.hypetrain.train[part].pictures.foreground" (click)="defaultPicture(part + '-foreground')" nbButton status="danger">
+                  <nb-icon icon="trash-2"></nb-icon>
+                </button>
+              </div>
+
+              <div>Size</div>
+              <div class="pictures-row">
+                <div class="field-container">
+                  <input
+                    [(ngModel)]="settings.hypetrain.train[part].pictureBounds.width"
+                    (change)="settings.onUpdated()"
+                    nbInput
+                    placeholder="1"
+                    type="number"
+                    class="input-number"
+                  />
+                  <div class="unit">px</div>
+                  <div class="anchor"><label>width</label></div>
+                </div>
+                <div class="field-container">
+                  <input
+                    [(ngModel)]="settings.hypetrain.train[part].pictureBounds.height"
+                    (change)="settings.onUpdated()"
+                    nbInput
+                    placeholder="1"
+                    type="number"
+                    class="input-number"
+                  />
+                  <div class="unit">px</div>
+                  <div class="anchor"><label>height</label></div>
+                </div>
+              </div>
+
+              <div>Offset</div>
+              <div class="pictures-row">
+                <div class="field-container">
+                  <input
+                    [(ngModel)]="settings.hypetrain.train[part].pictureBounds.left"
+                    (change)="settings.onUpdated()"
+                    nbInput
+                    placeholder="1"
+                    type="number"
+                    class="input-number"
+                  />
+                  <div class="unit">px</div>
+                  <div class="anchor"><label>left</label></div>
+                </div>
+                <div class="field-container">
+                  <input
+                    [(ngModel)]="settings.hypetrain.train[part].pictureBounds.top"
+                    (change)="settings.onUpdated()"
+                    nbInput
+                    placeholder="1"
+                    type="number"
+                    class="input-number"
+                  />
+                  <div class="unit">px</div>
+                  <div class="anchor"><label>top</label></div>
+                </div>
+              </div>
+
+              <div>Profile pic</div>
+              <div class="field-container">
+                <input
+                  [(ngModel)]="settings.hypetrain.train[part].pictureBounds.scale"
+                  (change)="settings.onUpdated()"
+                  nbInput
+                  placeholder="75"
+                  type="number"
+                  class="input-number"
+                />
+                <div class="unit">%</div>
+                <div class="anchor"><label>scale</label></div>
+              </div>
+            </div>
+          </div>
+
+          <div></div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+
+    <button nbButton status="PRIMARY" (click)="startTest()">FULL TEST</button>
+    <button nbButton status="PRIMARY" (click)="stopTest()">STOP TEST</button>
+  </nb-layout-column></nb-layout
+>

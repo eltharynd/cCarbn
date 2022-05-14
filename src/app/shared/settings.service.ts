@@ -19,7 +19,7 @@ export class SettingsService {
     train: {
       enabled: true,
       reverseDirection: false,
-      maxRows: 2,
+      maxRows: 1,
       reverseWrap: false,
       start: {
         x: 25,
@@ -31,11 +31,11 @@ export class SettingsService {
           foreground: null,
         },
         size: {
-          width: 128,
-          height: 128,
+          width: 256,
+          height: 256,
         },
-        scale: 0.8,
-        pictureBounds: { top: 0, left: 64, width: 64, height: 64, scale: 0.75 },
+        scale: 100,
+        pictureBounds: { top: 0, left: 128, width: 128, height: 128, scale: 75 },
       },
       carriage: {
         pictures: {
@@ -43,11 +43,11 @@ export class SettingsService {
           foreground: null,
         },
         size: {
-          width: 128,
-          height: 128,
+          width: 256,
+          height: 256,
         },
-        scale: 0.8,
-        pictureBounds: { top: 32, left: 32, width: 64, height: 64, scale: 0.75 },
+        scale: 100,
+        pictureBounds: { top: 64, left: 64, width: 128, height: 128, scale: 75 },
       },
     },
     audio: {
@@ -94,7 +94,8 @@ export class SettingsService {
   }
 
   async onUpdated() {
-    console.log('onUpdated')
+    if (this.hypetrain.train.maxRows < 1) this.hypetrain.train.maxRows = 1
+
     let response = await this.data.post(`user/${this.data._userId}/settings/api/listener/hypetrain`, this.hypetrain)
     if (response)
       this.data.socketIO.emit('settings-updated', {

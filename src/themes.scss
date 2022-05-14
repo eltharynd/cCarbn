@@ -382,3 +382,36 @@ nb-layout-footer > nav {
     text-align: center;
   }
 }
+
+.field-container {
+  height: 40px;
+  position: relative;
+  > .anchor {
+    position: relative;
+    top: -100%;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    > label {
+      position: relative;
+      left: 0.4rem;
+      top: -18px;
+      font-size: 12px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    color: rgba(white, 0.5);
+  }
+  > .unit {
+    position: absolute;
+    top: calc(50% - 0.5em);
+    left: 100%;
+    margin-left: 0.4rem;
+  }
+}
+
+.input-number {
+  width: 7rem !important;
+  min-width: 7rem !important;
+  max-width: 7rem !important;
+}

@@ -10,7 +10,7 @@
     [viewport]="settings.viewport"
     [coordinates]="settings.hypetrain.train.start"
     [size]="settings.hypetrain.train.locomotive.size"
-    [scale]="currentLocomotiveScale"
+    [scale]="hypetrain.currentLocomotiveScale"
     [pictureBounds]="settings.hypetrain.train.locomotive.pictureBounds"
     [user]="{ name: 'streamer', picture: hypetrain.channelPic }"
     [backgroundPic]="settings.hypetrain.train.locomotive.pictures.background"
@@ -37,7 +37,7 @@
     <app-uploader
       [name]="'hypetrain-track-1'"
       [displayTextOverride]="'LVL 0->1 TRACK'"
-      [disabled]="!audioLoaded || data.busy || currentLevel > 0"
+      [disabled]="!audioLoaded || data.busy || hypetrain.currentLevel > 0"
       [uploading]="trackUploadingSubject"
       [uploaded]="trackChangeSubject"
       [allowedTypes]="['audio']"
@@ -48,7 +48,7 @@
       mat-raised-button
       color="accent"
       (click)="defaultTrack('hypetrain-track-1')"
-      [disabled]="!settings.hypetrain.audio.tracks[1] || !audioLoaded || currentLevel > 0"
+      [disabled]="!settings.hypetrain.audio.tracks[1] || !audioLoaded || hypetrain.currentLevel > 0"
       [ngStyle]="{ 'margin-bottom': '1rem' }"
     >
       DEFAULT
@@ -57,7 +57,7 @@
     <app-uploader
       [name]="'hypetrain-track-2'"
       [displayTextOverride]="'LVL 1->2 TRACK'"
-      [disabled]="!audioLoaded || data.busy || currentLevel > 0"
+      [disabled]="!audioLoaded || data.busy || hypetrain.currentLevel > 0"
       [uploading]="trackUploadingSubject"
       [uploaded]="trackChangeSubject"
       [allowedTypes]="['audio']"
@@ -68,7 +68,7 @@
       mat-raised-button
       color="accent"
       (click)="defaultTrack('hypetrain-track-2')"
-      [disabled]="!settings.hypetrain.audio.tracks[2] || !audioLoaded || currentLevel > 0"
+      [disabled]="!settings.hypetrain.audio.tracks[2] || !audioLoaded || hypetrain.currentLevel > 0"
       [ngStyle]="{ 'margin-bottom': '1rem' }"
     >
       DEFAULT
@@ -77,7 +77,7 @@
     <app-uploader
       [name]="'hypetrain-track-3'"
       [displayTextOverride]="'LVL 2->3 TRACK'"
-      [disabled]="!audioLoaded || data.busy || currentLevel > 0"
+      [disabled]="!audioLoaded || data.busy || hypetrain.currentLevel > 0"
       [uploading]="trackUploadingSubject"
       [uploaded]="trackChangeSubject"
       [allowedTypes]="['audio']"
@@ -88,7 +88,7 @@
       mat-raised-button
       color="accent"
       (click)="defaultTrack('hypetrain-track-3')"
-      [disabled]="!settings.hypetrain.audio.tracks[3] || !audioLoaded || currentLevel > 0"
+      [disabled]="!settings.hypetrain.audio.tracks[3] || !audioLoaded || hypetrain.currentLevel > 0"
       [ngStyle]="{ 'margin-bottom': '1rem' }"
     >
       DEFAULT
@@ -97,7 +97,7 @@
     <app-uploader
       [name]="'hypetrain-track-4'"
       [displayTextOverride]="'LVL 3->4 TRACK'"
-      [disabled]="!audioLoaded || data.busy || currentLevel > 0"
+      [disabled]="!audioLoaded || data.busy || hypetrain.currentLevel > 0"
       [uploading]="trackUploadingSubject"
       [uploaded]="trackChangeSubject"
       [allowedTypes]="['audio']"
@@ -108,7 +108,7 @@
       mat-raised-button
       color="accent"
       (click)="defaultTrack('hypetrain-track-4')"
-      [disabled]="!settings.hypetrain.audio.tracks[4] || !audioLoaded || currentLevel > 0"
+      [disabled]="!settings.hypetrain.audio.tracks[4] || !audioLoaded || hypetrain.currentLevel > 0"
       [ngStyle]="{ 'margin-bottom': '1rem' }"
     >
       DEFAULT
@@ -117,7 +117,7 @@
     <app-uploader
       [name]="'hypetrain-track-5'"
       [displayTextOverride]="'LVL 4->5(END) TRACK'"
-      [disabled]="!audioLoaded || data.busy || currentLevel > 0"
+      [disabled]="!audioLoaded || data.busy || hypetrain.currentLevel > 0"
       [uploading]="trackUploadingSubject"
       [uploaded]="trackChangeSubject"
       [allowedTypes]="['audio']"
@@ -128,7 +128,7 @@
       mat-raised-button
       color="accent"
       (click)="defaultTrack('hypetrain-track-5')"
-      [disabled]="!settings.hypetrain.audio.tracks[5] || !audioLoaded || currentLevel > 0"
+      [disabled]="!settings.hypetrain.audio.tracks[5] || !audioLoaded || hypetrain.currentLevel > 0"
       [ngStyle]="{ 'margin-bottom': '1rem' }"
     >
       DEFAULT
@@ -185,7 +185,7 @@
     </div>
     <div>
       Maximum rows:
-      <mat-slider min="1" max="10" step="1" (change)="resizeToFit()" [(ngModel)]="settings.hypetrain.train.maxRows"></mat-slider>
+      <mat-slider min="1" max="10" step="1" (change)="hypetrain.resizeToFit()" [(ngModel)]="settings.hypetrain.train.maxRows"></mat-slider>
       {{ settings.hypetrain.train.maxRows }}
     </div>
     <div>
@@ -193,7 +193,7 @@
     </div>
     <br />
     <br />
-    <div>Linked scale: <mat-slide-toggle [(ngModel)]="scaleLinked"></mat-slide-toggle></div>
+    <div>Linked scale: <mat-slide-toggle></mat-slide-toggle></div>
 
     <h3>LOCOMOTIVE</h3>
     <div class="table-outer">
@@ -207,15 +207,7 @@
           [height]="'4rem'"
           [ngStyle]="{ 'margin-bottom': '.2rem' }"
         ></app-uploader>
-        <button
-          mat-raised-button
-          color="accent"
-          (click)="defaultPicture('locomotive-background')"
-          [disabled]="!settings.hypetrain.train.locomotive.pictures.background"
-          [ngStyle]="{ 'margin-bottom': '1rem' }"
-        >
-          DEFAULT
-        </button>
+        <button mat-raised-button color="accent" [disabled]="!settings.hypetrain.train.locomotive.pictures.background" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
         <mat-form-field>
           <input matInput type="number" placeholder="Background Width (px)" [disabled]="true" [(ngModel)]="settings.hypetrain.train.locomotive.size.width" />
         </mat-form-field>
@@ -236,15 +228,7 @@
           [height]="'4rem'"
           [ngStyle]="{ 'margin-bottom': '.2rem' }"
         ></app-uploader>
-        <button
-          mat-raised-button
-          color="accent"
-          (click)="defaultPicture('locomotive-foreground')"
-          [disabled]="!settings.hypetrain.train.locomotive.pictures.foreground"
-          [ngStyle]="{ 'margin-bottom': '1rem' }"
-        >
-          DEFAULT
-        </button>
+        <button mat-raised-button color="accent" [disabled]="!settings.hypetrain.train.locomotive.pictures.foreground" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
         <mat-form-field>
           <input matInput type="number" placeholder="Background Height (px)" [disabled]="true" [(ngModel)]="settings.hypetrain.train.locomotive.size.height" />
         </mat-form-field>
@@ -261,7 +245,7 @@
     </mat-form-field>
     <div>
       Locomotive scale:
-      <mat-slider min=".1" max="2" step=".1" (change)="scaleChange()" [(ngModel)]="settings.hypetrain.train.locomotive.scale"></mat-slider>
+      <mat-slider min=".1" max="2" step=".1" [(ngModel)]="settings.hypetrain.train.locomotive.scale"></mat-slider>
       {{ settings.hypetrain.train.locomotive.scale }}
     </div>
 
@@ -277,15 +261,7 @@
           [height]="'4rem'"
           [ngStyle]="{ 'margin-bottom': '.2rem' }"
         ></app-uploader>
-        <button
-          mat-raised-button
-          color="accent"
-          (click)="defaultPicture('carriage-background')"
-          [disabled]="!settings.hypetrain.train.carriage.pictures.background"
-          [ngStyle]="{ 'margin-bottom': '1rem' }"
-        >
-          DEFAULT
-        </button>
+        <button mat-raised-button color="accent" [disabled]="!settings.hypetrain.train.carriage.pictures.background" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
         <mat-form-field>
           <input matInput type="number" placeholder="Background Width (px)" [disabled]="true" [(ngModel)]="settings.hypetrain.train.carriage.size.width" />
         </mat-form-field>
@@ -306,15 +282,7 @@
           [height]="'4rem'"
           [ngStyle]="{ 'margin-bottom': '.2rem' }"
         ></app-uploader>
-        <button
-          mat-raised-button
-          color="accent"
-          (click)="defaultPicture('carriage-foreground')"
-          [disabled]="!settings.hypetrain.train.carriage.pictures.foreground"
-          [ngStyle]="{ 'margin-bottom': '1rem' }"
-        >
-          DEFAULT
-        </button>
+        <button mat-raised-button color="accent" [disabled]="!settings.hypetrain.train.carriage.pictures.foreground" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
         <mat-form-field>
           <input matInput type="number" placeholder="Background Height (px)" [disabled]="true" [(ngModel)]="settings.hypetrain.train.carriage.size.height" />
         </mat-form-field>
@@ -331,7 +299,7 @@
     </mat-form-field>
     <div>
       Carriage scale:
-      <mat-slider min=".1" max="2" step=".1" (change)="scaleChange(true)" [(ngModel)]="settings.hypetrain.train.carriage.scale"></mat-slider>
+      <mat-slider min=".1" max="2" step=".1" [(ngModel)]="settings.hypetrain.train.carriage.scale"></mat-slider>
       {{ settings.hypetrain.train.carriage.scale }}
     </div>
   </div>

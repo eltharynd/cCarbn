@@ -77,8 +77,8 @@ export class TrainComponent implements OnInit, OnChanges {
   @Input() viewport: { width: number; height: number } = { width: 1920, height: 1080 }
   @Input() coordinates: { x: number; y: number }
   @Input() size: { width: number; height: number } = { width: 128, height: 128 }
-  @Input() scale: number = 1
-  @Input() pictureBounds: { top?: number; left?: number; width?: number; height?: number; scale?: number } = { top: 0, left: 64, width: 64, height: 64, scale: 0.75 }
+  @Input() scale: number = 100
+  @Input() pictureBounds: { top?: number; left?: number; width?: number; height?: number; scale?: number } = { top: 0, left: 64, width: 64, height: 64, scale: 75 }
   @Input() user: { name: string; picture: string; total?: number }
   @Input() backgroundPic: string | null
   @Input() foregroundPic: string | null
@@ -100,13 +100,13 @@ export class TrainComponent implements OnInit, OnChanges {
 
   async resizePicture() {
     let newPicSide = {
-      width: (this.pictureBounds.width || this.size.width) * (this.scale || 1) * (this.pictureBounds.scale || 1),
-      height: (this.pictureBounds.height || this.size.height) * (this.scale || 1) * (this.pictureBounds.scale || 1),
+      width: (((this.pictureBounds.width || this.size.width) * (this.scale || 100)) / 100) * (this.pictureBounds.scale / 100 || 100),
+      height: (((this.pictureBounds.height || this.size.height) * (this.scale || 100)) / 100) * (this.pictureBounds.scale / 100 || 100),
     }
 
     this._pictureBounds = {
-      top: this.pictureBounds.top! * this.scale + (this.pictureBounds.height! * this.scale - newPicSide.height) / 2,
-      left: this.pictureBounds.left! * this.scale + (this.pictureBounds.width! * this.scale - newPicSide.width) / 2,
+      top: (this.pictureBounds.top! * this.scale) / 100 + ((this.pictureBounds.height! * this.scale) / 100 - newPicSide.height) / 2,
+      left: (this.pictureBounds.left! * this.scale) / 100 + ((this.pictureBounds.width! * this.scale) / 100 - newPicSide.width) / 2,
       width: newPicSide.width,
       height: newPicSide.height,
     }

@@ -10,26 +10,6 @@ input {
   width: 180px;
 }
 
-.field-container {
-  height: 40px;
-  > .anchor {
-    position: relative;
-    top: -100%;
-    left: 0;
-    width: 1px;
-    height: 1px;
-    > label {
-      position: relative;
-      left: 0.4rem;
-      top: -18px;
-      font-size: 12px;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-    color: rgba(white, 0.5);
-  }
-}
-
 .alert-header {
   justify-content: space-between;
   .alert-controls {
