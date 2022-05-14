@@ -1,0 +1,57 @@
+<app-global></app-global>
+
+<nb-card class="centered">
+  <nb-card-header class="card-header">
+    <div class="composed-title">
+      <h1 class="text-title">Hypetrain</h1>
+      <p class="text-description">
+        This component display a train on your browsersource.<br />
+        It gets progressively longer with carriages containing profile picture of the users that contributed.<br />
+        It also plays a music that gets progressively more intense as the hypetrain goes through levels levels.
+      </p>
+    </div>
+  </nb-card-header>
+
+  <nb-card-body>
+    <h2>MONITOR</h2>
+    <div class="monitor">
+      <nb-stepper #trainStepper orientation="horizontal" [disableStepNavigation]="true">
+        <nb-step *ngFor="let s of steps" [label]="s.label" [hidden]="s.hidden"></nb-step>
+      </nb-stepper>
+      <div>
+        <div>
+          Expires in:
+          <app-timediff *ngIf="hypetrain.expiresAt" [target]="hypetrain.expiresAt"></app-timediff>
+          <span *ngIf="!hypetrain.expiresAt">--:--</span>
+        </div>
+        <div>
+          Level progress:
+          {{ hypetrain.progress }}%
+        </div>
+      </div>
+    </div>
+
+    <h2>TEST</h2>
+    <div class="test">
+      <button nbButton status="success" (click)="hypetrain.testStart()" [disabled]="hypetrain.currentLevel > 0">START TRAIN</button>
+      <button nbButton status="warning" (click)="hypetrain.testAddCarriage()" [disabled]="hypetrain.currentLevel === 0 || hypetrain.ending">ADD CARRIAGE</button>
+      <button
+        nbButton
+        status="PRIMARY"
+        [disabled]="hypetrain.currentLevel === 0 || hypetrain.currentLevel === 5 || hypetrain.ending"
+        (click)="hypetrain.testChangeLevel(hypetrain.currentLevel + 1)"
+      >
+        NEXT LEVEL
+      </button>
+      <button nbButton status="danger" (click)="hypetrain.testStop()" [disabled]="hypetrain.currentLevel === 0">STOP</button>
+    </div>
+
+    <h2>AUDIO</h2>
+    <div class="audio">
+      Enabled <nb-toggle [(ngModel)]="settings.hypetrain.audio.enabled" (change)="settings.onUpdated()">{{ settings.hypetrain.audio.enabled ? 'ON' : 'OFF' }}</nb-toggle>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+<button nbButton status="PRIMARY" (click)="startTest()">FULL TEST</button>
+<button nbButton status="PRIMARY" (click)="stopTest()">STOP TEST</button>

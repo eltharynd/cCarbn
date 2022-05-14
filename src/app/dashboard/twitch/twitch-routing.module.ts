@@ -1,12 +1,11 @@
-import { NgModule } from "@angular/core"
-import { RouterModule, Routes } from "@angular/router"
-import { AlertsComponent } from "./alerts/alerts.component"
-import { ChatbotComponent } from "./chatbot/chatbot.component"
-import { TwitchAPIComponent } from "./twitchapi/twitchapi.component"
-import { TwitchComponent } from "./twitch.component"
-import { StreamdeckComponent } from "./streamdeck/streamdeck.component"
-
-
+import { NgModule } from '@angular/core'
+import { RouterModule, Routes } from '@angular/router'
+import { AlertsComponent } from './alerts/alerts.component'
+import { ChatbotComponent } from './chatbot/chatbot.component'
+import { TwitchAPIComponent } from './twitchapi/twitchapi.component'
+import { TwitchComponent } from './twitch.component'
+import { StreamdeckComponent } from './streamdeck/streamdeck.component'
+import { HypetrainComponent } from './hypetrain/hypetrain.component'
 
 const routes: Routes = [
   {
@@ -28,25 +27,32 @@ const routes: Routes = [
         },
       },
       {
-        path: 'chatbot',
-        component: ChatbotComponent,
-        data: {
-          title: 'Chatbot',
-        },
-      },
-      {
         path: 'streamdeck',
         component: StreamdeckComponent,
         data: {
           title: 'Stream Deck plugin',
         },
       },
-    ]
-  }
+      {
+        path: 'hypetrain',
+        component: HypetrainComponent,
+        data: {
+          title: 'Hypetrain',
+        },
+      },
+      {
+        path: 'chatbot',
+        component: ChatbotComponent,
+        data: {
+          title: 'Chatbot',
+        },
+      },
+    ],
+  },
 ]
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class TwitchRoutingModule {}

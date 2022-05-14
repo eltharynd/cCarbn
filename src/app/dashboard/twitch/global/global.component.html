@@ -1,0 +1,48 @@
+<nb-accordion class="centered" style="margin-bottom: 2rem">
+  <nb-accordion-item>
+    <nb-accordion-item-header class="accordion-header">
+      <div class="composed-title">
+        <strong class="text-title">OBS SETTINGS</strong>
+        <span class="text-description">Here you can find the settings for your Browser Source as well as other OBS functionalities</span>
+      </div>
+    </nb-accordion-item-header>
+    <nb-accordion-item-body>
+      <nb-list>
+        <nb-list-item>
+          URL: &nbsp;
+          <div class="streamer-mode" [class.on]="!showBrowserSource">
+            <nb-icon class="show-icon" *ngIf="!showBrowserSource" (click)="showBrowserSource = true" icon="eye"></nb-icon>
+            <nb-icon class="copy-icon" (click)="copy()" [nbPopover]="copied" icon="copy"></nb-icon>
+            <a [href]="settings.viewport.url" target="_blank">{{ settings.viewport.url }}</a>
+          </div>
+        </nb-list-item>
+        <nb-list-item>
+          Size: &nbsp;
+          {{ settings.viewport.width }}&nbsp;x&nbsp;{{ settings.viewport.height }}&nbsp;px
+        </nb-list-item>
+        <nb-list-item>
+          Padding: &nbsp;
+          {{ settings.viewport.padding }}&nbsp;px
+        </nb-list-item>
+        <nb-list-item>
+          <div>
+            In order for cCarbn to control your scenes/sources in OBS you must install the latest
+            <a href="https://github.com/obsproject/obs-websocket/releases" target="_blank">OBS-websocket plugin</a> (version 5.0.0 or higher). Then set your browser source
+            permissions to <strong>Advanced</strong> or higher
+          </div>
+        </nb-list-item>
+        <nb-list-item> obs-websocket: &nbsp; port 4455, no authentication (will change in the future) </nb-list-item>
+        <nb-list-item>
+          <div>
+            Two very useful plugins for obs are <a href="https://obsproject.com/forum/resources/move-transition.913/" target="_blank">Move transition</a> and
+            <a href="https://obsproject.com/forum/resources/streamfx-for-obs%C2%AE-studio.578/" target="_blank">StreamFX</a>.
+            <br />
+            These aren't required but they allow you to create animations and effects attached to sources as filters, which can be interacted with via cCarbn.
+            <br />
+            <a href="https://www.youtube.com/watch?v=6eSgiowHTCc" target="_blank">Here</a>'s a brief tutorial on how to setup those filters.
+          </div>
+        </nb-list-item>
+      </nb-list>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>

@@ -27,6 +27,8 @@ export class Socket {
         if (data.userId) socket.join(data.userId)
       })
 
+      /* STREAM DECK PAIRING */
+
       socket.on('pair-check', (data) => {
         if (data.pairingKey) {
           socket.emit('pair-check', { waiting: Socket.io.sockets.adapter.rooms.has(data.pairingKey) })
@@ -35,21 +37,18 @@ export class Socket {
       socket.on('pair-request', (data) => {
         if (data.pairingKey) socket.join(data.pairingKey)
       })
-
       socket.on('pair-successfull', (data) => {
         if (data.pairingKey) {
           socket.leave(data.pairingKey)
           socket.to(data.pairingKey).emit('pairing-successfull', {})
         }
       })
-
       socket.on('pair', (data) => {
         if (data.userId && data.pairingKey) {
           socket.join(data.pairingKey)
           Socket.io.to(data.pairingKey).emit('pair', data)
         }
       })
-
       socket.on('bind-streamdeck', (data) => {
         if (data.userId) {
           socket.emit('accept-streamdeck', {
@@ -77,9 +76,7 @@ export class Socket {
         }
       })
 
-      socket.on('unbind', (data) => {
-        if (data.userId) socket.leave(data.userId)
-      })
+      /* OBS */
 
       socket.on('requestOBSlist', (data) => {
         if (data.userId) socket.to(data.userId).emit('requestOBSlist', data)
@@ -91,15 +88,46 @@ export class Socket {
         }
       })
 
-      socket.on('alertsUpdated', (data) => {
+      /* ALERTS */
+
+      socket.on('alerts-updated', (data) => {
         if (data.userId) {
-          socket.to(data.userId).emit('alertsUpdated', data)
+          socket.to(data.userId).emit('alerts-updated', data)
         }
       })
 
-      socket.on('test', (data) => {
+      socket.on('alerts-test', (data) => {
         if (data.userId) {
-          socket.to(data.userId).emit('test', data)
+          socket.to(data.userId).emit('alerts-test', data)
+        }
+      })
+
+      /* SETTINGS */
+      socket.on('settings-updated', (data) => {
+        if (data.userId) {
+          socket.to(data.userId).emit('settings-updated', data)
+        }
+      })
+
+      /* HYPETRAIN */
+      socket.on('hypetrain-test-start', (data) => {
+        if (data.userId) {
+          socket.to(data.userId).emit('hypetrain-test-start', {})
+        }
+      })
+      socket.on('hypetrain-test-change-level', (data) => {
+        if (data.userId) {
+          socket.to(data.userId).emit('hypetrain-test-change-level', data)
+        }
+      })
+      socket.on('hypetrain-test-add-carriage', (data) => {
+        if (data.userId) {
+          socket.to(data.userId).emit('hypetrain-test-add-carriage')
+        }
+      })
+      socket.on('hypetrain-test-stop', (data) => {
+        if (data.userId) {
+          socket.to(data.userId).emit('hypetrain-test-stop', {})
         }
       })
 
@@ -116,6 +144,10 @@ export class Socket {
             found.client.say(found.channel, data.message)
           }
         }
+      })
+
+      socket.on('unbind', (data) => {
+        if (data.userId) socket.leave(data.userId)
       })
 
       socket.on('disconnect', () => {

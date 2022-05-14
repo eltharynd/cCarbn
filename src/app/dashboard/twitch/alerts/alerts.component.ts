@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment'
 import { OBSService } from 'src/app/shared/obs.service'
 import { BORDER, POSITION, TRANSITION } from 'src/app/browsersource/elements/elements.component'
 import { KeyValue } from '@angular/common'
-import { ClipboardService } from 'ngx-clipboard'
+import { SettingsService } from 'src/app/shared/settings.service'
 @Component({
   selector: 'app-alerts',
   templateUrl: './alerts.component.html',
@@ -15,19 +15,11 @@ import { ClipboardService } from 'ngx-clipboard'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AlertsComponent implements OnInit, OnDestroy {
-  showBrowserSource = false
-  viewport = {
-    url: `${environment?.production ? 'https://cCarbn.io/' : 'http://localhost:4200/'}browsersource/${this.auth.currentUser?._id}`,
-    width: 1920,
-    height: 1080,
-    padding: 50,
-  }
-
   alerts: _alert[] = []
   channelRewards: _redemption[] = []
   uploadedSubject: Subject<any> = new Subject()
 
-  constructor(private data: DataService, public auth: AuthGuard, public OBS: OBSService, public clipboardApi: ClipboardService, public cdr: ChangeDetectorRef) {
+  constructor(private data: DataService, public auth: AuthGuard, public OBS: OBSService, public cdr: ChangeDetectorRef, private settings: SettingsService) {
     this.data.get(`user/${this.auth.currentUser?._id}/redemptions`).then((data) => {
       this.channelRewards = data.sort((a, b) => a.title.localeCompare(b.title))
       this.cdr.detectChanges()
@@ -56,12 +48,6 @@ export class AlertsComponent implements OnInit, OnDestroy {
     document.documentElement.classList.add('smooth-scrolling')
   }
 
-  copied
-  copy() {
-    this.clipboardApi.copyFromContent(this.viewport.url)
-    this.copied = 'Browser Source URL copied!'
-  }
-
   sendTestAlert(pointerEvent, alert) {
     pointerEvent.stopPropagation()
     for (let element of alert.elements) {
@@ -73,7 +59,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
     let response = await this.data.patch(`alerts/${this.auth.currentUser?._id}`, cleanAlert(alert))
     if (response) {
       alert._id = response
-      this.data.send('alertsUpdated', {
+      this.data.send('alerts-updated', {
         userId: this.auth.currentUser?._id,
         alerts: this.alerts,
       })
@@ -132,7 +118,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
       alert.changes = false
       delete alert.backup
       alert.backup = JSON.stringify(alert)
-      this.data.send('alertsUpdated', {
+      this.data.send('alerts-updated', {
         userId: this.auth.currentUser?._id,
         alerts: this.alerts,
       })
@@ -165,7 +151,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
       this.alerts.splice(index, 1)
       this.cdr.detectChanges()
     }
-    this.data.send('alertsUpdated', {
+    this.data.send('alerts-updated', {
       userId: this.auth.currentUser?._id,
       alerts: this.alerts,
     })

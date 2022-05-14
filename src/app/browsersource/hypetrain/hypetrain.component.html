@@ -1,342 +1,338 @@
+<div
+  *ngIf="settings.viewport && settings.hypetrain"
+  class="viewport"
+  [ngStyle]="{ width: +settings.viewport.width - +settings.viewport.padding * 2 + 'px', height: +settings.viewport.height - +settings.viewport.padding * 2 + 'px' }"
+  [class.background]="settings.viewport.background"
+  [class.dark]="settings.viewport.dark"
+>
+  <hypetrain-locomotive
+    *ngIf="settings.hypetrain.train.enabled && hypetrain.currentLevel > 0"
+    [viewport]="settings.viewport"
+    [coordinates]="settings.hypetrain.train.start"
+    [size]="settings.hypetrain.train.locomotive.size"
+    [scale]="currentLocomotiveScale"
+    [pictureBounds]="settings.hypetrain.train.locomotive.pictureBounds"
+    [user]="{ name: 'streamer', picture: hypetrain.channelPic }"
+    [backgroundPic]="settings.hypetrain.train.locomotive.pictures.background"
+    [foregroundPic]="settings.hypetrain.train.locomotive.pictures.foreground"
+    [reverseDirection]="settings.hypetrain.train.reverseDirection"
+    [reverseWrap]="settings.hypetrain.train.reverseWrap"
+  >
+  </hypetrain-locomotive>
 
-<div class="viewport" [ngStyle]="{width: viewport.width+'px', height: viewport.height+'px'}" [class.background]="viewport.background" [class.dark]="viewport.dark">
-
-    <hypetrain-locomotive *ngIf="train.enabled && currentLevel>0"
-                          [viewport]="viewport"
-                          [coordinates]="train.start" 
-                          [size]="train.locomotive.size"
-                          [scale]="currentLocomotiveScale"
-                          [pictureBounds]="train.locomotive.pictureBounds"
-                          [carriages]="carriages"
-                          [user]="{name: 'eltharynd', picture: channelPic}"
-                          [backgroundPic]="train.locomotive.pictures.background"
-                          [foregroundPic]="train.locomotive.pictures.foreground"
-                          [reverseDirection]="train.reverseDirection"
-                          [reverseWrap]="train.reverseWrap">
-    </hypetrain-locomotive>
-
-    <div class="info-text" *ngIf="infoText.enabled && currentMessage" [ngStyle]="{top: infoText.position === 'bottom' ? viewport.height+'px' : infoText.margin}">
-      <div *ngIf="currentMessage" [@scrolling] (@scrolling.done)="popMessage()" [ngStyle]="{
-        minWidth: viewport.width+'px', 
-        fontSize: infoText.fontSize, 
-        fontWeight: infoText.fontWeight, 
-        color: infoText.color, 
-        bottom: infoText.position === 'bottom' ? 'calc(' + infoText.margin + ' + ' + infoText.fontSize + ')' : '',
-        '-webkit-text-stroke': infoText.fontStroke,
-        '-webkit-text-stroke-width': infoText.fontStrokeWidth
-      }">{{currentMessage}}</div>
-    </div>
-    <div class="viewport-anchor" [ngStyle]="{width: viewport.width+'px', height: viewport.height+'px'}"></div>
-    <div id="cover" [ngStyle]="{
-      left: viewport.width + 'px',
-      width: (1920 - viewport.width)+'px',
-      height: viewport.height+'px'
-    }"></div>
+  <div class="viewport-anchor" [ngStyle]="{ width: settings.viewport.width + 'px', height: settings.viewport.height + 'px' }"></div>
+  <div
+    id="cover"
+    [ngStyle]="{
+      left: settings.viewport.width + 'px',
+      width: 1920 - settings.viewport.width + 'px',
+      height: settings.viewport.height + 'px'
+    }"
+  ></div>
 </div>
 
-<div class="settings mat-typography"  [ngStyle]="{width: viewport.width+'px'}">
-
+<div *ngIf="!OBS.isOBS && settings.hypetrain" class="settings mat-typography" [ngStyle]="{ width: settings.viewport.width + 'px' }">
   <div class="test">
-
-    <h3>TEST</h3>
-
-    <div class="lvl-indicator-container test">
-      <button mat-raised-button color="accent" [disabled]="currentLevel!==1 && !(currentLevel===6 && lastLevel===1)">lvl1</button>
-      <button mat-raised-button color="accent" [disabled]="currentLevel!==2 && !(currentLevel===6 && lastLevel===2)">lvl2</button>
-      <button mat-raised-button color="accent" [disabled]="currentLevel!==3 && !(currentLevel===6 && lastLevel===3)">lvl3</button>
-      <button mat-raised-button color="accent" [disabled]="currentLevel!==4 && !(currentLevel===6 && lastLevel===4)">lvl4{{transitioning && lastLevel===4 ? '->' : ''}}</button>
-      <button mat-raised-button color="accent" [disabled]="currentLevel!==5 && !(currentLevel===6 && lastLevel===5)">{{transitioning && lastLevel===4 ? '->' : ''}}lvl5</button>
-      <button mat-raised-button color="accent" [disabled]="!(fader)">fade</button>
-    </div>
-    <div>
-      Level: 
-      <mat-slider [disabled]="!audioLoaded || transitioning || currentLevel===6 || now - changedAt <= 500" [min]="0" max="6" step="1" (change)="prematureEnd = lastLevel!==5; onLevelChange()" [(ngModel)]="currentLevel"></mat-slider>
-      {{currentLevel>0 ? currentLevel<6 ? currentLevel : 'ending' : 'none'}}
-    </div>
-    <div>
-      <button mat-raised-button color="accent" [disabled]="currentLevel>=5 ||currentLevel===0" (click)="currentLevel = 6; prematureEnd = true; onLevelChange()">fail (end)</button>
-      &nbsp;&nbsp;
-      <button mat-raised-button color="accent" [disabled]="currentLevel<5" (click)="endNow()">stop fade</button>
-    </div>
-    <br>
-    <button mat-raised-button color="accent" (click)="addCarriage()" [disabled]="currentLevel<1">ADD CARRIAGE</button>
-    
-
-    <br>
-    <div>
-      percentage: {{percentage}}
-    </div>
-    <div>
-      expiry: {{ expiryDate>0 ? ((expiryDate - now) | date: 'm.ss.SSS') : '---'}}
-    </div>
-
-
-    <h3>PREVIEW ONLY<br><small>(won't show in OBS)</small></h3>
-    <div>Background&nbsp;&nbsp;&nbsp;<mat-slide-toggle [(ngModel)]="viewport.background" (change)="background()">{{viewport.background ? 'ON' : 'OFF'}}</mat-slide-toggle></div>
-    <div>Mode: <mat-slide-toggle [(ngModel)]="viewport.dark" (change)="background()">{{viewport.dark ? 'Dark' : 'Light'}}</mat-slide-toggle></div>
-  
     <h3>HYPE TRAIN TRACKS</h3>
-    <app-uploader [name]="'hypetrain-track-1'" 
-                  [displayTextOverride] = "'LVL 0->1 TRACK'"
-                  [disabled]="!audioLoaded || data.busy || currentLevel>0"
-                  [uploading]="trackUploadingSubject"
-                  [uploaded]="trackChangeSubject"
-                  [allowedTypes]="['audio']" 
-                  [height]="'4rem'" 
-                  [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-1')" [disabled]="!audio.tracks[1] || !audioLoaded || currentLevel>0" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
-    
-    <app-uploader [name]="'hypetrain-track-2'" 
-                  [displayTextOverride] = "'LVL 1->2 TRACK'"
-                  [disabled]="!audioLoaded || data.busy || currentLevel>0"
-                  [uploading]="trackUploadingSubject"
-                  [uploaded]="trackChangeSubject" 
-                  [allowedTypes]="['audio']" 
-                  [height]="'4rem'" 
-                  [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-2')" [disabled]="!audio.tracks[2] || !audioLoaded || currentLevel>0" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
-    
-    <app-uploader [name]="'hypetrain-track-3'" 
-                  [displayTextOverride] = "'LVL 2->3 TRACK'"
-                  [disabled]="!audioLoaded || data.busy || currentLevel>0"
-                  [uploading]="trackUploadingSubject"
-                  [uploaded]="trackChangeSubject" 
-                  [allowedTypes]="['audio']" 
-                  [height]="'4rem'" 
-                  [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-3')" [disabled]="!audio.tracks[3] || !audioLoaded || currentLevel>0" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+    <app-uploader
+      [name]="'hypetrain-track-1'"
+      [displayTextOverride]="'LVL 0->1 TRACK'"
+      [disabled]="!audioLoaded || data.busy || currentLevel > 0"
+      [uploading]="trackUploadingSubject"
+      [uploaded]="trackChangeSubject"
+      [allowedTypes]="['audio']"
+      [height]="'4rem'"
+      [ngStyle]="{ 'margin-bottom': '.2rem' }"
+    ></app-uploader>
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="defaultTrack('hypetrain-track-1')"
+      [disabled]="!settings.hypetrain.audio.tracks[1] || !audioLoaded || currentLevel > 0"
+      [ngStyle]="{ 'margin-bottom': '1rem' }"
+    >
+      DEFAULT
+    </button>
 
-    <app-uploader [name]="'hypetrain-track-4'" 
-                  [displayTextOverride] = "'LVL 3->4 TRACK'"
-                  [disabled]="!audioLoaded || data.busy || currentLevel>0"
-                  [uploading]="trackUploadingSubject"
-                  [uploaded]="trackChangeSubject" 
-                  [allowedTypes]="['audio']" 
-                  [height]="'4rem'" 
-                  [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-4')" [disabled]="!audio.tracks[4] || !audioLoaded || currentLevel>0" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
-    
-    <app-uploader [name]="'hypetrain-track-5'" 
-                  [displayTextOverride] = "'LVL 4->5(END) TRACK'"
-                  [disabled]="!audioLoaded || data.busy || currentLevel>0"
-                  [uploading]="trackUploadingSubject"
-                  [uploaded]="trackChangeSubject" 
-                  [allowedTypes]="['audio']" 
-                  [height]="'4rem'" 
-                  [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-    <button mat-raised-button color="accent" (click)="defaultTrack('hypetrain-track-5')" [disabled]="!audio.tracks[5] || !audioLoaded || currentLevel>0" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
-    
-    <button class="save-button" mat-raised-button color="primary" [disabled]="data.busy" (click)="saveSettings()">SAVE</button>
+    <app-uploader
+      [name]="'hypetrain-track-2'"
+      [displayTextOverride]="'LVL 1->2 TRACK'"
+      [disabled]="!audioLoaded || data.busy || currentLevel > 0"
+      [uploading]="trackUploadingSubject"
+      [uploaded]="trackChangeSubject"
+      [allowedTypes]="['audio']"
+      [height]="'4rem'"
+      [ngStyle]="{ 'margin-bottom': '.2rem' }"
+    ></app-uploader>
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="defaultTrack('hypetrain-track-2')"
+      [disabled]="!settings.hypetrain.audio.tracks[2] || !audioLoaded || currentLevel > 0"
+      [ngStyle]="{ 'margin-bottom': '1rem' }"
+    >
+      DEFAULT
+    </button>
+
+    <app-uploader
+      [name]="'hypetrain-track-3'"
+      [displayTextOverride]="'LVL 2->3 TRACK'"
+      [disabled]="!audioLoaded || data.busy || currentLevel > 0"
+      [uploading]="trackUploadingSubject"
+      [uploaded]="trackChangeSubject"
+      [allowedTypes]="['audio']"
+      [height]="'4rem'"
+      [ngStyle]="{ 'margin-bottom': '.2rem' }"
+    ></app-uploader>
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="defaultTrack('hypetrain-track-3')"
+      [disabled]="!settings.hypetrain.audio.tracks[3] || !audioLoaded || currentLevel > 0"
+      [ngStyle]="{ 'margin-bottom': '1rem' }"
+    >
+      DEFAULT
+    </button>
+
+    <app-uploader
+      [name]="'hypetrain-track-4'"
+      [displayTextOverride]="'LVL 3->4 TRACK'"
+      [disabled]="!audioLoaded || data.busy || currentLevel > 0"
+      [uploading]="trackUploadingSubject"
+      [uploaded]="trackChangeSubject"
+      [allowedTypes]="['audio']"
+      [height]="'4rem'"
+      [ngStyle]="{ 'margin-bottom': '.2rem' }"
+    ></app-uploader>
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="defaultTrack('hypetrain-track-4')"
+      [disabled]="!settings.hypetrain.audio.tracks[4] || !audioLoaded || currentLevel > 0"
+      [ngStyle]="{ 'margin-bottom': '1rem' }"
+    >
+      DEFAULT
+    </button>
+
+    <app-uploader
+      [name]="'hypetrain-track-5'"
+      [displayTextOverride]="'LVL 4->5(END) TRACK'"
+      [disabled]="!audioLoaded || data.busy || currentLevel > 0"
+      [uploading]="trackUploadingSubject"
+      [uploaded]="trackChangeSubject"
+      [allowedTypes]="['audio']"
+      [height]="'4rem'"
+      [ngStyle]="{ 'margin-bottom': '.2rem' }"
+    ></app-uploader>
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="defaultTrack('hypetrain-track-5')"
+      [disabled]="!settings.hypetrain.audio.tracks[5] || !audioLoaded || currentLevel > 0"
+      [ngStyle]="{ 'margin-bottom': '1rem' }"
+    >
+      DEFAULT
+    </button>
   </div>
 
-  <div class="viewport-audio-text">
-
-    <h3>VIEWPORT</h3>
-    <div class="table-outer">
-      <div class="table-inner">
-        <mat-form-field>
-          <input matInput type="number" placeholder="Width" [(ngModel)]="viewport.width">
-        </mat-form-field>
-      </div>
-      <div class="table-inner">
-        <mat-form-field>
-          <input matInput type="number" placeholder="Height" [(ngModel)]="viewport.height">
-        </mat-form-field>
-      </div>
-    </div>
-    
-
+  <div class="settings.viewport-audio-text">
     <h3>AUDIO</h3>
-    <div>Enabled&nbsp;&nbsp;&nbsp;<mat-slide-toggle [disabled]="true" [(ngModel)]="audio.enabled">{{audio.enabled ? 'ON' : 'OFF'}}</mat-slide-toggle></div>
+    <div>
+      Enabled&nbsp;&nbsp;&nbsp;<mat-slide-toggle [disabled]="true" [(ngModel)]="settings.hypetrain.audio.enabled">{{
+        settings.hypetrain.audio.enabled ? 'ON' : 'OFF'
+      }}</mat-slide-toggle>
+    </div>
 
     <div>
-      Volume: 
+      Volume:
       <mat-slider min="0.1" max="1" step="0.1" (change)="onVolumeChange()" [(ngModel)]="currentVolume"></mat-slider>
-      {{currentVolume}}
+      {{ currentVolume }}
     </div>
-  
-    <div>
-      Fading duration: 
-      <mat-slider min="10" max="180" step="10" [disabled]="fader" [(ngModel)]="audio.fadingLength"></mat-slider>
-      {{audio.fadingLength}} secs
-    </div>
-    <div>
-      Fade on completion:
-      &nbsp;&nbsp;&nbsp;<mat-slide-toggle [(ngModel)]="audio.fadeOnCompletion">{{audio.enabled ? 'ON' : 'OFF'}}</mat-slide-toggle>
-    </div>
-
-    <h3>TEXT</h3>
-    <div>Enabled&nbsp;&nbsp;&nbsp;<mat-slide-toggle [(ngModel)]="infoText.enabled">{{infoText.enabled ? 'ON' : 'OFF'}}</mat-slide-toggle></div>
-
-    <div class="message-hint">
-      Messages<br>
-      (use <strong>@user</strong> and <strong>$x</strong> as placeholders)
-    </div>
-    <mat-form-field style="width: 80%">
-      <input matInput type="text" placeholder="Subs" [(ngModel)]="infoText.messages.sub">
-    </mat-form-field>
-<!--     <mat-form-field style="width: 80%">
-      <input matInput type="text" placeholder="Gifted Subs" [(ngModel)]="infoText.messages.gift">
-    </mat-form-field> -->
-    <mat-form-field style="width: 80%">
-      <input matInput type="text" placeholder="Cheers" [(ngModel)]="infoText.messages.cheer">
-    </mat-form-field>
 
     <div>
-      Delay between messages: 
-      <mat-slider min="0" max="5000" step="500" [(ngModel)]="infoText.delay"></mat-slider>
-      {{infoText.delay/1000}}s
+      Fading duration:
+      <mat-slider min="10" max="180" step="10" [disabled]="fader" [(ngModel)]="settings.hypetrain.audio.fadingLength"></mat-slider>
+      {{ settings.hypetrain.audio.fadingLength }} secs
     </div>
-
-    <div>Position&nbsp;&nbsp;&nbsp;
-      <mat-slide-toggle [checked]="infoText.position === 'top'" (change)="infoText.position = $event.checked ? 'top' : 'bottom'">{{infoText.position === 'bottom' ? 'BOTTOM' : 'TOP'}}</mat-slide-toggle>
+    <div>
+      Fade on completion: &nbsp;&nbsp;&nbsp;<mat-slide-toggle [(ngModel)]="settings.hypetrain.audio.fadeOnCompletion">{{
+        settings.hypetrain.audio.enabled ? 'ON' : 'OFF'
+      }}</mat-slide-toggle>
     </div>
-
-    <br>
-
-
-    <div class="table-outer">
-      <div class="table-inner">
-        <mat-form-field>
-          <input matInput type="text" placeholder="Font color" [(ngModel)]="infoText.color">
-        </mat-form-field>
-        <mat-form-field>
-          <input matInput type="text" placeholder="Font size" [(ngModel)]="infoText.fontSize">
-        </mat-form-field>
-        <mat-form-field>
-          <input matInput type="text" placeholder="Font stroke color" [(ngModel)]="infoText.fontStroke">
-        </mat-form-field>
-      </div>
-      <div class="table-inner">
-        <mat-form-field>
-          <input matInput type="text" placeholder="Text Margin" [(ngModel)]="infoText.margin">
-        </mat-form-field>
-        <mat-form-field>
-          <input matInput type="text" placeholder="Font weight" [(ngModel)]="infoText.fontWeight">
-        </mat-form-field>
-        <mat-form-field>
-          <input matInput type="text" placeholder="Font stroke width" [(ngModel)]="infoText.fontStrokeWidth">
-        </mat-form-field>
-      </div>
-    </div>
-
-
-
-
-
-
-    
-
-    <button class="save-button" mat-raised-button color="primary" [disabled]="data.busy" (click)="saveSettings()">SAVE</button>
   </div>
-  
+
   <div class="train">
     <h3>TRAIN</h3>
 
     <div class="table-outer">
       <div class="table-inner">
         <mat-form-field>
-          <input matInput type="number" placeholder="Left anchor(px)" [(ngModel)]="train.start.x">
+          <input matInput type="number" placeholder="Left anchor(px)" [(ngModel)]="settings.hypetrain.train.start.x" />
         </mat-form-field>
       </div>
       <div class="table-inner">
         <mat-form-field>
-          <input matInput type="number" placeholder="Top anchor(px)" [(ngModel)]="train.start.y">
+          <input matInput type="number" placeholder="Top anchor(px)" [(ngModel)]="settings.hypetrain.train.start.y" />
         </mat-form-field>
       </div>
     </div>
 
-    <div>Train direction: <mat-slide-toggle [disabled]="true" [(ngModel)]="train.reverseDirection">{{train.reverseDirection ? 'RIGHT' : 'LEFT'}}</mat-slide-toggle></div>
+    <div>
+      Train direction:
+      <mat-slide-toggle [disabled]="true" [(ngModel)]="settings.hypetrain.train.reverseDirection">{{
+        settings.hypetrain.train.reverseDirection ? 'RIGHT' : 'LEFT'
+      }}</mat-slide-toggle>
+    </div>
     <div>
       Maximum rows:
-      <mat-slider min="1" max="10" step="1" (change)="resizeToFit()" [(ngModel)]="train.maxRows"></mat-slider>
-      {{train.maxRows}}
+      <mat-slider min="1" max="10" step="1" (change)="resizeToFit()" [(ngModel)]="settings.hypetrain.train.maxRows"></mat-slider>
+      {{ settings.hypetrain.train.maxRows }}
     </div>
-    <div>New rows direction: <mat-slide-toggle [(ngModel)]="train.reverseWrap">{{train.reverseWrap ? 'UPWARD' : 'DOWNWARD'}}</mat-slide-toggle></div>
-    <br>
-    <br>
+    <div>
+      New rows direction: <mat-slide-toggle [(ngModel)]="settings.hypetrain.train.reverseWrap">{{ settings.hypetrain.train.reverseWrap ? 'UPWARD' : 'DOWNWARD' }}</mat-slide-toggle>
+    </div>
+    <br />
+    <br />
     <div>Linked scale: <mat-slide-toggle [(ngModel)]="scaleLinked"></mat-slide-toggle></div>
 
     <h3>LOCOMOTIVE</h3>
-      <div class="table-outer">
-        <div class="table-inner">
-          <span class="label">Background</span>
-          <app-uploader [name]="'locomotive-background'" [allowedTypes]="['image']" [url]="train.locomotive.pictures.background" [uploaded]="pictureChangeSubject" [height]="'4rem'" [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-          <button mat-raised-button color="accent" (click)="defaultPicture('locomotive-background')" [disabled]="!train.locomotive.pictures.background" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
-          <mat-form-field>
-            <input matInput type="number" placeholder="Background Width (px)" [disabled]="true" [(ngModel)]="train.locomotive.size.width">
-          </mat-form-field>
-          <mat-form-field>
-            <input matInput type="number" placeholder="Foreground Width (px)" [disabled]="true" [(ngModel)]="train.locomotive.pictureBounds.width">
-          </mat-form-field>
-          <mat-form-field>
-            <input matInput type="number" placeholder="Foreground Left (px)" [(ngModel)]="train.locomotive.pictureBounds.left">
-          </mat-form-field>
-        </div>
-        <div class="table-inner">
-          <span class="label">Foreground</span>
-          <app-uploader [name]="'locomotive-foreground'" [allowedTypes]="['image']" [url]="train.locomotive.pictures.foreground" [uploaded]="pictureChangeSubject" [height]="'4rem'" [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-          <button mat-raised-button color="accent" (click)="defaultPicture('locomotive-foreground')" [disabled]="!train.locomotive.pictures.foreground" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
-          <mat-form-field>
-            <input matInput type="number" placeholder="Background Height (px)" [disabled]="true" [(ngModel)]="train.locomotive.size.height">
-          </mat-form-field>
-          <mat-form-field>
-            <input matInput type="number" placeholder="Foreground Height (px)" [disabled]="true" [(ngModel)]="train.locomotive.pictureBounds.height">
-          </mat-form-field>
-          <mat-form-field>
-            <input matInput type="number" placeholder="Foreground Top (px)" [(ngModel)]="train.locomotive.pictureBounds.top">
-          </mat-form-field>
-        </div>
+    <div class="table-outer">
+      <div class="table-inner">
+        <span class="label">Background</span>
+        <app-uploader
+          [name]="'locomotive-background'"
+          [allowedTypes]="['image']"
+          [url]="settings.hypetrain.train.locomotive.pictures.background"
+          [uploaded]="pictureChangeSubject"
+          [height]="'4rem'"
+          [ngStyle]="{ 'margin-bottom': '.2rem' }"
+        ></app-uploader>
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="defaultPicture('locomotive-background')"
+          [disabled]="!settings.hypetrain.train.locomotive.pictures.background"
+          [ngStyle]="{ 'margin-bottom': '1rem' }"
+        >
+          DEFAULT
+        </button>
+        <mat-form-field>
+          <input matInput type="number" placeholder="Background Width (px)" [disabled]="true" [(ngModel)]="settings.hypetrain.train.locomotive.size.width" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="number" placeholder="Foreground Width (px)" [disabled]="true" [(ngModel)]="settings.hypetrain.train.locomotive.pictureBounds.width" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="number" placeholder="Foreground Left (px)" [(ngModel)]="settings.hypetrain.train.locomotive.pictureBounds.left" />
+        </mat-form-field>
       </div>
-      <mat-form-field>
-        <input matInput type="number" placeholder="Profile Pic Scale" [(ngModel)]="train.locomotive.pictureBounds.scale">
-      </mat-form-field>
-      <div>
-        Locomotive scale: 
-        <mat-slider min=".1" max="2" step=".1" (change)="scaleChange()" [(ngModel)]="train.locomotive.scale"></mat-slider>
-        {{train.locomotive.scale}}
+      <div class="table-inner">
+        <span class="label">Foreground</span>
+        <app-uploader
+          [name]="'locomotive-foreground'"
+          [allowedTypes]="['image']"
+          [url]="settings.hypetrain.train.locomotive.pictures.foreground"
+          [uploaded]="pictureChangeSubject"
+          [height]="'4rem'"
+          [ngStyle]="{ 'margin-bottom': '.2rem' }"
+        ></app-uploader>
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="defaultPicture('locomotive-foreground')"
+          [disabled]="!settings.hypetrain.train.locomotive.pictures.foreground"
+          [ngStyle]="{ 'margin-bottom': '1rem' }"
+        >
+          DEFAULT
+        </button>
+        <mat-form-field>
+          <input matInput type="number" placeholder="Background Height (px)" [disabled]="true" [(ngModel)]="settings.hypetrain.train.locomotive.size.height" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="number" placeholder="Foreground Height (px)" [disabled]="true" [(ngModel)]="settings.hypetrain.train.locomotive.pictureBounds.height" />
+        </mat-form-field>
+        <mat-form-field>
+          <input matInput type="number" placeholder="Foreground Top (px)" [(ngModel)]="settings.hypetrain.train.locomotive.pictureBounds.top" />
+        </mat-form-field>
       </div>
+    </div>
+    <mat-form-field>
+      <input matInput type="number" placeholder="Profile Pic Scale" [(ngModel)]="settings.hypetrain.train.locomotive.pictureBounds.scale" />
+    </mat-form-field>
+    <div>
+      Locomotive scale:
+      <mat-slider min=".1" max="2" step=".1" (change)="scaleChange()" [(ngModel)]="settings.hypetrain.train.locomotive.scale"></mat-slider>
+      {{ settings.hypetrain.train.locomotive.scale }}
+    </div>
 
     <h3>CARRIAGE</h3>
     <div class="table-outer">
       <div class="table-inner">
         <span class="label">Background</span>
-        <app-uploader [name]="'carriage-background'" [allowedTypes]="['image']" [url]="train.carriage.pictures.background" [uploaded]="pictureChangeSubject" [height]="'4rem'" [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-        <button mat-raised-button color="accent" (click)="defaultPicture('carriage-background')" [disabled]="!train.carriage.pictures.background" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+        <app-uploader
+          [name]="'carriage-background'"
+          [allowedTypes]="['image']"
+          [url]="settings.hypetrain.train.carriage.pictures.background"
+          [uploaded]="pictureChangeSubject"
+          [height]="'4rem'"
+          [ngStyle]="{ 'margin-bottom': '.2rem' }"
+        ></app-uploader>
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="defaultPicture('carriage-background')"
+          [disabled]="!settings.hypetrain.train.carriage.pictures.background"
+          [ngStyle]="{ 'margin-bottom': '1rem' }"
+        >
+          DEFAULT
+        </button>
         <mat-form-field>
-          <input matInput type="number" placeholder="Background Width (px)" [disabled]="true" [(ngModel)]="train.carriage.size.width">
+          <input matInput type="number" placeholder="Background Width (px)" [disabled]="true" [(ngModel)]="settings.hypetrain.train.carriage.size.width" />
         </mat-form-field>
         <mat-form-field>
-          <input matInput type="number" placeholder="Foreground Width (px)" [disabled]="true" [(ngModel)]="train.carriage.pictureBounds.width">
+          <input matInput type="number" placeholder="Foreground Width (px)" [disabled]="true" [(ngModel)]="settings.hypetrain.train.carriage.pictureBounds.width" />
         </mat-form-field>
         <mat-form-field>
-          <input matInput type="number" placeholder="Foreground Left (px)" [(ngModel)]="train.carriage.pictureBounds.left">
+          <input matInput type="number" placeholder="Foreground Left (px)" [(ngModel)]="settings.hypetrain.train.carriage.pictureBounds.left" />
         </mat-form-field>
       </div>
       <div class="table-inner">
         <span class="label">Foreground</span>
-        <app-uploader [name]="'carriage-foreground'" [allowedTypes]="['image']" [url]="train.carriage.pictures.foreground" [uploaded]="pictureChangeSubject" [height]="'4rem'" [ngStyle]="{ 'margin-bottom': '.2rem' }"></app-uploader>
-        <button mat-raised-button color="accent" (click)="defaultPicture('carriage-foreground')" [disabled]="!train.carriage.pictures.foreground" [ngStyle]="{ 'margin-bottom': '1rem' }">DEFAULT</button>
+        <app-uploader
+          [name]="'carriage-foreground'"
+          [allowedTypes]="['image']"
+          [url]="settings.hypetrain.train.carriage.pictures.foreground"
+          [uploaded]="pictureChangeSubject"
+          [height]="'4rem'"
+          [ngStyle]="{ 'margin-bottom': '.2rem' }"
+        ></app-uploader>
+        <button
+          mat-raised-button
+          color="accent"
+          (click)="defaultPicture('carriage-foreground')"
+          [disabled]="!settings.hypetrain.train.carriage.pictures.foreground"
+          [ngStyle]="{ 'margin-bottom': '1rem' }"
+        >
+          DEFAULT
+        </button>
         <mat-form-field>
-          <input matInput type="number" placeholder="Background Height (px)" [disabled]="true" [(ngModel)]="train.carriage.size.height">
+          <input matInput type="number" placeholder="Background Height (px)" [disabled]="true" [(ngModel)]="settings.hypetrain.train.carriage.size.height" />
         </mat-form-field>
         <mat-form-field>
-          <input matInput type="number" placeholder="Foreground Height (px)" [disabled]="true" [(ngModel)]="train.carriage.pictureBounds.height">
+          <input matInput type="number" placeholder="Foreground Height (px)" [disabled]="true" [(ngModel)]="settings.hypetrain.train.carriage.pictureBounds.height" />
         </mat-form-field>
         <mat-form-field>
-          <input matInput type="number" placeholder="Foreground Top (px)" [(ngModel)]="train.carriage.pictureBounds.top">
+          <input matInput type="number" placeholder="Foreground Top (px)" [(ngModel)]="settings.hypetrain.train.carriage.pictureBounds.top" />
         </mat-form-field>
       </div>
     </div>
     <mat-form-field>
-      <input matInput type="number" placeholder="Profile Pic Scale" [(ngModel)]="train.carriage.pictureBounds.scale">
+      <input matInput type="number" placeholder="Profile Pic Scale" [(ngModel)]="settings.hypetrain.train.carriage.pictureBounds.scale" />
     </mat-form-field>
     <div>
-      Carriage scale: 
-      <mat-slider min=".1" max="2" step=".1" (change)="scaleChange(true)" [(ngModel)]="train.carriage.scale"></mat-slider>
-      {{train.carriage.scale}}
+      Carriage scale:
+      <mat-slider min=".1" max="2" step=".1" (change)="scaleChange(true)" [(ngModel)]="settings.hypetrain.train.carriage.scale"></mat-slider>
+      {{ settings.hypetrain.train.carriage.scale }}
     </div>
-
-    <button class="save-button" mat-raised-button color="primary" [disabled]="data.busy" (click)="saveSettings()">SAVE</button>
   </div>
 </div>

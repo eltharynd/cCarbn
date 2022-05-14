@@ -1,4 +1,5 @@
 import * as express from 'express'
+import * as fs from 'fs'
 require('express-async-errors')
 import { createServer, Server } from 'http'
 import * as cors from 'cors'
@@ -12,6 +13,8 @@ import { User } from '../db/models/user'
 import * as multer from 'multer'
 import { TTS } from '../external/tts'
 import { File } from '../db/models/files'
+import { from, map, toArray } from 'rxjs'
+import { Socket } from '../socket/socket'
 const { Readable } = require('stream')
 
 export class Api {
@@ -210,6 +213,48 @@ export class Api {
         console.error(e)
         return res.status(500).send()
       }
+    })
+
+    let handlers = []
+    Api.endpoints.get('/api/hypetrain/test', async (req, res) => {
+      let data = JSON.parse('' + fs.readFileSync('hypetrain.json'))
+
+      let i = 0
+      let currentLevel = 0
+      let expiresAt = new Date(Date.now() + 5 * 60 * 1000)
+      let faster = await from(data)
+        .pipe(
+          map((event: any) => {
+            event.time = 2000 * ++i
+            if (event.event.level !== currentLevel) {
+              expiresAt = new Date(Date.now() + 5 * 60 * 1000 + event.time)
+              event.event.expires_at = expiresAt
+            } else event.event.expires_at = expiresAt
+            currentLevel = event.event.level
+            return event
+          }),
+          toArray()
+        )
+        .toPromise()
+
+      res.send(data)
+
+      handlers = []
+      for (let event of faster) {
+        handlers.push(
+          setTimeout(() => {
+            Socket.io.to('62657fd7133898e795be21f8').emit('hypetrain', event)
+          }, event.time)
+        )
+      }
+    })
+
+    Api.endpoints.get('/api/hypetrain/stop', (req, res) => {
+      for (let h of handlers) {
+        clearTimeout(h)
+      }
+      handlers = []
+      res.send({})
     })
   }
 

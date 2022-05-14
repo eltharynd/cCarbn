@@ -375,3 +375,10 @@ nb-layout-footer > nav {
     padding-right: 0.5rem !important;
   }
 }
+
+.step {
+  > .label {
+    white-space: pre-line;
+    text-align: center;
+  }
+}
