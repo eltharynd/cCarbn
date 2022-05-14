@@ -18,7 +18,6 @@ export const MONGO = JSON.parse('' + fs.readFileSync('mongo_credentials.json'))
 export var channelID
 
 let startApp = async () => {
-
   console.info('CONNECTING TO DATABASE...')
 
   await Mongo.connect()
@@ -26,14 +25,14 @@ let startApp = async () => {
   console.info('CONNECTING TO TWITCH...')
 
   await Twitch.init()
-  let admin: any = await User.findOne({admin: true})
-  let defaultUserToken: any = await UserToken.findOne({userId: admin._id})
+  let admin: any = await User.findOne({ admin: true })
+  let defaultUserToken: any = await UserToken.findOne({ userId: admin._id })
   Chat.defaultUserProvider = new RefreshingAuthProvider(
     {
       clientId: Mongo.clientId,
       clientSecret: Mongo.clientSecret,
       onRefresh: async (token) => {
-        let defaultUserToken: any = await UserToken.findOne({userId: admin._id})
+        let defaultUserToken: any = await UserToken.findOne({ userId: admin._id })
         defaultUserToken.accessToken = token.accessToken
         defaultUserToken.refreshToken = token.refreshToken
         defaultUserToken.expiresIn = token.expiresIn
@@ -51,27 +50,27 @@ let startApp = async () => {
 
   console.info('SERVER INITIALIZED. ACTIVATING USER SERVICES...')
 
-  let users = await User.find().sort({ lastLogin: -1 }) 
-  for(let user of users) {
-    let s = await Settings.findOne({userId: user._id})
-    if(!s) continue
+  let users = await User.find().sort({ lastLogin: -1 })
+  for (let user of users) {
+    let s = await Settings.findOne({ userId: user._id })
+    if (!s) continue
 
     console.info(`Processing user ${user.twitchDisplayName}...`)
 
     let ss = s.json
-    if(ss.api.enabled) {
+    if (ss.api.enabled) {
       console.info(`Enabling APIs for user ${user.twitchDisplayName}...`)
       try {
         await Twitch.connect(user.toJSON(), ss)
       } catch (e: any) {
-        if(e._statusCode === 403) {
+        if (e._statusCode === 403) {
           console.error('User appears to have manually removed permissions, deleting...', user)
           await deleteUser(s.userId)
           continue
         }
       }
     }
-    if(ss.chatbot.enabled) {
+    if (ss.chatbot.enabled) {
       console.info(`Enabling chatbot for user ${user.twitchDisplayName}...`)
       try {
         await Chat.connect(user.toJSON(), ss)
@@ -84,19 +83,29 @@ let startApp = async () => {
   }
 
   console.info('SERVER STARTED SUCCESSFULLY...')
-
 }
 startApp()
 
-
 process.on('SIGINT', async () => {
   console.info('SAFELY QUITTING APPLICATION...')
-  for(let iClient of Twitch.clients) 
-    if(iClient.subscriptions)
-      for(let sub of iClient.subscriptions)
-        try { await sub.subscription.stop() } catch (e) { console.error(e) }
-  try { await Twitch.listener.unlisten() } catch (e) { console.error(e) }
-  try { await Mongoose.disconnect() } catch (e) { console.error(e) }
+  for (let iClient of Twitch.clients)
+    if (iClient.subscriptions)
+      for (let sub of iClient.subscriptions)
+        try {
+          await sub.subscription.stop()
+        } catch (e) {
+          console.error(e)
+        }
+  try {
+    await Twitch.listener.unlisten()
+  } catch (e) {
+    console.error(e)
+  }
+  try {
+    await Mongoose.disconnect()
+  } catch (e) {
+    console.error(e)
+  }
   console.info('SAFELY CLOSED APPLICATION...')
   process.exit(0)
 })

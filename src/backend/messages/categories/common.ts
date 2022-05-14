@@ -10,7 +10,7 @@ export class Common extends Message {
   }
 
   //TODO refactor into it's own thing
-/*   voters = {}
+  /*   voters = {}
   birds = {}
   private voting = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!vote \w+$/.test(message)) {
@@ -119,7 +119,6 @@ export class Common extends Message {
     }
   } */
 
-
   private tuck = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!tuck [\@a-zA-Z0-9][a-zA-Z0-9]*/i.test(message)) {
       this.client.say(channel, `/me @${user} tucks @${filterParameters(message)[0].replace('@', '')} snuggly in their bed!`)
@@ -135,8 +134,7 @@ export class Common extends Message {
   private time = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!time [\w\/]+/i.test(message)) {
       let par = message.replace(/^!time /i, '')
-      if(/pst/i.test(par) || /pt/i.test(par) || /pdt/i.test(par))
-        par = 'America/Los_Angeles'
+      if (/pst/i.test(par) || /pt/i.test(par) || /pdt/i.test(par)) par = 'America/Los_Angeles'
       let data: any
       try {
         data = (await axios.get(`http://worldtimeapi.org/api/timezone/${encodeURI(par).replace(/\//g, '%2F')}`)).data
@@ -184,20 +182,20 @@ export class Common extends Message {
 
   private dadjokes = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!dadjoke/i.test(message)) {
-      if (user!==channel.replace('#', '') && this._timeout(5)) return
+      if (user !== channel.replace('#', '') && this._timeout(5)) return
       let response: any = axios.get(`https://icanhazdadjoke.com/`, {
         headers: {
           Accept: 'application/json',
         },
       })
-      if(!response.data) return this.client.say(channel, `/me Sorry. All the dads seem to be offline...`)
+      if (!response.data) return this.client.say(channel, `/me Sorry. All the dads seem to be offline...`)
       this.client.say(channel, `/me ${response.data.joke}`)
     }
   }
 
   private darkjokes = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!darkjoke/i.test(message)) {
-      if (user!==channel.replace('#', '') && this._timeout(5)) return
+      if (user !== channel.replace('#', '') && this._timeout(5)) return
       let result = (
         await axios.get(`https://v2.jokeapi.dev/joke/Dark` + '?blacklistFlags=racist,sexist', {
           headers: {
@@ -215,5 +213,4 @@ export class Common extends Message {
       } else this.client.say(channel, `/me I'm trying to get some cool dark jokes but this dudes aren't answering... I suppose that's what you get with free APIs`)
     }
   }
-
 }

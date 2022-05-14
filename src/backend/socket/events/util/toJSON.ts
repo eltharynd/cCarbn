@@ -7,6 +7,5 @@ export const toJSON = (event: any): any => {
 }
 
 export const getUserInfo = async (user: HelixUser): Promise<IUserInfo> => {
-
   return null
 }

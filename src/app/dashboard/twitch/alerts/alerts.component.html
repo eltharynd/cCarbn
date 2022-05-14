@@ -2,628 +2,618 @@
 <nb-layout class="nested"><nb-layout-column>
 
 <nb-accordion class="centered" style="margin-bottom: 2rem;">
-    <nb-accordion-item>
-        <nb-accordion-item-header class="accordion-header">
-            <div class="composed-title">
-                <strong class="text-title">OBS SETTINGS</strong>
-                <span class="text-description">Here you can find the settings for your Browser Source as well as other OBS functionalities</span>
-              </div>
-        </nb-accordion-item-header>
-        <nb-accordion-item-body>
-            <nb-list>
-                <nb-list-item>
-                    URL:
-                    &nbsp;
-                    <div class="streamer-mode" [class.on]="!showBrowserSource">
-                        <nb-icon class="show-icon" *ngIf="!showBrowserSource" (click)="showBrowserSource=true;cdr.detectChanges()" icon="eye"></nb-icon>
-                        <nb-icon class="copy-icon" (click)="copy()" [nbPopover]="copied" icon="copy"></nb-icon>
-                        <a [href]="viewport.url" target="_blank" class>{{viewport.url}}</a>
-                    </div>
-                    
-                </nb-list-item>
-                <nb-list-item>
-                    Size:
-                    &nbsp;
-                    {{viewport.width}}&nbsp;x&nbsp;{{viewport.height}}&nbsp;px
-                </nb-list-item>
-                <nb-list-item>
-                    Padding:
-                    &nbsp;
-                    {{viewport.padding}}&nbsp;px
-                </nb-list-item>
-                <nb-list-item>
-                    <div>
-                        In order for cCarbn to control your scenes/sources in OBS you must install the latest <a href="https://github.com/obsproject/obs-websocket/releases" target="_blank">OBS-websocket plugin</a> (version 5.0.0 or higher). Then set your browser source permissions to <strong>Advanced</strong> or higher
-                    </div>
-                </nb-list-item>
-                <nb-list-item>
-                    obs-websocket:
-                    &nbsp;
-                    port 4455, no authentication (will change in the future)
-                </nb-list-item>
-                <nb-list-item>
-                    <div>
-                        Two very useful plugins for obs are <a href="https://obsproject.com/forum/resources/move-transition.913/" target="_blank">Move transition</a> and <a href="https://obsproject.com/forum/resources/streamfx-for-obs%C2%AE-studio.578/" target="_blank">StreamFX</a>.
-                        <br>
-                        These aren't required but they allow you to create animations and effects attached to sources as filters, which can be interacted with via cCarbn.
-                        <br>
-                        <a href="https://www.youtube.com/watch?v=6eSgiowHTCc" target="_blank">Here</a>'s a brief tutorial on how to setup those filters.
-                    </div>
-                </nb-list-item>
-            </nb-list>
-        </nb-accordion-item-body>
-    </nb-accordion-item>
+	<nb-accordion-item>
+		<nb-accordion-item-header class="accordion-header">
+			<div class="composed-title">
+				<strong class="text-title">OBS SETTINGS</strong>
+				<span class="text-description">Here you can find the settings for your Browser Source as well as other OBS functionalities</span>
+			  </div>
+		</nb-accordion-item-header>
+		<nb-accordion-item-body>
+			<nb-list>
+				<nb-list-item>
+					URL:
+					&nbsp;
+					<div class="streamer-mode" [class.on]="!showBrowserSource">
+						<nb-icon class="show-icon" *ngIf="!showBrowserSource" (click)="showBrowserSource=true;cdr.detectChanges()" icon="eye"></nb-icon>
+						<nb-icon class="copy-icon" (click)="copy()" [nbPopover]="copied" icon="copy"></nb-icon>
+						<a [href]="viewport.url" target="_blank" class>{{viewport.url}}</a>
+					</div>
+					
+				</nb-list-item>
+				<nb-list-item>
+					Size:
+					&nbsp;
+					{{viewport.width}}&nbsp;x&nbsp;{{viewport.height}}&nbsp;px
+				</nb-list-item>
+				<nb-list-item>
+					Padding:
+					&nbsp;
+					{{viewport.padding}}&nbsp;px
+				</nb-list-item>
+				<nb-list-item>
+					<div>
+						In order for cCarbn to control your scenes/sources in OBS you must install the latest <a href="https://github.com/obsproject/obs-websocket/releases" target="_blank">OBS-websocket plugin</a> (version 5.0.0 or higher). Then set your browser source permissions to <strong>Advanced</strong> or higher
+					</div>
+				</nb-list-item>
+				<nb-list-item>
+					obs-websocket:
+					&nbsp;
+					port 4455, no authentication (will change in the future)
+				</nb-list-item>
+				<nb-list-item>
+					<div>
+						Two very useful plugins for obs are <a href="https://obsproject.com/forum/resources/move-transition.913/" target="_blank">Move transition</a> and <a href="https://obsproject.com/forum/resources/streamfx-for-obs%C2%AE-studio.578/" target="_blank">StreamFX</a>.
+						<br>
+						These aren't required but they allow you to create animations and effects attached to sources as filters, which can be interacted with via cCarbn.
+						<br>
+						<a href="https://www.youtube.com/watch?v=6eSgiowHTCc" target="_blank">Here</a>'s a brief tutorial on how to setup those filters.
+					</div>
+				</nb-list-item>
+			</nb-list>
+		</nb-accordion-item-body>
+	</nb-accordion-item>
 </nb-accordion>
 
 <nb-card class="add-alert-card centered">
-    <nb-card-body>
-        <button nbButton status="success" fullWidth (click)="addAlert()">ADD NEW ALERT</button>
-    </nb-card-body>
+	<nb-card-body>
+		<button nbButton status="success" fullWidth (click)="addAlert()">ADD NEW ALERT</button>
+	</nb-card-body>
 </nb-card>
 
 <nb-accordion class="centered alternate" multi>
-    <nb-accordion-item *ngFor="let al of alerts; let alIndex = index;" [expanded]="al.expanded">  
-        
-        <!-- HEADER -->
-        <nb-accordion-item-header class="alert-header">
-            <div class="alert-controls">
-                <button nbButton status="primary" nbTooltip="Send test to browser source" nbTooltipStatus="primary" (click)="sendTestAlert($event, al)"><nb-icon icon="cast"></nb-icon></button>
-                <nb-toggle class="alert-toggle" (checkedChange)="toggleEnabled(al)" [(ngModel)]="al.enabled" (click)="$event.stopPropagation()"></nb-toggle>
-            </div>
-            <div class="alert-name">
-                {{al.name}}
-            </div>
-            <div class="alert-details">
-                <div *ngFor="let c of al.conditions; let i = index" style="white-space: pre-line;">
-                    <strong>{{_primaryConditions[c.type]}}</strong> - {{_operators.all()[c.operator]}} {{c.compared?.command ? c.compared.command : c.compared?.title ? c.compared.title : _userTypes.hasOwnProperty(c.compared+'') ? _userTypes[c.compared] : c.compared}}
-                    <strong *ngIf="i+1 < al.conditions.length">&nbsp;AND&nbsp;</strong>
-                </div>
-            </div>
-            <div class="alert-mover">
-                <nb-icon icon="arrow-up-outline" [class.disabled]="alIndex<=0" (click)="moveAlert(al, true);$event.stopPropagation()"></nb-icon>
-                <nb-icon icon="arrow-down-outline" [class.disabled]="alIndex>=alerts.length-1" (click)="moveAlert(al, false);$event.stopPropagation()"></nb-icon>
-            </div>
-        </nb-accordion-item-header>
+	<nb-accordion-item *ngFor="let al of alerts; let alIndex = index;" [expanded]="al.expanded">  
+		
+		<!-- HEADER -->
+		<nb-accordion-item-header class="alert-header">
+			<div class="alert-controls">
+				<button nbButton status="primary" nbTooltip="Send test to browser source" nbTooltipStatus="primary" (click)="sendTestAlert($event, al)"><nb-icon icon="cast"></nb-icon></button>
+				<nb-toggle class="alert-toggle" (checkedChange)="toggleEnabled(al)" [(ngModel)]="al.enabled" (click)="$event.stopPropagation()"></nb-toggle>
+			</div>
+			<div class="alert-name">
+				{{al.name}}
+			</div>
+			<div class="alert-details">
+				<div *ngFor="let c of al.conditions; let i = index" style="white-space: pre-line;">
+					<strong>{{_primaryConditions[c.type]}}</strong> - {{_operators.all()[c.operator]}} {{c.compared?.command ? c.compared.command : c.compared?.title ? c.compared.title : _userTypes.hasOwnProperty(c.compared+'') ? _userTypes[c.compared] : c.compared}}
+					<strong *ngIf="i+1 < al.conditions.length">&nbsp;AND&nbsp;</strong>
+				</div>
+			</div>
+			<div class="alert-mover">
+				<nb-icon icon="arrow-up-outline" [class.disabled]="alIndex<=0" (click)="moveAlert(al, true);$event.stopPropagation()"></nb-icon>
+				<nb-icon icon="arrow-down-outline" [class.disabled]="alIndex>=alerts.length-1" (click)="moveAlert(al, false);$event.stopPropagation()"></nb-icon>
+			</div>
+		</nb-accordion-item-header>
 
 
 
-        <!-- TRIGGERS AND ELEMENTS -->
-        <nb-accordion-item-body class="centered-nested">
-            <nb-card class="alert-card">
+		<!-- TRIGGERS AND ELEMENTS -->
+		<nb-accordion-item-body class="centered-nested">
+			<nb-card class="alert-card">
 
-                <!-- TRIGGERS -->
-                <nb-card-header class="conditions-header lighter">                      
-                    <nb-list>
-                        <nb-list-item *ngFor="let c of al.conditions; let i = index" class="conditions-entry">
+				<!-- TRIGGERS -->
+				<nb-card-header class="conditions-header lighter">                      
+					<nb-list>
+						<nb-list-item *ngFor="let c of al.conditions; let i = index" class="conditions-entry">
 
-                            <!-- TYPES -->
-                            <div class="field-container">
-                                <nb-select [(selected)]="c.type" (selectedChange)="al.changes=true; c.operator=null; c.compared=null; al.buffer = (c.type==='' ? getUserCommands() : null); al.buffer = (i===0 && al.conditions.length>1) ? deleteCondition(al, al.conditions[1]) : null" fullWidth>
-                                    <nb-option disabled>-- Common --</nb-option>
-                                    <nb-option  *ngFor="let type of _primaryConditions | keyvalue: originalOrder" 
-                                                [value]="type.key"
-                                                [disabled]="i>0"
-                                                >
-                                        {{type.value}}
-                                    </nb-option>
-                                    <nb-option disabled>-- Secondary --</nb-option>
-                                    <nb-option  *ngFor="let type of _secondaryConditions | keyvalue: originalOrder"
-                                                [value]="type.key"
-                                                [disabled]="
-                                                    i<1 ||
-                                                    (al.conditions[0].type==='moderatorAdd') ||
-                                                    (al.conditions[0].type==='moderatorRemoved') ||
-                                                    (al.conditions[0].type==='streamOnline') ||
-                                                    (al.conditions[0].type==='streamOffline') ||
-                                                    (al.conditions[0].type==='pollStarted') ||
-                                                    (al.conditions[0].type==='pollProgress') ||
-                                                    (al.conditions[0].type==='pollEnd') ||
-                                                    (al.conditions[0].type==='predicitonStart') ||
-                                                    (al.conditions[0].type==='predicitonProgress') ||
-                                                    (al.conditions[0].type==='predicitonLocked') ||
-                                                    (al.conditions[0].type==='predicitonEnd') ||
-                                                    (al.conditions[0].type==='rewardAdd') ||
-                                                    (al.conditions[0].type==='rewardUpdate') ||
-                                                    (al.conditions[0].type==='rewardDelete') ||
-                                                    (al.conditions[0].type==='titleChanged') ||
-                                                    (al.conditions[0].type==='categoryChanged')
-                                                "
-                                                >
-                                        {{type.value}}
-                                    </nb-option>
-                                    <nb-option disabled>-- Interactions --</nb-option>
-                                    <nb-option  *ngFor="let type of _interactionConditions | keyvalue: originalOrder" 
-                                                [value]="type.key"
-                                                [disabled]="i>0"
-                                                >
-                                        {{type.value}}
-                                    </nb-option>
-                                    <nb-option disabled>-- Strean --</nb-option>
-                                    <nb-option  *ngFor="let type of _streamConditions | keyvalue: originalOrder" 
-                                                [value]="type.key"
-                                                [disabled]="i>0"
-                                                >
-                                        {{type.value}}
-                                    </nb-option>
-                                    
-                                </nb-select>
-                                <div class="anchor"><label>{{i==0 ? 'When' : 'AND'}}</label></div>
-                            </div>
+							<!-- TYPES -->
+							<div class="field-container">
+								<nb-select [(selected)]="c.type" (selectedChange)="al.changes=true; c.operator=null; c.compared=null; al.buffer = (c.type==='' ? getUserCommands() : null); al.buffer = (i===0 && al.conditions.length>1) ? deleteCondition(al, al.conditions[1]) : null" fullWidth>
+									<nb-option disabled>-- Common --</nb-option>
+									<nb-option  *ngFor="let type of _primaryConditions | keyvalue: originalOrder" 
+												[value]="type.key"
+												[disabled]="i>0"
+												>
+										{{type.value}}
+									</nb-option>
+									<nb-option disabled>-- Secondary --</nb-option>
+									<nb-option  *ngFor="let type of _secondaryConditions | keyvalue: originalOrder"
+												[value]="type.key"
+												[disabled]="
+													i<1 ||
+													(al.conditions[0].type==='moderatorAdd') ||
+													(al.conditions[0].type==='moderatorRemoved') ||
+													(al.conditions[0].type==='streamOnline') ||
+													(al.conditions[0].type==='streamOffline') ||
+													(al.conditions[0].type==='pollStarted') ||
+													(al.conditions[0].type==='pollProgress') ||
+													(al.conditions[0].type==='pollEnd') ||
+													(al.conditions[0].type==='predicitonStart') ||
+													(al.conditions[0].type==='predicitonProgress') ||
+													(al.conditions[0].type==='predicitonLocked') ||
+													(al.conditions[0].type==='predicitonEnd') ||
+													(al.conditions[0].type==='rewardAdd') ||
+													(al.conditions[0].type==='rewardUpdate') ||
+													(al.conditions[0].type==='rewardDelete') ||
+													(al.conditions[0].type==='titleChanged') ||
+													(al.conditions[0].type==='categoryChanged')
+												"
+												>
+										{{type.value}}
+									</nb-option>
+									<nb-option disabled>-- Interactions --</nb-option>
+									<nb-option  *ngFor="let type of _interactionConditions | keyvalue: originalOrder" 
+												[value]="type.key"
+												[disabled]="i>0"
+												>
+										{{type.value}}
+									</nb-option>
+									<nb-option disabled>-- Strean --</nb-option>
+									<nb-option  *ngFor="let type of _streamConditions | keyvalue: originalOrder" 
+												[value]="type.key"
+												[disabled]="i>0"
+												>
+										{{type.value}}
+									</nb-option>
+									
+								</nb-select>
+								<div class="anchor"><label>{{i==0 ? 'When' : 'AND'}}</label></div>
+							</div>
 
-                            <!-- OPERATORS PRIMARY -->
-                            <div *ngIf="c.type==='bits'" class="field-container">
-                                <nb-select [(selected)]="c.operator" (selectedChange)="al.changes=true" fullWidth>
-                                    <nb-option *ngFor="let op of _operators.comparison | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                                </nb-select>
-                                <div class="anchor"><label>is</label></div>
-                            </div>
-                            <div *ngIf="c.type==='redeem'" class="field-container">
-                                <nb-select [(selected)]="c.operator" (selectedChange)="al.changes=true" fullWidth>
-                                    <nb-option *ngFor="let op of _operators.redemption | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                                </nb-select>
-                                <div class="anchor"><label>is</label></div>
-                            </div>
-                            <div *ngIf="c.type==='subscription'" class="field-container">
-                                <nb-select [(selected)]="c.operator" (selectedChange)="al.changes=true" fullWidth>
-                                    <nb-option *ngFor="let op of _operators.subscription | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                                </nb-select>
-                                <div class="anchor"><label>what</label></div>
-                            </div>
-                            <div *ngIf="c.type==='raid'" class="field-container">
-                                <nb-select [(selected)]="c.operator" [placeholder]="_operators.raid[c.operator]" (selectedChange)="al.changes=true" fullWidth>
-                                    <nb-option *ngFor="let op of _operators.raid | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                                </nb-select>
-                                <div class="anchor"><label>what</label></div>
-                            </div>
-                            <div *ngIf="c.type==='ban'" class="field-container">
-                                <nb-select [(selected)]="c.operator" [placeholder]="_operators.ban[c.operator]" (selectedChange)="al.changes=true" fullWidth>
-                                    <nb-option *ngFor="let op of _operators.ban | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                                </nb-select>
-                                <div class="anchor"><label>what</label></div>
-                            </div>
+							<!-- OPERATORS PRIMARY -->
+							<div *ngIf="c.type==='bits'" class="field-container">
+								<nb-select [(selected)]="c.operator" (selectedChange)="al.changes=true" fullWidth>
+									<nb-option *ngFor="let op of _operators.comparison | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+								</nb-select>
+								<div class="anchor"><label>is</label></div>
+							</div>
+							<div *ngIf="c.type==='redeem'" class="field-container">
+								<nb-select [(selected)]="c.operator" (selectedChange)="al.changes=true" fullWidth>
+									<nb-option *ngFor="let op of _operators.redemption | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+								</nb-select>
+								<div class="anchor"><label>is</label></div>
+							</div>
+							<div *ngIf="c.type==='subscription'" class="field-container">
+								<nb-select [(selected)]="c.operator" (selectedChange)="al.changes=true" fullWidth>
+									<nb-option *ngFor="let op of _operators.subscription | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+								</nb-select>
+								<div class="anchor"><label>what</label></div>
+							</div>
+							<div *ngIf="c.type==='raid'" class="field-container">
+								<nb-select [(selected)]="c.operator" [placeholder]="_operators.raid[c.operator]" (selectedChange)="al.changes=true" fullWidth>
+									<nb-option *ngFor="let op of _operators.raid | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+								</nb-select>
+								<div class="anchor"><label>what</label></div>
+							</div>
+							<div *ngIf="c.type==='ban'" class="field-container">
+								<nb-select [(selected)]="c.operator" [placeholder]="_operators.ban[c.operator]" (selectedChange)="al.changes=true" fullWidth>
+									<nb-option *ngFor="let op of _operators.ban | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+								</nb-select>
+								<div class="anchor"><label>what</label></div>
+							</div>
 
-                            <!-- OPERATORS SECONDARY -->
-                            <div *ngIf="c.type==='user'" class="field-container">
-                                <nb-select [(selected)]="c.operator" (selectedChange)="al.changes=true" fullWidth>
-                                    <nb-option *ngFor="let op of _operators.user | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                                    <nb-option *ngFor="let op of _operators.userType | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                                </nb-select>
-                                <div class="anchor"><label>what</label></div>
-                            </div>
+							<!-- OPERATORS SECONDARY -->
+							<div *ngIf="c.type==='user'" class="field-container">
+								<nb-select [(selected)]="c.operator" (selectedChange)="al.changes=true" fullWidth>
+									<nb-option *ngFor="let op of _operators.user | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+									<nb-option *ngFor="let op of _operators.userType | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+								</nb-select>
+								<div class="anchor"><label>what</label></div>
+							</div>
 
-                            <!-- OPERATORS UPDATE -->
-                            <div *ngIf="c.type==='update'" class="field-container">
-                                <nb-select [placeholder]="_operators.update[c.operator]||'Any'" [(selected)]="c.operator" (selectedChange)="al.changes=true" fullWidth>
-                                    <nb-option *ngFor="let op of _operators.update | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
-                                </nb-select>
-                                <div class="anchor"><label>what</label></div>
-                            </div>
-
-
-                            <!-- COMPARED -->
-                            <div *ngIf="c.type === 'bits'" class="field-container">
-                                <input nbInput type="number" [(ngModel)]="c.compared" (change)="al.changes=true" fullWidth>
-                                <div class="anchor"><label>how many</label></div>
-                            </div>
-                            <div *ngIf="c.type === 'user' && c.operator?.length>0 && c.operator[0]!=='t'" class="field-container">
-                                <input nbInput type="text" [(ngModel)]="c.compared" (change)="al.changes=true" fullWidth>
-                                <div class="anchor"><label>username</label></div>
-                            </div>
-                            <div *ngIf="c.type === 'user' && c.operator?.length>0 && c.operator[0]==='t'"class="field-container">
-                                <nb-select [(selected)]="c.compared" (selectedChange)="al.changes=true" fullWidth>
-                                    <nb-option *ngFor="let ut of _userTypes | keyvalue: originalOrder" [value]=ut.key>{{ut.value}}</nb-option>
-                                </nb-select>
-                                <div class="anchor"><label>what</label></div>
-                            </div>
-                            <div *ngIf="c.type === 'redeem'" class="field-container">
-                                <nb-select [(selected)]="c.compared" [placeholder]="c.compared?.title||''" (selectedChange)="al.changes=true" fullWidth>
-                                    <nb-option *ngFor="let r of channelRewards" [value]=r>{{r.title}}</nb-option>
-                                </nb-select>
-                                <div class="anchor"><label>which</label></div>
-                            </div>
-                            <div *ngIf="c.type === 'subscription' && (c.operator==='sub' || c.operator==='subEnd')" class="field-container">
-                                <nb-select [(selected)]="c.compared" [placeholder]="_subOptions[c.compared]||'Any'" (selectedChange)="al.changes=true" fullWidth>
-                                    <nb-option *ngFor="let o of _subOptions | keyvalue: originalOrder" [value]=o.key>{{o.value}}</nb-option>
-                                </nb-select>
-                                <div class="anchor"><label>real/gift</label></div>
-                            </div>
-                            <div *ngIf="c.type === 'subscription'" class="field-container">
-                                <nb-select [(selected)]="c.tier" [placeholder]="_subTiers[c.tier]||'All Tiers'" (selectedChange)="al.changes=true" fullWidth>
-                                    <nb-option *ngFor="let o of _subTiers | keyvalue: originalOrder" [value]=o.key>{{o.value}}</nb-option>
-                                </nb-select>
-                                <div class="anchor"><label>Tiers</label></div>
-                            </div>
-                            <div *ngIf="c.type === 'command'" class="field-container">
-                                <nb-select [(selected)]="c.compared" [placeholder]="userCommands && c.compared?._id && userCommands[c.compared?._id] ? userCommands[c.compared._id].command : 'Select a command'" (selectedChange)="al.changes=true" fullWidth>
-                                    <nb-option *ngFor="let c of userCommands | keyvalue: originalOrder" [value]=c.value>{{c.value!.command}}</nb-option>
-                                </nb-select>
-                                <div class="anchor"><label>Which</label></div>
-                            </div>
-                            <div *ngIf="c.type === 'update' && c.operator && c.operator!=='any'" class="field-container">
-                                <input nbInput type="text" [(ngModel)]="c.compared" (change)="al.changes=true" fullWidth>
-                                <div class="anchor"><label>text</label></div>
-                            </div>
-
-                            <!-- BUTTONS -->
-                            <button nbButton status="danger" [disabled]="al.conditions.length<2 || i===0" (click)="deleteCondition(al, c)"><nb-icon icon="trash-2"></nb-icon></button>
-                            <button nbButton status="success" (click)="addCondition(al)" [disabled]="i<al.conditions.length-1 || al.conditions.length>=2"><nb-icon icon="plus"></nb-icon></button>
-                        </nb-list-item>
-                
-                        <nb-list-item>
-                            <div class="field-container" style="width: 100%;">
-                                <input nbInput [(ngModel)]="al.name" (change)="al.changes=true" fullWidth>
-                                <div class="anchor"><label>alert name</label></div>
-                            </div>
-                        </nb-list-item>
-                    </nb-list>
-                </nb-card-header>
-                <!-- ELEMENTS -->
-                <nb-card-body class="elements-body">
-                    <nb-tabset fullWidth class="elements-tabs" (changeTab)="al.manualSelect = false">
-                        <nb-tab *ngFor="let elem of al.elements; let i = index" [tabTitle]="elem.type||'ALERT ELEMENTS'" style="padding: 0;" [active]="al.manualSelect ? elem.selectThis : i===0">
-                            <div class="element-tab-header">
-                                <button nbButton status="primary" (click)="moveElement(al, elem, false)" [disabled]="i===0"><nb-icon icon="arrow-left"></nb-icon></button>
-                                <div style="width: 3rem;"></div>
-
-                                <nb-select status="success" placeholder="Add an element" [(selected)]="al.selectedElementToAdd">
-                                    <nb-option *ngFor="let type of ElementTypes | keyvalue: originalOrder" [value]="type.key">{{type.value}}</nb-option>
-                                </nb-select>
-                                <button nbButton status="success" (click)="addElement(al, al.selectedElementToAdd)"><nb-icon icon="plus"></nb-icon></button>
-
-                                <div style="width: 1rem;"></div>
-
-                                <nb-select status="danger" placeholder="Delete an element" [(selected)]="al.selectedElementToDelete" [disabled]="al.elements.length<1 || elem.placeholder">
-                                    <nb-option *ngFor="let ev of al.elements; let i = index" [value]="i">{{ev.type}}</nb-option>
-                                </nb-select>
-                                <button nbButton status="danger" (click)="deleteElement(al, al.selectedElementToDelete)" [disabled]="al.elements.length<1 || elem.placeholder"><nb-icon icon="trash-2"></nb-icon></button>
-                                
-                                <div style="width: 3rem;"></div>
-                                <button nbButton status="primary" (click)="moveElement(al, elem, true)" [disabled]="al.elements.length<1 || i+1===al.elements.length"><nb-icon icon="arrow-right"></nb-icon></button>
-                            </div>
-
-                            <div *ngIf="elem.placeholder" class="element-body-placeholder">
-                                <p>
-                                    THIS ALERT HAS NO ELEMENTS YET
-                                </p>
-                            </div>
-
-                            <div #media *ngIf="elem.type==='video' || elem.type==='audio' || elem.type==='gif' || elem.type==='image' || elem.type==='clip'" class="media-container">
-                                
-                                <div *ngIf="elem.src && elem.type!=='clip'" class="media-preview">
-
-                                    <video *ngIf="elem.type==='video'" style="width: 100%; height: 100%;" (loadeddata)="onLoadedData(elem, $event)" autoplay loop [muted]="'muted'">
-                                        <source [src]="elem.src">
-                                    </video>  
-
-                                    <audio *ngIf="elem.type==='audio'" (loadeddata)="onLoadedData(elem, $event)" controls>
-                                        <source *ngIf="elem.src" [src]="elem.src">
-                                    </audio>
-
-                                    <img *ngIf="elem.type==='gif' || elem.type==='image'" [src]="elem.src" (load)="onLoadedData(elem, $event)" loop="False">
-
-                                    <button nbButton class="media-delete-button" status="danger" (click)="deleteMediaSource(al, elem, elem.src)"><nb-icon icon="trash-2"></nb-icon></button>
-                                </div>
-
-                                <div *ngIf="!elem.src && elem.type!=='clip'" class="media-uploader">
-
-                                    <nb-select placeholder="Select a video" *ngIf="elem.select && elem.type==='video'" [(selected)]="elem.src" (selectedChange)="videoSelected(al, elem);al.changes=true" fullWidth>
-                                        <nb-option *ngIf="!userVideos || userVideos.length<1" disabled>No valid file exists</nb-option>
-                                        <nb-option *ngFor="let file of userVideos" [value]=file.src>{{file.filename}}</nb-option>
-                                    </nb-select>
-
-                                    <nb-select placeholder="Select an audio" *ngIf="elem.select && elem.type==='audio'" [(selected)]="elem.src" (selectedChange)="videoSelected(al, elem);al.changes=true" fullWidth>
-                                        <nb-option *ngIf="!userAudios || userAudios.length<1" disabled>No valid file exists</nb-option>
-                                        <nb-option *ngFor="let file of userAudios" [value]=file.src>{{file.filename}}</nb-option>
-                                    </nb-select>
-
-                                    <nb-select placeholder="Select a GIF" *ngIf="elem.select && elem.type==='gif'" [(selected)]="elem.src" (selectedChange)="videoSelected(al, elem);al.changes=true" fullWidth>
-                                        <nb-option *ngIf="!userGIFS || userGIFS.length<1" disabled>No valid file exists</nb-option>
-                                        <nb-option *ngFor="let file of userGIFS" [value]=file.src>{{file.filename}}</nb-option>
-                                    </nb-select>
-
-                                    <nb-select placeholder="Select an image" *ngIf="elem.select && elem.type==='image'" [(selected)]="elem.src" (selectedChange)="videoSelected(al, elem);al.changes=true" fullWidth>
-                                        <nb-option *ngIf="!userImages || userImages.length<1" disabled>No valid file exists</nb-option>
-                                        <nb-option *ngFor="let file of userImages" [value]=file.src>{{file.filename}}</nb-option>
-                                    </nb-select>
-
-                                    <app-uploader *ngIf="elem.upload || !elem.src && !elem.select" [allowedTypes]="[elem.type]" [blockedTypes]="elem.type==='image' ? ['gif'] : null" height="120px" [autoIndexing]="true" [uploaded]="uploadedSubject" [reference]="{al: al, ev: elem}"></app-uploader>
-                                    <button nbButton class="media-select-button" status="success" nbTooltip="Select file from existing" nbTooltipStatus="success" (click)="getUserSelectableFiles(elem)"><nb-icon icon="book-open"></nb-icon></button>
-                                    <button nbButton *ngIf="elem.select" class="media-upload-button" status="warning" nbTooltip="Upload a new file" nbTooltipStatus="warning" (click)="elem.upload=true; elem.select = false"><nb-icon icon="cloud-upload"></nb-icon></button>
-                                </div>
-
-                                <div *ngIf="elem.src && elem.mediaInformation && elem.type!=='clip'" class="media-details">
-                                    <div *ngIf="elem.mediaInformation.width">Width: {{elem.mediaInformation.width}}px</div>
-                                    <div *ngIf="elem.mediaInformation.height">Height: {{elem.mediaInformation.height}}px</div>
-                                    <div *ngIf="elem.mediaInformation.duration">Duration: {{elem.mediaInformation.duration | number: '1.1-1'}}s</div>
-                                </div>
-
-                                <div *ngIf="elem.type==='clip'" class="clip-inner">
-                                    <div style="text-align: center;">
-                                        Note: Clips currently only work with chat commands!!!
-                                    </div>
-                                    <div class="field-container">
-                                        <nb-select [placeholder]="elem.which||_clip.which.random" [(selected)]="elem.which" (selectedChange)="al.changes=true;" fullWidth>
-                                            <nb-option *ngFor="let t of _clip.which | keyvalue: originalOrder" [value]="t.key">{{t.value}}</nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>Which</label></div>
-                                    </div>
-                                </div>
-
-                                <div class="media-settings">
-                                    <nb-toggle [(ngModel)]="elem.withPrevious" (checkedChange)="al.changes=true" [disabled]="i==0">
-                                        Don't wait for previous
-                                    </nb-toggle>
-
-                                    <nb-accordion class="lighter">
-
-                                        <!-- MANDATORY SETTINGS -->
-                                        <nb-accordion-item expanded>
-                                            <nb-accordion-item-header>
-                                                Primary Settings
-                                            </nb-accordion-item-header>
-                                            <nb-accordion-item-body class="settings-unpadded">
-                                                <nb-list>
-                                                    <nb-list-item *ngFor="let o of _options[elem.type].mandatory | keyvalue: originalOrder">
-                                                        <div class="key">{{o.value}}</div>
-                                                        <div class="value" *ngIf="_options[elem.type].units[o.key]==='px' || _options[elem.type].units[o.key]==='s' || _options[elem.type].units[o.key]==='%'">
-                                                            <input nbInput type="number" [placeholder]="_options[elem.type].default.hasOwnProperty(o.key) ? _options[elem.type].default[o.key] : null" [(ngModel)]="elem[o.key]" (change)="al.changes=true" fullWidth>
-                                                            <div class="unit">{{_options[elem.type].units[o.key]}}</div>
-                                                        </div>
-                                                        <div class="value" *ngIf="_options[elem.type].units[o.key]==='POSITION'">
-                                                            <nb-select [placeholder]="_options[elem.type].default[o.key] ? _options[elem.type].default[o.key] : 'Select one'" [(selected)]="elem.position" (selectedChange)="al.changes=true" fullWidth>
-                                                                <nb-option *ngFor="let p of _POSITION | keyvalue : originalOrder" [value]="p.key">{{p.value}}</nb-option>
-                                                            </nb-select>
-                                                        </div>
-                                                        <div class="value" *ngIf="_options[elem.type].units[o.key]==='TRANSITION'">
-                                                            <nb-select [placeholder]="_TRANSITION[elem[o.key]] ? _TRANSITION[elem[o.key]] :  _options[elem.type].default[o.key] ? _options[elem.type].default[o.key] : 'Select one'" [(selected)]="elem[o.key]" (selectedChange)="al.changes=true" fullWidth>
-                                                                <nb-option *ngFor="let t of _TRANSITION | keyvalue : originalOrder" [value]="t.key">{{t.value}}</nb-option>
-                                                            </nb-select>
-                                                        </div>
-                                                    </nb-list-item>
-                                                    <nb-list-item *ngIf="elem.position==='MANUAL'">
-                                                        <div class="key">Position X</div>
-                                                        <div class="value">
-                                                            <input nbInput type="number" [(ngModel)]="elem.targetX" placeholder="Center point X" (change)="al.changes=true" fullWidth>
-                                                            <div class="unit">px</div>
-                                                        </div>
-                                                    </nb-list-item>
-                                                    <nb-list-item *ngIf="elem.position==='MANUAL'">
-                                                        <div class="key">Position Y</div>
-                                                        <div class="value">
-                                                            <input nbInput type="number" [(ngModel)]="elem.targetY" placeholder="Center point Y" (change)="al.changes=true" fullWidth>
-                                                            <div class="unit">px</div>
-                                                        </div>
-                                                    </nb-list-item>
-                                                    <nb-list-item *ngIf="elem.position==='MANUAL'">
-                                                        <div class="key">Position padding</div>
-                                                        <div class="value" style="justify-content: flex-end;">
-                                                            <nb-toggle [(ngModel)]="elem.ignorePadding" style="margin-right: 0.5rem;"></nb-toggle>
-                                                            <div class="unit">{{elem.ignorePadding ? 'Ignore viewport padding' : 'Within viewport padding'}}</div>
-                                                        </div>
-                                                    </nb-list-item>
-                                                </nb-list>
-                                            </nb-accordion-item-body>
-                                        </nb-accordion-item>
-
-                                        <!-- BORDER SETTINGS -->
-                                        <nb-accordion-item *ngIf="elem.type!=='audio'">
-                                            <nb-accordion-item-header>
-                                                Border Settings
-                                            </nb-accordion-item-header>
-                                            <nb-accordion-item-body class="unpadded">
-                                                <nb-list>
-                                                    <nb-list-item>
-                                                        <div class="key">Border:</div>
-                                                        <div class="value">
-                                                            <nb-select [placeholder]="_BORDER.types[elem.border]||'None'" [(selected)]="elem.border" (selectedChange)="al.changes=true" fullWidth>
-                                                                <nb-option [value]="null">None</nb-option>
-                                                                <nb-option *ngFor="let type of _BORDER.types | keyvalue : originalOrder" [value]="type.key">{{type.value}}</nb-option>
-                                                            </nb-select>
-                                                        </div>
-                                                    </nb-list-item>
-                                                    <nb-list-item>
-                                                        <div class="key">Thickness:</div>
-                                                        <div class="value">
-                                                            <nb-select [disabled]="!elem.border" [placeholder]="_BORDER.thickness[elem.borderStroke]||'Regular'" [(selected)]="elem.borderStroke" (selectedChange)="al.changes=true" fullWidth>
-                                                                <nb-option *ngFor="let type of _BORDER.thickness | keyvalue : originalOrder" [value]="type.key">{{type.value}}</nb-option>
-                                                            </nb-select>
-                                                        </div>
-                                                    </nb-list-item>
-                                                    <nb-list-item>
-                                                        <div class="key">Color:</div>
-                                                        <div class="value">
-                                                            <nb-select [disabled]="!elem.border" [placeholder]="_BORDER.color[elem.borderColor]||'Black'" [(selected)]="elem.borderColor" (selectedChange)="al.changes=true" fullWidth>
-                                                                <nb-option *ngFor="let type of _BORDER.color | keyvalue : originalOrder" [value]="type.key">{{type.value}}</nb-option>
-                                                            </nb-select>
-                                                        </div>
-                                                    </nb-list-item>
-                                                    <nb-list-item *ngIf="elem.border && elem.borderColor==='custom'">
-                                                        <div class="key">Custom Color: </div>
-                                                        <div class="value">
-                                                            <input nbInput type="text" placeholder="#daa520" [(ngModel)]="elem.borderCustomColor" (change)="al.changes=true" fullWidth>
-                                                        </div>
-                                                    </nb-list-item>
-                                                </nb-list>
-                                            </nb-accordion-item-body>
-                                        </nb-accordion-item>
-      
-                                        <!-- ADDITIONAL SETTINGS -->
-                                        <nb-accordion-item>
-                                            <nb-accordion-item-header>
-                                                Additional Settings
-                                            </nb-accordion-item-header>
-                                            <nb-accordion-item-body class="unpadded">
-                                                <nb-list>
-                                                    <nb-list-item *ngFor="let o of _options[elem.type].additional | keyvalue: originalOrder">
-                                                        <div class="key">{{o.value}}:</div>
-                                                        <div class="value" *ngIf="_options[elem.type].units[o.key]==='px' || _options[elem.type].units[o.key]==='s'">
-                                                            <input nbInput type="number" [(ngModel)]="elem[o.key]" (change)="al.changes=true" fullWidth>
-                                                            <div class="unit">{{_options[elem.type].units[o.key]}}</div>
-                                                        </div>
-                                                    </nb-list-item>
-                                                </nb-list>
-                                            </nb-accordion-item-body>
-                                        </nb-accordion-item>
-
-                                    </nb-accordion>
-                                </div>
-                            </div>
-
-                            <div #tts *ngIf="elem.type==='tts'" class="tts-container">
-                                <div class="field-container">
-                                    <nb-select [(selected)]="elem.voice" (selectedChange)="al.changes=true" placeholder="Select which voice to use" fullWidth>
-                                        <nb-option disabled class="tts-separator">Free Tier Voices -</nb-option>
-                                        <nb-option *ngFor="let v of _tts.voices | keyvalue: originalOrder" [value]="v.key" >{{v.value}}</nb-option>
-                                        <nb-option disabled class="tts-separator">Supporter Tier Voices</nb-option>
-                                        <nb-option *ngFor="let v of _tts.supporterVoices | keyvalue: originalOrder" [value]="v.key" class="supporter" [disabled]="!auth.currentUser?.founder && !auth.currentUser?.supporter && !auth.currentUser?.premium">{{v.value}}</nb-option>
-                                        <nb-option disabled class="tts-separator">Premium Tier Voices</nb-option>
-                                        <nb-option *ngFor="let v of _tts.premiumVoices | keyvalue: originalOrder" [value]="v.key" class="premium" [disabled]="!auth.currentUser?.premium">{{v.value}}</nb-option>
-                                    </nb-select>
-                                    <div class="anchor"><label>voice</label></div>
-                                </div>
-
-                                <div>
-                                    <div class="field-container">
-                                        <nb-select [(selected)]="elem.message" (selectedChange)="al.changes=true" placeholder="Select what to read" fullWidth>
-                                            <nb-option  *ngFor="let o of _tts.options | keyvalue: originalOrder" 
-                                                        [value]="o.key"
-                                                        [disabled]="
-                                                            (o.key==='redemptionMessage' && al.conditions[0].type!=='redeem') ||
-                                                            (o.key==='cheerMessage' && al.conditions[0].type!=='bits') ||
-                                                            (o.key==='subMessage' && al.conditions[0].type!=='subscription' && (!al.conditions[0].operator || al.conditions[0].operator!=='subMessage'))
-                                                        "
-                                                        >
-                                                {{o.value}}
-                                            </nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>what</label></div>
-                                    </div>
-
-                                    <nb-toggle [(ngModel)]="elem.withPrevious" (checkedChange)="al.changes=true" [disabled]="i===0">Don't wait for previous</nb-toggle>
-                                </div>
-
-                                <div *ngIf="elem.message === 'customMessage'">
-                                    <textarea nbInput type="text" (change)="al.changes=true" placeholder="Custom message. Use the keywords below and they will be replaced accordingly." [(ngModel)]="elem.customMessage" fullWidth></textarea>
-                                </div>
-
-                                <div *ngIf="elem.message === 'customMessage'" class="keywords">
-                                    <div *ngFor="let keyword of _chat.keywords | keyvalue: originalOrder;">
-                                        <div>{{keyword.key}}:</div>
-                                        <div>{{keyword.value}}</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div #obs *ngIf="elem.type==='obs'" class="obs-container">
+							<!-- OPERATORS UPDATE -->
+							<div *ngIf="c.type==='update'" class="field-container">
+								<nb-select [placeholder]="_operators.update[c.operator]||'Any'" [(selected)]="c.operator" (selectedChange)="al.changes=true" fullWidth>
+									<nb-option *ngFor="let op of _operators.update | keyvalue: originalOrder" [value]=op.key>{{op.value}}</nb-option>
+								</nb-select>
+								<div class="anchor"><label>what</label></div>
+							</div>
 
 
-                                <div class="field-container">
-                                    <nb-select [placeholder]="elem.trigger" [(selected)]="elem.trigger" (selectedChange)="al.changes=true; elem.scene=null; elem.source=null; elem.input=null; elem.duration=null; elem.toggleTo=null; elem.revert = elem.trigger==='filterVisibility' ? false : elem.revert" fullWidth>
-                                        <nb-option *ngFor="let t of _obs.triggers | keyvalue: originalOrder" [value]="t.key">{{t.value}}</nb-option>
-                                    </nb-select>
-                                    <div class="anchor"><label>Trigger</label></div>
-                                </div>
+							<!-- COMPARED -->
+							<div *ngIf="c.type === 'bits'" class="field-container">
+								<input nbInput type="number" [(ngModel)]="c.compared" (change)="al.changes=true" fullWidth>
+								<div class="anchor"><label>how many</label></div>
+							</div>
+							<div *ngIf="c.type === 'user' && c.operator?.length>0 && c.operator[0]!=='t'" class="field-container">
+								<input nbInput type="text" [(ngModel)]="c.compared" (change)="al.changes=true" fullWidth>
+								<div class="anchor"><label>username</label></div>
+							</div>
+							<div *ngIf="c.type === 'user' && c.operator?.length>0 && c.operator[0]==='t'"class="field-container">
+								<nb-select [(selected)]="c.compared" (selectedChange)="al.changes=true" fullWidth>
+									<nb-option *ngFor="let ut of _userTypes | keyvalue: originalOrder" [value]=ut.key>{{ut.value}}</nb-option>
+								</nb-select>
+								<div class="anchor"><label>what</label></div>
+							</div>
+							<div *ngIf="c.type === 'redeem'" class="field-container">
+								<nb-select [(selected)]="c.compared" [placeholder]="c.compared?.title||''" (selectedChange)="al.changes=true" fullWidth>
+									<nb-option *ngFor="let r of channelRewards" [value]=r>{{r.title}}</nb-option>
+								</nb-select>
+								<div class="anchor"><label>which</label></div>
+							</div>
+							<div *ngIf="c.type === 'subscription' && (c.operator==='sub' || c.operator==='subEnd')" class="field-container">
+								<nb-select [(selected)]="c.compared" [placeholder]="_subOptions[c.compared]||'Any'" (selectedChange)="al.changes=true" fullWidth>
+									<nb-option *ngFor="let o of _subOptions | keyvalue: originalOrder" [value]=o.key>{{o.value}}</nb-option>
+								</nb-select>
+								<div class="anchor"><label>real/gift</label></div>
+							</div>
+							<div *ngIf="c.type === 'subscription'" class="field-container">
+								<nb-select [(selected)]="c.tier" [placeholder]="_subTiers[c.tier]||'All Tiers'" (selectedChange)="al.changes=true" fullWidth>
+									<nb-option *ngFor="let o of _subTiers | keyvalue: originalOrder" [value]=o.key>{{o.value}}</nb-option>
+								</nb-select>
+								<div class="anchor"><label>Tiers</label></div>
+							</div>
+							<div *ngIf="c.type === 'command'" class="field-container">
+								<nb-select [(selected)]="c.compared" [placeholder]="userCommands && c.compared?._id && userCommands[c.compared?._id] ? userCommands[c.compared._id].command : 'Select a command'" (selectedChange)="al.changes=true" fullWidth>
+									<nb-option *ngFor="let c of userCommands | keyvalue: originalOrder" [value]=c.value>{{c.value!.command}}</nb-option>
+								</nb-select>
+								<div class="anchor"><label>Which</label></div>
+							</div>
+							<div *ngIf="c.type === 'update' && c.operator && c.operator!=='any'" class="field-container">
+								<input nbInput type="text" [(ngModel)]="c.compared" (change)="al.changes=true" fullWidth>
+								<div class="anchor"><label>text</label></div>
+							</div>
 
-                                <div *ngIf="elem.trigger==='sourceVisibility'" class="obs-inner">
-                                    <div class="field-container">
-                                        <nb-select [placeholder]="elem.scene?.sceneName" [(selected)]="elem.scene" (selectedChange)="al.changes=true; elem.source=null" fullWidth>
-                                            <nb-option *ngFor="let s of OBS.scenes" [value]="s">{{s.sceneName}}</nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>Scene</label></div>
-                                    </div>
-                                    <div class="field-container">
-                                        <nb-select [placeholder]="elem.source?.sourceName" [(selected)]="elem.source" (selectedChange)="al.changes=true; elem.sourceNested = null;" fullWidth [disabled]="!elem.scene || !elem.scene.sources">
-                                            <nb-option *ngFor="let s of elem.scene?.sources||[]" [value]="s">{{s.sourceName}}</nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>{{elem.source?.isGroup ? 'Group' : 'Source'}}</label></div>
-                                    </div>
-                                    <div class="field-container" *ngIf="elem.source?.isGroup">
-                                        <nb-select [placeholder]="elem.sourceNested?.sourceName||'Whole Group'" [(selected)]="elem.sourceNested" (selectedChange)="al.changes=true" fullWidth [disabled]="!elem.scene || !elem.scene.sources || !elem.source">
-                                            <nb-option class="option-header">Whole Group</nb-option>
-                                            <nb-option *ngFor="let s of elem.source?.items||[]" [value]="s">{{s.sourceName}}</nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>Source</label></div>
-                                    </div>
-                                </div>
+							<!-- BUTTONS -->
+							<button nbButton status="danger" [disabled]="al.conditions.length<2 || i===0" (click)="deleteCondition(al, c)"><nb-icon icon="trash-2"></nb-icon></button>
+							<button nbButton status="success" (click)="addCondition(al)" [disabled]="i<al.conditions.length-1 || al.conditions.length>=2"><nb-icon icon="plus"></nb-icon></button>
+						</nb-list-item>
+				
+						<nb-list-item>
+							<div class="field-container" style="width: 100%;">
+								<input nbInput [(ngModel)]="al.name" (change)="al.changes=true" fullWidth>
+								<div class="anchor"><label>alert name</label></div>
+							</div>
+						</nb-list-item>
+					</nb-list>
+				</nb-card-header>
+				<!-- ELEMENTS -->
+				<nb-card-body class="elements-body">
+					<nb-tabset fullWidth class="elements-tabs" (changeTab)="al.manualSelect = false">
+						<nb-tab *ngFor="let elem of al.elements; let i = index" [tabTitle]="elem.type||'ALERT ELEMENTS'" style="padding: 0;" [active]="al.manualSelect ? elem.selectThis : i===0">
+							<div class="element-tab-header">
+								<button nbButton status="primary" (click)="moveElement(al, elem, false)" [disabled]="i===0"><nb-icon icon="arrow-left"></nb-icon></button>
+								<div style="width: 3rem;"></div>
 
-                                <div *ngIf="elem.trigger==='filterVisibility'" class="obs-inner">
-                                    <div class="field-container" >
-                                        <nb-select [placeholder]="elem.input?.inputName" [(selected)]="elem.input" (selectedChange)="al.changes=true" fullWidth>
-                                            <nb-option class="option-header">Scenes</nb-option>
-                                            <nb-option *ngFor="let i of OBS.scenes" [value]="i">{{i.sceneName}}</nb-option>
-                                            <nb-option class="option-header">Sources</nb-option>
-                                            <nb-option *ngFor="let i of OBS.sources" [value]="i">{{i.inputName}}</nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>Input</label></div>
-                                    </div>
-                                    <div class="field-container" >
-                                        <nb-select [placeholder]="elem.filter?.filterName" [(selected)]="elem.filter" (selectedChange)="al.changes=true" fullWidth [disabled]="!elem.input || !elem.input.filters">
-                                            <nb-option *ngFor="let f of elem.input?.filters||[]" [value]="f">{{f.filterName}}</nb-option>
-                                        </nb-select>
-                                        <div class="anchor"><label>Filter</label></div>
-                                    </div>
-                                </div>
+								<nb-select status="success" placeholder="Add an element" [(selected)]="al.selectedElementToAdd">
+									<nb-option *ngFor="let type of ElementTypes | keyvalue: originalOrder" [value]="type.key">{{type.value}}</nb-option>
+								</nb-select>
+								<button nbButton status="success" (click)="addElement(al, al.selectedElementToAdd)"><nb-icon icon="plus"></nb-icon></button>
 
-                                <div class="obs-inner" *ngIf="elem.filter || elem.source">
+								<div style="width: 1rem;"></div>
 
-                                    <nb-toggle (change)="al.changes=true" [(checked)]="elem.toggleTo">
-                                        Turn {{elem.toggleTo ? 'Visible' : 'Invisible'}}
-                                    </nb-toggle>
+								<nb-select status="danger" placeholder="Delete an element" [(selected)]="al.selectedElementToDelete" [disabled]="al.elements.length<1 || elem.placeholder">
+									<nb-option *ngFor="let ev of al.elements; let i = index" [value]="i">{{ev.type}}</nb-option>
+								</nb-select>
+								<button nbButton status="danger" (click)="deleteElement(al, al.selectedElementToDelete)" [disabled]="al.elements.length<1 || elem.placeholder"><nb-icon icon="trash-2"></nb-icon></button>
+								
+								<div style="width: 3rem;"></div>
+								<button nbButton status="primary" (click)="moveElement(al, elem, true)" [disabled]="al.elements.length<1 || i+1===al.elements.length"><nb-icon icon="arrow-right"></nb-icon></button>
+							</div>
 
-                                    <nb-toggle (change)="al.changes=true;" [(checked)]="elem.revert">
-                                        {{elem.revert ? 'Automatically revert back' : 'Leave as is'}}
-                                    </nb-toggle>
-                                    <div class="field-container">
-                                        <input nbInput type="number" placeholder="Next will play immediately" [(ngModel)]="elem.duration" (change)="al.changes=true; elem.duration=elem.duration>0 ? elem.duration : null" fullWidth>
-                                        <div class="anchor"><label>Duration</label></div>
-                                    </div>
+							<div *ngIf="elem.placeholder" class="element-body-placeholder">
+								<p>
+									THIS ALERT HAS NO ELEMENTS YET
+								</p>
+							</div>
 
-                                </div>
-                            </div>
-                            
-                            <div #chat *ngIf="elem.type==='chat'" class="chat-container">
-                                <textarea nbInput type="text" (change)="al.changes=true" placeholder="Chat message. Use type the keywords below and they will be replaced accordingly." [(ngModel)]="elem.text" fullWidth></textarea>
-                                <div class="keywords">
-                                    <div *ngFor="let keyword of _chat.keywords | keyvalue: originalOrder;">
-                                        <div>{{keyword.key}}:</div>
-                                        <div>{{keyword.value}}</div>
-                                    </div>
-                                </div>
-                            </div>
+							<div #media *ngIf="elem.type==='video' || elem.type==='audio' || elem.type==='gif' || elem.type==='image' || elem.type==='clip'" class="media-container">
+								
+								<div *ngIf="elem.src && elem.type!=='clip'" class="media-preview">
 
-                        </nb-tab>
-<!--                         <nb-tab tabTitle="Add" tabIcon="file-add">
-                            <nb-select placeholder="Select type of element to add" fullWidth [(selected)]="selectedElementType" (selectedChange)="addElement(al, $event)">
-                                <nb-option *ngFor="let type of ElementTypes | keyvalue: originalOrder" [value]="type.key">{{type.value}}</nb-option>
-                            </nb-select>
-                        </nb-tab>
-                        <nb-tab tabTitle="Delete" tabIcon="trash-2" [disabled]="!al.elements || al.elements.length<1">
-                            <nb-select placeholder="Select the element to delete" fullWidth [(selected)]="selectedElementType" (selectedChange)="deleteElement(al, $event)">
-                                <nb-option *ngFor="let ev of al.elements; let i = index" [value]="i">{{ev.type}}</nb-option>
-                            </nb-select>
-                        </nb-tab> -->
-                    </nb-tabset>
-                </nb-card-body>
+									<video *ngIf="elem.type==='video'" style="width: 100%; height: 100%;" (loadeddata)="onLoadedData(elem, $event)" autoplay loop [muted]="'muted'">
+										<source [src]="elem.src">
+									</video>  
 
-                <nb-card-footer *ngIf="al.error" class="element-error">
-                    There were errors in your alert's settings... Could not save it!
-                </nb-card-footer>
+									<audio *ngIf="elem.type==='audio'" (loadeddata)="onLoadedData(elem, $event)" controls>
+										<source *ngIf="elem.src" [src]="elem.src">
+									</audio>
 
-                <nb-card-footer class="alert-footer">
-                    <button nbButton status="warning" [disabled]="!al.changes" (click)="revertAlert(al)"><nb-icon icon="refresh"></nb-icon></button>
-                    <button nbButton status="success" [disabled]="!al.changes" (click)="saveAlert(al)">SAVE</button>
-                    <button nbButton status="danger" (click)="deleteAlert(al)"><nb-icon icon="trash-2"></nb-icon></button>
-                </nb-card-footer>
+									<img *ngIf="elem.type==='gif' || elem.type==='image'" [src]="elem.src" (load)="onLoadedData(elem, $event)" loop="False">
 
-            </nb-card>
-        </nb-accordion-item-body>
-    </nb-accordion-item>
+									<button nbButton class="media-delete-button" status="danger" (click)="deleteMediaSource(al, elem, elem.src)"><nb-icon icon="trash-2"></nb-icon></button>
+								</div>
+
+								<div *ngIf="!elem.src && elem.type!=='clip'" class="media-uploader">
+
+									<nb-select placeholder="Select a video" *ngIf="elem.select && elem.type==='video'" [(selected)]="elem.src" (selectedChange)="videoSelected(al, elem);al.changes=true" fullWidth>
+										<nb-option *ngIf="!userVideos || userVideos.length<1" disabled>No valid file exists</nb-option>
+										<nb-option *ngFor="let file of userVideos" [value]=file.src>{{file.filename}}</nb-option>
+									</nb-select>
+
+									<nb-select placeholder="Select an audio" *ngIf="elem.select && elem.type==='audio'" [(selected)]="elem.src" (selectedChange)="videoSelected(al, elem);al.changes=true" fullWidth>
+										<nb-option *ngIf="!userAudios || userAudios.length<1" disabled>No valid file exists</nb-option>
+										<nb-option *ngFor="let file of userAudios" [value]=file.src>{{file.filename}}</nb-option>
+									</nb-select>
+
+									<nb-select placeholder="Select a GIF" *ngIf="elem.select && elem.type==='gif'" [(selected)]="elem.src" (selectedChange)="videoSelected(al, elem);al.changes=true" fullWidth>
+										<nb-option *ngIf="!userGIFS || userGIFS.length<1" disabled>No valid file exists</nb-option>
+										<nb-option *ngFor="let file of userGIFS" [value]=file.src>{{file.filename}}</nb-option>
+									</nb-select>
+
+									<nb-select placeholder="Select an image" *ngIf="elem.select && elem.type==='image'" [(selected)]="elem.src" (selectedChange)="videoSelected(al, elem);al.changes=true" fullWidth>
+										<nb-option *ngIf="!userImages || userImages.length<1" disabled>No valid file exists</nb-option>
+										<nb-option *ngFor="let file of userImages" [value]=file.src>{{file.filename}}</nb-option>
+									</nb-select>
+
+									<app-uploader *ngIf="elem.upload || !elem.src && !elem.select" [allowedTypes]="[elem.type]" [blockedTypes]="elem.type==='image' ? ['gif'] : null" height="120px" [autoIndexing]="true" [uploaded]="uploadedSubject" [reference]="{al: al, ev: elem}"></app-uploader>
+									<button nbButton class="media-select-button" status="success" nbTooltip="Select file from existing" nbTooltipStatus="success" (click)="getUserSelectableFiles(elem)"><nb-icon icon="book-open"></nb-icon></button>
+									<button nbButton *ngIf="elem.select" class="media-upload-button" status="warning" nbTooltip="Upload a new file" nbTooltipStatus="warning" (click)="elem.upload=true; elem.select = false"><nb-icon icon="cloud-upload"></nb-icon></button>
+								</div>
+
+								<div *ngIf="elem.src && elem.mediaInformation && elem.type!=='clip'" class="media-details">
+									<div *ngIf="elem.mediaInformation.width">Width: {{elem.mediaInformation.width}}px</div>
+									<div *ngIf="elem.mediaInformation.height">Height: {{elem.mediaInformation.height}}px</div>
+									<div *ngIf="elem.mediaInformation.duration">Duration: {{elem.mediaInformation.duration | number: '1.1-1'}}s</div>
+								</div>
+
+								<div *ngIf="elem.type==='clip'" class="clip-inner">
+									<div style="text-align: center;">
+										Note: Clips currently only work with chat commands!!!
+									</div>
+									<div class="field-container">
+										<nb-select [placeholder]="elem.which||_clip.which.random" [(selected)]="elem.which" (selectedChange)="al.changes=true;" fullWidth>
+											<nb-option *ngFor="let t of _clip.which | keyvalue: originalOrder" [value]="t.key">{{t.value}}</nb-option>
+										</nb-select>
+										<div class="anchor"><label>Which</label></div>
+									</div>
+								</div>
+
+								<div class="media-settings">
+									<nb-toggle [(ngModel)]="elem.withPrevious" (checkedChange)="al.changes=true" [disabled]="i==0">
+										Don't wait for previous
+									</nb-toggle>
+
+									<nb-accordion class="lighter">
+
+										<!-- MANDATORY SETTINGS -->
+										<nb-accordion-item expanded>
+											<nb-accordion-item-header>
+												Primary Settings
+											</nb-accordion-item-header>
+											<nb-accordion-item-body class="settings-unpadded">
+												<nb-list>
+													<nb-list-item *ngFor="let o of _options[elem.type].mandatory | keyvalue: originalOrder">
+														<div class="key">{{o.value}}</div>
+														<div class="value" *ngIf="_options[elem.type].units[o.key]==='px' || _options[elem.type].units[o.key]==='s' || _options[elem.type].units[o.key]==='%'">
+															<input nbInput type="number" [placeholder]="_options[elem.type].default.hasOwnProperty(o.key) ? _options[elem.type].default[o.key] : null" [(ngModel)]="elem[o.key]" (change)="al.changes=true" fullWidth>
+															<div class="unit">{{_options[elem.type].units[o.key]}}</div>
+														</div>
+														<div class="value" *ngIf="_options[elem.type].units[o.key]==='POSITION'">
+															<nb-select [placeholder]="_options[elem.type].default[o.key] ? _options[elem.type].default[o.key] : 'Select one'" [(selected)]="elem.position" (selectedChange)="al.changes=true" fullWidth>
+																<nb-option *ngFor="let p of _POSITION | keyvalue : originalOrder" [value]="p.key">{{p.value}}</nb-option>
+															</nb-select>
+														</div>
+														<div class="value" *ngIf="_options[elem.type].units[o.key]==='TRANSITION'">
+															<nb-select [placeholder]="_TRANSITION[elem[o.key]] ? _TRANSITION[elem[o.key]] :  _options[elem.type].default[o.key] ? _options[elem.type].default[o.key] : 'Select one'" [(selected)]="elem[o.key]" (selectedChange)="al.changes=true" fullWidth>
+																<nb-option *ngFor="let t of _TRANSITION | keyvalue : originalOrder" [value]="t.key">{{t.value}}</nb-option>
+															</nb-select>
+														</div>
+													</nb-list-item>
+													<nb-list-item *ngIf="elem.position==='MANUAL'">
+														<div class="key">Position X</div>
+														<div class="value">
+															<input nbInput type="number" [(ngModel)]="elem.targetX" placeholder="Center point X" (change)="al.changes=true" fullWidth>
+															<div class="unit">px</div>
+														</div>
+													</nb-list-item>
+													<nb-list-item *ngIf="elem.position==='MANUAL'">
+														<div class="key">Position Y</div>
+														<div class="value">
+															<input nbInput type="number" [(ngModel)]="elem.targetY" placeholder="Center point Y" (change)="al.changes=true" fullWidth>
+															<div class="unit">px</div>
+														</div>
+													</nb-list-item>
+													<nb-list-item *ngIf="elem.position==='MANUAL'">
+														<div class="key">Position padding</div>
+														<div class="value" style="justify-content: flex-end;">
+															<nb-toggle [(ngModel)]="elem.ignorePadding" style="margin-right: 0.5rem;"></nb-toggle>
+															<div class="unit">{{elem.ignorePadding ? 'Ignore viewport padding' : 'Within viewport padding'}}</div>
+														</div>
+													</nb-list-item>
+												</nb-list>
+											</nb-accordion-item-body>
+										</nb-accordion-item>
+
+										<!-- BORDER SETTINGS -->
+										<nb-accordion-item *ngIf="elem.type!=='audio'">
+											<nb-accordion-item-header>
+												Border Settings
+											</nb-accordion-item-header>
+											<nb-accordion-item-body class="unpadded">
+												<nb-list>
+													<nb-list-item>
+														<div class="key">Border:</div>
+														<div class="value">
+															<nb-select [placeholder]="_BORDER.types[elem.border]||'None'" [(selected)]="elem.border" (selectedChange)="al.changes=true" fullWidth>
+																<nb-option [value]="null">None</nb-option>
+																<nb-option *ngFor="let type of _BORDER.types | keyvalue : originalOrder" [value]="type.key">{{type.value}}</nb-option>
+															</nb-select>
+														</div>
+													</nb-list-item>
+													<nb-list-item>
+														<div class="key">Thickness:</div>
+														<div class="value">
+															<nb-select [disabled]="!elem.border" [placeholder]="_BORDER.thickness[elem.borderStroke]||'Regular'" [(selected)]="elem.borderStroke" (selectedChange)="al.changes=true" fullWidth>
+																<nb-option *ngFor="let type of _BORDER.thickness | keyvalue : originalOrder" [value]="type.key">{{type.value}}</nb-option>
+															</nb-select>
+														</div>
+													</nb-list-item>
+													<nb-list-item>
+														<div class="key">Color:</div>
+														<div class="value">
+															<nb-select [disabled]="!elem.border" [placeholder]="_BORDER.color[elem.borderColor]||'Black'" [(selected)]="elem.borderColor" (selectedChange)="al.changes=true" fullWidth>
+																<nb-option *ngFor="let type of _BORDER.color | keyvalue : originalOrder" [value]="type.key">{{type.value}}</nb-option>
+															</nb-select>
+														</div>
+													</nb-list-item>
+													<nb-list-item *ngIf="elem.border && elem.borderColor==='custom'">
+														<div class="key">Custom Color: </div>
+														<div class="value">
+															<input nbInput type="text" placeholder="#daa520" [(ngModel)]="elem.borderCustomColor" (change)="al.changes=true" fullWidth>
+														</div>
+													</nb-list-item>
+												</nb-list>
+											</nb-accordion-item-body>
+										</nb-accordion-item>
+	  
+										<!-- ADDITIONAL SETTINGS -->
+										<nb-accordion-item>
+											<nb-accordion-item-header>
+												Additional Settings
+											</nb-accordion-item-header>
+											<nb-accordion-item-body class="unpadded">
+												<nb-list>
+													<nb-list-item *ngFor="let o of _options[elem.type].additional | keyvalue: originalOrder">
+														<div class="key">{{o.value}}:</div>
+														<div class="value" *ngIf="_options[elem.type].units[o.key]==='px' || _options[elem.type].units[o.key]==='s'">
+															<input nbInput type="number" [(ngModel)]="elem[o.key]" (change)="al.changes=true" fullWidth>
+															<div class="unit">{{_options[elem.type].units[o.key]}}</div>
+														</div>
+													</nb-list-item>
+												</nb-list>
+											</nb-accordion-item-body>
+										</nb-accordion-item>
+
+									</nb-accordion>
+								</div>
+							</div>
+
+							<div #tts *ngIf="elem.type==='tts'" class="tts-container">
+								<div class="field-container">
+									<nb-select [(selected)]="elem.voice" (selectedChange)="al.changes=true" placeholder="Select which voice to use" fullWidth>
+										<nb-option disabled class="tts-separator">Free Tier Voices -</nb-option>
+										<nb-option *ngFor="let v of _tts.voices | keyvalue: originalOrder" [value]="v.key" >{{v.value}}</nb-option>
+										<nb-option disabled class="tts-separator">Supporter Tier Voices</nb-option>
+										<nb-option *ngFor="let v of _tts.supporterVoices | keyvalue: originalOrder" [value]="v.key" class="supporter" [disabled]="!auth.currentUser?.founder && !auth.currentUser?.supporter && !auth.currentUser?.premium">{{v.value}}</nb-option>
+										<nb-option disabled class="tts-separator">Premium Tier Voices</nb-option>
+										<nb-option *ngFor="let v of _tts.premiumVoices | keyvalue: originalOrder" [value]="v.key" class="premium" [disabled]="!auth.currentUser?.premium">{{v.value}}</nb-option>
+									</nb-select>
+									<div class="anchor"><label>voice</label></div>
+								</div>
+
+								<div>
+									<div class="field-container">
+										<nb-select [(selected)]="elem.message" (selectedChange)="al.changes=true" placeholder="Select what to read" fullWidth>
+											<nb-option  *ngFor="let o of _tts.options | keyvalue: originalOrder" 
+														[value]="o.key"
+														[disabled]="
+															(o.key==='redemptionMessage' && al.conditions[0].type!=='redeem') ||
+															(o.key==='cheerMessage' && al.conditions[0].type!=='bits') ||
+															(o.key==='subMessage' && al.conditions[0].type!=='subscription' && (!al.conditions[0].operator || al.conditions[0].operator!=='subMessage'))
+														"
+														>
+												{{o.value}}
+											</nb-option>
+										</nb-select>
+										<div class="anchor"><label>what</label></div>
+									</div>
+
+									<nb-toggle [(ngModel)]="elem.withPrevious" (checkedChange)="al.changes=true" [disabled]="i===0">Don't wait for previous</nb-toggle>
+								</div>
+
+								<div *ngIf="elem.message === 'customMessage'">
+									<textarea nbInput type="text" (change)="al.changes=true" placeholder="Custom message. Use the keywords below and they will be replaced accordingly." [(ngModel)]="elem.customMessage" fullWidth></textarea>
+								</div>
+
+								<div *ngIf="elem.message === 'customMessage'" class="keywords">
+									<div *ngFor="let keyword of _chat.keywords | keyvalue: originalOrder;">
+										<div>{{keyword.key}}:</div>
+										<div>{{keyword.value}}</div>
+									</div>
+								</div>
+							</div>
+
+							<div #obs *ngIf="elem.type==='obs'" class="obs-container">
+
+
+								<div class="field-container">
+									<nb-select [placeholder]="elem.trigger" [(selected)]="elem.trigger" (selectedChange)="al.changes=true; elem.scene=null; elem.source=null; elem.input=null; elem.duration=null; elem.toggleTo=null; elem.revert = elem.trigger==='filterVisibility' ? false : elem.revert" fullWidth>
+										<nb-option *ngFor="let t of _obs.triggers | keyvalue: originalOrder" [value]="t.key">{{t.value}}</nb-option>
+									</nb-select>
+									<div class="anchor"><label>Trigger</label></div>
+								</div>
+
+								<div *ngIf="elem.trigger==='sourceVisibility'" class="obs-inner">
+									<div class="field-container">
+										<nb-select [placeholder]="elem.scene?.sceneName" [(selected)]="elem.scene" (selectedChange)="al.changes=true; elem.source=null" fullWidth>
+											<nb-option *ngFor="let s of OBS.scenes" [value]="s">{{s.sceneName}}</nb-option>
+										</nb-select>
+										<div class="anchor"><label>Scene</label></div>
+									</div>
+									<div class="field-container">
+										<nb-select [placeholder]="elem.source?.sourceName" [(selected)]="elem.source" (selectedChange)="al.changes=true; elem.sourceNested = null;" fullWidth [disabled]="!elem.scene || !elem.scene.sources">
+											<nb-option *ngFor="let s of elem.scene?.sources||[]" [value]="s">{{s.sourceName}}</nb-option>
+										</nb-select>
+										<div class="anchor"><label>{{elem.source?.isGroup ? 'Group' : 'Source'}}</label></div>
+									</div>
+									<div class="field-container" *ngIf="elem.source?.isGroup">
+										<nb-select [placeholder]="elem.sourceNested?.sourceName||'Whole Group'" [(selected)]="elem.sourceNested" (selectedChange)="al.changes=true" fullWidth [disabled]="!elem.scene || !elem.scene.sources || !elem.source">
+											<nb-option class="option-header">Whole Group</nb-option>
+											<nb-option *ngFor="let s of elem.source?.items||[]" [value]="s">{{s.sourceName}}</nb-option>
+										</nb-select>
+										<div class="anchor"><label>Source</label></div>
+									</div>
+								</div>
+
+								<div *ngIf="elem.trigger==='filterVisibility'" class="obs-inner">
+									<div class="field-container" >
+										<nb-select [placeholder]="elem.input?.inputName" [(selected)]="elem.input" (selectedChange)="al.changes=true" fullWidth>
+											<nb-option class="option-header">Scenes</nb-option>
+											<nb-option *ngFor="let i of OBS.scenes" [value]="i">{{i.sceneName}}</nb-option>
+											<nb-option class="option-header">Sources</nb-option>
+											<nb-option *ngFor="let i of OBS.sources" [value]="i">{{i.inputName}}</nb-option>
+										</nb-select>
+										<div class="anchor"><label>Input</label></div>
+									</div>
+									<div class="field-container" >
+										<nb-select [placeholder]="elem.filter?.filterName" [(selected)]="elem.filter" (selectedChange)="al.changes=true" fullWidth [disabled]="!elem.input || !elem.input.filters">
+											<nb-option *ngFor="let f of elem.input?.filters||[]" [value]="f">{{f.filterName}}</nb-option>
+										</nb-select>
+										<div class="anchor"><label>Filter</label></div>
+									</div>
+								</div>
+
+								<div class="obs-inner" *ngIf="elem.filter || elem.source">
+
+									<nb-toggle (change)="al.changes=true" [(checked)]="elem.toggleTo">
+										Turn {{elem.toggleTo ? 'Visible' : 'Invisible'}}
+									</nb-toggle>
+
+									<nb-toggle (change)="al.changes=true;" [(checked)]="elem.revert">
+										{{elem.revert ? 'Automatically revert back' : 'Leave as is'}}
+									</nb-toggle>
+									<div class="field-container">
+										<input nbInput type="number" placeholder="Next will play immediately" [(ngModel)]="elem.duration" (change)="al.changes=true; elem.duration=elem.duration>0 ? elem.duration : null" fullWidth>
+										<div class="anchor"><label>Duration</label></div>
+									</div>
+
+								</div>
+							</div>
+							
+							<div #chat *ngIf="elem.type==='chat'" class="chat-container">
+								<textarea nbInput type="text" (change)="al.changes=true" placeholder="Chat message. Use type the keywords below and they will be replaced accordingly." [(ngModel)]="elem.text" fullWidth></textarea>
+								<div class="keywords">
+									<div *ngFor="let keyword of _chat.keywords | keyvalue: originalOrder;">
+										<div>{{keyword.key}}:</div>
+										<div>{{keyword.value}}</div>
+									</div>
+								</div>
+							</div>
+
+						</nb-tab>
+					</nb-tabset>
+				</nb-card-body>
+
+				<nb-card-footer *ngIf="al.error" class="element-error">
+					There were errors in your alert's settings... Could not save it!
+				</nb-card-footer>
+
+				<nb-card-footer class="alert-footer">
+					<button nbButton status="warning" [disabled]="!al.changes" (click)="revertAlert(al)"><nb-icon icon="refresh"></nb-icon></button>
+					<button nbButton status="success" [disabled]="!al.changes" (click)="saveAlert(al)">SAVE</button>
+					<button nbButton status="danger" (click)="deleteAlert(al)"><nb-icon icon="trash-2"></nb-icon></button>
+				</nb-card-footer>
+
+			</nb-card>
+		</nb-accordion-item-body>
+	</nb-accordion-item>
 </nb-accordion>
 
 <nb-card class="add-alert-card centered">
-    <nb-card-body>
-        <button nbButton status="success" fullWidth (click)="addAlert()">ADD NEW ALERT</button>
-    </nb-card-body>
+	<nb-card-body>
+		<button nbButton status="success" fullWidth (click)="addAlert()">ADD NEW ALERT</button>
+	</nb-card-body>
 </nb-card>
 
 

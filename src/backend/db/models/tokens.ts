@@ -1,4 +1,4 @@
-import { Schema, model, Types } from "mongoose"
+import { Schema, model, Types } from 'mongoose'
 import * as uuid from 'uuid'
 
 interface IUserToken {
@@ -16,11 +16,11 @@ export const userTokenSchema: Schema = new Schema({
   expiresIn: Number,
   obtainmentTimestamp: {
     type: Date,
-    default: Date.now()
+    default: Date.now(),
   },
   secret: {
     type: String,
-    default: uuid.v4()
+    default: uuid.v4(),
   },
 })
 export const UserToken = model<IUserToken>('UserToken', userTokenSchema)
@@ -35,7 +35,7 @@ export const clientTokenSchema: Schema = new Schema({
   clientSecret: String,
   secret: {
     type: String,
-    default: uuid.v4()
+    default: uuid.v4(),
   },
 })
 export const ClientToken = model<IClientToken>('ClientToken', clientTokenSchema)

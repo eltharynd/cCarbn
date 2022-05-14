@@ -1,26 +1,26 @@
-import { ApiClient, HelixUser } from "@twurple/api"
-import { RefreshingAuthProvider } from "@twurple/auth"
-import axios from "axios"
-import { UserToken } from "../../db/models/tokens"
-import { User } from "../../db/models/user"
-import { Mongo } from "../../db/mongo"
-import { Socket } from "../../socket/socket"
-import { Chat } from "../../twitch/chat"
-import { Api } from "../express"
+import { ApiClient, HelixUser } from '@twurple/api'
+import { RefreshingAuthProvider } from '@twurple/auth'
+import axios from 'axios'
+import { UserToken } from '../../db/models/tokens'
+import { User } from '../../db/models/user'
+import { Mongo } from '../../db/mongo'
+import { Socket } from '../../socket/socket'
+import { Chat } from '../../twitch/chat'
+import { Api } from '../express'
 import * as uuid from 'uuid'
 
 export const authMiddleware = async (req, res, next) => {
   let token = req?.headers?.authorization ? req.headers.authorization.replace(/^Basic\s/, '') : null
-  if(!token) {
+  if (!token) {
     res.status(403).send('Missing Authorization Header')
     return
   } else {
-    let user: any = await User.findOne({token: { $eq: token }})
-    if(user) {
+    let user: any = await User.findOne({ token: { $eq: token } })
+    if (user) {
       req.headers.authorization = user.toJSON()
       req.headers.authorization._id = req.headers.authorization._id.toString()
 
-      if(!user.admin && req.params.userId && req.params.userId !== req.headers.authorization._id) {
+      if (!user.admin && req.params.userId && req.params.userId !== req.headers.authorization._id) {
         res.status(403).send(`You don't have permission to access this resource...`)
         return
       }
@@ -29,33 +29,32 @@ export const authMiddleware = async (req, res, next) => {
   }
 }
 export class AuthRoutes {
-
   static attach() {
-
     Api.endpoints.post('/api/auth/token', async (req, res) => {
-      if(!req.body.code || !req.body.redirect || !req.body.state) {
+      if (!req.body.code || !req.body.redirect || !req.body.state) {
         res.status(400).send('Invalid Request')
         return
       }
       try {
-        let response = await axios.post(`
+        let response = await axios.post(
+          `
           https://id.twitch.tv/oauth2/token
           ?client_id=${Mongo.clientId}
           &client_secret=${Mongo.clientSecret}
           &code=${req.body.code}
           &grant_type=authorization_code
           &state=${req.body.state}
-          &redirect_uri=${req.body.redirect}`.replace(/\s/g, ''))
-        if(!response.data)
-          throw new Error()
+          &redirect_uri=${req.body.redirect}`.replace(/\s/g, '')
+        )
+        if (!response.data) throw new Error()
 
         let token: any = {
           accessToken: response.data.access_token,
           refreshToken: response.data.refresh_token,
           expiresIn: response.data.expires_in,
-          obtainmentTimestamp: Date.now()
+          obtainmentTimestamp: Date.now(),
         }
-      
+
         let userProvider = new RefreshingAuthProvider(
           {
             clientId: Mongo.clientId,
@@ -65,23 +64,21 @@ export class AuthRoutes {
           token
         )
         let twitch = new ApiClient({
-          authProvider: userProvider
-        })    
+          authProvider: userProvider,
+        })
         let tokenInfo = await twitch.getTokenInfo()
         let user: any = {
           twitchId: tokenInfo.userId,
           twitchName: tokenInfo.userName,
         }
         let registered = await User.findOne({ twitchId: user.twitchId })
-        if(!registered) {
-
+        if (!registered) {
           let helixUser: HelixUser = await twitch.users.getUserById(user.twitchId)
-          if(helixUser) {
+          if (helixUser) {
             user.twitchPic = helixUser.profilePictureUrl
             user.twitchName = helixUser.name
             user.twitchDisplayName = helixUser.displayName
           }
-
 
           registered = new User(user)
           registered.token = `${uuid.v4()}`
@@ -92,7 +89,7 @@ export class AuthRoutes {
           await userToken.save()
         } else {
           let helixUser: HelixUser = await twitch.users.getUserById(user.twitchId)
-          if(helixUser) {
+          if (helixUser) {
             registered.twitchPic = helixUser.profilePictureUrl
             registered.twitchName = helixUser.name
             registered.twitchDisplayName = helixUser.displayName
@@ -100,8 +97,8 @@ export class AuthRoutes {
             await registered.save()
           }
 
-          let found = await UserToken.findOne({userId: registered._id})
-          if(found) {
+          let found = await UserToken.findOne({ userId: registered._id })
+          if (found) {
             token.userId = registered._id
             found.overwrite(token)
             await found.save()
@@ -111,7 +108,6 @@ export class AuthRoutes {
             await userToken.save()
           }
         }
-        
 
         Socket.io.emit(req.body.state, {
           _id: registered._id,
@@ -121,7 +117,7 @@ export class AuthRoutes {
           premium: registered.premium,
           token: registered.token,
           picture: registered.twitchPic,
-          settings: registered.navigationSettings
+          settings: registered.navigationSettings,
         })
         res.send('token saved')
       } catch (err) {
@@ -133,26 +129,25 @@ export class AuthRoutes {
 
     Api.endpoints.post('/api/auth/resume', async (req, res) => {
       let user = req.body
-      if(!user) {
+      if (!user) {
         res.status(400).send('Bad Request')
         return
       }
 
-      let registered = await User.findOne({token: { $eq: req.body.token }})
-      if(!registered) 
-        res.status(401).send('Could not resume session...')
+      let registered = await User.findOne({ token: { $eq: req.body.token } })
+      if (!registered) res.status(401).send('Could not resume session...')
       else {
         let twitch = new ApiClient({
-          authProvider: Chat.defaultUserProvider
-        })   
+          authProvider: Chat.defaultUserProvider,
+        })
         let helixUser: HelixUser = await twitch.users.getUserById(registered.twitchId)
-        if(helixUser) {
+        if (helixUser) {
           registered.twitchPic = helixUser.profilePictureUrl
           registered.twitchName = helixUser.name
           registered.twitchDisplayName = helixUser.displayName
           registered.lastLogin = new Date()
           await registered.save()
-        }    
+        }
         res.send({
           _id: registered._id,
           name: registered.twitchDisplayName,
@@ -161,10 +156,9 @@ export class AuthRoutes {
           premium: registered.premium,
           token: registered.token,
           picture: registered.twitchPic,
-          settings: registered.navigationSettings
+          settings: registered.navigationSettings,
         })
       }
     })
   }
-
 }

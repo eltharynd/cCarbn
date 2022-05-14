@@ -17,22 +17,20 @@ $inner-background-light: #5e4a99;
 $inner-border: #a16eff;
 $inner-color: #cbafff;
 
-$nb-themes: nb-register-theme((
+$nb-themes: nb-register-theme(
+  (
+    font-family-primary: 'Poppins, sans-serif',
+    font-family-secondary: 'Poppins, sans-serif',
 
-  font-family-primary: 'Poppins, sans-serif',
-  font-family-secondary: 'Poppins, sans-serif',
-
-/*   text-basic-color: red,
+    /*   
+  text-basic-color: red,
   text-alternate-color: red,
   text-control-color: red,
   text-disabled-color: red,
-  text-hint-color: red, */
-
-  // add your variables here like:
-
-  //#26212e
-
-  /*   
+  text-hint-color: red, 
+  */ // add your variables here like:
+    //#26212e
+    /*   
   color-basic-100: #ffffff,
   color-basic-200: #f7f7fc,
   color-basic-300: #f0f0fa,
@@ -45,22 +43,21 @@ $nb-themes: nb-register-theme((
   color-basic-1000: #1b1b38,
   color-basic-1100: #13132b,
   */
-  
-
-/*   color-basic-800: #45375e,
-
-  color-basic-1000: #26212e, */
-
-
-/*   background-basic-color-1: color-basic-800,
+      /*   
+  color-basic-800: #45375e,
+  color-basic-1000: #26212e, 
+  */
+      /*   
+  background-basic-color-1: color-basic-800,
   background-basic-color-2: color-basic-900,
   background-basic-color-3: color-basic-1000,
-  background-basic-color-4: color-basic-1100, */
+  background-basic-color-4: color-basic-1100, 
+  */
+      layout-background-color: $deep-background-color,
 
-  layout-background-color: $deep-background-color,
-
-  //background-basic-color-3: color-basic-700,
-/*   background-basic-color-1: color-basic-700,
+    //background-basic-color-3: color-basic-700,
+    /*   
+  background-basic-color-1: color-basic-700,
   background-basic-color-2: color-basic-800,
   background-basic-color-3: color-basic-900,
   background-basic-color-4: color-basic-100,
@@ -68,13 +65,15 @@ $nb-themes: nb-register-theme((
   border-basic-color-2: color-basic-800,
   border-basic-color-3: color-basic-900,
   border-basic-color-4: color-basic-1000,
-  border-basic-color-5: color-basic-1100, */
-
-/*   shadow: 0 0.5rem 1rem 0 rgba(25, 30, 51, 0.24), */
-
-/*   text-disabled-color: color-basic-600, */
-
-/*   color-primary-100: #f2f6ff,
+  border-basic-color-5: color-basic-1100, 
+  */
+      /*   
+  shadow: 0 0.5rem 1rem 0 rgba(25, 30, 51, 0.24), 
+  */ /*   
+  text-disabled-color: color-basic-600, 
+  */
+      /*   
+  color-primary-100: #f2f6ff,
   color-primary-200: #d9e4ff,
   color-primary-300: #a6c1ff,
   color-primary-400: #598bff,
@@ -82,25 +81,27 @@ $nb-themes: nb-register-theme((
   color-primary-600: #274bdb,
   color-primary-700: #1a34b8,
   color-primary-800: #102694,
-  color-primary-900: #091c7a, */
+  color-primary-900: #091c7a, 
+  */
+      /*   
+  card-header-primary-background-color: #3366ff,
+  card-header-info-background-color: #3366ff, 
+  */ color-basic-800: #393554,
 
-
-/*   card-header-primary-background-color: #3366ff,
-  card-header-info-background-color: #3366ff, */
-
-  color-basic-800: #393554,
-  
-/*   select-outline-small-padding: 0.4375rem 1rem,
+    /*   
+  select-outline-small-padding: 0.4375rem 1rem,
   select-min-width: 100px,
   select-small-max-width: 100px,
-  select-medium-max-width: 350px, */
+  select-medium-max-width: 350px, 
+  */ popover-background-color:
+      #00d68f,
 
-  popover-background-color: #00d68f,
-
-  shadow: 0 .5rem 1rem 0 $deep-background-shadow,
-  card-shadow: 0 .5rem 1rem 0 $deep-background-shadow,
-  
-), ccarbn, cosmic);
+    shadow: 0 0.5rem 1rem 0 $deep-background-shadow,
+    card-shadow: 0 0.5rem 1rem 0 $deep-background-shadow,
+  ),
+  ccarbn,
+  cosmic
+);
 
 input.size-medium {
   min-width: var(--select-min-width);
@@ -114,7 +115,6 @@ html.smooth-scrolling {
   scroll-behavior: smooth !important;
 }
 
-
 .card-header {
   background-color: $inner-background-light;
 }
@@ -123,9 +123,9 @@ html.smooth-scrolling {
   display: flex;
   align-items: center;
   > *:not(:last-child) {
-    margin-right: 2rem
+    margin-right: 2rem;
   }
-  border-radius: 5px
+  border-radius: 5px;
 }
 
 .supporter {
@@ -146,7 +146,7 @@ html.smooth-scrolling {
   > .text-description {
     font-size: 1rem;
     line-height: 1rem;
-    color: rgba(white, .75);
+    color: rgba(white, 0.75);
     font-weight: 300;
     margin: 0;
   }
@@ -158,47 +158,41 @@ html.smooth-scrolling {
   > .text-description-sub {
     font-size: 0.8rem;
     line-height: 0.8rem;
-    color: rgba(white, .75);
+    color: rgba(white, 0.75);
     font-weight: 300;
   }
 }
 
-
-
 nb-accordion.alternate > nb-accordion-item:nth-child(2n) {
-  background-color: #2e2a46;//var(--background-basic-color-2);
+  background-color: #2e2a46; //var(--background-basic-color-2);
 }
 nb-accordion-item-body.unpadded > div > div {
   padding: 0;
   > nb-list > nb-list-item:first-child {
-    border-top:0
+    border-top: 0;
   }
 }
 nb-accordion.lighter {
   nb-accordion-item {
-      overflow: hidden;
+    overflow: hidden;
   }
   nb-accordion-item-header {
-      background-color: $inner-background-light;
-      border: 1px solid $inner-border;
+    background-color: $inner-background-light;
+    border: 1px solid $inner-border;
   }
   nb-list-item {
-      background-color: $inner-background;
-      border-color: $inner-border;
-      border-left: 1px solid $inner-border;;
-      border-right: 1px solid $inner-border;;
+    background-color: $inner-background;
+    border-color: $inner-border;
+    border-left: 1px solid $inner-border;
+    border-right: 1px solid $inner-border;
   }
   nb-accordion-item:last-child {
     nb-list-item:last-child {
       border-bottom: 1px solid $inner-border;
-      border-radius: 0 0 .5rem .5rem;
+      border-radius: 0 0 0.5rem 0.5rem;
     }
   }
 }
-
-
-
-
 
 .centered {
   min-width: 320px;
@@ -220,7 +214,6 @@ nb-accordion.lighter {
     padding-right: 0 !important;
   }
   .centered {
-
     > nb-accordion-item > nb-accordion-item-header,
     > nb-accordion-item > nb-accordion-item-body,
     > nb-card-header,
@@ -238,18 +231,16 @@ nb-accordion.lighter {
         padding-right: 0rem;
       }
       nb-list-item {
-        padding-left: .2rem;
-        padding-right: .2rem;
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
       }
       .content-active {
-        padding-left: .2rem;
-        padding-right: .2rem;
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
       }
     }
   }
 }
-
-
 
 //Workaround until they fix https://github.com/akveo/nebular/issues/2119
 ::-webkit-scrollbar {
@@ -264,11 +255,17 @@ nb-accordion.lighter {
   background: $deep-background-color;
 }
 
-
 .no-background > div > .layout {
   background-color: $clear-background-color;
 
-  h1, h2, h3, h4, h5, p, ul>li, ol>li {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  p,
+  ul > li,
+  ol > li {
     color: #26212e;
   }
   nb-card {
@@ -276,19 +273,31 @@ nb-accordion.lighter {
     margin-bottom: 6rem;
     nb-card-header {
       background-color: var(--color-basic-800);
-      h1, h2, h3, h4, h5, p, ul, ol>li {
-        color: $clear-background-color
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      p,
+      ul,
+      ol > li {
+        color: $clear-background-color;
       }
     }
     nb-card-body,
     nb-card-footer {
       background-color: $deep-background-color;
-      h1, h2, h3, h4, h5, p, ul, ol>li {
-        color: $clear-background-color-dark
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      p,
+      ul,
+      ol > li {
+        color: $clear-background-color-dark;
       }
-
     }
-
   }
 }
 
@@ -304,7 +313,6 @@ nb-accordion.lighter {
     padding: 0 !important;
   }
 }
-
 
 .streamer-mode {
   position: relative;
@@ -335,11 +343,10 @@ nb-accordion.lighter {
 .on {
   transition: 0.3s;
   > *:not(nb-icon) {
-    filter: blur(5px) drop-shadow(2px 4px 6px #000000A0);
+    filter: blur(5px) drop-shadow(2px 4px 6px #000000a0);
     pointer-events: none;
   }
 }
-
 
 nb-layout-footer {
   z-index: 999;
@@ -355,17 +362,16 @@ nb-sidebar.loaded.collapsed {
   > div {
     transition: 0.3s ease;
   }
-} 
-
+}
 
 nb-layout-footer > nav {
   > app-footer {
     align-items: center !important;
   }
 }
-@media only screen and (max-width:350px) {
+@media only screen and (max-width: 350px) {
   nb-layout-footer > nav {
-    padding-left: .5rem !important;
-    padding-right: .5rem !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
   }
 }

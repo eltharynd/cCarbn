@@ -1,4 +1,4 @@
-import { Schema, model, Types } from "mongoose"
+import { Schema, model, Types } from 'mongoose'
 
 interface ICommand {
   userId: Types.ObjectId
