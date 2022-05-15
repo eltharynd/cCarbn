@@ -23,11 +23,23 @@ export class HypetrainComponent implements OnInit {
 
   constructor(public data: DataService, public OBS: OBSService, public settings: SettingsService, public hypetrain: HypetrainService) {}
 
+  cantPlay = false
   async ngOnInit() {
     if (!this.data._userId) return
     if (!this.settings.loaded.closed) await this.settings.loaded.toPromise()
-
     if (!this.settings.hypetrain) return
+
+    if (!this.OBS.isOBS) {
+      let audio = new Audio()
+      audio.play().catch((e) => {
+        this.cantPlay = true
+        let listener = (click) => {
+          this.cantPlay = false
+          window.removeEventListener('click', listener)
+        }
+        window.addEventListener('click', listener)
+      })
+    }
     await this.loadAudio()
     this.hypetrain.onLevelChange.subscribe((level) => {
       this.onLevelChange()

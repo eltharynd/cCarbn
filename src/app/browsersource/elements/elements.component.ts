@@ -149,10 +149,11 @@ export class ElementsComponent implements OnInit {
       let audio = new Audio()
       audio.play().catch((e) => {
         this.cantPlay = true
-        window.onclick = (click) => {
+        let listener = (click) => {
           this.cantPlay = false
-          window.onclick = null
+          window.removeEventListener('click', listener)
         }
+        window.addEventListener('click', listener)
       })
     }
   }
