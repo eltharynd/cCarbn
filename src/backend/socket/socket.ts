@@ -68,7 +68,7 @@ export class Socket {
                   take(1)
                 )
                 .toPromise()
-              if (alert) Socket.io.to(data.userId).emit('test', alert)
+              if (alert) Socket.io.to(data.userId).emit('alerts-test', alert)
             }
           }
         } catch (e) {

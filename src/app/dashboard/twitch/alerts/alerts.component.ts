@@ -51,7 +51,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
   sendTestAlert(pointerEvent, alert) {
     pointerEvent.stopPropagation()
     for (let element of alert.elements) {
-      this.data.send('test', Object.assign({ userId: this.auth.currentUser?._id }, element))
+      this.data.send('alerts-test', Object.assign({ userId: this.auth.currentUser?._id }, element))
     }
   }
 
