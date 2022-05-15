@@ -196,7 +196,6 @@ export class AlertsService {
             ignore = data.type !== 'Reward Remove'
           } else if (c.type === 'update') {
             ignore = data.type !== 'Update'
-            console.log('here')
             if (c.operator && c.operator !== 'any') {
               if (/^title/gi.test(c.operator)) {
                 let contains = new RegExp(c.compared || '', 'gi').test(data.title)

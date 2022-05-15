@@ -35,7 +35,6 @@ export class HypetrainService {
         this.processNext()
         return
       }
-      console.log('processing')
 
       this.ending = data.type === 'Hype Train End' || (data.event.level === 5 && +data.event.progress >= +data.event.goal)
 
@@ -66,23 +65,6 @@ export class HypetrainService {
 
       this.onProgress.next(this.progress)
 
-      console.log(this.currentLevel, this.progress)
-
-      /* 
-      if (data.type === 'Hype Train Begin') {
-        //this.currentLevel = 1
-        //await this.onLevelChange()
-      } else if (data.type === 'Hype Train Progress') {
-        //let nextLevel = data.level !== this.currentLevel && this.currentLevel !== 6 ? true : false
-        //this.currentLevel = data.level
-        //if (nextLevel) await this.onLevelChange()
-      } else if (data.type === 'Hype Train End') {
-        //if (this.currentLevel < 5) this.prematureEnd = true
-        //this.currentLevel = 6
-        //this.expiryDate = 0
-        //await this.onLevelChange()
-      } */
-
       data.processed = true
       this.eventsSubject.next(data)
     })
@@ -92,6 +74,7 @@ export class HypetrainService {
       this.testChangeLevel(data.level)
     })
     this.data.socketIO.on('hypetrain-test-add-carriage', (data) => this.addCarriage())
+    this.data.socketIO.on('hypetrain-test-end', (data) => this.end())
     this.data.socketIO.on('hypetrain-test-stop', (data) => this.stop())
 
     this.currentLocomotiveScale = this.settings.hypetrain.train.locomotive.scale
@@ -112,7 +95,6 @@ export class HypetrainService {
   currentlyProcessed
   private processed = 0
   private async processNext() {
-    console.log('playnext')
     if (this.eventsQueue.length < 1 || this.processed > 0) return false
 
     this.processed++
@@ -129,9 +111,10 @@ export class HypetrainService {
   changeLevel(level) {
     if (level === this.currentLevel) return
     this.currentLevel = level
+
+    if (this.currentLevel === 5 && !this.expiresAt) this.expiresAt = new Date(Date.now() + 5 * 60 * 1000)
     this.onLevelChange.next(level)
   }
-
   async addCarriage(lastContribution?) {
     if (lastContribution) {
       let found = await from(this.carriages)
@@ -175,6 +158,10 @@ export class HypetrainService {
     this.resizeToFit()
     this.onProgress.next(this.currentLevel)
   }
+  end() {
+    this.ending = true
+    this.onLevelChange.next(this.currentLevel)
+  }
   stop() {
     this.currentLevel = 0
     this.ending = false
@@ -188,36 +175,39 @@ export class HypetrainService {
   testStart() {
     this.start()
     this.data.socketIO.emit('hypetrain-test-start', {
-      userId: this.auth.currentUser?._id,
+      userId: this.auth.currentUser?._id || this.data._userId,
     })
   }
   testChangeLevel(level) {
     if (level === this.currentLevel) return
     this.changeLevel(level)
     this.data.socketIO.emit('hypetrain-test-change-level', {
-      userId: this.auth.currentUser?._id,
+      userId: this.auth.currentUser?._id || this.data._userId,
       level: level,
     })
   }
   testAddCarriage() {
     this.addCarriage()
     this.data.socketIO.emit('hypetrain-test-add-carriage', {
-      userId: this.auth.currentUser?._id,
+      userId: this.auth.currentUser?._id || this.data._userId,
+    })
+  }
+  testEnd() {
+    this.end()
+    this.data.socketIO.emit('hypetrain-test-end', {
+      userId: this.auth.currentUser?._id || this.data._userId,
     })
   }
   testStop() {
     this.stop()
     this.data.socketIO.emit('hypetrain-test-stop', {
-      userId: this.auth.currentUser?._id,
+      userId: this.auth.currentUser?._id || this.data._userId,
     })
   }
 
   currentLocomotiveScale = this.settings.hypetrain.train.locomotive.scale
   currentCarriageScale = this.settings.hypetrain.train.carriage.scale
-
   async resizeToFit() {
-    console.log('resizing')
-
     let locomotiveWidth = (+this.settings.hypetrain.train.locomotive.size.width * +this.settings.hypetrain.train.locomotive.scale) / 100
     let carriageWidth = (+this.settings.hypetrain.train.carriage.size.width * +this.settings.hypetrain.train.carriage.scale) / 100
 

@@ -415,3 +415,13 @@ nb-layout-footer > nav {
   min-width: 7rem !important;
   max-width: 7rem !important;
 }
+
+nb-icon.clickable:not(:hover) {
+  transition: 0.3s;
+}
+nb-icon.clickable:hover {
+  transform-origin: center;
+  transform: scale(1.25);
+  filter: drop-shadow(0 0 6px white);
+  transition: 0.3s;
+}

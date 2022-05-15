@@ -125,6 +125,11 @@ export class Socket {
           socket.to(data.userId).emit('hypetrain-test-add-carriage')
         }
       })
+      socket.on('hypetrain-test-end', (data) => {
+        if (data.userId) {
+          socket.to(data.userId).emit('hypetrain-test-end', {})
+        }
+      })
       socket.on('hypetrain-test-stop', (data) => {
         if (data.userId) {
           socket.to(data.userId).emit('hypetrain-test-stop', {})

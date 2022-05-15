@@ -81,3 +81,33 @@ nb-card-body > h2 {
 .train {
   margin-bottom: 5rem;
 }
+
+.guide {
+  position: relative;
+  > span {
+    display: initial;
+  }
+  > img {
+    display: initial;
+    position: absolute;
+  }
+}
+
+.guide:hover {
+  position: relative;
+  > span {
+    display: none;
+  }
+  > img {
+    display: initial;
+    position: absolute;
+  }
+}
+
+.disabled {
+  > *:not(.main-toggle) {
+    opacity: 0.7;
+    filter: grayscale(0.7);
+    pointer-events: none;
+  }
+}

@@ -13,7 +13,6 @@ export class SubscriptionHandler {
     let data = toJSON(event)
     data.type = 'Subscription'
     data.userInfo = getUserInfo(await event.getUser())
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) Socket.io.to(found._id.toString()).emit('alerts', data)
@@ -23,7 +22,6 @@ export class SubscriptionHandler {
     let data = toJSON(event)
     data.type = 'Subscription End'
     data.userInfo = getUserInfo(await event.getUser())
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) Socket.io.to(found._id.toString()).emit('alerts', data)
@@ -33,7 +31,6 @@ export class SubscriptionHandler {
     let data = toJSON(event)
     data.type = 'Subscription Gift'
     data.userInfo = getUserInfo(await event.getGifter())
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) Socket.io.to(found._id.toString()).emit('alerts', data)
@@ -43,7 +40,6 @@ export class SubscriptionHandler {
     let data = toJSON(event)
     data.type = 'Subscription Message'
     data.userInfo = getUserInfo(await event.getUser())
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) Socket.io.to(found._id.toString()).emit('alerts', data)

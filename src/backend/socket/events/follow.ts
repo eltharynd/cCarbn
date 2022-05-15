@@ -8,7 +8,6 @@ export class FollowHandler {
     let data = toJSON(event)
     data.type = 'Follow'
     data.userInfo = getUserInfo(await event.getUser())
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) {

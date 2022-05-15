@@ -7,7 +7,6 @@ export class ModeratorHandler {
   static moderatorAddEvent = async (event: EventSubChannelModeratorEvent) => {
     let data = toJSON(event)
     data.type = 'Moderator Add'
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) {
@@ -18,7 +17,6 @@ export class ModeratorHandler {
   static moderatorRemoveEvent = async (event: EventSubChannelModeratorEvent) => {
     let data = toJSON(event)
     data.type = 'Moderator Remove'
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) {

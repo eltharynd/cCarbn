@@ -9,7 +9,6 @@ export class HypetrainHandler {
   static hypeTrainBegin = async (event: EventSubChannelHypeTrainBeginEvent) => {
     let data = toJSON(event)
     data.type = 'Hype Train Begin'
-    console.log(data)
 
     if (data.last_contribution) {
       let helixUser: HelixUser | null = await Twitch.client.users.getUserById(data.last_contribution.user_id)
@@ -35,8 +34,6 @@ export class HypetrainHandler {
     data.type = 'Hype Train Progress'
     data.userInfo = getUserInfo(await event.lastContribution.getUser())
 
-    console.log(data)
-
     if (data.last_contribution) {
       let helixUser: HelixUser | null = await Twitch.client.users.getUserById(data.last_contribution.user_id)
       if (helixUser) data.last_contribution.picture = helixUser.profilePictureUrl
@@ -58,7 +55,6 @@ export class HypetrainHandler {
   static hypeTrainEnd = async (event: EventSubChannelHypeTrainEndEvent) => {
     let data = toJSON(event)
     data.type = 'Hype Train End'
-    console.log(data)
 
     if (data.last_contribution) {
       let helixUser: HelixUser | null = await Twitch.client.users.getUserById(data.last_contribution.user_id)

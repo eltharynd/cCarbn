@@ -11,9 +11,11 @@ import { StreamdeckComponent } from './streamdeck/streamdeck.component'
 import { HypetrainComponent } from './hypetrain/hypetrain.component'
 import { TimeDifferenceModule } from 'src/app/shared/timediff.module'
 import { GlobalComponent } from './global/global.component'
+import { GuideComponent } from './hypetrain/guide/guide.component'
+import { SharedMaterialModule } from 'src/app/shared/material.module'
 
 @NgModule({
-  imports: [TwitchRoutingModule, SharedNebularModule, CommonModule, TimeDifferenceModule],
-  declarations: [TwitchComponent, TwitchAPIComponent, ChatbotComponent, AlertsComponent, StreamdeckComponent, HypetrainComponent, GlobalComponent],
+  imports: [TwitchRoutingModule, SharedNebularModule, SharedMaterialModule, CommonModule, TimeDifferenceModule],
+  declarations: [TwitchComponent, TwitchAPIComponent, ChatbotComponent, AlertsComponent, StreamdeckComponent, HypetrainComponent, GlobalComponent, GuideComponent],
 })
 export class TwitchModule {}

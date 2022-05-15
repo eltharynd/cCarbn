@@ -7,7 +7,6 @@ export class PollHandler {
   static pollBeginEvent = async (event: EventSubChannelPollBeginEvent) => {
     let data = toJSON(event)
     data.type = 'Poll Begin'
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) {
@@ -18,8 +17,6 @@ export class PollHandler {
   static pollProgressEvent = async (event: EventSubChannelPollProgressEvent) => {
     let data = toJSON(event)
     data.type = 'Poll Progress'
-    console.log(data)
-
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) {
       Socket.io.to(found._id.toString()).emit('alerts', toJSON(event))
@@ -29,7 +26,6 @@ export class PollHandler {
   static pollEndEvent = async (event: EventSubChannelPollEndEvent) => {
     let data = toJSON(event)
     data.type = 'Poll End'
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) {

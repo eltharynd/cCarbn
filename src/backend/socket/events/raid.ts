@@ -11,7 +11,6 @@ export class RaidHandler {
     let data = toJSON(event)
     data.type = 'Raid From'
     data.userInfo = getUserInfo(await event.getRaidingBroadcaster())
-    console.log(data)
 
     try {
       let alertData: any = {
@@ -57,7 +56,6 @@ export class RaidHandler {
     let data = toJSON(event)
     data.type = 'Raid To'
     data.userInfo = getUserInfo(await event.getRaidedBroadcaster())
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.raidingBroadcasterId })
     if (found) {

@@ -12,7 +12,6 @@ export class PredictionHandler {
   static predictionBeginEvent = async (event: EventSubChannelPredictionBeginEvent) => {
     let data = toJSON(event)
     data.type = 'Prediction Begin'
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) {
@@ -24,7 +23,6 @@ export class PredictionHandler {
   static predictionProgressEvent = async (event: EventSubChannelPredictionProgressEvent) => {
     let data = toJSON(event)
     data.type = 'Prediction Progress'
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) {
@@ -36,7 +34,6 @@ export class PredictionHandler {
   static predictionLockEvent = async (event: EventSubChannelPredictionLockEvent) => {
     let data = toJSON(event)
     data.type = 'Prediction Lock'
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) {
@@ -48,7 +45,6 @@ export class PredictionHandler {
   static predictionEndEvent = async (event: EventSubChannelPredictionEndEvent) => {
     let data = toJSON(event)
     data.type = 'Prediction End'
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) {

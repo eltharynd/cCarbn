@@ -8,7 +8,6 @@ export class RedemptionHandler {
     let data = toJSON(event)
     data.type = 'Redemption Add'
     data.userInfo = getUserInfo(await event.getUser())
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) Socket.io.to(found._id.toString()).emit('alerts', data)
@@ -18,7 +17,6 @@ export class RedemptionHandler {
     let data = toJSON(event)
     data.type = 'Redemption Update'
     data.userInfo = getUserInfo(await event.getUser())
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) Socket.io.to(found._id.toString()).emit('alerts', data)

@@ -2,11 +2,13 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core'
 import { AuthGuard } from 'src/app/auth/auth.guard'
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 import * as merge from 'deepmerge'
-import { NbStepperComponent } from '@nebular/theme'
+import { NbStepperComponent, NbWindowService } from '@nebular/theme'
 import { HypetrainService } from 'src/app/shared/hypetrain.service'
 import { SettingsService } from 'src/app/shared/settings.service'
 import { Subject } from 'rxjs'
 import { resolve } from 'path'
+import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast'
+import { GuideComponent } from './guide/guide.component'
 
 @Component({
   selector: 'app-hypetrain',
@@ -19,7 +21,7 @@ export class HypetrainComponent implements OnInit {
 
   pictureChangeSubject = new Subject<any>()
 
-  constructor(private data: DataService, private auth: AuthGuard, public hypetrain: HypetrainService, public settings: SettingsService) {}
+  constructor(private data: DataService, private auth: AuthGuard, public hypetrain: HypetrainService, public settings: SettingsService, private windowService: NbWindowService) {}
 
   async ngOnInit() {
     let settings = await this.data.get(`user/${this.auth.currentUser?._id}/settings/api/listener/hypetrain`)
@@ -123,15 +125,15 @@ export class HypetrainComponent implements OnInit {
     await this.settings.onUpdated()
   }
 
-  /*  */
-  /*  */
-  /*  */
-  /*  */
-  async startTest() {
-    console.log(await this.data.get('hypetrain/test'))
-  }
-  async stopTest() {
-    console.log(await this.data.get('hypetrain/stop'))
+  openPictureGuide() {
+    this.windowService.open(GuideComponent, {
+      title: 'Hype Train Images',
+      buttons: {
+        minimize: false,
+        maximize: false,
+        fullScreen: false,
+      },
+    })
   }
 }
 

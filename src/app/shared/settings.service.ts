@@ -80,7 +80,6 @@ export class SettingsService {
   async getSettings() {
     this.hypetrain = await this.data.get(`user/${this.data._userId}/settings/api/listener/hypetrain`)
     this.data.socketIO.on('settings-updated', (data) => {
-      console.log('received')
       this.onSettingsReceived(data.settings)
     })
     this.loaded.complete()
@@ -95,6 +94,7 @@ export class SettingsService {
 
   async onUpdated() {
     if (this.hypetrain.train.maxRows < 1) this.hypetrain.train.maxRows = 1
+    if (this.hypetrain.train.fadingLength < 0) this.hypetrain.train.fadingLength = 0
 
     let response = await this.data.post(`user/${this.data._userId}/settings/api/listener/hypetrain`, this.hypetrain)
     if (response)

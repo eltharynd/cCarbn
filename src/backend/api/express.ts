@@ -178,7 +178,6 @@ export class Api {
     setTimeout(async () => {
       if (!logger) {
         logger = {}
-        console.log('creating logs')
         let users = await User.find()
         for (let u of users) {
           if (u.ttsStart) logger[u.twitchName] = +u.ttsCharacters

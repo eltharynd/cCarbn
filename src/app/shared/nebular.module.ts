@@ -21,6 +21,7 @@ import {
   NbCheckboxModule,
   NbPopoverModule,
   NbStepperModule,
+  NbWindowModule,
 } from '@nebular/theme'
 import { NbEvaIconsModule } from '@nebular/eva-icons'
 import { CommonModule } from '@angular/common'
@@ -55,6 +56,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
     NbToggleModule,
     NbTooltipModule,
     NbUserModule,
+    NbWindowModule.forRoot(),
   ],
   exports: [
     CommonModule,
@@ -84,6 +86,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
     NbToggleModule,
     NbTooltipModule,
     NbUserModule,
+    NbWindowModule,
   ],
 })
 export class SharedNebularModule {}

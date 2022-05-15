@@ -8,7 +8,6 @@ export class BanHandler {
     let data = toJSON(event)
     data.type = 'Ban'
     data.userInfo = getUserInfo(await event.getUser())
-    console.log(data)
 
     if (event.endDate) data.timeLeft = event.endDate.getTime() - Date.now()
 
@@ -22,7 +21,6 @@ export class BanHandler {
     let data = toJSON(event)
     data.type = 'Unban'
     data.userInfo = getUserInfo(await event.getUser())
-    console.log(data)
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) {
