@@ -20,28 +20,36 @@ export class ObsComponent implements OnInit {
     if(!this.OBS.isOBS) {
       setTimeout(() => {
         this.onPlaybackEnded()
-      }, ((+this.element.duration)|500) * 1000);
+      }, ((+this.element.duration)||0) * 1000);
       return
     }
     
     switch (this.element.trigger) {
       case 'sourceVisibility':
-        this.OBS.toggleSource(this.element.toggleTo, this.element.scene.sceneName ? this.element.scene.sceneName : this.element.scene, this.element.source.sourceName? this.element.source.sourceName : this.element.source)
+
+        let sceneName = this.element.sourceNested ? this.element.source.sourceName : this.element.scene?.sceneName
+        let sourceName =this.element.sourceNested ? this.element.sourceNested.sourceName : this.element.source?.sourceName 
+
+        this.OBS.toggleSource(this.element.toggleTo, sceneName, sourceName)
 
         setTimeout(() => {
           if(this.element.revert)
-            this.OBS.toggleSource(!this.element.toggleTo, this.element.scene.sceneName ? this.element.scene.sceneName : this.element.scene, this.element.source.sourceName? this.element.source.sourceName : this.element.source)
+            this.OBS.toggleSource(!this.element.toggleTo, sceneName, sourceName)
           this.onPlaybackEnded()
-        }, ((+this.element.duration)|500) * 1000);
+        }, ((+this.element.duration)||0) * 1000);
         break
       case 'filterVisibility':
-        this.OBS.toggleFilter(this.element.toggleTo, this.element.input.inputName? this.element.input.inputName : this.element.input, this.element.filter.filterName? this.element.filter.filterName : this.element.filter)
+
+        let inputName = this.element.input?.sceneName ? this.element.input.sceneName : this.element.input?.inputName
+        let filterName = this.element.filter?.filterName
+    
+        this.OBS.toggleFilter(this.element.toggleTo, inputName, filterName)
 
         setTimeout(() => {
           if(this.element.revert)
-            this.OBS.toggleFilter(!this.element.toggleTo, this.element.input.inputName? this.element.input.inputName : this.element.input, this.element.filter.filterName? this.element.filter.filterName : this.element.filter)
+            this.OBS.toggleFilter(!this.element.toggleTo, inputName, filterName)
           this.onPlaybackEnded()
-        }, ((+this.element.duration)|0) * 1000);
+        }, ((+this.element.duration)||0) * 1000);
         break
       default:
         setTimeout(() => {

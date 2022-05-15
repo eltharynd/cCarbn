@@ -45,16 +45,15 @@ export class Self extends Message {
 
   private F = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^F$/i.test(message)) {
-      if (this._timeout(20 * 60)) return
+      if (user !== channel.replace('#', '') && this._timeout(20 * 60)) return
       this.client.say(channel, `/me F`)
     }
   }
 
   private caret = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^\^$/.test(message)) {
-      if (this._timeout(20 * 60)) return
+      if (user !== channel.replace('#', '') && this._timeout(20 * 60)) return
       this.client.say(channel, `/me ^^`)
     }
   }
-
 }

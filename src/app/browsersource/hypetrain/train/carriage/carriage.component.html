@@ -1,29 +1,41 @@
-
-
-<div class="anchor" [@entry]="entryState" (@entry.done)="animationProgress()" [ngStyle]="{width: (size.width * (scale||1))+'px', height: (size.height * (scale||1))+'px'}">
-    <div class="container" 
-         [@shake]="shakeState" 
-         (@shake.done)="shakeState = +shakeState + 1 === shakeKeyframes ? 0 : +shakeState + 1" 
-         [ngStyle]="{
-             width: (size.width * (scale||1))+'px', 
-             height: (size.height * (scale||1))+'px',
-             'background-image': backgroundPic ? 'url(' + backgroundPic + '#)' : ''
-            }">
-        <img class="picture" 
-             [src]="user.picture" 
-             [ngStyle]="{
-                 top: _pictureBounds.top+'px', 
-                 width: _pictureBounds.width+'px', 
-                 left: _pictureBounds.left+'px', 
-                 height: _pictureBounds.height+'px'
-                }">
-        <div class="top" 
-             [ngStyle]="{
-                 top: (pictureBounds.top! * scale)+'px', 
-                 width: (pictureBounds.width! * scale)+'px', 
-                 left: (pictureBounds.left! * scale)+'px', 
-                 height: (pictureBounds.height! * scale)+'px',
-                 'background-image': foregroundPic ? 'url(' + foregroundPic + '#)' : ''
-                }"></div>
-    </div>
+<div
+  class="anchor"
+  [@entry]="entryState"
+  (@entry.done)="animationProgress()"
+  [ngStyle]="{
+    width: (settings.hypetrain.train[type].size.width * (hypetrain.currentCarriageScale || 1100)) / 100 + 'px',
+    height: (settings.hypetrain.train[type].size.height * (hypetrain.currentCarriageScale || 100)) / 100 + 'px'
+  }"
+>
+  <div
+    class="container"
+    [@shake]="shakeState"
+    (@shake.done)="shakeState = +shakeState + 1 === shakeKeyframes ? 0 : +shakeState + 1"
+    [ngStyle]="{
+      width: (settings.hypetrain.train[type].size.width * (hypetrain.currentCarriageScale || 100)) / 100 + 'px',
+      height: (settings.hypetrain.train[type].size.height * (hypetrain.currentCarriageScale || 100)) / 100 + 'px',
+      'background-image': settings.hypetrain.train[type].pictures.background ? 'url(' + settings.hypetrain.train[type].pictures.background + '#)' : 'url(carriage-outer.png)'
+    }"
+  >
+    <img
+      class="picture"
+      [src]="user.picture"
+      [ngStyle]="{
+        top: _pictureBounds.top + 'px',
+        width: _pictureBounds.width + 'px',
+        left: _pictureBounds.left + 'px',
+        height: _pictureBounds.height + 'px'
+      }"
+    />
+    <div
+      class="top"
+      [ngStyle]="{
+        top: (settings.hypetrain.train[type].pictureBounds.top! * hypetrain.currentCarriageScale) / 100 + 'px',
+        width: (settings.hypetrain.train[type].pictureBounds.width! * hypetrain.currentCarriageScale) / 100 + 'px',
+        left: (settings.hypetrain.train[type].pictureBounds.left! * hypetrain.currentCarriageScale) / 100 + 'px',
+        height: (settings.hypetrain.train[type].pictureBounds.height! * hypetrain.currentCarriageScale) / 100 + 'px',
+        'background-image': settings.hypetrain.train[type].pictures.foreground ? 'url(' + settings.hypetrain.train[type].pictures.foreground + '#)' : 'url(carriage-inner.png)'
+      }"
+    ></div>
+  </div>
 </div>

@@ -1,0 +1,116 @@
+.monitor {
+  margin: 1rem;
+  > div {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+}
+::ng-deep .monitor > nb-stepper > .step-content {
+  display: none;
+}
+
+.test {
+  margin: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+nb-card-body > h2,
+nb-card-body > h3 {
+  text-align: center;
+}
+
+.test {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.audio,
+.tracks,
+.train,
+.locomotive,
+.carriage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  > .pictures {
+    align-items: flex-start;
+    gap: 4rem;
+    margin-left: 2rem;
+    margin-right: 2rem;
+    > .pictures-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: center;
+      > .pictures-row {
+        display: flex;
+        gap: 2.5rem;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+}
+
+.uploader {
+  position: relative;
+  > button {
+    position: absolute;
+    right: -1rem;
+    bottom: -1rem;
+    z-index: 4;
+  }
+}
+
+.monitor {
+  margin-top: 2rem;
+}
+.monitor,
+.test,
+.audio,
+.tracks,
+.train {
+  margin-bottom: 5rem;
+}
+
+.guide {
+  position: relative;
+  > span {
+    display: initial;
+  }
+  > img {
+    display: initial;
+    position: absolute;
+  }
+}
+
+.guide:hover {
+  position: relative;
+  > span {
+    display: none;
+  }
+  > img {
+    display: initial;
+    position: absolute;
+  }
+}
+
+.disabled {
+  > *:not(.main-toggle) {
+    opacity: 0.7;
+    filter: grayscale(0.7);
+    pointer-events: none;
+  }
+}

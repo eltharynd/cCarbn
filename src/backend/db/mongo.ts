@@ -4,12 +4,11 @@ import { ClientToken } from './models/tokens'
 import { createModel } from 'mongoose-gridfs'
 import { IUpload, GridfsModel } from './models/files'
 
-
 export class Mongo {
   private static database: Mongoose.Connection
 
   static Upload: GridfsModel<IUpload, any, any, any>
-  
+
   static clientId
   static clientSecret
 
@@ -27,7 +26,7 @@ export class Mongo {
         Mongo.Upload = createModel({
           modelName: 'Upload',
           connection: Mongo.database,
-          metadata: { userId: Mongoose.Types.ObjectId, usages: 1 }
+          metadata: { userId: Mongoose.Types.ObjectId, usages: 1 },
         })
         resolve(true)
       })
@@ -36,10 +35,8 @@ export class Mongo {
 
   static ObjectId(id: string): Mongoose.Types.ObjectId
   static ObjectId(id: Mongoose.Types.ObjectId): Mongoose.Types.ObjectId
-  static ObjectId(id: string|Mongoose.Types.ObjectId): Mongoose.Types.ObjectId {
-    if(typeof id === 'string')
-      return new Mongoose.Types.ObjectId(id)
-    else
-      return id
+  static ObjectId(id: string | Mongoose.Types.ObjectId): Mongoose.Types.ObjectId {
+    if (typeof id === 'string') return new Mongoose.Types.ObjectId(id)
+    else return id
   }
 }

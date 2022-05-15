@@ -8,19 +8,19 @@ import { Self } from '../messages/categories/self'
 import { Moderators } from '../messages/categories/moderators'
 import { Pokemon } from '../messages/categories/pokemon'
 import { Storeable } from '../messages/categories/storeable'
- 
-export class Chat {
 
+export class Chat {
   static clients: IChatClient[] = []
   static defaultUserProvider
 
   private static async find(userId) {
-    return await from(Chat.clients).pipe(filter(c => c.userId.toString() === userId.toString())).toPromise()
+    return await from(Chat.clients)
+      .pipe(filter((c) => c.userId.toString() === userId.toString()))
+      .toPromise()
   }
 
   static async connect(user, settings?) {
-    if(await Chat.find(user._id))
-      throw new Error(`User doesn't have a connected client...`)
+    if (await Chat.find(user._id)) throw new Error(`User doesn't have a connected client...`)
 
     let client = await this.connectToUser(user)
     let iClient = {
@@ -28,23 +28,20 @@ export class Chat {
       channel: client.channel,
       client: client.client,
       //@ts-ignore
-      settings: settings? settings : (await Settings.findOne({userId: user._id}).json)
+      settings: settings ? settings : await Settings.findOne({ userId: user._id }).json,
     }
     Chat.clients.push(iClient)
 
-    
     await this.bindCategories(iClient, settings)
   }
 
   static async disconnect(user, settings?) {
     let iClient = await this.find(user._id)
-    if(iClient) {
-      await iClient.client.quit() 
+    if (iClient) {
+      await iClient.client.quit()
       Chat.clients.splice(Chat.clients.indexOf(iClient), 1)
     }
-
   }
-
 
   static async connectToUser(user) {
     let chatClient = new ChatClient({
@@ -52,29 +49,28 @@ export class Chat {
       channels: [user.twitchName],
       requestMembershipEvents: true,
       logger: {
-        minLevel: 'info'
-      }
+        minLevel: 'info',
+      },
     })
     chatClient.connect()
     return { channel: user.twitchName, client: chatClient }
   }
 
   static async bindCategories(iClient, settings) {
-    if(settings?.chatbot?.categories?.self?.enabled) new Self(iClient)
-    if(settings?.chatbot?.categories?.common?.enabled) new Common(iClient)
-    if(settings?.chatbot?.categories?.moderators?.enabled) new Moderators(iClient)
-    if(settings?.chatbot?.categories?.pokemon?.enabled) new Pokemon(iClient)
-    if(settings?.chatbot?.categories?.storeable?.enabled) new Storeable(iClient)
+    if (settings?.chatbot?.categories?.self?.enabled) new Self(iClient)
+    if (settings?.chatbot?.categories?.common?.enabled) new Common(iClient)
+    if (settings?.chatbot?.categories?.moderators?.enabled) new Moderators(iClient)
+    if (settings?.chatbot?.categories?.pokemon?.enabled) new Pokemon(iClient)
+    if (settings?.chatbot?.categories?.storeable?.enabled) new Storeable(iClient)
   }
 
   static async toggleCategory(user, category: Category, enable, settings) {
     let iClient = await this.find(user._id)
-    if(!iClient && enable) {
+    if (!iClient && enable) {
       throw new Error(`User doesn't have a connected client...`)
-
-    } else  {
-      if(enable) {
-        switch(category) {
+    } else {
+      if (enable) {
+        switch (category) {
           case Category.self:
             new Self(iClient)
             break
@@ -91,7 +87,7 @@ export class Chat {
           case Category.storeable:
             new Storeable(iClient)
             break
-        } 
+        }
       } else {
         await iClient!.client.quit()
         iClient!.client = (await this.connectToUser(user)).client
@@ -100,12 +96,10 @@ export class Chat {
       }
     }
   }
-
 }
 
-
-
 export class IChatClient {
+  /** cCarbn clientId */
   userId: string
   channel: string
   client: ChatClient
@@ -116,5 +110,5 @@ export enum Category {
   common,
   moderators,
   pokemon,
-  storeable
+  storeable,
 }

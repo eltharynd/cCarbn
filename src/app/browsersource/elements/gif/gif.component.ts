@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertsService } from '../../../shared/alerts.service'
-import { ElementsComponent, ELEMENT_ANIMATIONS_IN, ELEMENT_ANIMATIONS_OUT_INNER } from '../elements.component'
+import { ElementsComponent, ELEMENT_ANIMATIONS_IN_INNER, ELEMENT_ANIMATIONS_OUT_INNER } from '../elements.component'
 
 @Component({
   selector: 'app-gif',
   templateUrl: './gif.component.html',
   styleUrls: ['../elements.component.scss'],
-  animations: [ ...ELEMENT_ANIMATIONS_IN, ...ELEMENT_ANIMATIONS_OUT_INNER]
+  animations: [ ...ELEMENT_ANIMATIONS_IN_INNER, ...ELEMENT_ANIMATIONS_OUT_INNER]
 })
 export class GIFComponent implements OnInit {
 
@@ -55,19 +55,19 @@ export class GIFComponent implements OnInit {
         this.outerStyle.borderRadius = `${Math.max(5, stroke/2)}px`
         this.innerStyle.borderRadius = `${Math.max(4, stroke/2)}px`
       } else if(/ellipse/.test(this.element.border)) {
-        
+        this.outerStyle.borderRadius = `50%`
+        this.innerStyle.borderRadius = `50%`
       }
     } else {
       this.outerStyle.width = this.outerStyle.width
       this.outerStyle.height = this.outerStyle.height
     }
 
-    this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element, this.outerStyle)
+    this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element, this.outerStyle, this.innerStyle)
   }
 
-  loaded: boolean
   onLoadedData() {
-    this.loaded = true
+    this.element.loaded = true
     setTimeout(() => {
       this.onPlaybackEnded()
     }, (+this.element.duration||5)*1000);

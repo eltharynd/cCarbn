@@ -1,15 +1,15 @@
 {
-    "include": ["./*.ts", "./**/*.ts", "./**/*.json"],
-    "compileOnSave": false,
-    "compilerOptions": {
-        "moduleResolution": "node",
-        "noImplicitAny": false,
-        "noStrictGenericChecks": true,
-        "outDir": "../dist/backend",
-        "rootDir": ".",
-        "sourceMap": true,
-        "strictNullChecks": false,
-        "strictPropertyInitialization": false,
-        "target": "es5"
-    }
+  "include": ["./*.ts", "./**/*.ts", "./**/*.json"],
+  "compileOnSave": false,
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "noStrictGenericChecks": true,
+    "outDir": "../dist/backend",
+    "rootDir": ".",
+    "sourceMap": true,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "target": "es5"
+  }
 }

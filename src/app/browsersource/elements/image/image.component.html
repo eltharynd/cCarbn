@@ -1,6 +1,6 @@
-<div class="viewport-flex" [ngStyle]="viewportStyle" [style.opacity]="!loaded ? '0' : 'initial'">
+<div class="viewport-flex" [ngStyle]="viewportStyle" [style.opacity]="!element.loaded ? '0' : 'initial'">
 
-    <div [ngStyle]="outerStyle" class="outer-container" [class.rainbow]="outerStyle.rainbow" [class.vaporwave]="outerStyle.vaporwave" [@innerOUT]="element.innerTransitionOUT" [@in]="element.innerTransitionIN" >
+    <div [ngStyle]="outerStyle" class="outer-container" [class.rainbow]="outerStyle.rainbow" [class.vaporwave]="outerStyle.vaporwave" [@innerIN]="element.loaded ? element.innerTransitionIN : 'loading'" [@innerOUT]="element.innerTransitionOUT">
         <img [ngStyle]="innerStyle"[src]="element.src"(load)="onLoadedData()">
     </div>
 

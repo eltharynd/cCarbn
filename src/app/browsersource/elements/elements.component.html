@@ -1,19 +1,34 @@
-<div class="viewport" [ngStyle]="{
-  width: viewport.width+'px', 
-  height: viewport.height+'px',
-  padding: viewport.padding+'px'
-}">
-  
-  <div [@in]="element.transitionIN" [@out]="element.transitionOUT" *ngFor="let element of currentElements">
-    <app-video *ngIf="element?.type === 'video'" [element]=element [viewport]="viewport"></app-video>
-    <app-audio *ngIf="element?.type === 'audio'" [element]=element></app-audio>
-    <app-tts *ngIf="element?.type === 'tts'" [element]=element></app-tts>
-    <app-obs *ngIf="element?.type === 'obs'" [element]=element></app-obs>
-    <app-chat *ngIf="element?.type === 'chat'" [element]=element></app-chat>
-    <app-gif *ngIf="element?.type === 'gif'" [element]=element [viewport]="viewport"></app-gif>
-    <app-image *ngIf="element?.type === 'image'" [element]=element [viewport]="viewport"></app-image>
-  </div>
+<div
+  class="viewport"
+  [ngStyle]="{
+    width: viewport.width + 'px',
+    height: viewport.height + 'px',
+    padding: viewport.padding + 'px'
+  }"
+>
+  <ng-container *ngFor="let element of currentElements">
+    <div
+      *ngIf="element.type === 'video' || element.type === 'clip' || element.type === 'gif' || element.type === 'image'"
+      [@in]="element.loaded ? element.transitionIN : 'loading'"
+      [@out]="element.transitionOUT"
+    >
+      <app-video *ngIf="element?.type === 'video'" [element]="element" [viewport]="viewport"></app-video>
+      <app-clip *ngIf="element?.type === 'clip'" [element]="element" [viewport]="viewport"></app-clip>
+      <app-gif *ngIf="element?.type === 'gif'" [element]="element" [viewport]="viewport"></app-gif>
+      <app-image *ngIf="element?.type === 'image'" [element]="element" [viewport]="viewport"></app-image>
+    </div>
+  </ng-container>
 
-  <div *ngIf="cantPlay" style="color: red; font-weight: bold; position: absolute;">IF YOU OPEN THIS ON A BROWSER YOU NEED TO INTERACT WITH THE PAGE BEFORE IT CAN PLAY MEDIA</div>
+  <ng-container *ngFor="let element of currentElements">
+    <div *ngIf="element.type === 'audio' || element.type === 'tts' || element.type === 'obs' || element.type === 'chat'">
+      <app-audio *ngIf="element?.type === 'audio'" [element]="element"></app-audio>
+      <app-tts *ngIf="element?.type === 'tts'" [element]="element"></app-tts>
+      <app-obs *ngIf="element?.type === 'obs'" [element]="element"></app-obs>
+      <app-chat *ngIf="element?.type === 'chat'" [element]="element"></app-chat>
+    </div>
+  </ng-container>
 
+  <div *ngIf="cantPlay" style="color: red; font-weight: bold; position: absolute">IF YOU OPEN THIS ON A BROWSER YOU NEED TO INTERACT WITH THE PAGE BEFORE IT CAN PLAY MEDIA</div>
+
+  <app-hypetrain></app-hypetrain>
 </div>

@@ -1,4 +1,4 @@
-import { Schema, model, Types } from "mongoose"
+import { Schema, model, Types } from 'mongoose'
 
 interface ICommand {
   userId: Types.ObjectId
@@ -7,6 +7,7 @@ interface ICommand {
   answer: string
   mods: boolean
   streamer: boolean
+  alertable: boolean
   cooldown: number
   cooldownPerUser: boolean
   source: string
@@ -18,6 +19,7 @@ export const commandSchema: Schema = new Schema({
   answer: String,
   mods: Boolean,
   streamer: Boolean,
+  alertable: Boolean,
   cooldown: Number,
   cooldownPerUser: Boolean,
   source: String,

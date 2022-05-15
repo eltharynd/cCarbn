@@ -85,8 +85,6 @@ export class OBSService {
       this.currentScene = data.currentScene
       this.scenes = data.scenes
       this.sources = data.sources
-      console.log(this.scenes)
-      console.log(this.sources)
     })
   }
 
@@ -102,28 +100,33 @@ export class OBSService {
         })
         s.sources = sources.sceneItems
 
-        /* for(let source of s.sources) {
+        for(let source of s.sources) {
           if(source.isGroup) {
-            let inner = await this.OBS.call('GetGroupItemList', {
+            let inner = await this.OBS.call('GetGroupSceneItemList', {
               sceneName: source.sourceName
             })
             source.items = inner.sceneItems
           }
-        } */
+        }
+
+        let filters = await this.OBS.call('GetSourceFilterList', {
+          sourceName: s.sceneName
+        })
+        s.filters = filters.filters
       }
+
+      this.scenes.sort((a, b) => {
+        if(a.sceneName.toLowerCase() < b.sceneName.toLowerCase())
+          return -1
+        else if (a.sceneName.toLowerCase() > b.sceneName.toLowerCase())
+          return 1
+        else return 0
+      })
     }
   
     response = await this.OBS.call('GetInputList')
     if(response) {
       this.sources = response.inputs
-      let groups = await this.OBS.call('GetGroupList')
-      if(groups) {
-        for(let g of groups.groups) {
-          this.sources.push({
-            inputKind: 'group', inputName: g
-          })
-        }  
-      }
       this.sources.sort((a, b) => {
         if(a.inputName.toLowerCase() < b.inputName.toLowerCase())
           return -1
@@ -154,27 +157,29 @@ export class OBSService {
   }
 
   async toggleSource(visibile: boolean, scene: string, source: string) {
-
-    let response = await this.OBS.call('GetSceneItemId', {
-      sceneName : scene,
-      sourceName: source
-    })
-
-    if(response)
-      await this.OBS.call('SetSceneItemEnabled', {
-        sceneName: scene,
-        sceneItemId: response.sceneItemId,
-        sceneItemEnabled: visibile
+    try {
+      let response = await this.OBS.call('GetSceneItemId', {
+        sceneName : scene,
+        sourceName: source
       })
+
+      if(response)
+        await this.OBS.call('SetSceneItemEnabled', {
+          sceneName: scene,
+          sceneItemId: response.sceneItemId,
+          sceneItemEnabled: visibile ? true : false
+        })
+    } catch(e) {console.error(e)}
   }
 
   async toggleFilter(visible: boolean, source: string, filter: string) {
-    await this.OBS.call('SetSourceFilterEnabled', {
-      sourceName: source,
-      filterName: filter,
-      filterEnabled: visible
-    })
-
+    try {
+      await this.OBS.call('SetSourceFilterEnabled', {
+        sourceName: source,
+        filterName: filter,
+        filterEnabled: visible ? true : false
+      })
+    } catch(e) {console.error(e)}
   }
 
 }

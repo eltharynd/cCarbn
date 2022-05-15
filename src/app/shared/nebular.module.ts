@@ -1,7 +1,29 @@
-
-import { NgModule } from '@angular/core'
-import { NbThemeModule, NbLayoutModule, NbIconModule, NbCardModule, NbButtonModule, NbSpinnerModule, NbSidebarModule, NbUserModule, NbActionsModule, NbContextMenuModule, NbMenuModule, NbToggleModule, NbListModule, NbAccordionModule, NbSelectModule, NbTabsetModule, NbInputModule, NbTooltipModule, NbCheckboxModule, NbPopoverModule } from '@nebular/theme';
-import { NbEvaIconsModule } from '@nebular/eva-icons';
+import { Component, NgModule } from '@angular/core'
+import {
+  NbThemeModule,
+  NbLayoutModule,
+  NbIconModule,
+  NbCardModule,
+  NbButtonModule,
+  NbSpinnerModule,
+  NbSidebarModule,
+  NbUserModule,
+  NbActionsModule,
+  NbContextMenuModule,
+  NbMenuModule,
+  NbToggleModule,
+  NbListModule,
+  NbAccordionModule,
+  NbSelectModule,
+  NbTabsetModule,
+  NbInputModule,
+  NbTooltipModule,
+  NbCheckboxModule,
+  NbPopoverModule,
+  NbStepperModule,
+  NbWindowModule,
+} from '@nebular/theme'
+import { NbEvaIconsModule } from '@nebular/eva-icons'
 import { CommonModule } from '@angular/common'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
@@ -29,10 +51,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
     NbPopoverModule,
     NbSelectModule,
     NbSpinnerModule,
+    NbStepperModule,
     NbTabsetModule,
     NbToggleModule,
     NbTooltipModule,
     NbUserModule,
+    NbWindowModule.forRoot(),
   ],
   exports: [
     CommonModule,
@@ -45,7 +69,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 
     FormsModule,
     ReactiveFormsModule,
-    
+
     NbAccordionModule,
     NbActionsModule,
     NbButtonModule,
@@ -57,11 +81,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
     NbPopoverModule,
     NbSelectModule,
     NbSpinnerModule,
+    NbStepperModule,
     NbTabsetModule,
     NbToggleModule,
     NbTooltipModule,
     NbUserModule,
+    NbWindowModule,
   ],
-  providers: []
 })
-export class SharedNebularModule { }
+export class SharedNebularModule {}

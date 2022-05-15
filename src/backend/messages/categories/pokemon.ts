@@ -13,7 +13,7 @@ export class Pokemon extends Message {
       let pokemon = message.replace(/^!\w+ /, '').toLowerCase()
       let data
 
-      if(pokemon === 'rockruff' || pokemon === ' lycanroc'){
+      if (pokemon === 'rockruff' || pokemon === ' lycanroc') {
         this.client.say(channel, `/me listen, it's complicated... just check this stuff out https://bulbapedia.bulbagarden.net/wiki/Rockruff_(Pok%C3%A9mon)#Evolution`)
         return
       }
@@ -33,73 +33,50 @@ export class Pokemon extends Message {
 
       let process = (pokemon) => {
         let text = ''
-        let details = pokemon.evolution_details[pokemon.evolution_details.length-1]
+        let details = pokemon.evolution_details[pokemon.evolution_details.length - 1]
         text += ` evolves into ${pokemon.species.name.toUpperCase()}`
-        if(details.min_level>0)
-          text += ` at lvl ${details.min_level}`
-        if(details.item)
-          text += ` by using ${details.item.name.toUpperCase()}`
-        if(details.trigger?.name === 'trade')
-          text += ` from trading`
-        if(details.trigger?.name === 'spin')
-          text += ` from spinning around`
-        if(details.trade_species)
-          text += ` with a ${details.trade_species.name.toUpperCase()}` 
-        if(details.held_item)
-          text += ` while holding ${details.held_item.name.toUpperCase()}`
-        if(details.min_happiness)
-          text += ` from high happiness`
-        if(details.min_affection)
-          text += ` from high affection`
-        if(details.turn_upside_down)
-          text += ` while holding your console upside down`
-        if(details.min_beauty)
-          text += ` from high beauty`
-        if(details.needs_overworld_rain)
-          text += ` only when raining`
-        if(details.time_of_day)
-          text += ` only during the ${details.time_of_day}`
-        if(details.known_move)
-          text += ` whilst knowing ${details.known_move.name.toUpperCase()}`
-        if(details.location)
-          text += ` when in the ${details.location.name.toUpperCase()}`
-        if(details.known_move_type)
-          text += ` whilst knowing a ${details.known_move_type.name.toUpperCase()} move`
-        if(details.relative_physical_stats !== null)
-          text += ` only when ${details.relative_physical_stats>0 ? 'ATT>SPA' : details.relative_physical_stats<0 ? 'SPA>ATT' : 'ATT=SPA'}`
+        if (details.min_level > 0) text += ` at lvl ${details.min_level}`
+        if (details.item) text += ` by using ${details.item.name.toUpperCase()}`
+        if (details.trigger?.name === 'trade') text += ` from trading`
+        if (details.trigger?.name === 'spin') text += ` from spinning around`
+        if (details.trade_species) text += ` with a ${details.trade_species.name.toUpperCase()}`
+        if (details.held_item) text += ` while holding ${details.held_item.name.toUpperCase()}`
+        if (details.min_happiness) text += ` from high happiness`
+        if (details.min_affection) text += ` from high affection`
+        if (details.turn_upside_down) text += ` while holding your console upside down`
+        if (details.min_beauty) text += ` from high beauty`
+        if (details.needs_overworld_rain) text += ` only when raining`
+        if (details.time_of_day) text += ` only during the ${details.time_of_day}`
+        if (details.known_move) text += ` whilst knowing ${details.known_move.name.toUpperCase()}`
+        if (details.location) text += ` when in the ${details.location.name.toUpperCase()}`
+        if (details.known_move_type) text += ` whilst knowing a ${details.known_move_type.name.toUpperCase()} move`
+        if (details.relative_physical_stats !== null)
+          text += ` only when ${details.relative_physical_stats > 0 ? 'ATT>SPA' : details.relative_physical_stats < 0 ? 'SPA>ATT' : 'ATT=SPA'}`
         return text
       }
 
       let text = chain.species.name.toUpperCase()
-      if(chain.evolves_to.length>0) {
-        for(let i=0; i<chain.evolves_to.length; i++) {
-          
-          let pokemon = chain.evolves_to[i] 
+      if (chain.evolves_to.length > 0) {
+        for (let i = 0; i < chain.evolves_to.length; i++) {
+          let pokemon = chain.evolves_to[i]
           text += process(pokemon)
-          for(let j=0; j<pokemon.evolves_to.length; j++) {
-              let pokemon2 = pokemon.evolves_to[j]
-              text += process(pokemon2)
-              for(let k=0; k<pokemon2.evolves_to.length; k++) {
-                let pokemon3 = pokemon2.evolves_to[k]
-                text += process(pokemon3)
-                for(let l=0; l<pokemon3.evolves_to.length; l++) {
-                  let pokemon4 = pokemon3.evolves_to[l]
-                  text += process(pokemon4)
+          for (let j = 0; j < pokemon.evolves_to.length; j++) {
+            let pokemon2 = pokemon.evolves_to[j]
+            text += process(pokemon2)
+            for (let k = 0; k < pokemon2.evolves_to.length; k++) {
+              let pokemon3 = pokemon2.evolves_to[k]
+              text += process(pokemon3)
+              for (let l = 0; l < pokemon3.evolves_to.length; l++) {
+                let pokemon4 = pokemon3.evolves_to[l]
+                text += process(pokemon4)
               }
             }
           }
-          if(i>=0 && i<chain.evolves_to.length-1)
-            text += ' or it'
+          if (i >= 0 && i < chain.evolves_to.length - 1) text += ' or it'
         }
+      } else text += ` does not evolve.`
 
-      } else 
-        text += ` does not evolve.`
-
-     
-      this.client.say(
-        channel,
-        `/me ${text}`.replace(/\n/g, '')
-      )
+      this.client.say(channel, `/me ${text}`.replace(/\n/g, ''))
     } else if (/^!evo/i.test(message)) {
       this.client.say(channel, `/me You didn't specify a pokemon to look up for...`)
     }
@@ -107,15 +84,14 @@ export class Pokemon extends Message {
 
   private weakness = async (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {
     if (/^!weak [\w\s]+/i.test(message)) {
-
       let pokemon = message.replace(/^!weak /, '')
       let data
 
-      if(pokemon === 'joe') {
+      if (pokemon === 'joe') {
         this.client.say(channel, `/me joe mama is weak to [PHYSICAL_EXERCISE] unless it's also [SLEEPING_WITH_CHAT]. Awkward`)
         return
       }
-      
+
       try {
         data = (await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.replace(' ', '-')}`)).data
       } catch (error) {
@@ -131,11 +107,11 @@ export class Pokemon extends Message {
       for (let t of data.types) weaknesses.push((await axios.get(t.type.url)).data)
 
       let weakness = {}
-      for (let w of weaknesses) 
+      for (let w of weaknesses)
         for (let key of Object.keys(w.damage_relations)) {
           if (/_from/.test(key)) {
-            let relation: any = w.damage_relations[key];
-            let multiplier = key === 'double_damage_from' ? 2 : key === 'half_damage_from' ? 0.5 : key === 'no_damage_from' ? 0 : 1;
+            let relation: any = w.damage_relations[key]
+            let multiplier = key === 'double_damage_from' ? 2 : key === 'half_damage_from' ? 0.5 : key === 'no_damage_from' ? 0 : 1
             for (let type of relation) weakness[type.name] = weakness.hasOwnProperty(type.name) ? +weakness[type.name] * multiplier : multiplier
           }
         }
@@ -283,10 +259,7 @@ export class Pokemon extends Message {
 
       this.client.say(
         channel,
-        `/me ${ability.substring(0, 1).toUpperCase()}${ability.substring(1)} ability: ${data.flavor_text_entries[0].flavor_text.replace(
-          /\n/g,
-          ' '
-        )}.`.replace(/\n/g, '')
+        `/me ${ability.substring(0, 1).toUpperCase()}${ability.substring(1)} ability: ${data.flavor_text_entries[0].flavor_text.replace(/\n/g, ' ')}.`.replace(/\n/g, '')
       )
     } else if (/^!ability\+ [\w\s]+/i.test(message)) {
       if (filterParameters(message).length == 0) {
@@ -321,5 +294,4 @@ export class Pokemon extends Message {
       this.client.say(channel, `/me You didn't specify a ability to look up for...`)
     }
   }
-  
 }
