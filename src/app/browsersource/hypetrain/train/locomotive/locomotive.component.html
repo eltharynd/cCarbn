@@ -1,16 +1,25 @@
-<div class="anchor" [@entry]="entryState" (@entry.done)="animationProgress()" [ngStyle]="{ top: coordinates.y + 'px', left: coordinates.x + 'px' }">
+<div
+  class="anchor"
+  [@entry]="entryState"
+  (@entry.done)="animationProgress()"
+  [ngStyle]="{ top: settings.hypetrain.train.start.y + 'px', left: settings.hypetrain.train.start.x + 'px' }"
+>
   <div
     class="container"
-    [ngStyle]="{ width: viewport.width - coordinates.x + 'px', 'flex-direction': reverseDirection ? 'row-reverse' : 'row', 'flex-wrap': reverseWrap ? 'wrap-reverse' : 'wrap' }"
+    [ngStyle]="{
+      width: settings.viewport.width - settings.hypetrain.train.start.x + 'px',
+      'flex-direction': settings.hypetrain.train.reverseDirection ? 'row-reverse' : 'row',
+      'flex-wrap': settings.hypetrain.train.reverseWrap ? 'wrap-reverse' : 'wrap'
+    }"
   >
     <div
       class="train"
       [@shake]="shakeState"
       (@shake.done)="shakeState = +shakeState + 1 === shakeKeyframes ? 0 : +shakeState + 1"
       [ngStyle]="{
-        width: (size.width * (scale || 100)) / 100 + 'px',
-        height: (size.height * (scale || 100)) / 100 + 'px',
-        'background-image': backgroundPic ? 'url(' + backgroundPic + '#)' : ''
+        width: (settings.hypetrain.train[type].size.width * (hypetrain.currentLocomotiveScale || 100)) / 100 + 'px',
+        height: (settings.hypetrain.train[type].size.height * (hypetrain.currentLocomotiveScale || 100)) / 100 + 'px',
+        'background-image': settings.hypetrain.train[type].pictures.background ? 'url(' + settings.hypetrain.train[type].pictures.background + '#)' : 'url(locomotive-outer.png)'
       }"
     >
       <img
@@ -26,25 +35,14 @@
       <div
         class="top"
         [ngStyle]="{
-          top: (pictureBounds.top! * scale) / 100 + 'px',
-          width: (pictureBounds.width! * scale) / 100 + 'px',
-          left: (pictureBounds.left! * scale) / 100 + 'px',
-          height: (pictureBounds.height! * scale) / 100 + 'px',
-          'background-image': foregroundPic ? 'url(' + foregroundPic + '#)' : ''
+          top: (settings.hypetrain.train[type].pictureBounds.top! * hypetrain.currentLocomotiveScale) / 100 + 'px',
+          width: (settings.hypetrain.train[type].pictureBounds.width! * hypetrain.currentLocomotiveScale) / 100 + 'px',
+          left: (settings.hypetrain.train[type].pictureBounds.left! * hypetrain.currentLocomotiveScale) / 100 + 'px',
+          height: (settings.hypetrain.train[type].pictureBounds.height! * hypetrain.currentLocomotiveScale) / 100 + 'px',
+          'background-image': settings.hypetrain.train[type].pictures.foreground ? 'url(' + settings.hypetrain.train[type].pictures.foreground + '#)' : 'url(locomotive-inner.png)'
         }"
       ></div>
     </div>
-    <hypetrain-carriage
-      *ngFor="let c of carriages; let i = index"
-      [viewport]="viewport"
-      [size]="c.size"
-      [scale]="c.scale"
-      [index]="i"
-      [pictureBounds]="c.pictureBounds"
-      [user]="c.user"
-      [backgroundPic]="c.backgroundPic"
-      [foregroundPic]="c.foregroundPic"
-    >
-    </hypetrain-carriage>
+    <hypetrain-carriage *ngFor="let c of carriages; let i = index" [index]="i" [user]="c.user"> </hypetrain-carriage>
   </div>
 </div>

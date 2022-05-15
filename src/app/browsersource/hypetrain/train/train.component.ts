@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core'
 import { animate, animateChild, AnimationStateMetadata, group, query, state, style, transition, trigger } from '@angular/animations'
 import { HypetrainService } from 'src/app/shared/hypetrain.service'
+import { SettingsService } from 'src/app/shared/settings.service'
 
 let _shakeKeyframes = 60
 
@@ -74,41 +75,47 @@ for (let i = 0; i < _shakeKeyframes; i++)
   ],
 })
 export class TrainComponent implements OnInit, OnChanges {
-  @Input() viewport: { width: number; height: number } = { width: 1920, height: 1080 }
-  @Input() coordinates: { x: number; y: number }
-  @Input() size: { width: number; height: number } = { width: 128, height: 128 }
-  @Input() scale: number = 100
-  @Input() pictureBounds: { top?: number; left?: number; width?: number; height?: number; scale?: number } = { top: 0, left: 64, width: 64, height: 64, scale: 75 }
   @Input() user: { name: string; picture: string; total?: number }
-  @Input() backgroundPic: string | null
-  @Input() foregroundPic: string | null
-
   _pictureBounds: { top: number; left: number; width: number; height: number }
 
   entryState: any = { value: 'void', params: { viewportWidth: 100 } }
   shakeState: number = 0
   shakeKeyframes: number = _shakeKeyframes
 
-  constructor(public hypetrain: HypetrainService) {}
+  type: string = 'locomotive'
+
+  constructor(public hypetrain: HypetrainService, public settings: SettingsService) {}
 
   async ngOnInit() {
     await this.resizePicture()
+    this.settings.updated.subscribe(() => {
+      this.resizePicture()
+    })
   }
   async ngOnChanges() {
     await this.resizePicture()
   }
 
   async resizePicture() {
-    let newPicSide = {
-      width: (((this.pictureBounds.width || this.size.width) * (this.scale || 100)) / 100) * (this.pictureBounds.scale / 100 || 100),
-      height: (((this.pictureBounds.height || this.size.height) * (this.scale || 100)) / 100) * (this.pictureBounds.scale / 100 || 100),
+    let scale = this.type === 'locomotive' ? this.hypetrain.currentLocomotiveScale : this.hypetrain.currentCarriageScale
+    let newPicSize = {
+      width:
+        (((this.settings.hypetrain.train[this.type].pictureBounds.width || this.settings.hypetrain.train[this.type].size.width) * (scale || 100)) / 100) *
+        (this.settings.hypetrain.train[this.type].pictureBounds.scale / 100 || 100),
+      height:
+        (((this.settings.hypetrain.train[this.type].pictureBounds.height || this.settings.hypetrain.train[this.type].size.height) * (scale || 100)) / 100) *
+        (this.settings.hypetrain.train[this.type].pictureBounds.scale / 100 || 100),
     }
 
     this._pictureBounds = {
-      top: (this.pictureBounds.top! * this.scale) / 100 + ((this.pictureBounds.height! * this.scale) / 100 - newPicSide.height) / 2,
-      left: (this.pictureBounds.left! * this.scale) / 100 + ((this.pictureBounds.width! * this.scale) / 100 - newPicSide.width) / 2,
-      width: newPicSide.width,
-      height: newPicSide.height,
+      top:
+        (this.settings.hypetrain.train[this.type].pictureBounds.top! * scale) / 100 +
+        ((this.settings.hypetrain.train[this.type].pictureBounds.height! * scale) / 100 - newPicSize.height) / 2,
+      left:
+        (this.settings.hypetrain.train[this.type].pictureBounds.left! * scale) / 100 +
+        ((this.settings.hypetrain.train[this.type].pictureBounds.width! * scale) / 100 - newPicSize.width) / 2,
+      width: newPicSize.width,
+      height: newPicSize.height,
     }
   }
 
@@ -116,7 +123,10 @@ export class TrainComponent implements OnInit, OnChanges {
     if (this.entryState.value !== 'entered')
       this.entryState =
         this.entryState.value === 'void'
-          ? { value: 'entering', params: { viewportWidth: this.viewport.width - this.coordinates.x - this.size.width } }
+          ? {
+              value: 'entering',
+              params: { viewportWidth: this.settings.viewport.width - this.settings.hypetrain.train.start.x - this.settings.hypetrain.train[this.type].size.width },
+            }
           : this.entryState.value === 'entering'
           ? { value: 'entered' }
           : this.entryState

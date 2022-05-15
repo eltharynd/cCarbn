@@ -15,6 +15,7 @@
       </nb-card-header>
 
       <nb-card-body>
+        <!-- MONITOR -->
         <h2>MONITOR</h2>
         <div class="monitor">
           <nb-stepper #trainStepper orientation="horizontal" [disableStepNavigation]="true">
@@ -33,6 +34,7 @@
           </div>
         </div>
 
+        <!-- TEST -->
         <h2>TEST</h2>
         <div class="test">
           <button nbButton status="success" (click)="hypetrain.testStart()" [disabled]="hypetrain.currentLevel > 0">START TRAIN</button>
@@ -49,9 +51,10 @@
           <button nbButton status="danger" (click)="hypetrain.testStop()" [disabled]="hypetrain.currentLevel === 0">EMERGENCY STOP</button>
         </div>
 
+        <!-- AUDIO -->
         <h2>AUDIO</h2>
-        <div class="audio">
-          <div>
+        <div class="audio" [class.disabled]="!settings.hypetrain.audio.enabled">
+          <div class="main-toggle">
             <nb-toggle [(ngModel)]="settings.hypetrain.audio.enabled" (change)="settings.onUpdated()">
               {{ settings.hypetrain.audio.enabled ? 'ENABLED' : 'DISABLED' }}
             </nb-toggle>
@@ -77,6 +80,26 @@
           </div>
         </div>
 
+        <!-- TRACKS -->
+        <h3>TRACKS</h3>
+        <div *ngFor="let level of [1, 2, 3, 4, 5]" class="tracks">
+          <div>Suggested length ~{{ level === 5 ? '4.5min' : '20secs' }}</div>
+          <div class="uploader">
+            <app-uploader
+              [name]="'hypetrain-track-' + level"
+              [displayTextOverride]="'DRAG OR CLICK TO CHANGE\nLEVEL ' + level + ' TRACK'"
+              [allowedTypes]="['audio']"
+              [disabled]="hypetrain.currentLevel > 0"
+              [uploaded]="trackUploadedSubject"
+              [height]="'4rem'"
+            ></app-uploader>
+            <button *ngIf="settings.hypetrain.audio.tracks[level]" (click)="defaultTrack('hypetrain-track-' + level)" nbButton status="danger">
+              <nb-icon icon="trash-2"></nb-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- TRAIN -->
         <h2>TRAIN</h2>
         <div class="train" [class.disabled]="!settings.hypetrain.train.enabled">
           <div class="main-toggle">
@@ -111,11 +134,12 @@
           </div>
         </div>
 
+        <!-- LOCOMOTIVE & CARRIAGES -->
         <div *ngFor="let part of ['locomotive', 'carriage']" [class]="part" [class.disabled]="!settings.hypetrain.train.enabled">
-          <h2>{{ part.toUpperCase() }}&nbsp;&nbsp;<nb-icon icon="question-mark-circle-outline" (click)="openPictureGuide()" class="clickable"></nb-icon></h2>
+          <h3>{{ part.toUpperCase() }}&nbsp;&nbsp;<nb-icon icon="question-mark-circle-outline" (click)="openPictureGuide()" class="clickable"></nb-icon></h3>
           <div class="pictures">
             <div class="pictures-column">
-              <div class="pictures-uploader">
+              <div class="uploader">
                 <app-uploader
                   [name]="part + '-background'"
                   [displayTextOverride]="'DRAG OR CLICK TO CHANGE\n' + part.toUpperCase() + ' BACKGROUND'"
@@ -167,7 +191,7 @@
             </div>
 
             <div class="pictures-column">
-              <div class="pictures-uploader">
+              <div class="uploader">
                 <app-uploader
                   [name]="part + '-foreground'"
                   [displayTextOverride]="'DRAG OR CLICK TO CHANGE\n' + part.toUpperCase() + ' FOREGROUND'"

@@ -17,7 +17,8 @@
   align-items: center;
 }
 
-nb-card-body > h2 {
+nb-card-body > h2,
+nb-card-body > h3 {
   text-align: center;
 }
 
@@ -29,6 +30,7 @@ nb-card-body > h2 {
 }
 
 .audio,
+.tracks,
 .train,
 .locomotive,
 .carriage {
@@ -58,17 +60,17 @@ nb-card-body > h2 {
         justify-content: center;
         align-items: center;
       }
-
-      > .pictures-uploader {
-        position: relative;
-        > button {
-          position: absolute;
-          right: -1rem;
-          bottom: -1rem;
-          z-index: 4;
-        }
-      }
     }
+  }
+}
+
+.uploader {
+  position: relative;
+  > button {
+    position: absolute;
+    right: -1rem;
+    bottom: -1rem;
+    z-index: 4;
   }
 }
 
@@ -78,6 +80,7 @@ nb-card-body > h2 {
 .monitor,
 .test,
 .audio,
+.tracks,
 .train {
   margin-bottom: 5rem;
 }

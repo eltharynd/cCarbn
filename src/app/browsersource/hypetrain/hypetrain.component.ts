@@ -18,28 +18,10 @@ import { AuthGuard } from 'src/app/auth/auth.guard'
     trigger('scrolling', [state('void', style({ transform: 'translateX(100%)' })), state('*', style({ transform: 'translateX(-100%)' })), transition('void=>*', animate(5000))]),
   ],
 })
-export class HypetrainComponent implements OnInit, OnDestroy {
+export class HypetrainComponent implements OnInit {
   loops = {}
 
-  trackUploadingSubject = new Subject<any>()
-  trackChangeSubject = new Subject<any>()
-
-  constructor(public data: DataService, public OBS: OBSService, public settings: SettingsService, public hypetrain: HypetrainService) {
-    this.trackUploadingSubject.subscribe(() => {
-      this.audioLoaded = false
-    })
-    this.trackChangeSubject.subscribe(async (response) => {
-      if (!response.url) {
-        this.audioLoaded = true
-        return
-      }
-      let name: string = response.url.replace(/^.*\//, '').replace(/\..*$/, '')
-      let level = name.charAt(name.length - 1)
-      this.settings.hypetrain.audio.tracks[level] = `${SERVER_URL}${response.url}`
-      this.loops[`lvl${level}`] = null
-      this.loadAudio()
-    })
-  }
+  constructor(public data: DataService, public OBS: OBSService, public settings: SettingsService, public hypetrain: HypetrainService) {}
 
   async ngOnInit() {
     if (!this.data._userId) return
@@ -51,19 +33,16 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       this.onLevelChange()
     })
     this.settings.updated.subscribe((settings) => {
-      this.onVolumeChange()
+      if (this.hypetrain.currentLevel === 0) this.loadAudio()
+      else this.onVolumeChange()
     })
-  }
-
-  ngOnDestroy() {
-    this.stopAudio()
   }
 
   stopAudio() {
     for (let i = 1; i <= 5; i++) {
       if (this.loops[`lvl${i}`]) {
         this.loops[`lvl${i}`].stop()
-        this.loops[`lvl${i}`].gainNode.gain.value = this.settings.hypetrain.audio.volume
+        this.loops[`lvl${i}`].gainNode.gain.value = this.settings.hypetrain.audio.enabled ? this.settings.hypetrain.audio.volume : 0
       }
     }
 
@@ -72,14 +51,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
     this.transitioningFrom = null
     this.lastLevel = 0
     this.changedAt = null
-  }
-
-  //TODO update
-  onVolumeChange() {
-    for (let i = 1; i <= 5; i++) {
-      let track: Track = this.loops[`lvl${i}`]
-      track.gainNode.gain.value = this.settings.hypetrain.audio.volume
-    }
   }
 
   audioLoaded = false
@@ -92,7 +63,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
       let track: Track = new Track()
       track.audioContext = new AudioContext()
       track.gainNode = track.audioContext.createGain()
-      track.gainNode.gain.value = this.settings.hypetrain.audio.volume
+      track.gainNode.gain.value = this.settings.hypetrain.audio.enabled ? this.settings.hypetrain.audio.volume : 0
       track.gainNode.connect(track.audioContext.destination)
 
       let url = this.settings.hypetrain.audio.tracks[i + ''] ? this.settings.hypetrain.audio.tracks[i + ''] : `assets/sounds/hypetrain/level ${i}.mp3`
@@ -108,6 +79,13 @@ export class HypetrainComponent implements OnInit, OnDestroy {
 
       this.loops[`lvl${i}`] = track
       this.audioLoaded = ++done >= 5
+    }
+  }
+
+  onVolumeChange() {
+    for (let i = 1; i <= 5; i++) {
+      let track: Track = this.loops[`lvl${i}`]
+      track.gainNode.gain.value = this.settings.hypetrain.audio.enabled ? this.settings.hypetrain.audio.volume : 0
     }
   }
 
@@ -130,8 +108,8 @@ export class HypetrainComponent implements OnInit, OnDestroy {
         let x = ++i / 100
         let f_x = Math.sin((Math.PI / 2) * x + Math.PI / 2)
 
-        if (last) last.gainNode.gain.value = Math.max(0, Math.min(f_x * this.settings.hypetrain.audio.volume, 1))
-        if (f_x * this.settings.hypetrain.audio.volume <= 0) {
+        if (last) last.gainNode.gain.value = Math.max(0, Math.min(f_x * (this.settings.hypetrain.audio.enabled ? this.settings.hypetrain.audio.volume : 0), 1))
+        if (f_x * (this.settings.hypetrain.audio.enabled ? this.settings.hypetrain.audio.volume : 0) <= 0) {
           clearInterval(fader)
           fader = null
           this.stopAudio()
@@ -174,7 +152,7 @@ export class HypetrainComponent implements OnInit, OnDestroy {
 
             current.gainNode.gain.value = Math.max(0, Math.min(f_x * this.settings.hypetrain.audio.volume, 1))
 
-            if (f_x * this.settings.hypetrain.audio.volume <= 0) {
+            if (f_x * (this.settings.hypetrain.audio.enabled ? this.settings.hypetrain.audio.volume : 0) <= 0) {
               clearInterval(fader)
               fader = null
               this.hypetrain.testStop()
@@ -214,15 +192,6 @@ export class HypetrainComponent implements OnInit, OnDestroy {
 
       this.lastLevel = this.hypetrain.currentLevel
     }
-  }
-
-  async defaultTrack(name: string) {
-    let level = name.charAt(name.length - 1)
-
-    await this.data.delete(this.settings.hypetrain.audio.tracks[level].replace(/^.*\/api\//, ''))
-    this.settings.hypetrain.audio.tracks[level] = null
-
-    this.loadAudio()
   }
 }
 

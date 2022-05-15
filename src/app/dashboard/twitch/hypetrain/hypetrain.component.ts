@@ -20,6 +20,7 @@ export class HypetrainComponent implements OnInit {
   steps: any = STEPS
 
   pictureChangeSubject = new Subject<any>()
+  trackUploadedSubject = new Subject<any>()
 
   constructor(private data: DataService, private auth: AuthGuard, public hypetrain: HypetrainService, public settings: SettingsService, private windowService: NbWindowService) {}
 
@@ -68,6 +69,14 @@ export class HypetrainComponent implements OnInit {
         await this.settings.onUpdated()
       }
       picture.src = this.settings.hypetrain.train[uri[0]].pictures[uri[1]]
+    })
+
+    this.trackUploadedSubject.subscribe(async (response) => {
+      if (!response.url) return
+      let name: string = response.url.replace(/^.*\//, '').replace(/\..*$/, '')
+      let level = name.charAt(name.length - 1)
+      this.settings.hypetrain.audio.tracks[level] = `${SERVER_URL}${response.url}`
+      this.settings.onUpdated()
     })
   }
 
@@ -134,6 +143,13 @@ export class HypetrainComponent implements OnInit {
         fullScreen: false,
       },
     })
+  }
+
+  async defaultTrack(name: string) {
+    let level = name.charAt(name.length - 1)
+    await this.data.delete(this.settings.hypetrain.audio.tracks[level].replace(/^.*\/api\//, ''))
+    this.settings.hypetrain.audio.tracks[level] = null
+    this.settings.onUpdated()
   }
 }
 
