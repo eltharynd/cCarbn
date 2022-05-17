@@ -9,6 +9,7 @@ import { Subject } from 'rxjs'
 import { resolve } from 'path'
 import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast'
 import { GuideComponent } from './guide/guide.component'
+import { DeviceDetectorService } from 'ngx-device-detector'
 
 @Component({
   selector: 'app-hypetrain',
@@ -22,7 +23,14 @@ export class HypetrainComponent implements OnInit {
   pictureChangeSubject = new Subject<any>()
   trackUploadedSubject = new Subject<any>()
 
-  constructor(private data: DataService, private auth: AuthGuard, public hypetrain: HypetrainService, public settings: SettingsService, private windowService: NbWindowService) {}
+  constructor(
+    private data: DataService,
+    private auth: AuthGuard,
+    public hypetrain: HypetrainService,
+    public settings: SettingsService,
+    private windowService: NbWindowService,
+    public device: DeviceDetectorService
+  ) {}
 
   async ngOnInit() {
     let settings = await this.data.get(`user/${this.auth.currentUser?._id}/settings/api/listener/hypetrain`)
@@ -78,6 +86,10 @@ export class HypetrainComponent implements OnInit {
       this.settings.hypetrain.audio.tracks[level] = `${SERVER_URL}${response.url}`
       this.settings.onUpdated()
     })
+
+    setInterval(() => {
+      console.log(this.device.deviceType)
+    }, 1000)
   }
 
   async onLevelChange(level: number) {
