@@ -395,7 +395,7 @@
                                     (selectedChange)="al.changes = true"
                                     fullWidth
                                   >
-                                    <nb-option *ngFor="let p of _POSITION | keyvalue: originalOrder" [value]="p.key">{{ p.value }}</nb-option>
+                                    <nb-option *ngFor="let p of _POSITION | keyvalue: originalOrder" [value]="p.key" [disabled]="p.key === 'COVER'">{{ p.value }}</nb-option>
                                   </nb-select>
                                 </div>
                                 <div class="value" *ngIf="_options[elem.type].units[o.key] === 'TRANSITION'">
