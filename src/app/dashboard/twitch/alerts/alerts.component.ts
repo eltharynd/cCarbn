@@ -363,6 +363,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
 
     raid: 'Raid',
     command: 'Chat command',
+    welcome: 'First message of stream',
   }
   _interactionConditions = {
     pollStarted: 'Poll started',
@@ -455,7 +456,6 @@ export class AlertsComponent implements OnInit, OnDestroy {
     follower: 'Follower',
     sub: 'Sub',
     vip: 'VIP',
-    welcome: 'First message of stream',
   }
   _subOptions = {
     any: 'Any',

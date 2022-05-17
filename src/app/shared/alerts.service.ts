@@ -36,6 +36,7 @@ export class AlertsService {
       for (let alert of this.alerts) {
         if (!alert.enabled) continue
 
+        console.log(this.alerts)
         let ignore = false
         for (let c of alert.conditions) {
           if (c.type === 'bits') {
@@ -166,6 +167,8 @@ export class AlertsService {
             ignore = (c.operator === 'received' && data.type !== 'Raid from') || (c.operator === 'launched' && data.type !== 'Raid to')
           } else if (c.type === 'command') {
             ignore = data.type !== 'Command' || c.compared?.command !== data.command
+          } else if (c.type === 'welcome') {
+            ignore = data.type !== 'First Message'
           } else if (c.type === 'pollStarted') {
             ignore = data.type !== 'Poll Begin'
           } else if (c.type === 'pollProgress') {
@@ -213,6 +216,7 @@ export class AlertsService {
               (c.operator === 'timeout' && (data.type !== 'Ban' || data.is_permanent)) ||
               (c.operator === 'unbanned' && data.type !== 'Unban')
           } else if (c.type === 'user') {
+            console.log(c.operator)
             switch (c.operator) {
               case 'is':
                 ignore = `${c.compared}`.toLowerCase().replace(/\s/g, '') !== `${user}`.toLowerCase()
@@ -221,8 +225,12 @@ export class AlertsService {
                 ignore = `${c.compared}`.toLowerCase().replace(/\s/g, '') === `${user}`.toLowerCase()
                 break
               case 'typeis':
+                ignore = !data.userInfo || !data.userInfo[c.compared]
+                console.log('typeis', ignore, data.userInfo)
                 break
               case 'typeisnt':
+                ignore = data.userInfo && data.userInfo[c.compared]
+                console.log('typeisnt', ignore, data.userInfo)
                 break
               default:
                 ignore = true

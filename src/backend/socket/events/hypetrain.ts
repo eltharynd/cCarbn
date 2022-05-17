@@ -3,7 +3,7 @@ import { EventSubChannelHypeTrainBeginEvent, EventSubChannelHypeTrainEndEvent, E
 import { User } from '../../db/models/user'
 import { Twitch } from '../../twitch/twitch'
 import { Socket } from '../socket'
-import { toJSON, getUserInfo } from './util/toJSON'
+import { toJSON, getUserInfo } from './util/eventUtils'
 
 export class HypetrainHandler {
   static hypeTrainBegin = async (event: EventSubChannelHypeTrainBeginEvent) => {
@@ -32,7 +32,7 @@ export class HypetrainHandler {
   static hypeTrainProgress = async (event: EventSubChannelHypeTrainProgressEvent) => {
     let data = toJSON(event)
     data.type = 'Hype Train Progress'
-    data.userInfo = getUserInfo(await event.lastContribution.getUser())
+    data.userInfo = getUserInfo(await event.getBroadcaster(), await event.lastContribution.getUser())
 
     if (data.last_contribution) {
       let helixUser: HelixUser | null = await Twitch.client.users.getUserById(data.last_contribution.user_id)

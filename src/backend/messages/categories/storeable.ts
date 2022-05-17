@@ -4,7 +4,7 @@ import { from } from 'rxjs'
 import { filter, map, take, toArray } from 'rxjs/operators'
 import { Command } from '../../db/models/command'
 import { Mongo } from '../../db/mongo'
-import { toJSON } from '../../socket/events/util/toJSON'
+import { toJSON } from '../../socket/events/util/eventUtils'
 import { Socket } from '../../socket/socket'
 import { Twitch } from '../../twitch/twitch'
 import { MAX_CHAT_MESSAGE_LENGTH, Message } from '../message'
@@ -325,7 +325,6 @@ export class Storeable extends Message {
               streamer: msg.userInfo.isBroadcaster,
               sub: msg.userInfo.isSubscriber,
               vip: msg.userInfo.isVip,
-              welcome: this.usersThatTalkedSinceStreamStarted.hasOwnProperty(msg.userInfo.userName),
             }
 
             let followData: HelixFollow = await Twitch.client.users.getFollowFromUserToBroadcaster(msg.userInfo.userId, this.user.twitchId)
@@ -393,7 +392,6 @@ export interface IUserInfo {
   follower?: boolean
   sub?: boolean
   vip?: boolean
-  welcome?: boolean
 }
 
 /* private justice = (channel: string, user: string, message: string, msg: TwitchPrivateMessage) => {

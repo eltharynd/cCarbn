@@ -8,6 +8,9 @@ import { Self } from '../messages/categories/self'
 import { Moderators } from '../messages/categories/moderators'
 import { Pokemon } from '../messages/categories/pokemon'
 import { Storeable } from '../messages/categories/storeable'
+import { Socket } from '../socket/socket'
+import { Twitch } from './twitch'
+import { getUserInfo } from '../socket/events/util/eventUtils'
 
 export class Chat {
   static clients: IChatClient[] = []
@@ -29,7 +32,28 @@ export class Chat {
       client: client.client,
       //@ts-ignore
       settings: settings ? settings : await Settings.findOne({ userId: user._id }).json,
+      usersWhoTalked: [],
+      vips: {},
     }
+
+    iClient.client.onMessage(async (channel, user, message, msg) => {
+      if (!iClient.usersWhoTalked.includes(user)) {
+        iClient.usersWhoTalked.push(user)
+
+        //TODO bother twitch until they add a VIP request to the API and do this shit properly
+        iClient.vips[user] = msg.userInfo.isVip
+        let sender = await Twitch.client.users.getUserByName(user)
+        if (sender)
+          Socket.io.to(iClient.userId).emit('alerts', {
+            type: 'First Message',
+            user_id: sender.id,
+            user_login: sender.name,
+            user_name: sender.displayName,
+            userInfo: await getUserInfo(channel.replace(/\#/gi, ''), sender, { vip: msg.userInfo.isVip }),
+          })
+      }
+    })
+
     Chat.clients.push(iClient)
 
     await this.bindCategories(iClient, settings)
@@ -103,6 +127,8 @@ export class IChatClient {
   userId: string
   channel: string
   client: ChatClient
+  usersWhoTalked: string[] = []
+  vips: {}
 }
 
 export enum Category {

@@ -4,13 +4,13 @@ import { filter, from, take } from 'rxjs'
 import { User } from '../../db/models/user'
 import { Twitch } from '../../twitch/twitch'
 import { Socket } from '../socket'
-import { toJSON, getUserInfo } from './util/toJSON'
+import { toJSON, getUserInfo } from './util/eventUtils'
 
 export class RaidHandler {
   static raidFromEvent = async (event: EventSubChannelRaidEvent) => {
     let data = toJSON(event)
     data.type = 'Raid From'
-    data.userInfo = getUserInfo(await event.getRaidingBroadcaster())
+    data.userInfo = getUserInfo(await event.getRaidedBroadcaster(), await event.getRaidingBroadcaster())
 
     try {
       let alertData: any = {
@@ -55,7 +55,7 @@ export class RaidHandler {
   static raidToEvent = async (event: EventSubChannelRaidEvent) => {
     let data = toJSON(event)
     data.type = 'Raid To'
-    data.userInfo = getUserInfo(await event.getRaidedBroadcaster())
+    data.userInfo = getUserInfo(await event.getRaidingBroadcaster(), await event.getRaidedBroadcaster())
 
     let found: any = await User.findOne({ twitchId: event.raidingBroadcasterId })
     if (found) {

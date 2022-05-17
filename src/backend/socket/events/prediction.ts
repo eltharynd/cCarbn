@@ -6,7 +6,7 @@ import {
 } from '@twurple/eventsub/lib'
 import { User } from '../../db/models/user'
 import { Socket } from '../socket'
-import { toJSON } from './util/toJSON'
+import { toJSON } from './util/eventUtils'
 
 export class PredictionHandler {
   static predictionBeginEvent = async (event: EventSubChannelPredictionBeginEvent) => {

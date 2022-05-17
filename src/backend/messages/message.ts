@@ -17,8 +17,6 @@ export class Message {
   user: IUser
   settings
 
-  usersThatTalkedSinceStreamStarted: Object = {}
-
   constructor(iClient) {
     this.iClient = iClient
     this.client = iClient.client
@@ -31,7 +29,7 @@ export class Message {
   protected _init = () => {
     let keys: string[] = []
     for (let key of Object.keys(this)) if (typeof this[key] === 'function' && !key.startsWith('_')) keys.push(key)
-    this.client.onMessage((channel, user, message, msg) => {
+    this.client.onMessage(async (channel, user, message, msg) => {
       for (let key of keys) this[key](channel, user, message, msg)
     })
   }

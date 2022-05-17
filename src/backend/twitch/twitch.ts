@@ -283,6 +283,9 @@ export class Twitch {
 }
 
 export class IApiClient {
+  /**
+   * cCarbn userId
+   */
   userId: string
   user: HelixUser
   client: ApiClient

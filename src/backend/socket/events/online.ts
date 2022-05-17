@@ -1,7 +1,9 @@
 import { EventSubStreamOnlineEvent, EventSubStreamOfflineEvent } from '@twurple/eventsub/lib'
+import { filter, from, take, tap } from 'rxjs'
 import { User } from '../../db/models/user'
+import { Chat } from '../../twitch/chat'
 import { Socket } from '../socket'
-import { toJSON } from './util/toJSON'
+import { toJSON } from './util/eventUtils'
 
 export class OnlineHandler {
   static onlineEvent = async (event: EventSubStreamOnlineEvent) => {
@@ -10,6 +12,14 @@ export class OnlineHandler {
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) Socket.io.to(found._id.toString()).emit('alerts', data)
+
+    from(Chat.clients).pipe(
+      filter((i) => i.userId === found._id),
+      take(1),
+      tap((i) => {
+        i.usersWhoTalked = []
+      })
+    )
   }
 
   static offlineEvent = async (event: EventSubStreamOfflineEvent) => {

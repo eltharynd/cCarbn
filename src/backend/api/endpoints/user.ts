@@ -7,7 +7,7 @@ import { Api } from '../express'
 import { authMiddleware } from './auth'
 import { Mongo } from '../../db/mongo'
 import * as merge from 'deepmerge'
-import { toJSON } from '../../socket/events/util/toJSON'
+import { toJSON } from '../../socket/events/util/eventUtils'
 import { from, map, toArray } from 'rxjs'
 import { Command } from '../../db/models/command'
 

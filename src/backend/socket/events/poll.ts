@@ -1,7 +1,7 @@
 import { EventSubChannelPollBeginEvent, EventSubChannelPollProgressEvent, EventSubChannelPollEndEvent } from '@twurple/eventsub/lib'
 import { User } from '../../db/models/user'
 import { Socket } from '../socket'
-import { toJSON } from './util/toJSON'
+import { toJSON } from './util/eventUtils'
 
 export class PollHandler {
   static pollBeginEvent = async (event: EventSubChannelPollBeginEvent) => {
