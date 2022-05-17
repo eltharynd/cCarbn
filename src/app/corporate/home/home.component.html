@@ -1,29 +1,23 @@
-
 <div class="hero">
   <div>
-    
-    <img src="assets/brand/logo-white.png">
+    <img src="assets/brand/logo-white.png" />
 
     <div>
       <div>
         <h1>cCarbn</h1>
+        <p>Interact with Twitch events and chat via Browser Source ready dynamic pages and chat.</p>
         <p>
-          Interact with Twitch events and chat via Browser Source ready dynamic pages and chat.
+          <strong>100% Cloud based.</strong><br />
+          No software install required.
         </p>
-        <p>
-          <strong>100% Cloud based.</strong><br/>
-          No software install required.</p>
         <div class="buttons-container">
-          <button nbButton [routerLink]="[auth.currentUser ? '/dashboard' : '/auth/login']" status="primary">{{auth.currentUser ? 'Go to Dashboard' : 'Twitch Login'}}</button>
+          <button nbButton [routerLink]="[auth.currentUser ? '/dashboard' : '/auth/login']" status="primary">{{ auth.currentUser ? 'Go to Dashboard' : 'Twitch Login' }}</button>
           <a href="#what-it-can-do"><button nbButton status="primary" outline>Learn more</button></a>
         </div>
       </div>
     </div>
-
   </div>
 </div>
-
-
 
 <div @fadeIn class="centered subhero">
   <h2 id="what-it-can-do">What it can do</h2>
@@ -31,97 +25,67 @@
     <div [class.expanding]="isDesktop">
       <div>
         <nb-icon icon="flip-2-outline"></nb-icon>
-        <h3>
-          Connect to Twitch API
-        </h3>
-        <p>
-          Receive event data such as Follows, Gifted subs, Hype trains etc
-        </p>
+        <h3>Connect to Twitch API</h3>
+        <p>Receive event data such as Follows, Gifted subs, Hype trains etc</p>
       </div>
     </div>
     <div [class.expanding]="isDesktop">
       <div>
         <nb-icon icon="message-square-outline"></nb-icon>
-        <h3>
-          Chatbot
-        </h3>
-        <p>
-          Default commands to get you started, including a Pokémon API
-        </p>
+        <h3>Chatbot</h3>
+        <p>Default commands to get you started, including a Pokémon API</p>
       </div>
     </div>
     <div [class.expanding]="isDesktop">
       <div>
         <nb-icon icon="code-outline"></nb-icon>
-        <h3>
-          Custom commands
-        </h3>
-        <p>
-          Powerful variables to create dynamic commands on the go
-        </p>
+        <h3>Custom commands</h3>
+        <p>Powerful variables to create dynamic commands on the go</p>
       </div>
     </div>
     <div [class.expanding]="isDesktop">
       <div>
         <nb-icon icon="film-outline"></nb-icon>
-        <h3>
-          Stream Overlay
-        </h3>
-        <p>
-          Create custom elements that display via a Browser Source
-        </p>
+        <h3>Stream Overlay</h3>
+        <p>Create custom elements that display via a Browser Source</p>
       </div>
     </div>
     <div [class.expanding]="isDesktop">
       <div>
         <nb-icon icon="bell-outline"></nb-icon>
-        <h3>
-          Stream Alerts
-        </h3>
-        <p>
-          Trigger your elements based on events received from Twitch
-        </p>
+        <h3>Stream Alerts</h3>
+        <p>Trigger your elements based on events received from Twitch</p>
       </div>
     </div>
     <div [class.expanding]="isDesktop">
       <div>
         <nb-icon icon="keypad-outline"></nb-icon>
-        <h3>
-          Stream Deck
-        </h3>
-        <p>
-          Control your elements via Stream Deck with our plugin
-        </p>
+        <h3>Stream Deck</h3>
+        <p>Control your elements via Stream Deck with our plugin</p>
       </div>
     </div>
   </div>
 </div>
-
-
 
 <div @fadeIn class="centered subhero">
   <h2 id="additional-features">Additional Features</h2>
   <div class="text-subhero">
     <h3>Hype Train</h3>
     <p>
-      Display a customizable train with the profile pictures of the people that contributed.<br/>
+      Display a customizable train with the profile pictures of the people that contributed.<br />
       All while looping a song that gets progressively more hyped.
     </p>
   </div>
 </div>
 
-
-
 <div @fadeIn class="centered subhero">
   <h2 id="coming-soon">Coming Soon...</h2>
   <div class="text-subhero">
     <h3>Channel editors</h3>
-    <p>
-      Allow your editors to customize youre settings for you.
-    </p>
+    <p>Allow your editors to customize youre settings for you.</p>
     <h3>Discord integration</h3>
-    <p>
-      Connect to discord to handle going live notifications and more.
-    </p>
+    <p>Connect to discord to handle going live notifications and more.</p>
+    <h3>More</h3>
+    <p>More to come, you can leave a suggestion in the <a href="https://github.com/eltharynd/cCarbn/issues" target="_blank">github issues</a>.</p>
   </div>
 </div>
