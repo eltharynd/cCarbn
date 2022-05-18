@@ -10,7 +10,7 @@ export class PollHandler {
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) {
-      Socket.io.to(found._id.toString()).emit('alerts', toJSON(event))
+      Socket.io.to(found._id.toString()).emit('alerts', data)
     }
   }
 
@@ -19,7 +19,7 @@ export class PollHandler {
     data.type = 'Poll Progress'
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) {
-      Socket.io.to(found._id.toString()).emit('alerts', toJSON(event))
+      Socket.io.to(found._id.toString()).emit('alerts', data)
     }
   }
 
@@ -29,7 +29,7 @@ export class PollHandler {
 
     let found: any = await User.findOne({ twitchId: event.broadcasterId })
     if (found) {
-      Socket.io.to(found._id.toString()).emit('alerts', toJSON(event))
+      Socket.io.to(found._id.toString()).emit('alerts', data)
     }
   }
 }
