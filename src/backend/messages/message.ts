@@ -1,6 +1,6 @@
 import { ChatClient } from '@twurple/chat/lib'
 import { IChatClient } from '../twitch/chat'
-import { User, IUser } from '../db/models/user'
+import { User, IUser } from '../db/models/user.model'
 import { Mongo } from '../db/mongo'
 
 export const MAX_CHAT_MESSAGE_LENGTH: number = 500

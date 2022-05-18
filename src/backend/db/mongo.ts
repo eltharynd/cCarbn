@@ -1,8 +1,8 @@
 import * as Mongoose from 'mongoose'
 import { MONGO } from '../index'
-import { ClientToken } from './models/tokens'
+import { ClientToken } from './models/tokens.model'
 import { createModel } from 'mongoose-gridfs'
-import { IUpload, GridfsModel } from './models/files'
+import { IUpload, GridfsModel } from './models/files.model'
 
 export class Mongo {
   private static database: Mongoose.Connection

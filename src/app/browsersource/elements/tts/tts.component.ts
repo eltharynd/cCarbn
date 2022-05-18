@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core'
 import { DataService, SERVER_URL } from 'src/app/shared/data.service'
 import { AlertsService } from '../../../shared/alerts.service'
 
@@ -8,14 +8,13 @@ import { AlertsService } from '../../../shared/alerts.service'
   styleUrls: ['../elements.component.scss'],
 })
 export class TTSComponent implements OnInit {
-
   @Input() element: any
   @ViewChild('ttsPlayer') ttsPlayer: ElementRef
   encodedTTS
 
-  constructor(private alerts: AlertsService, private data: DataService) { }
+  constructor(private alerts: AlertsService, private data: DataService) {}
   async ngOnInit() {
-    this.encodedTTS = `${SERVER_URL}tts/${this.data._userId}/${this.element.voice ? this.element.voice : 'us'}/${encodeURI(this.element.text.replace(/\?/g, '&questionmark;'))}`
+    this.encodedTTS = `${SERVER_URL}tts/${this.data._userId}/${this.element.voice ? this.element.voice : 'en-us'}/${encodeURI(this.element.text.replace(/\?/g, '&questionmark;'))}`
   }
 
   alignItems
@@ -33,8 +32,7 @@ export class TTSComponent implements OnInit {
     this.alerts.elementsSubject.next({
       type: 'tts',
       what: 'ended',
-      element: this.element
+      element: this.element,
     })
   }
-
 }

@@ -4,7 +4,7 @@ import {
   EventSubChannelPredictionLockEvent,
   EventSubChannelPredictionProgressEvent,
 } from '@twurple/eventsub/lib'
-import { User } from '../../db/models/user'
+import { User } from '../../db/models/user.model'
 import { Socket } from '../socket'
 import { toJSON } from './util/eventUtils'
 

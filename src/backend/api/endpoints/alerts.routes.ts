@@ -1,9 +1,10 @@
-import { Alerts } from '../../db/models/alerts'
+import { Alerts } from '../../db/models/alerts.model'
 import { Api } from '../express'
-import { authMiddleware } from './auth'
+import { authMiddleware } from './auth.routes'
 import { Mongo } from '../../db/mongo'
 import { filter, from, retryWhen, take } from 'rxjs'
-import { File } from '../../db/models/files'
+import { File } from '../../db/models/files.model'
+import { UploadRoutes } from './uploads.routes'
 const uuid = require('uuid')
 
 export class AlertsRoutes {
@@ -112,7 +113,7 @@ export class AlertsRoutes {
                 --file.metadata.usages
                 await file.save()
               } else {
-                await Api.unlink(fileName, req.params.userId, res)
+                await UploadRoutes.unlink(fileName, req.params.userId, res)
                 return
               }
             }

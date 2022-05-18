@@ -1,6 +1,6 @@
 import { HelixUser } from '@twurple/api/lib'
 import { EventSubChannelHypeTrainBeginEvent, EventSubChannelHypeTrainEndEvent, EventSubChannelHypeTrainProgressEvent } from '@twurple/eventsub/lib'
-import { User } from '../../db/models/user'
+import { User } from '../../db/models/user.model'
 import { Twitch } from '../../twitch/twitch'
 import { Socket } from '../socket'
 import { toJSON, getUserInfo } from './util/eventUtils'

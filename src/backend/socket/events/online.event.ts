@@ -1,6 +1,6 @@
 import { EventSubStreamOnlineEvent, EventSubStreamOfflineEvent } from '@twurple/eventsub/lib'
 import { filter, from, take, tap } from 'rxjs'
-import { User } from '../../db/models/user'
+import { User } from '../../db/models/user.model'
 import { Chat } from '../../twitch/chat'
 import { Socket } from '../socket'
 import { toJSON } from './util/eventUtils'

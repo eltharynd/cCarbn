@@ -1,15 +1,15 @@
 import { HelixUser } from '@twurple/api/lib'
-import { User, deleteUser } from '../../db/models/user'
-import { Settings } from '../../db/models/settings'
+import { User, deleteUser } from '../../db/models/user.model'
+import { Settings } from '../../db/models/settings.model'
 import { Category, Chat } from '../../twitch/chat'
 import { Listeners, Twitch } from '../../twitch/twitch'
 import { Api } from '../express'
-import { authMiddleware } from './auth'
+import { authMiddleware } from './auth.routes'
 import { Mongo } from '../../db/mongo'
 import * as merge from 'deepmerge'
 import { toJSON } from '../../socket/events/util/eventUtils'
 import { from, map, toArray } from 'rxjs'
-import { Command } from '../../db/models/command'
+import { Command } from '../../db/models/command.model'
 
 export class UserRoutes {
   static attach() {

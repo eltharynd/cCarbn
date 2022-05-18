@@ -1,8 +1,8 @@
 import { Schema, model, Types } from 'mongoose'
 import { Mongo } from '../mongo'
-import { Settings } from './settings'
-import { Command } from './command'
-import { ClientToken, UserToken } from './tokens'
+import { Settings } from './settings.model'
+import { Command } from './command.model'
+import { ClientToken, UserToken } from './tokens.model'
 import * as merge from 'deepmerge'
 
 export interface IUser {

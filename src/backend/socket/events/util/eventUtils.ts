@@ -1,7 +1,7 @@
 import { getRawData, UserNameResolveableType } from '@twurple/common'
 import { HelixUser } from '@twurple/api'
 import { filter, from, take } from 'rxjs'
-import { IUserInfo } from '../../../messages/categories/storeable'
+import { IUserInfo } from '../../../messages/categories/storeable.messages'
 import { Chat } from '../../../twitch/chat'
 import { Twitch } from '../../../twitch/twitch'
 

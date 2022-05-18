@@ -1,7 +1,7 @@
 import { HelixClip } from '@twurple/api/lib'
 import { EventSubChannelRaidEvent } from '@twurple/eventsub/lib'
 import { filter, from, take } from 'rxjs'
-import { User } from '../../db/models/user'
+import { User } from '../../db/models/user.model'
 import { Twitch } from '../../twitch/twitch'
 import { Socket } from '../socket'
 import { toJSON, getUserInfo } from './util/eventUtils'

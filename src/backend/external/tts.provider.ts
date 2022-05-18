@@ -9,7 +9,7 @@ const gtts = {
 import { TextToSpeechClient } from '@google-cloud/text-to-speech'
 import { Polly, StartSpeechSynthesisTaskInput } from '@aws-sdk/client-polly'
 
-export class TTS {
+export class TTSProvider {
   private static googleClient = new TextToSpeechClient({
     keyFile: 'google_credentials.json',
   })
@@ -33,7 +33,7 @@ export class TTS {
             voice: { languageCode: 'en-US', name: _voice },
             audioConfig: { audioEncoding: 'MP3', speakingRate: 1 },
           }
-          let [response] = await TTS.googleClient.synthesizeSpeech(request)
+          let [response] = await TTSProvider.googleClient.synthesizeSpeech(request)
           if (response.audioContent instanceof Uint8Array) {
             const readStream = new Stream.PassThrough()
             readStream.end(response.audioContent)
@@ -55,7 +55,7 @@ export class TTS {
             Engine: neural && user.premium ? 'neural' : 'standard',
           }
 
-          let response = await TTS.amazonClient.synthesizeSpeech(request)
+          let response = await TTSProvider.amazonClient.synthesizeSpeech(request)
           if (response?.AudioStream) {
             return resolve(response.AudioStream)
           } else {
@@ -63,6 +63,7 @@ export class TTS {
           }
         }
 
+        console.log(voice)
         resolve(gtts[voice ? voice : 'en-us'].stream(text))
       } catch (e) {
         console.error(e)
