@@ -15,7 +15,7 @@ import { SettingsService } from 'src/app/shared/settings.service'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AlertsComponent implements OnInit, OnDestroy {
-  alerts: _alert[] = []
+  alerts: _alert[]
   channelRewards: _redemption[] = []
   uploadedSubject: Subject<any> = new Subject()
 

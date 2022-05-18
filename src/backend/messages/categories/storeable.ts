@@ -41,10 +41,11 @@ export class Storeable extends Message {
       }
 
       let buffer = message
-        .replace(/^!command /i, '')
-        .replace(/^!commands /i, '')
-        .replace(/^!cmd /i, '')
-        .replace(/^!cmds /i, '')
+        .replace(/^!commands\s+/i, '')
+        .replace(/^!command\s+/i, '')
+        .replace(/^!cmds\s+/i, '')
+        .replace(/^!cmd\s+/i, '')
+
       if (buffer.startsWith('add') || buffer.startsWith('edit')) {
         let edit = buffer.startsWith('edit') ? true : false
         buffer = buffer.replace('add ', '').replace('save ', '').replace('edit ', '')

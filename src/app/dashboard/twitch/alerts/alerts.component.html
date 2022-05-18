@@ -3,13 +3,17 @@
   <nb-layout-column>
     <app-global></app-global>
 
+    <!-- ADD ALERT -->
     <nb-card class="add-alert-card centered">
       <nb-card-body>
         <button nbButton status="success" fullWidth (click)="addAlert()">ADD NEW ALERT</button>
       </nb-card-body>
     </nb-card>
 
-    <nb-accordion class="centered alternate" multi>
+    <nb-spinner *ngIf="!alerts" status="primary"></nb-spinner>
+
+    <!-- ALERTS -->
+    <nb-accordion *ngIf="alerts" class="centered alternate" multi>
       <nb-accordion-item *ngFor="let al of alerts; let alIndex = index" [expanded]="al.expanded">
         <!-- HEADER -->
         <nb-accordion-item-header class="alert-header">
@@ -701,6 +705,7 @@
       </nb-accordion-item>
     </nb-accordion>
 
+    <!-- ADD ALERT -->
     <nb-card class="add-alert-card centered">
       <nb-card-body>
         <button nbButton status="success" fullWidth (click)="addAlert()">ADD NEW ALERT</button>
