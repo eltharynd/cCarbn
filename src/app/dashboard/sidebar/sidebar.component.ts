@@ -36,6 +36,11 @@ export class SidebarComponent {
           link: '/dashboard/twitch/hypetrain',
         },
         {
+          title: 'Predictions',
+          icon: { icon: 'chart-pie', pack: 'fa' },
+          link: '/dashboard/twitch/predictions',
+        },
+        {
           title: 'Chat Commands',
           icon: { icon: 'swatchbook', pack: 'fa' },
           link: '/dashboard/twitch/chatbot',

@@ -6,6 +6,7 @@ import { TwitchAPIComponent } from './twitchapi/twitchapi.component'
 import { TwitchComponent } from './twitch.component'
 import { StreamdeckComponent } from './streamdeck/streamdeck.component'
 import { HypetrainComponent } from './hypetrain/hypetrain.component'
+import { PredictionsComponent } from './predictions/predictions.component'
 
 const routes: Routes = [
   {
@@ -31,6 +32,13 @@ const routes: Routes = [
         component: HypetrainComponent,
         data: {
           title: 'Hypetrain',
+        },
+      },
+      {
+        path: 'predictions',
+        component: PredictionsComponent,
+        data: {
+          title: 'Predictions',
         },
       },
       {

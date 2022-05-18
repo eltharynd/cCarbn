@@ -14,21 +14,11 @@ import { GIFComponent } from './elements/gif/gif.component'
 import { ImageComponent } from './elements/image/image.component'
 import { ClipComponent } from './elements/clip/clip.component'
 import { HypetrainComponent } from './hypetrain/hypetrain.component'
+import { PredictionsModule } from './predictions/predictions.module'
+import { SharedNebularModule } from '../shared/nebular.module'
 
 @NgModule({
-  imports: [BrowserSourceRoutingModule, SharedMaterialModule, HypetrainModule],
-  declarations: [
-    BrowserSourceComponent,
-    PredictionsComponent,
-    ElementsComponent,
-    VideoComponent,
-    AudioComponent,
-    TTSComponent,
-    ObsComponent,
-    ChatComponent,
-    GIFComponent,
-    ImageComponent,
-    ClipComponent,
-  ],
+  imports: [BrowserSourceRoutingModule, SharedMaterialModule, SharedNebularModule, HypetrainModule, PredictionsModule],
+  declarations: [BrowserSourceComponent, ElementsComponent, VideoComponent, AudioComponent, TTSComponent, ObsComponent, ChatComponent, GIFComponent, ImageComponent, ClipComponent],
 })
 export class BrowserSourceModule {}

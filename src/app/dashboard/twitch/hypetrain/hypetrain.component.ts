@@ -33,9 +33,6 @@ export class HypetrainComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    let settings = await this.data.get(`user/${this.auth.currentUser?._id}/settings/api/listener/hypetrain`)
-    if (!settings) return
-
     this.hypetrain.onLevelChange.subscribe((level) => this.onLevelChange(level))
     this.hypetrain.onProgress.subscribe(() => this.onProgress())
 

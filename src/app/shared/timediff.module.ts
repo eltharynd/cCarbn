@@ -11,6 +11,7 @@ export class TimeDifferenceComponent implements OnInit, OnDestroy {
 
   private handler
   ngOnInit() {
+    this.timeLeft = new Date(this.target).getTime() - Date.now()
     this.handler = setInterval(() => {
       this.timeLeft = new Date(this.target).getTime() - Date.now()
     }, 1000)

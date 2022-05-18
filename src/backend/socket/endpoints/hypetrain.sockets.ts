@@ -1,5 +1,4 @@
 import * as socketIO from 'socket.io'
-import { Socket } from '../socket'
 
 export class HypetrainSockets {
   static attach(socket: socketIO.Socket) {

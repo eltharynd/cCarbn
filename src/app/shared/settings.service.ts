@@ -64,6 +64,7 @@ export class SettingsService {
       },
     },
   }
+  predictions: any = {}
 
   loaded: Subject<any> = new Subject()
   updated: Subject<any> = new Subject()
@@ -78,31 +79,38 @@ export class SettingsService {
   }
 
   async getSettings() {
-    this.hypetrain = await this.data.get(`user/${this.data._userId}/settings/api/listener/hypetrain`)
+    this.onSettingsReceived(await this.data.get(`user/${this.data._userId}/settings/api/listeners`), true)
     this.data.socketIO.on('settings-updated', (data) => {
       this.onSettingsReceived(data.settings)
     })
     this.loaded.complete()
   }
 
-  async onSettingsReceived(settings) {
+  async onSettingsReceived(settings, noUpdate?: boolean) {
     if (settings.hypetrain) {
       this.hypetrain = merge(this.hypetrain, settings.hypetrain)
     }
-    this.updated.next(settings)
+    if (settings.predictions) {
+      this.predictions = merge(this.predictions, settings.predictions)
+    }
+    if (!noUpdate) this.updated.next(settings)
   }
 
   async onUpdated() {
     if (this.hypetrain.train.maxRows < 1) this.hypetrain.train.maxRows = 1
     if (this.hypetrain.train.fadingLength < 0) this.hypetrain.train.fadingLength = 0
 
-    let response = await this.data.post(`user/${this.data._userId}/settings/api/listener/hypetrain`, this.hypetrain)
+    let response = await this.data.post(`user/${this.data._userId}/settings/api/listeners`, {
+      hypetrain: this.hypetrain,
+      predictions: this.predictions,
+    })
     if (response)
       this.data.socketIO.emit('settings-updated', {
         userId: this.data._userId,
         settings: {
           viewport: this.viewport,
           hypetrain: this.hypetrain,
+          predictions: this.predictions,
         },
       })
   }

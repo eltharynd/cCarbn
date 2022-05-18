@@ -103,19 +103,19 @@ export class HypetrainService {
     return true
   }
 
-  start() {
+  private start() {
     if (this.currentLevel > 0) return
     this.onLevelChange.next(++this.currentLevel)
     this.resizeToFit()
   }
-  changeLevel(level) {
+  private changeLevel(level) {
     if (level === this.currentLevel) return
     this.currentLevel = level
 
     if (this.currentLevel === 5 && !this.expiresAt) this.expiresAt = new Date(Date.now() + 5 * 60 * 1000)
     this.onLevelChange.next(level)
   }
-  async addCarriage(lastContribution?) {
+  private async addCarriage(lastContribution?) {
     if (lastContribution) {
       let found = await from(this.carriages)
         .pipe(
@@ -158,11 +158,11 @@ export class HypetrainService {
     this.resizeToFit()
     this.onProgress.next(this.currentLevel)
   }
-  end() {
+  private end() {
     this.ending = true
     this.onLevelChange.next(this.currentLevel)
   }
-  stop() {
+  private stop() {
     this.currentLevel = 0
     this.ending = false
     this.expiresAt = null

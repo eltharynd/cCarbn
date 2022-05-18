@@ -1,9 +1,75 @@
-
-/* .predictions-container {
-  width: 100px;
-  height: 100px;
-  margin: 20px;
-  
-  background-color: red;
+.viewport-flex {
+  display: flex;
+  position: absolute;
 }
- */
+
+.pie-chart {
+  position: absolute;
+  width: 500px;
+  aspect-ratio: 1;
+  //display: inline-grid;
+  place-content: center;
+
+  //border-radius: 50%;
+
+  margin: 5px;
+}
+
+.pie-chart::before {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  inset: 0;
+
+  border: 0.5rem solid white;
+  animation: p 1s 0.5s both;
+}
+
+.entry-0::before {
+  background: conic-gradient(var(--color-0) var(--percentage-0), #0000 0);
+}
+.entry-1::before {
+  background: conic-gradient(var(--color-1) var(--percentage-1), #0000 0);
+}
+.entry-2::before {
+  background: conic-gradient(var(--color-2) var(--percentage-2), #0000 0);
+}
+.entry-3::before {
+  background: conic-gradient(var(--color-3) var(--percentage-3), #0000 0);
+}
+.entry-4::before {
+  background: conic-gradient(var(--color-4) var(--percentage-4), #0000 0);
+}
+.entry-5::before {
+  background: conic-gradient(var(--color-5) var(--percentage-5), #0000 0);
+}
+.entry-6::before {
+  background: conic-gradient(var(--color-6) var(--percentage-6), #0000 0);
+}
+.entry-7::before {
+  background: conic-gradient(var(--color-7) var(--percentage-7), #0000 0);
+}
+.entry-8::before {
+  background: conic-gradient(var(--color-8) var(--percentage-8), #0000 0);
+}
+.entry-9::before {
+  background: conic-gradient(var(--color-9) var(--percentage-9), #0000 0);
+}
+
+@property --percentage-0 {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 0%;
+}
+@property --percentage-1 {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 0%;
+}
+
+@keyframes p {
+  from {
+    --percentage-0: 0%;
+    --percentage-1: 0%;
+  }
+}

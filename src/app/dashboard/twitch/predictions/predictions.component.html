@@ -1,0 +1,23 @@
+<nb-layout>
+  <nb-layout-column>
+    <app-global></app-global>
+
+    <nb-card class="centered">
+      <nb-card-header class="card-header">
+        <div class="composed-title">
+          <strong class="text-title">PREDICTIONS</strong>
+          <span class="text-description">Displays a pie chart on stream with the current prediction results</span>
+        </div>
+      </nb-card-header>
+      <nb-card-body>
+        <div class="test">
+          <button (click)="predictions.predictionBeginTest()" nbButton status="primary">START PREDICTION</button>
+          <button (click)="predictions.predictionProgressTest(0)" nbButton status="primary">VOTE 1</button>
+          <button (click)="predictions.predictionProgressTest(1)" nbButton status="primary">VOTE 2</button>
+          <button (click)="predictions.predictionLockTest()" nbButton status="primary">LOCK PREDICTIONS</button>
+          <button (click)="predictions.predictionEndTest()" nbButton status="primary">END PREDICTION</button>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </nb-layout-column>
+</nb-layout>

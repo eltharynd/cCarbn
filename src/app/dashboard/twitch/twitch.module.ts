@@ -12,10 +12,11 @@ import { HypetrainComponent } from './hypetrain/hypetrain.component'
 import { TimeDifferenceModule } from 'src/app/shared/timediff.module'
 import { GlobalComponent } from './global/global.component'
 import { GuideComponent } from './hypetrain/guide/guide.component'
-import { SharedMaterialModule } from 'src/app/shared/material.module'
+import { SharedMaterialModule } from 'src/app/shared/material.module';
+import { PredictionsComponent } from './predictions/predictions.component'
 
 @NgModule({
   imports: [TwitchRoutingModule, SharedNebularModule, SharedMaterialModule, CommonModule, TimeDifferenceModule],
-  declarations: [TwitchComponent, TwitchAPIComponent, ChatbotComponent, AlertsComponent, StreamdeckComponent, HypetrainComponent, GlobalComponent, GuideComponent],
+  declarations: [TwitchComponent, TwitchAPIComponent, ChatbotComponent, AlertsComponent, StreamdeckComponent, HypetrainComponent, GlobalComponent, GuideComponent, PredictionsComponent],
 })
 export class TwitchModule {}

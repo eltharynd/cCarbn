@@ -1,29 +1,30 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'
-import { ActivatedRoute } from '@angular/router'
+import { Component, OnInit } from '@angular/core'
 import { DataService } from 'src/app/shared/data.service'
-
+import { Outcomes, PredictionsService } from 'src/app/shared/predictions.service'
+import { SettingsService } from 'src/app/shared/settings.service'
 @Component({
   selector: 'app-predictions',
   templateUrl: './predictions.component.html',
   styleUrls: ['./predictions.component.scss'],
 })
-export class PredictionsComponent implements OnInit, OnDestroy {
-  userId: string
-
-  constructor(private data: DataService, private route: ActivatedRoute) {
-    this.route.parent?.params.subscribe((params) => {
-      this.userId = params.userId
-    })
-  }
+export class PredictionsComponent implements OnInit {
+  outcomes: Outcomes[]
+  constructor(public settings: SettingsService, public predictions: PredictionsService, private data: DataService) {}
 
   async ngOnInit() {
-    if (!this.userId) return
+    if (!this.data._userId) return
+    if (!this.settings.loaded.closed) await this.settings.loaded.toPromise()
+    if (!this.settings.predictions) return
 
-    this.data.userId.next(this.userId)
-    this.data.socketIO.on('prediction', (data) => {})
-  }
-
-  async ngOnDestroy() {
-    this.data.socketIO.emit('prediction', { userId: this.userId })
+    this.predictions.progressSubject.subscribe((currentPredictions) => {
+      if (!this.outcomes) {
+        this.outcomes = currentPredictions.outcomes
+      } else {
+        for (let i = 0; i < this.outcomes.length; i++) {
+          this.outcomes[i].style = currentPredictions.outcomes[i].style
+          //this.outcomes[i].style['--percentage-' + i] = currentPredictions.outcomes[i].style['--percentage-' + i]
+        }
+      }
+    })
   }
 }

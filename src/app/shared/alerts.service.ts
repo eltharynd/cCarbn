@@ -36,7 +36,7 @@ export class AlertsService {
       for (let alert of this.alerts) {
         if (!alert.enabled) continue
 
-        console.log(this.alerts)
+        console.log(this.alerts, data)
         let ignore = false
         for (let c of alert.conditions) {
           if (c.type === 'bits') {
@@ -216,7 +216,6 @@ export class AlertsService {
               (c.operator === 'timeout' && (data.type !== 'Ban' || data.is_permanent)) ||
               (c.operator === 'unbanned' && data.type !== 'Unban')
           } else if (c.type === 'user') {
-            console.log(c.operator)
             switch (c.operator) {
               case 'is':
                 ignore = `${c.compared}`.toLowerCase().replace(/\s/g, '') !== `${user}`.toLowerCase()
@@ -226,11 +225,9 @@ export class AlertsService {
                 break
               case 'typeis':
                 ignore = !data.userInfo || !data.userInfo[c.compared]
-                console.log('typeis', ignore, data.userInfo)
                 break
               case 'typeisnt':
                 ignore = data.userInfo && data.userInfo[c.compared]
-                console.log('typeisnt', ignore, data.userInfo)
                 break
               default:
                 ignore = true
@@ -243,6 +240,7 @@ export class AlertsService {
           if (ignore) break
         }
 
+        console.log(`ignore: ${ignore}`)
         if (ignore) continue
 
         if (alert.elements?.length > 0) alert.elements[0].withPrevious = false

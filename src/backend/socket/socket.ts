@@ -10,6 +10,7 @@ import { StreamDeckSockets } from './endpoints/streamdeck.sockets'
 import { AlertsSockets } from './endpoints/alerts.sockets'
 import { SettingsSockets } from './endpoints/settings.sockets'
 import { HypetrainSockets } from './endpoints/hypetrain.sockets'
+import { PredictionsSockets } from './endpoints/predictions.sockets'
 
 export class Socket {
   static io: socketIO.Server
@@ -37,6 +38,7 @@ export class Socket {
       AlertsSockets.attach(socket)
       SettingsSockets.attach(socket)
       HypetrainSockets.attach(socket)
+      PredictionsSockets.attach(socket)
 
       //TODO build a queue not to repeat messages when user has multiple browsersources opened
       socket.on('chat-relay', async (data) => {

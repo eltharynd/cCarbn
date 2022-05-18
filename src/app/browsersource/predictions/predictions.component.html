@@ -1,3 +1,36 @@
-<div class="predictions-container">
+<div
+  *ngIf="settings.viewport"
+  [ngStyle]="{
+    width: +settings.viewport.width - +settings.viewport.padding * 2 + 'px',
+    height: +settings.viewport.height - +settings.viewport.padding * 2 + 'px',
+    top: +settings.viewport.padding + 'px',
+    left: +settings.viewport.padding + 'px'
+  }"
+  class="viewport-flex"
+>
+  <div *ngIf="false && predictions.currentPrediction">
+    <div style="font-size: 6rem; color: white">{{ predictions.currentPrediction.title }}</div>
+    <div *ngIf="!predictions.currentPrediction.locked" style="font-size: 5rem; color: white">
+      locking in <app-timediff [target]="predictions.currentPrediction.locks_at"></app-timediff>
+    </div>
+    <div *ngIf="predictions.currentPrediction.locked" style="font-size: 5rem; color: white">Predictions are locked</div>
 
+    <div *ngFor="let o of predictions.currentPrediction.outcomes" style="font-size: 5rem" [ngStyle]="{ color: o.color }">
+      {{ o.title }}: {{ o.users }} bet {{ o.channel_points }} channel points
+    </div>
+  </div>
+
+  <div *ngIf="predictions.currentPrediction">
+    <div
+      *ngFor="let o of outcomes; let i = index; let p = &quot;--percentage&quot;"
+      [class]="'entry-' + i"
+      [style]="o.style"
+      class="pie-chart"
+      [ngStyle]="{
+        'z-index': -(i + 1)
+      }"
+    >
+      &nbsp;
+    </div>
+  </div>
 </div>

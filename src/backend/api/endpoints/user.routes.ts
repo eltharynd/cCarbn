@@ -86,6 +86,32 @@ export class UserRoutes {
       res.send(found.json)
     })
 
+    Api.endpoints.get('/api/user/:userId/settings/api/listeners', async (req, res) => {
+      let found: any = await Settings.findOne({ userId: req.params.userId })
+      if (!found) {
+        found = new Settings({ userId: req.params.userId })
+        await found.save()
+      }
+
+      res.send(found.json.api.listeners)
+    })
+    Api.endpoints.post('/api/user/:userId/settings/api/listeners', authMiddleware, async (req, res) => {
+      let found: any = await Settings.findOne({ userId: req.params.userId })
+      if (!found || !req.body) {
+        res.status(400).send()
+        return
+      }
+      let buffer = {
+        api: {
+          listeners: {},
+        },
+      }
+      buffer.api.listeners = req.body
+      found.json = merge(found.json, buffer)
+      await found.save()
+      res.send(found.json.api.listeners)
+    })
+
     Api.endpoints.get('/api/user/:userId/settings/api/:action', authMiddleware, async (req, res) => {
       let settings: any = await Settings.findOne({ userId: req.params.userId })
       let json = settings.json
