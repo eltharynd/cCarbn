@@ -31,11 +31,6 @@ export class SidebarComponent {
           link: '/dashboard/twitch/alerts',
         },
         {
-          title: 'Stream Deck',
-          icon: { icon: 'keypad-outline', pack: 'eva' },
-          link: '/dashboard/twitch/streamdeck',
-        },
-        {
           title: 'Hype Train',
           icon: { icon: 'train', pack: 'fa' },
           link: '/dashboard/twitch/hypetrain',
@@ -44,6 +39,11 @@ export class SidebarComponent {
           title: 'Chat Commands',
           icon: { icon: 'swatchbook', pack: 'fa' },
           link: '/dashboard/twitch/chatbot',
+        },
+        {
+          title: 'Stream Deck',
+          icon: { icon: 'keypad-outline', pack: 'eva' },
+          link: '/dashboard/twitch/streamdeck',
         },
       ],
     },

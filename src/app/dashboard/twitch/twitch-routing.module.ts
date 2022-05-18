@@ -27,13 +27,6 @@ const routes: Routes = [
         },
       },
       {
-        path: 'streamdeck',
-        component: StreamdeckComponent,
-        data: {
-          title: 'Stream Deck plugin',
-        },
-      },
-      {
         path: 'hypetrain',
         component: HypetrainComponent,
         data: {
@@ -45,6 +38,13 @@ const routes: Routes = [
         component: ChatbotComponent,
         data: {
           title: 'Chatbot',
+        },
+      },
+      {
+        path: 'streamdeck',
+        component: StreamdeckComponent,
+        data: {
+          title: 'Stream Deck plugin',
         },
       },
     ],
