@@ -12,12 +12,7 @@ export const PREDICTIONS_PINK = '#F5009B'
 export class PredictionsService {
   currentPrediction: Predictions = null
 
-  beginSubject: Subject<Predictions> = new Subject()
-  progressSubject: Subject<Predictions> = new Subject()
-
   constructor(private data: DataService, private auth: AuthGuard) {
-    return
-
     this.data.socketIO.on('predictions', (data) => {
       console.log(data)
       if (data.locks_at) data.locks_at = new Date(data.locks_at)
@@ -26,6 +21,8 @@ export class PredictionsService {
         for (let o of data.outcomes) {
           o.users = 0
           o.channel_points = 0
+          o.color = o.color === 'blue' ? PREDICTIONS_BLUE : o.color === 'pink' ? PREDICTIONS_PINK : o.color
+          o.percentage = 0
         }
         this.onPredictionBegin(data)
       }
@@ -56,52 +53,29 @@ export class PredictionsService {
 
   private onPredictionBegin(predictions: Predictions) {
     this.currentPrediction = predictions
-    this.beginSubject.next(this.currentPrediction)
   }
 
   private async onPredictionProgress(outcomes: Outcomes[]) {
-    let totalCP = await from(outcomes)
+    let totalCP: number = await from(outcomes)
       .pipe(
         map((o) => o.channel_points),
         reduce((acc, curr) => acc + curr, 0)
       )
       .toPromise()
-    let index = 0
-    let currentPercentage = 0
-
-    console.log(totalCP)
+    let highestCP: Outcomes = JSON.parse(JSON.stringify(this.currentPrediction.outcomes)).sort((a, b) => b.channel_points - a.channel_points)[0]
 
     this.currentPrediction.outcomes = await from(outcomes)
       .pipe(
         map((o) => {
-          let oo = JSON.parse(JSON.stringify(o))
-          //console.log(o.color)
           o.color = o.color === 'blue' ? PREDICTIONS_BLUE : o.color === 'pink' ? PREDICTIONS_PINK : o.color
-          //console.log(o.percentage, currentPercentage, o.channel_points, totalCP)
-          o.percentage = o.channel_points / totalCP + currentPercentage
-          //console.log(o.percentage, currentPercentage, o.channel_points, totalCP)
-          currentPercentage += o.percentage
-          //console.log(o.percentage, currentPercentage, o.channel_points, totalCP)
-
-          let oldPercentage
-          if (o.style && o.style[`--percentage-${index}`]) {
-            oldPercentage = o.style[`--percentage-${index}`]
-          } else {
-            oldPercentage = `0%`
-          }
-          o.style = {}
-          o.style[`--percentage-${index}`] = `${o.percentage * 100}%`
-          o.style[`--color-${index}`] = o.color
-          o.style[`--old-percentage-${index++}`] = oldPercentage
-
+          o.percentage = Math.max(0, Math.min(o.channel_points / highestCP.channel_points, 1))
           return o
         }),
         toArray()
       )
       .toPromise()
-    console.log(this.currentPrediction.outcomes)
 
-    this.progressSubject.next(this.currentPrediction)
+    console.log(this.currentPrediction.outcomes)
   }
 
   private onPredictionLock() {
@@ -117,8 +91,8 @@ export class PredictionsService {
       title: 'Will this predictions test be successfull??',
       locks_at: new Date(Date.now() + 60_000),
       outcomes: [
-        { title: 'Hell Yeah!', color: 'blue', users: 0, channel_points: 0 },
-        { title: 'Fuck no!', color: 'pink', users: 0, channel_points: 0 },
+        { title: 'Hell Yeah!', users: 0, channel_points: 0, color: PREDICTIONS_BLUE, percentage: 0 },
+        { title: 'Fuck no!', users: 0, channel_points: 0, color: PREDICTIONS_PINK, percentage: 0 },
       ],
     })
     this.data.socketIO.emit('predictions-test-begin', {
@@ -165,8 +139,6 @@ export interface Outcomes {
   users: number
   channel_points: number
   percentage?: number
-  style?: any
-  oldStyle?: any
 }
 export interface Predictions {
   title: string

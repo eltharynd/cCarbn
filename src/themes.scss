@@ -415,6 +415,11 @@ nb-layout-footer > nav {
   min-width: 5rem !important;
   max-width: 5rem !important;
 }
+.input-number-medium {
+  width: 7rem !important;
+  min-width: 7rem !important;
+  max-width: 7rem !important;
+}
 
 nb-icon.clickable:not(:hover) {
   transition: 0.3s;

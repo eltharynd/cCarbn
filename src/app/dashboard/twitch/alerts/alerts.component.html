@@ -62,12 +62,12 @@
                       fullWidth
                     >
                       <nb-option disabled>-- Common --</nb-option>
-                      <nb-option *ngFor="let type of _primaryConditions | keyvalue: originalOrder" [value]="type.key" [disabled]="i > 0">
+                      <nb-option *ngFor="let type of _primaryConditions | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="type.key" [disabled]="i > 0">
                         {{ type.value }}
                       </nb-option>
                       <nb-option disabled>-- Secondary --</nb-option>
                       <nb-option
-                        *ngFor="let type of _secondaryConditions | keyvalue: originalOrder"
+                        *ngFor="let type of _secondaryConditions | keyvalue: settings.keyValueWithOriginalOrderPipe"
                         [value]="type.key"
                         [disabled]="
                           i < 1 ||
@@ -92,11 +92,11 @@
                         {{ type.value }}
                       </nb-option>
                       <nb-option disabled>-- Interactions --</nb-option>
-                      <nb-option *ngFor="let type of _interactionConditions | keyvalue: originalOrder" [value]="type.key" [disabled]="i > 0">
+                      <nb-option *ngFor="let type of _interactionConditions | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="type.key" [disabled]="i > 0">
                         {{ type.value }}
                       </nb-option>
                       <nb-option disabled>-- Strean --</nb-option>
-                      <nb-option *ngFor="let type of _streamConditions | keyvalue: originalOrder" [value]="type.key" [disabled]="i > 0">
+                      <nb-option *ngFor="let type of _streamConditions | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="type.key" [disabled]="i > 0">
                         {{ type.value }}
                       </nb-option>
                     </nb-select>
@@ -108,31 +108,31 @@
                   <!-- OPERATORS PRIMARY -->
                   <div *ngIf="c.type === 'bits'" class="field-container">
                     <nb-select [(selected)]="c.operator" (selectedChange)="al.changes = true" fullWidth>
-                      <nb-option *ngFor="let op of _operators.comparison | keyvalue: originalOrder" [value]="op.key">{{ op.value }}</nb-option>
+                      <nb-option *ngFor="let op of _operators.comparison | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="op.key">{{ op.value }}</nb-option>
                     </nb-select>
                     <div class="anchor"><label>is</label></div>
                   </div>
                   <div *ngIf="c.type === 'redeem'" class="field-container">
                     <nb-select [(selected)]="c.operator" (selectedChange)="al.changes = true" fullWidth>
-                      <nb-option *ngFor="let op of _operators.redemption | keyvalue: originalOrder" [value]="op.key">{{ op.value }}</nb-option>
+                      <nb-option *ngFor="let op of _operators.redemption | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="op.key">{{ op.value }}</nb-option>
                     </nb-select>
                     <div class="anchor"><label>is</label></div>
                   </div>
                   <div *ngIf="c.type === 'subscription'" class="field-container">
                     <nb-select [(selected)]="c.operator" (selectedChange)="al.changes = true" fullWidth>
-                      <nb-option *ngFor="let op of _operators.subscription | keyvalue: originalOrder" [value]="op.key">{{ op.value }}</nb-option>
+                      <nb-option *ngFor="let op of _operators.subscription | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="op.key">{{ op.value }}</nb-option>
                     </nb-select>
                     <div class="anchor"><label>what</label></div>
                   </div>
                   <div *ngIf="c.type === 'raid'" class="field-container">
                     <nb-select [(selected)]="c.operator" [placeholder]="_operators.raid[c.operator]" (selectedChange)="al.changes = true" fullWidth>
-                      <nb-option *ngFor="let op of _operators.raid | keyvalue: originalOrder" [value]="op.key">{{ op.value }}</nb-option>
+                      <nb-option *ngFor="let op of _operators.raid | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="op.key">{{ op.value }}</nb-option>
                     </nb-select>
                     <div class="anchor"><label>what</label></div>
                   </div>
                   <div *ngIf="c.type === 'ban'" class="field-container">
                     <nb-select [(selected)]="c.operator" [placeholder]="_operators.ban[c.operator]" (selectedChange)="al.changes = true" fullWidth>
-                      <nb-option *ngFor="let op of _operators.ban | keyvalue: originalOrder" [value]="op.key">{{ op.value }}</nb-option>
+                      <nb-option *ngFor="let op of _operators.ban | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="op.key">{{ op.value }}</nb-option>
                     </nb-select>
                     <div class="anchor"><label>what</label></div>
                   </div>
@@ -140,8 +140,8 @@
                   <!-- OPERATORS SECONDARY -->
                   <div *ngIf="c.type === 'user'" class="field-container">
                     <nb-select [(selected)]="c.operator" (selectedChange)="al.changes = true" fullWidth>
-                      <nb-option *ngFor="let op of _operators.user | keyvalue: originalOrder" [value]="op.key">{{ op.value }}</nb-option>
-                      <nb-option *ngFor="let op of _operators.userType | keyvalue: originalOrder" [value]="op.key">{{ op.value }}</nb-option>
+                      <nb-option *ngFor="let op of _operators.user | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="op.key">{{ op.value }}</nb-option>
+                      <nb-option *ngFor="let op of _operators.userType | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="op.key">{{ op.value }}</nb-option>
                     </nb-select>
                     <div class="anchor"><label>what</label></div>
                   </div>
@@ -149,7 +149,7 @@
                   <!-- OPERATORS UPDATE -->
                   <div *ngIf="c.type === 'update'" class="field-container">
                     <nb-select [placeholder]="_operators.update[c.operator] || 'Any'" [(selected)]="c.operator" (selectedChange)="al.changes = true" fullWidth>
-                      <nb-option *ngFor="let op of _operators.update | keyvalue: originalOrder" [value]="op.key">{{ op.value }}</nb-option>
+                      <nb-option *ngFor="let op of _operators.update | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="op.key">{{ op.value }}</nb-option>
                     </nb-select>
                     <div class="anchor"><label>what</label></div>
                   </div>
@@ -165,7 +165,7 @@
                   </div>
                   <div *ngIf="c.type === 'user' && c.operator?.length > 0 && c.operator[0] === 't'" class="field-container">
                     <nb-select [(selected)]="c.compared" (selectedChange)="al.changes = true" fullWidth>
-                      <nb-option *ngFor="let ut of _userTypes | keyvalue: originalOrder" [value]="ut.key">{{ ut.value }}</nb-option>
+                      <nb-option *ngFor="let ut of _userTypes | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="ut.key">{{ ut.value }}</nb-option>
                     </nb-select>
                     <div class="anchor"><label>what</label></div>
                   </div>
@@ -177,13 +177,13 @@
                   </div>
                   <div *ngIf="c.type === 'subscription' && (c.operator === 'sub' || c.operator === 'subEnd')" class="field-container">
                     <nb-select [(selected)]="c.compared" [placeholder]="_subOptions[c.compared] || 'Any'" (selectedChange)="al.changes = true" fullWidth>
-                      <nb-option *ngFor="let o of _subOptions | keyvalue: originalOrder" [value]="o.key">{{ o.value }}</nb-option>
+                      <nb-option *ngFor="let o of _subOptions | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="o.key">{{ o.value }}</nb-option>
                     </nb-select>
                     <div class="anchor"><label>real/gift</label></div>
                   </div>
                   <div *ngIf="c.type === 'subscription'" class="field-container">
                     <nb-select [(selected)]="c.tier" [placeholder]="_subTiers[c.tier] || 'All Tiers'" (selectedChange)="al.changes = true" fullWidth>
-                      <nb-option *ngFor="let o of _subTiers | keyvalue: originalOrder" [value]="o.key">{{ o.value }}</nb-option>
+                      <nb-option *ngFor="let o of _subTiers | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="o.key">{{ o.value }}</nb-option>
                     </nb-select>
                     <div class="anchor"><label>Tiers</label></div>
                   </div>
@@ -194,7 +194,7 @@
                       (selectedChange)="al.changes = true"
                       fullWidth
                     >
-                      <nb-option *ngFor="let c of userCommands | keyvalue: originalOrder" [value]="c.value">{{ c.value!.command }}</nb-option>
+                      <nb-option *ngFor="let c of userCommands | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="c.value">{{ c.value!.command }}</nb-option>
                     </nb-select>
                     <div class="anchor"><label>Which</label></div>
                   </div>
@@ -232,7 +232,7 @@
                     <div style="width: 3rem"></div>
 
                     <nb-select status="success" placeholder="Add an element" [(selected)]="al.selectedElementToAdd">
-                      <nb-option *ngFor="let type of ElementTypes | keyvalue: originalOrder" [value]="type.key">{{ type.value }}</nb-option>
+                      <nb-option *ngFor="let type of ElementTypes | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="type.key">{{ type.value }}</nb-option>
                     </nb-select>
                     <button nbButton status="success" (click)="addElement(al, al.selectedElementToAdd)"><nb-icon icon="plus"></nb-icon></button>
 
@@ -361,7 +361,7 @@
                       <div style="text-align: center">Note: Clips currently only work with chat commands!!!</div>
                       <div class="field-container">
                         <nb-select [placeholder]="elem.which || _clip.which.random" [(selected)]="elem.which" (selectedChange)="al.changes = true" fullWidth>
-                          <nb-option *ngFor="let t of _clip.which | keyvalue: originalOrder" [value]="t.key">{{ t.value }}</nb-option>
+                          <nb-option *ngFor="let t of _clip.which | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="t.key">{{ t.value }}</nb-option>
                         </nb-select>
                         <div class="anchor"><label>Which</label></div>
                       </div>
@@ -376,7 +376,7 @@
                           <nb-accordion-item-header> Primary Settings </nb-accordion-item-header>
                           <nb-accordion-item-body class="settings-unpadded">
                             <nb-list>
-                              <nb-list-item *ngFor="let o of _options[elem.type].mandatory | keyvalue: originalOrder">
+                              <nb-list-item *ngFor="let o of _options[elem.type].mandatory | keyvalue: settings.keyValueWithOriginalOrderPipe">
                                 <div class="key">{{ o.value }}</div>
                                 <div
                                   class="value"
@@ -399,7 +399,9 @@
                                     (selectedChange)="al.changes = true"
                                     fullWidth
                                   >
-                                    <nb-option *ngFor="let p of _POSITION | keyvalue: originalOrder" [value]="p.key" [disabled]="p.key === 'COVER'">{{ p.value }}</nb-option>
+                                    <nb-option *ngFor="let p of _POSITION | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="p.key" [disabled]="p.key === 'COVER'">{{
+                                      p.value
+                                    }}</nb-option>
                                   </nb-select>
                                 </div>
                                 <div class="value" *ngIf="_options[elem.type].units[o.key] === 'TRANSITION'">
@@ -411,7 +413,7 @@
                                     (selectedChange)="al.changes = true"
                                     fullWidth
                                   >
-                                    <nb-option *ngFor="let t of _TRANSITION | keyvalue: originalOrder" [value]="t.key">{{ t.value }}</nb-option>
+                                    <nb-option *ngFor="let t of _TRANSITION | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="t.key">{{ t.value }}</nb-option>
                                   </nb-select>
                                 </div>
                               </nb-list-item>
@@ -450,7 +452,7 @@
                                 <div class="value">
                                   <nb-select [placeholder]="_BORDER.types[elem.border] || 'None'" [(selected)]="elem.border" (selectedChange)="al.changes = true" fullWidth>
                                     <nb-option [value]="null">None</nb-option>
-                                    <nb-option *ngFor="let type of _BORDER.types | keyvalue: originalOrder" [value]="type.key">{{ type.value }}</nb-option>
+                                    <nb-option *ngFor="let type of _BORDER.types | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="type.key">{{ type.value }}</nb-option>
                                   </nb-select>
                                 </div>
                               </nb-list-item>
@@ -464,7 +466,9 @@
                                     (selectedChange)="al.changes = true"
                                     fullWidth
                                   >
-                                    <nb-option *ngFor="let type of _BORDER.thickness | keyvalue: originalOrder" [value]="type.key">{{ type.value }}</nb-option>
+                                    <nb-option *ngFor="let type of _BORDER.thickness | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="type.key">{{
+                                      type.value
+                                    }}</nb-option>
                                   </nb-select>
                                 </div>
                               </nb-list-item>
@@ -478,7 +482,7 @@
                                     (selectedChange)="al.changes = true"
                                     fullWidth
                                   >
-                                    <nb-option *ngFor="let type of _BORDER.color | keyvalue: originalOrder" [value]="type.key">{{ type.value }}</nb-option>
+                                    <nb-option *ngFor="let type of _BORDER.color | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="type.key">{{ type.value }}</nb-option>
                                   </nb-select>
                                 </div>
                               </nb-list-item>
@@ -497,7 +501,7 @@
                           <nb-accordion-item-header> Additional Settings </nb-accordion-item-header>
                           <nb-accordion-item-body class="unpadded">
                             <nb-list>
-                              <nb-list-item *ngFor="let o of _options[elem.type].additional | keyvalue: originalOrder">
+                              <nb-list-item *ngFor="let o of _options[elem.type].additional | keyvalue: settings.keyValueWithOriginalOrderPipe">
                                 <div class="key">{{ o.value }}:</div>
                                 <div class="value" *ngIf="_options[elem.type].units[o.key] === 'px' || _options[elem.type].units[o.key] === 's'">
                                   <input nbInput type="number" [(ngModel)]="elem[o.key]" (change)="al.changes = true" fullWidth />
@@ -515,19 +519,23 @@
                     <div class="field-container">
                       <nb-select [(selected)]="elem.voice" (selectedChange)="al.changes = true" placeholder="Select which voice to use" fullWidth>
                         <nb-option disabled class="tts-separator">Free Tier Voices -</nb-option>
-                        <nb-option *ngFor="let v of _tts.voices | keyvalue: originalOrder" [value]="v.key">{{ v.value }}</nb-option>
+                        <nb-option *ngFor="let v of _tts.voices | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="v.key">{{ v.value }}</nb-option>
                         <nb-option disabled class="tts-separator">Supporter Tier Voices</nb-option>
                         <nb-option
-                          *ngFor="let v of _tts.supporterVoices | keyvalue: originalOrder"
+                          *ngFor="let v of _tts.supporterVoices | keyvalue: settings.keyValueWithOriginalOrderPipe"
                           [value]="v.key"
                           class="supporter"
                           [disabled]="!auth.currentUser?.founder && !auth.currentUser?.supporter && !auth.currentUser?.premium"
                           >{{ v.value }}</nb-option
                         >
                         <nb-option disabled class="tts-separator">Premium Tier Voices</nb-option>
-                        <nb-option *ngFor="let v of _tts.premiumVoices | keyvalue: originalOrder" [value]="v.key" class="premium" [disabled]="!auth.currentUser?.premium">{{
-                          v.value
-                        }}</nb-option>
+                        <nb-option
+                          *ngFor="let v of _tts.premiumVoices | keyvalue: settings.keyValueWithOriginalOrderPipe"
+                          [value]="v.key"
+                          class="premium"
+                          [disabled]="!auth.currentUser?.premium"
+                          >{{ v.value }}</nb-option
+                        >
                       </nb-select>
                       <div class="anchor"><label>voice</label></div>
                     </div>
@@ -536,7 +544,7 @@
                       <div class="field-container">
                         <nb-select [(selected)]="elem.message" (selectedChange)="al.changes = true" placeholder="Select what to read" fullWidth>
                           <nb-option
-                            *ngFor="let o of _tts.options | keyvalue: originalOrder"
+                            *ngFor="let o of _tts.options | keyvalue: settings.keyValueWithOriginalOrderPipe"
                             [value]="o.key"
                             [disabled]="
                               (o.key === 'redemptionMessage' && al.conditions[0].type !== 'redeem') ||
@@ -565,7 +573,7 @@
                     </div>
 
                     <div *ngIf="elem.message === 'customMessage'" class="keywords">
-                      <div *ngFor="let keyword of _chat.keywords | keyvalue: originalOrder">
+                      <div *ngFor="let keyword of _chat.keywords | keyvalue: settings.keyValueWithOriginalOrderPipe">
                         <div>{{ keyword.key }}:</div>
                         <div>{{ keyword.value }}</div>
                       </div>
@@ -588,7 +596,7 @@
                         "
                         fullWidth
                       >
-                        <nb-option *ngFor="let t of _obs.triggers | keyvalue: originalOrder" [value]="t.key">{{ t.value }}</nb-option>
+                        <nb-option *ngFor="let t of _obs.triggers | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="t.key">{{ t.value }}</nb-option>
                       </nb-select>
                       <div class="anchor"><label>Trigger</label></div>
                     </div>
@@ -683,7 +691,7 @@
                       fullWidth
                     ></textarea>
                     <div class="keywords">
-                      <div *ngFor="let keyword of _chat.keywords | keyvalue: originalOrder">
+                      <div *ngFor="let keyword of _chat.keywords | keyvalue: settings.keyValueWithOriginalOrderPipe">
                         <div>{{ keyword.key }}:</div>
                         <div>{{ keyword.value }}</div>
                       </div>

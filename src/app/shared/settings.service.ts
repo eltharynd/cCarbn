@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment'
 import { AuthGuard } from '../auth/auth.guard'
 import { DataService } from './data.service'
 import * as merge from 'deepmerge'
+import { KeyValue } from '@angular/common'
 
 @Injectable({
   providedIn: 'root',
@@ -64,7 +65,19 @@ export class SettingsService {
       },
     },
   }
-  predictions: any = {}
+  predictions: any = {
+    left: 50,
+    top: 350,
+    growDownwards: false,
+    growLeftwards: false,
+    barWidth: 60,
+    barHeight: 300,
+    barSpacing: 20,
+    fontSize: 28,
+    mirrorText: false,
+    textColor: 'white',
+    manualColor: null,
+  }
 
   loaded: Subject<any> = new Subject()
   updated: Subject<any> = new Subject()
@@ -99,6 +112,7 @@ export class SettingsService {
   async onUpdated() {
     if (this.hypetrain.train.maxRows < 1) this.hypetrain.train.maxRows = 1
     if (this.hypetrain.train.fadingLength < 0) this.hypetrain.train.fadingLength = 0
+    if (this.predictions.manualColor && /^[0-9a-f]{6,8}$/i.test(this.predictions.manualColor)) this.predictions.manualColor = `#${this.predictions.manualColor}`
 
     let response = await this.data.post(`user/${this.data._userId}/settings/api/listeners`, {
       hypetrain: this.hypetrain,
@@ -113,5 +127,9 @@ export class SettingsService {
           predictions: this.predictions,
         },
       })
+  }
+
+  keyValueWithOriginalOrderPipe = (a: KeyValue<string, any>, b: KeyValue<string, any>): number => {
+    return 0
   }
 }

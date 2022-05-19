@@ -13,7 +13,6 @@ import { ChatComponent } from './elements/chat/chat.component'
 import { GIFComponent } from './elements/gif/gif.component'
 import { ImageComponent } from './elements/image/image.component'
 import { ClipComponent } from './elements/clip/clip.component'
-import { HypetrainComponent } from './hypetrain/hypetrain.component'
 import { PredictionsModule } from './predictions/predictions.module'
 import { SharedNebularModule } from '../shared/nebular.module'
 

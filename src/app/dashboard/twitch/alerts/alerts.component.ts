@@ -19,7 +19,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
   channelRewards: _redemption[] = []
   uploadedSubject: Subject<any> = new Subject()
 
-  constructor(private data: DataService, public auth: AuthGuard, public OBS: OBSService, public cdr: ChangeDetectorRef, private settings: SettingsService) {
+  constructor(private data: DataService, public auth: AuthGuard, public OBS: OBSService, public cdr: ChangeDetectorRef, public settings: SettingsService) {
     this.data.get(`user/${this.auth.currentUser?._id}/redemptions`).then((data) => {
       this.channelRewards = data.sort((a, b) => a.title.localeCompare(b.title))
       this.cdr.detectChanges()
@@ -346,10 +346,6 @@ export class AlertsComponent implements OnInit, OnDestroy {
     }
     element.mediaInformation = mediaInformation
     this.cdr.detectChanges()
-  }
-
-  originalOrder = (a: KeyValue<string, any>, b: KeyValue<string, any>): number => {
-    return 0
   }
 
   ElementTypes = ELEMENT_TYPES

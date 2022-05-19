@@ -8,3 +8,19 @@
   background-color: rgba(white, 0.1);
   border-radius: 0.5rem;
 }
+
+.settings {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  > .row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2.5rem;
+  }
+}

@@ -2,22 +2,109 @@
   <nb-layout-column>
     <app-global></app-global>
 
-    <nb-card class="centered">
-      <nb-card-header class="card-header">
-        <div class="composed-title">
-          <strong class="text-title">PREDICTIONS</strong>
-          <span class="text-description">Displays a pie chart on stream with the current prediction results</span>
-        </div>
-      </nb-card-header>
-      <nb-card-body>
-        <div class="test">
-          <button (click)="predictions.predictionBeginTest()" nbButton status="primary">START PREDICTION</button>
-          <button (click)="predictions.predictionProgressTest(0)" nbButton status="primary">VOTE 1</button>
-          <button (click)="predictions.predictionProgressTest(1)" nbButton status="primary">VOTE 2</button>
-          <button (click)="predictions.predictionLockTest()" nbButton status="primary">LOCK PREDICTIONS</button>
-          <button (click)="predictions.predictionEndTest()" nbButton status="primary">END PREDICTION</button>
-        </div>
-      </nb-card-body>
-    </nb-card>
+    <nb-accordion class="centered">
+      <nb-accordion-item expanded>
+        <nb-accordion-item-header class="accordion-header">
+          <div class="composed-title">
+            <strong class="text-title">PREDICTIONS</strong>
+            <span class="text-description">Displays a pie chart on stream with the current prediction results</span>
+          </div>
+        </nb-accordion-item-header>
+        <nb-accordion-item-body>
+          <div class="test">
+            <button (click)="predictions.predictionBeginTest()" nbButton status="primary">START PREDICTION</button>
+            <button (click)="predictions.predictionProgressTest(0)" nbButton status="primary">VOTE 1</button>
+            <button (click)="predictions.predictionProgressTest(1)" nbButton status="primary">VOTE 2</button>
+            <button (click)="predictions.predictionLockTest()" nbButton status="primary">LOCK PREDICTIONS</button>
+            <button (click)="predictions.predictionEndTest()" nbButton status="primary">END PREDICTION</button>
+          </div>
+        </nb-accordion-item-body>
+      </nb-accordion-item>
+    </nb-accordion>
+    <nb-accordion class="centered">
+      <nb-accordion-item>
+        <nb-accordion-item-header class="accordion-header">
+          <div class="composed-title">
+            <strong class="text-title">SETTINGS</strong>
+            <span class="text-description">Customize the looks of it</span>
+          </div>
+        </nb-accordion-item-header>
+        <nb-accordion-item-body>
+          <div class="settings">
+            <h2>CONTAINER</h2>
+            <div class="row">
+              <div class="field-container">
+                <input [(ngModel)]="settings.predictions.left" (change)="settings.onUpdated()" nbInput type="number" class="input-number-medium" />
+                <div class="anchor"><label>anchor left</label></div>
+                <div class="unit">px</div>
+              </div>
+              <div class="field-container">
+                <input [(ngModel)]="settings.predictions.top" (change)="settings.onUpdated()" nbInput type="number" class="input-number-medium" />
+                <div class="anchor"><label>anchor top</label></div>
+                <div class="unit">px</div>
+              </div>
+            </div>
+            <div class="row">
+              <nb-toggle [(ngModel)]="settings.predictions.growDownwards" (change)="settings.onUpdated()">
+                {{ settings.predictions.growDownwards ? 'GROW DOWNWARDS' : 'GROW UPWARDS' }}
+              </nb-toggle>
+              <nb-toggle [(ngModel)]="settings.predictions.growLeftwards" (change)="settings.onUpdated()">
+                {{ settings.predictions.growLeftwards ? 'GROW LEFTWARDS' : 'GROW RIGHTWARDS' }}
+              </nb-toggle>
+            </div>
+            <h2>BARS</h2>
+            <div class="row">
+              <div class="field-container">
+                <input [(ngModel)]="settings.predictions.barWidth" (change)="settings.onUpdated()" nbInput type="number" class="input-number-medium" />
+                <div class="anchor"><label>width</label></div>
+                <div class="unit">px</div>
+              </div>
+              <div class="field-container">
+                <input [(ngModel)]="settings.predictions.barHeight" (change)="settings.onUpdated()" nbInput type="number" class="input-number-medium" />
+                <div class="anchor"><label>Max height</label></div>
+                <div class="unit">px</div>
+              </div>
+            </div>
+            <div class="field-container">
+              <input [(ngModel)]="settings.predictions.barSpacing" (change)="settings.onUpdated()" nbInput type="number" class="input-number-medium" />
+              <div class="anchor"><label>spacing</label></div>
+              <div class="unit">px</div>
+            </div>
+
+            <h3>BARS TEXT</h3>
+
+            <div class="row">
+              <div class="field-container">
+                <input [(ngModel)]="settings.predictions.fontSize" (change)="settings.onUpdated()" nbInput type="number" class="input-number-medium" />
+                <div class="anchor"><label>font size</label></div>
+                <div class="unit">px</div>
+              </div>
+
+              <nb-toggle [(ngModel)]="settings.predictions.mirrorText" (change)="settings.onUpdated()">
+                {{ settings.predictions.mirrorText ? '90° Counter Clockwise' : '90° Clockwise' }}
+              </nb-toggle>
+            </div>
+
+            <div class="row">
+              <div class="field-container">
+                <nb-select
+                  [(selected)]="settings.predictions.textColor"
+                  [placeholder]="_colors[settings.predictions.textColor] || 'Pick a color'"
+                  (selectedChange)="settings.predictions.manualColor = null; settings.onUpdated()"
+                  fullWidth
+                >
+                  <nb-option *ngFor="let color of _colors | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="color.key">{{ color.value }}</nb-option>
+                </nb-select>
+                <div class="anchor"><label>text color</label></div>
+              </div>
+              <div *ngIf="settings.predictions.textColor === 'manual'" class="field-container">
+                <input [(ngModel)]="settings.predictions.manualColor" placeholder="#a16eff" (change)="settings.onUpdated()" nbInput type="text" />
+                <div class="anchor"><label>hex color</label></div>
+              </div>
+            </div>
+          </div>
+        </nb-accordion-item-body>
+      </nb-accordion-item>
+    </nb-accordion>
   </nb-layout-column>
 </nb-layout>

@@ -31,12 +31,15 @@ export class AlertsService {
     })
 
     this.data.socketIO.on('alerts', async (data) => {
+      console.info('Received event from Twitch...')
+      console.info('event: ', data)
+      console.info('registered alerts: ', this.alerts)
+
       let user = data.user_name || null
 
       for (let alert of this.alerts) {
         if (!alert.enabled) continue
 
-        console.log(this.alerts, data)
         let ignore = false
         for (let c of alert.conditions) {
           if (c.type === 'bits') {
@@ -164,7 +167,7 @@ export class AlertsService {
                 ignore = true
             }
           } else if (c.type === 'raid') {
-            ignore = (c.operator === 'received' && data.type !== 'Raid from') || (c.operator === 'launched' && data.type !== 'Raid to')
+            ignore = (c.operator === 'received' && data.type !== 'Raid From') || (c.operator === 'launched' && data.type !== 'Raid To')
           } else if (c.type === 'command') {
             ignore = data.type !== 'Command' || c.compared?.command !== data.command
           } else if (c.type === 'welcome') {
@@ -240,7 +243,7 @@ export class AlertsService {
           if (ignore) break
         }
 
-        console.log(`ignore: ${ignore}`)
+        console.log(`ignored: ${ignore}`)
         if (ignore) continue
 
         if (alert.elements?.length > 0) alert.elements[0].withPrevious = false

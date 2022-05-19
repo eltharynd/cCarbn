@@ -20,17 +20,52 @@
     </div>
   </div>
 
-  <div *ngIf="predictions.currentPrediction">
+  <div
+    *ngIf="predictions.currentPrediction"
+    [ngStyle]="{
+      top: settings.predictions.growDownwards ? 'unset' : +settings.predictions.top - +settings.viewport.padding + 'px',
+      bottom: settings.predictions.growDownwards
+        ? +settings.viewport.height - +settings.viewport.padding - +settings.predictions.top - +settings.predictions.barHeight + 'px'
+        : 'unset',
+      left: settings.predictions.growLeftwards ? 'unset' : +settings.predictions.left - +settings.viewport.padding + 'px',
+      right: settings.predictions.growLeftwards ? +settings.viewport.width - +settings.viewport.padding - +settings.predictions.left + 'px' : 'unset',
+      width: settings.predictions.width + 'px',
+      height: settings.predictions.barHeight + 'px',
+      gap: settings.predictions.barSpacing + 'px',
+      flexDirection: settings.predictions.growLeftwards ? 'row-reverse' : 'row'
+    }"
+    class="bars-container"
+  >
     <div
-      *ngFor="let o of outcomes; let i = index; let p = &quot;--percentage&quot;"
-      [class]="'entry-' + i"
-      [style]="o.style"
-      class="pie-chart"
+      *ngFor="let o of predictions.currentPrediction.outcomes"
+      class="bar"
       [ngStyle]="{
-        'z-index': -(i + 1)
+        backgroundColor: o.color,
+        width: (settings.predictions.barWidth || 50) + 'px',
+        height: (+o.percentage || 0) * 100 + '%'
       }"
     >
-      &nbsp;
+      <div
+        [ngStyle]="{
+          fontSize: (settings.predictions.fontSize || 18) + 'px',
+          color: settings.predictions.manualColor || settings.predictions.textColor || 'white',
+          transform: settings.predictions.mirrorText ? 'scaleX(-1) scaleY(-1)' : 'unset',
+          justifyContent: settings.predictions.growLeftwards ? 'flex-end' : 'flex-start'
+        }"
+        class="bar-text"
+      >
+        <div>{{ o.title }}</div>
+      </div>
+      <div
+        [ngStyle]="{
+          color: o.color,
+          fontSize: (settings.predictions.barWidth * 0.5 || 9) + 'px',
+          transform: settings.predictions.mirrorText ? 'scaleX(-1) scaleY(-1)' : 'unset'
+        }"
+        class="legend"
+      >
+        {{ o.users }} - {{ o.channel_points | channelPointsPipe }}
+      </div>
     </div>
   </div>
 </div>

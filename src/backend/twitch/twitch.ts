@@ -186,8 +186,8 @@ export class Twitch {
       })
     }
     if (settings?.api?.listeners?.raid?.enabled) {
-      subscriptions.push({ listener: Listeners.prediction, subscription: await Twitch.listener.subscribeToChannelRaidEventsFrom(channel.id, RaidHandler.raidFromEvent) })
-      subscriptions.push({ listener: Listeners.prediction, subscription: await Twitch.listener.subscribeToChannelRaidEventsTo(channel.id, RaidHandler.raidToEvent) })
+      subscriptions.push({ listener: Listeners.raid, subscription: await Twitch.listener.subscribeToChannelRaidEventsFrom(channel.id, RaidHandler.raidFromEvent) })
+      subscriptions.push({ listener: Listeners.raid, subscription: await Twitch.listener.subscribeToChannelRaidEventsTo(channel.id, RaidHandler.raidToEvent) })
     }
     if (settings?.api?.listeners?.redemption?.enabled) {
       subscriptions.push({
