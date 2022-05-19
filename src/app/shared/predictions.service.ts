@@ -62,7 +62,7 @@ export class PredictionsService {
         reduce((acc, curr) => acc + curr, 0)
       )
       .toPromise()
-    let highestCP: Outcomes = JSON.parse(JSON.stringify(this.currentPrediction.outcomes)).sort((a, b) => b.channel_points - a.channel_points)[0]
+    let highestCP: Outcomes = JSON.parse(JSON.stringify(outcomes)).sort((a, b) => b.channel_points - a.channel_points)[0]
 
     this.currentPrediction.outcomes = await from(outcomes)
       .pipe(

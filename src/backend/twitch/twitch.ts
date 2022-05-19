@@ -175,7 +175,10 @@ export class Twitch {
         listener: Listeners.prediction,
         subscription: await Twitch.listener.subscribeToChannelPredictionBeginEvents(channel.id, PredictionHandler.predictionBeginEvent),
       })
-      //subscriptions.push({listener: Listeners.prediction, subscription: await Twitch.listener.subscribeToChannelPredictionProgressEvents(channel.id, PredictionHandler.predictionProgressEvent)})
+      subscriptions.push({
+        listener: Listeners.prediction,
+        subscription: await Twitch.listener.subscribeToChannelPredictionProgressEvents(channel.id, PredictionHandler.predictionProgressEvent),
+      })
       subscriptions.push({
         listener: Listeners.prediction,
         subscription: await Twitch.listener.subscribeToChannelPredictionLockEvents(channel.id, PredictionHandler.predictionLockEvent),
