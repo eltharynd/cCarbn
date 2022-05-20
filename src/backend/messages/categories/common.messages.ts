@@ -1,8 +1,10 @@
 import { TwitchPrivateMessage } from '@twurple/chat/lib/commands/TwitchPrivateMessage'
 import axios from 'axios'
-import { Chat } from '../../twitch/chat'
 import { filterParameters, Message } from '../message'
+import * as fs from 'fs'
+import { filter, from, take } from 'rxjs'
 
+export const TIMEZONES: [{ timezone: string; abbreviation: string }] = JSON.parse('' + fs.readFileSync('timezones.json'))
 export class Common extends Message {
   public constructor(iClient) {
     super(iClient)
@@ -135,9 +137,68 @@ export class Common extends Message {
     if (/^!time [\w\/]+/i.test(message)) {
       let par = message.replace(/^!time /i, '')
       if (/pst/i.test(par) || /pt/i.test(par) || /pdt/i.test(par)) par = 'America/Los_Angeles'
+
+      let match = null
+      let weights = []
+      for (let i = 0; i < TIMEZONES.length; i++) {
+        let t = TIMEZONES[i]
+        let weight = 0
+        if (par === t.timezone) {
+          match = t
+          break
+        }
+        if (par === t.abbreviation) {
+          match = t
+          break
+        }
+        if (new RegExp(par, 'ig').test(t.timezone)) weight += 2
+        if (new RegExp(par, 'ig').test(t.abbreviation)) weight += 1
+
+        weights.push({ index: i, weight: weight })
+      }
+      if (!match) {
+        weights = weights.sort((a, b) => b.weight - a.weight)
+        let occurrencesAbbrevs = []
+        let occurrencesTimes = []
+        if (weights[0].weight > 2) {
+          match = TIMEZONES[weights[0].index]
+        } else if (weights[0].weight === 2) {
+          for (let w of weights) {
+            if (w.weight === 2) {
+              let abbrev = TIMEZONES[w.index].abbreviation
+              if (!occurrencesAbbrevs.includes(abbrev)) {
+                occurrencesAbbrevs.push(abbrev)
+                occurrencesTimes.push(1)
+              } else {
+                console.log('---------------------')
+                console.log(occurrencesTimes[occurrencesAbbrevs.indexOf(abbrev)])
+                occurrencesTimes[occurrencesAbbrevs.indexOf(abbrev)]++
+                console.log(occurrencesTimes[occurrencesAbbrevs.indexOf(abbrev)])
+              }
+              let most = 0
+              let mostIndex = 0
+              for (let i = 0; i < occurrencesAbbrevs.length; i++) {
+                if (occurrencesTimes[i] > most) {
+                  most = occurrencesTimes[i]
+                  mostIndex = i
+                }
+              }
+              match = await from(TIMEZONES)
+                .pipe(
+                  filter((t) => t.abbreviation === occurrencesAbbrevs[mostIndex]),
+                  take(1)
+                )
+                .toPromise()
+            } else break
+          }
+        } else {
+          match = TIMEZONES[weights[0].index]
+        }
+      }
+
       let data: any
       try {
-        data = (await axios.get(`http://worldtimeapi.org/api/timezone/${encodeURI(par).replace(/\//g, '%2F')}`)).data
+        data = (await axios.get(`http://worldtimeapi.org/api/timezone/${encodeURI(match.timezone).replace(/\//g, '%2F')}`)).data
       } catch (e) {
         this.client.say(channel, `/me I could not find that location...`)
         return
