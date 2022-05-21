@@ -7,9 +7,9 @@ import { Socket } from '../socket'
 import { toJSON, getUserInfo } from './util/eventUtils'
 
 export class RaidHandler {
-  static raidFromEvent = async (event: EventSubChannelRaidEvent) => {
+  static raidIncomingEvent = async (event: EventSubChannelRaidEvent) => {
     let data = toJSON(event)
-    data.type = 'Raid From'
+    data.type = 'Raid Incoming'
     data.userInfo = getUserInfo(await event.getRaidedBroadcaster(), await event.getRaidingBroadcaster())
 
     try {
@@ -52,9 +52,9 @@ export class RaidHandler {
     }
   }
 
-  static raidToEvent = async (event: EventSubChannelRaidEvent) => {
+  static raidOutgoingEvent = async (event: EventSubChannelRaidEvent) => {
     let data = toJSON(event)
-    data.type = 'Raid To'
+    data.type = 'Raid Outgoing'
     data.userInfo = getUserInfo(await event.getRaidingBroadcaster(), await event.getRaidedBroadcaster())
 
     let found: any = await User.findOne({ twitchId: event.raidingBroadcasterId })
