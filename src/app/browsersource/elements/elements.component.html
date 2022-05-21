@@ -30,6 +30,6 @@
 
   <div *ngIf="cantPlay" style="color: red; font-weight: bold; position: absolute">IF YOU OPEN THIS ON A BROWSER YOU NEED TO INTERACT WITH THE PAGE BEFORE IT CAN PLAY MEDIA</div>
 
-  <app-hypetrain></app-hypetrain>
-  <app-predictions></app-predictions>
+  <app-hypetrain *ngIf="hypetrain.currentLevel > 0"></app-hypetrain>
+  <app-predictions *ngIf="predictions.currentPrediction"></app-predictions>
 </div>

@@ -77,6 +77,12 @@ export class SettingsService {
     mirrorText: false,
     textColor: 'white',
     manualColor: null,
+    titleSize: 30,
+    titleWeight: 'bold',
+    titleColor: 'white',
+    titleManualColor: null,
+    borderThickness: 6,
+    borderSpacing: 5,
   }
 
   loaded: Subject<any> = new Subject()

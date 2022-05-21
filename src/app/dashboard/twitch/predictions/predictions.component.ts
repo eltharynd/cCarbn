@@ -8,6 +8,13 @@ export const TEXT_COLOR_OPTIONS = {
   manual: 'Manual',
 }
 
+export const TEXT_WEIGHT_OPTIONS = {
+  100: 'Thin',
+  400: 'Normal',
+  700: 'Bold',
+  900: 'Extra Bold',
+}
+
 @Component({
   selector: 'app-predictions',
   templateUrl: './predictions.component.html',
@@ -15,6 +22,7 @@ export const TEXT_COLOR_OPTIONS = {
 })
 export class PredictionsComponent implements OnInit {
   _colors = TEXT_COLOR_OPTIONS
+  _weight = TEXT_WEIGHT_OPTIONS
 
   constructor(public settings: SettingsService, public predictions: PredictionsService) {}
 

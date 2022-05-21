@@ -45,13 +45,87 @@
               </div>
             </div>
             <div class="row">
-              <nb-toggle [(ngModel)]="settings.predictions.growDownwards" (change)="settings.onUpdated()">
-                {{ settings.predictions.growDownwards ? 'GROW DOWNWARDS' : 'GROW UPWARDS' }}
+              <nb-toggle [(ngModel)]="settings.predictions.growUpwards" (change)="settings.onUpdated()">
+                {{ settings.predictions.growUpwards ? 'GROW UPWARDS' : 'GROW DOWNWARDS' }}
               </nb-toggle>
               <nb-toggle [(ngModel)]="settings.predictions.growLeftwards" (change)="settings.onUpdated()">
                 {{ settings.predictions.growLeftwards ? 'GROW LEFTWARDS' : 'GROW RIGHTWARDS' }}
               </nb-toggle>
             </div>
+
+            <div class="row">
+              <span>Title</span>
+              <div class="field-container">
+                <input [(ngModel)]="settings.predictions.titleSize" (change)="settings.onUpdated()" nbInput type="number" class="input-number-medium" />
+                <div class="anchor"><label>size</label></div>
+                <div class="unit">px</div>
+              </div>
+
+              <div class="field-container">
+                <nb-select
+                  [(selected)]="settings.predictions.titleWeight"
+                  [placeholder]="_weight[settings.predictions.titleWeight] || 'Normal'"
+                  (selectedChange)="settings.onUpdated()"
+                  fullWidth
+                >
+                  <nb-option *ngFor="let w of _weight | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="w.key">{{ w.value }}</nb-option>
+                </nb-select>
+                <div class="anchor"><label>weight</label></div>
+              </div>
+              <span style="opacity: 0">Title</span>
+            </div>
+
+            <div class="row">
+              <div class="field-container">
+                <nb-select
+                  [(selected)]="settings.predictions.titleColor"
+                  [placeholder]="_colors[settings.predictions.titleColor] || 'Pick a color'"
+                  (selectedChange)="settings.predictions.titleManualColor = null; settings.onUpdated()"
+                  fullWidth
+                >
+                  <nb-option *ngFor="let color of _colors | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="color.key">{{ color.value }}</nb-option>
+                </nb-select>
+                <div class="anchor"><label>title color</label></div>
+              </div>
+              <div *ngIf="settings.predictions.titleColor === 'manual'" class="field-container">
+                <input [(ngModel)]="settings.predictions.titleManualColor" placeholder="#a16eff" (change)="settings.onUpdated()" nbInput type="text" />
+                <div class="anchor"><label>hex color</label></div>
+              </div>
+            </div>
+
+            <div class="row">
+              <span>Line</span>
+              <div class="field-container">
+                <input [(ngModel)]="settings.predictions.borderThickness" (change)="settings.onUpdated()" nbInput type="number" class="input-number-medium" />
+                <div class="anchor"><label>thickness</label></div>
+                <div class="unit">px</div>
+              </div>
+              <div class="field-container">
+                <input [(ngModel)]="settings.predictions.borderSpacing" (change)="settings.onUpdated()" nbInput type="number" class="input-number-medium" />
+                <div class="anchor"><label>spacing</label></div>
+                <div class="unit">px</div>
+              </div>
+              <span style="opacity: 0">Line</span>
+            </div>
+
+            <div class="row">
+              <div class="field-container">
+                <nb-select
+                  [(selected)]="settings.predictions.borderColor"
+                  [placeholder]="_colors[settings.predictions.borderColor] || 'Pick a color'"
+                  (selectedChange)="settings.predictions.borderManualColor = null; settings.onUpdated()"
+                  fullWidth
+                >
+                  <nb-option *ngFor="let color of _colors | keyvalue: settings.keyValueWithOriginalOrderPipe" [value]="color.key">{{ color.value }}</nb-option>
+                </nb-select>
+                <div class="anchor"><label>line color</label></div>
+              </div>
+              <div *ngIf="settings.predictions.borderColor === 'manual'" class="field-container">
+                <input [(ngModel)]="settings.predictions.borderManualColor" placeholder="#a16eff" (change)="settings.onUpdated()" nbInput type="text" />
+                <div class="anchor"><label>hex color</label></div>
+              </div>
+            </div>
+
             <h2>BARS</h2>
             <div class="row">
               <div class="field-container">

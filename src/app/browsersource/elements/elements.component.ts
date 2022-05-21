@@ -1,6 +1,8 @@
 import { animate, animateChild, group, query, style, transition, trigger } from '@angular/animations'
 import { Component, OnInit } from '@angular/core'
+import { HypetrainService } from 'src/app/shared/hypetrain.service'
 import { OBSService } from 'src/app/shared/obs.service'
+import { PredictionsService } from 'src/app/shared/predictions.service'
 import { AlertsService } from '../../shared/alerts.service'
 
 export enum POSITION {
@@ -122,7 +124,7 @@ export class ElementsComponent implements OnInit {
 
   currentElements: any[] = []
 
-  constructor(private alerts: AlertsService, public OBS: OBSService) {
+  constructor(private alerts: AlertsService, public OBS: OBSService, public hypetrain: HypetrainService, public predictions: PredictionsService) {
     alerts.elementsSubject.subscribe((element) => {
       switch (element.what) {
         case 'start':

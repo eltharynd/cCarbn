@@ -69,6 +69,7 @@ export class PredictionsService {
         map((o) => {
           o.color = o.color === 'blue' ? PREDICTIONS_BLUE : o.color === 'pink' ? PREDICTIONS_PINK : o.color
           o.percentage = Math.max(0, Math.min(o.channel_points / highestCP.channel_points, 1))
+          o.oldPercentage = this.currentPrediction.outcomes[outcomes.indexOf(o)]?.percentage || 0
           return o
         }),
         toArray()
@@ -139,6 +140,7 @@ export interface Outcomes {
   users: number
   channel_points: number
   percentage?: number
+  oldPercentage?: number
 }
 export interface Predictions {
   title: string

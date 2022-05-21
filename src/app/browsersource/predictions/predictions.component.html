@@ -23,16 +23,16 @@
   <div
     *ngIf="predictions.currentPrediction"
     [ngStyle]="{
-      top: settings.predictions.growDownwards ? 'unset' : +settings.predictions.top - +settings.viewport.padding + 'px',
-      bottom: settings.predictions.growDownwards
-        ? +settings.viewport.height - +settings.viewport.padding - +settings.predictions.top - +settings.predictions.barHeight + 'px'
-        : 'unset',
+      top: settings.predictions.growUpwards ? 'unset' : +settings.predictions.top - +settings.viewport.padding + 'px',
+      bottom: settings.predictions.growUpwards ? +settings.viewport.height - +settings.viewport.padding - +settings.predictions.top + 'px' : 'unset',
       left: settings.predictions.growLeftwards ? 'unset' : +settings.predictions.left - +settings.viewport.padding + 'px',
       right: settings.predictions.growLeftwards ? +settings.viewport.width - +settings.viewport.padding - +settings.predictions.left + 'px' : 'unset',
       width: settings.predictions.width + 'px',
       height: settings.predictions.barHeight + 'px',
       gap: settings.predictions.barSpacing + 'px',
-      flexDirection: settings.predictions.growLeftwards ? 'row-reverse' : 'row'
+      flexDirection: settings.predictions.growLeftwards ? 'row-reverse' : 'row',
+      'padding-bottom': (settings.predictions.borderSpacing || 5) + 'px',
+      'border-bottom': (settings.predictions.borderThickness || 6) + 'px solid ' + (settings.predictions.borderManualColor || settings.predictions.borderColor || 'white')
     }"
     class="bars-container"
   >
@@ -44,6 +44,7 @@
         width: (settings.predictions.barWidth || 50) + 'px',
         height: (+o.percentage || 0) * 100 + '%'
       }"
+      [style]="'--old-percentage: ' + (+o.oldPercentage || 0) * 100 + '%'"
     >
       <div
         [ngStyle]="{
@@ -66,6 +67,17 @@
       >
         {{ o.users }} - {{ o.channel_points | channelPointsPipe }}
       </div>
+    </div>
+
+    <div
+      [ngStyle]="{
+        color: settings.predictions.titleManualColor || settings.predictions.titleColor || 'white',
+        'font-size': (settings.predictions.titleSize || 30) + 'px',
+        'font-weight': settings.predictions.titleWeight || 'bold'
+      }"
+      class="predictions-title"
+    >
+      {{ predictions.currentPrediction.title }}
     </div>
   </div>
 </div>
