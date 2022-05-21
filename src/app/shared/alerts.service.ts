@@ -31,7 +31,7 @@ export class AlertsService {
     })
 
     this.data.socketIO.on('alerts', async (data) => {
-      console.info('Received event from Twitch...')
+      console.info(`Received event '${data.type}' from Twitch...`)
       console.info('event: ', data)
       console.info('registered alerts: ', this.alerts)
 

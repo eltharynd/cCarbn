@@ -19,7 +19,7 @@ export class RaidHandler {
       }
       alertData.channel = await from(alertData.channel)
         .pipe(
-          filter((channel: any) => channel.name === data.from_broadcaster_user_id),
+          filter((channel: any) => channel.name === data.from_broadcaster_user_login),
           take(1)
         )
         .toPromise()
@@ -33,13 +33,25 @@ export class RaidHandler {
           alertData.topClip = clip
         }
 
-        if (alertData.topClip.views < 0) delete alertData.topClip
+        if (alertData.topClip.views < 0) {
+          delete alertData.topClip
+        }
 
-        if (alertData.channel) alertData.channel = toJSON(alertData.channel)
-        if (alertData.clips) alertData.clips = toJSON(alertData.clips)
-        if (alertData.stream) alertData.stream = toJSON(alertData.stream)
-        if (alertData.randomClip) alertData.randomClip = toJSON(alertData.randomClip)
-        if (alertData.topClip) alertData.topClip = toJSON(alertData.topClip)
+        if (alertData.channel) {
+          alertData.channel = toJSON(alertData.channel)
+        }
+        if (alertData.clips) {
+          alertData.clips = toJSON(alertData.clips)
+        }
+        if (alertData.stream) {
+          alertData.stream = toJSON(alertData.stream)
+        }
+        if (alertData.randomClip) {
+          alertData.randomClip = toJSON(alertData.randomClip)
+        }
+        if (alertData.topClip) {
+          alertData.topClip = toJSON(alertData.topClip)
+        }
 
         data.alertData = alertData
       }
