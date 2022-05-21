@@ -10,11 +10,12 @@ export class RaidHandler {
   static raidIncomingEvent = async (event: EventSubChannelRaidEvent) => {
     let data = toJSON(event)
     data.type = 'Raid Incoming'
-    data.userInfo = getUserInfo(await event.getRaidedBroadcaster(), await event.getRaidingBroadcaster())
+
+    data.userInfo = await getUserInfo(await event.getRaidedBroadcaster(), await event.getRaidingBroadcaster())
 
     try {
       let alertData: any = {
-        channel: (await Twitch.client.search.searchChannels(data.from_broadcaster_user_id)).data,
+        channel: (await Twitch.client.search.searchChannels(data.from_broadcaster_user_login)).data,
       }
       alertData.channel = await from(alertData.channel)
         .pipe(
