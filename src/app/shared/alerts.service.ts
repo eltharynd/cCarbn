@@ -167,7 +167,7 @@ export class AlertsService {
                 ignore = true
             }
           } else if (c.type === 'raid') {
-            ignore = (c.operator === 'received' && data.type !== 'Raid From') || (c.operator === 'launched' && data.type !== 'Raid To')
+            ignore = (c.operator === 'received' && data.type !== 'Raid Incoming') || (c.operator === 'launched' && data.type !== 'Raid Outgoing')
           } else if (c.type === 'command') {
             ignore = data.type !== 'Command' || c.compared?.command !== data.command
           } else if (c.type === 'welcome') {
