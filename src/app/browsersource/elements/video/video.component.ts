@@ -70,6 +70,13 @@ export class VideoComponent implements OnInit {
     }
 
     this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element, this.outerStyle, this.innerStyle)
+    setTimeout(() => {
+      this.alerts.elementsSubject.next({
+        type: 'video',
+        what: 'ended',
+        element: this.element,
+      })
+    }, 1000)
   }
 
   onLoadedData() {
@@ -83,6 +90,7 @@ export class VideoComponent implements OnInit {
   }
 
   onPlaybackEnded() {
+    return
     this.alerts.elementsSubject.next({
       type: 'video',
       what: 'ended',

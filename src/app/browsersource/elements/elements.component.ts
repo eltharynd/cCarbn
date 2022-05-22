@@ -20,6 +20,7 @@ export enum POSITION {
   COVER = 'Cover',
   FIT = 'Fit',
   MANUAL = 'Manual XY',
+  RANDOM = 'Random',
 }
 
 export const BORDER = {
@@ -204,13 +205,17 @@ export class ElementsComponent implements OnInit {
             innerStyle.height = `${+viewport.height}px`
           }
         } catch (e) {}
-      } else if (/MANUAL/.test(element.position)) {
+      } else if (/MANUAL/.test(element.position) || /RANDOM/.test(element.position)) {
         try {
           let _width = parseInt(outerStyle.width.replace('px', ''))
           let _height = parseInt(outerStyle.height.replace('px', ''))
 
           let _targetX = +element.targetX
           let _targetY = +element.targetY
+          if (/RANDOM/.test(element.position)) {
+            _targetX = Math.random() * (viewport.width - _width) + _width / 2
+            _targetY = Math.random() * (viewport.height - _height) + _height / 2
+          }
 
           style.paddingLeft = `${_targetX - _width / 2}px`
           style.paddingTop = `${_targetY - _height / 2}px`

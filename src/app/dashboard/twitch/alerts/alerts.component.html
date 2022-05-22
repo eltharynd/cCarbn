@@ -449,7 +449,7 @@
                                   <div class="unit">px</div>
                                 </div>
                               </nb-list-item>
-                              <nb-list-item *ngIf="elem.position === 'MANUAL'">
+                              <nb-list-item *ngIf="elem.position === 'MANUAL' || elem.position === 'RANDOM'">
                                 <div class="key">Position padding</div>
                                 <div class="value" style="justify-content: flex-end">
                                   <nb-toggle [(ngModel)]="elem.ignorePadding" (checkedChange)="al.changes = true" style="margin-right: 0.5rem"></nb-toggle>
