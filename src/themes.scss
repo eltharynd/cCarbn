@@ -430,3 +430,20 @@ nb-icon.clickable:hover {
   filter: drop-shadow(0 0 6px white);
   transition: 0.3s;
 }
+
+mat-slider {
+  .mat-slider-track-background {
+    background-color: $inner-background-light;
+  }
+  .mat-slider:hover .mat-slider-track-background,
+  .mat-slider.cdk-focused .mat-slider-track-background {
+    background-color: $inner-border;
+  }
+
+  .mat-slider-track-fill {
+    background-color: var(--color-primary-default) !important;
+  }
+  .mat-slider-thumb {
+    background-color: $inner-color !important;
+  }
+}

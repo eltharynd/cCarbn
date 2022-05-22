@@ -480,8 +480,8 @@ export class AlertsComponent implements OnInit, OnDestroy {
         transitionOUT: TRANSITION.NONE,
       },
       additional: {
-        width: 'Width override',
-        height: 'Height override',
+        width: 'Manual Width',
+        height: 'Manual Height',
         offsetX: 'X offset',
         offsetY: 'Y offset',
       },

@@ -65,8 +65,8 @@ export class VideoComponent implements OnInit {
         this.innerStyle.borderRadius = `50%`
       }
     } else {
-      this.outerStyle.width = this.outerStyle.width
-      this.outerStyle.height = this.outerStyle.height
+      this.outerStyle.width = this.innerStyle.width
+      this.outerStyle.height = this.innerStyle.height
     }
 
     this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element, this.outerStyle, this.innerStyle)

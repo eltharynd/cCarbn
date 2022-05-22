@@ -1,54 +1,36 @@
-
 .viewport-flex {
-    display: flex;
-    position: absolute;
+  display: flex;
+  position: absolute;
 }
 
 .outer-container {
-    position: relative;
-    overflow: hidden;
+  position: relative;
 }
 .rainbow::before {
-    content: "";
-    position: absolute;
-    width: 500%;
-    height: 1000%;
-    left: -200%;
-    top: -450%;
-    z-index: -1;
-    background: conic-gradient(
-      #fd004c,
-      #fe9000,
-      #fff020,
-      #3edf4b,
-      #3363ff,
-      #b102b7,
-      #fd004c,
-    );
-    animation: spin 5s linear infinite;
+  content: '';
+  position: absolute;
+  width: 500%;
+  height: 1000%;
+  left: -200%;
+  top: -450%;
+  z-index: -1;
+  background: conic-gradient(#fd004c, #fe9000, #fff020, #3edf4b, #3363ff, #b102b7, #fd004c);
+  animation: spin 5s linear infinite;
 }
 .vaporwave::before {
-    content: "";
-    position: absolute;
-    width: 500%;
-    height: 1000%;
-    left: -200%;
-    top: -450%;
-    z-index: -1;
-    background: conic-gradient(
-        #ff00c1,
-        #9600ff,
-        #4900ff,
-        #00b8ff,
-        #00fff9,
-        #ff00c1
-    );
-    animation: spin 5s linear infinite;
+  content: '';
+  position: absolute;
+  width: 500%;
+  height: 1000%;
+  left: -200%;
+  top: -450%;
+  z-index: -1;
+  background: conic-gradient(#ff00c1, #9600ff, #4900ff, #00b8ff, #00fff9, #ff00c1);
+  animation: spin 5s linear infinite;
 }
 
-
 @keyframes spin {
-    to{
-      transform: rotate(360deg);
-    }	
+  to {
+    transform: rotate(360deg);
+  }
 }

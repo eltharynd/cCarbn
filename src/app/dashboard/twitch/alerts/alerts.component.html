@@ -376,6 +376,24 @@
                           <nb-accordion-item-header> Primary Settings </nb-accordion-item-header>
                           <nb-accordion-item-body class="settings-unpadded">
                             <nb-list>
+                              <nb-list-item>
+                                <div class="key">scale</div>
+                                <div class="value">
+                                  <mat-slider
+                                    [(ngModel)]="elem.scale"
+                                    [disabled]="!elem.mediaInformation"
+                                    min="1"
+                                    max="150"
+                                    style="width: 100%"
+                                    (change)="
+                                      elem.width = (elem.mediaInformation.width * elem.scale) / 100;
+                                      elem.height = (elem.mediaInformation.height * elem.scale) / 100;
+                                      al.changes = true
+                                    "
+                                  ></mat-slider>
+                                  <div class="unit">{{ elem.scale || 100 }}%</div>
+                                </div>
+                              </nb-list-item>
                               <nb-list-item *ngFor="let o of _options[elem.type].mandatory | keyvalue: settings.keyValueWithOriginalOrderPipe">
                                 <div class="key">{{ o.value }}</div>
                                 <div
@@ -434,7 +452,7 @@
                               <nb-list-item *ngIf="elem.position === 'MANUAL'">
                                 <div class="key">Position padding</div>
                                 <div class="value" style="justify-content: flex-end">
-                                  <nb-toggle [(ngModel)]="elem.ignorePadding" style="margin-right: 0.5rem"></nb-toggle>
+                                  <nb-toggle [(ngModel)]="elem.ignorePadding" (checkedChange)="al.changes = true" style="margin-right: 0.5rem"></nb-toggle>
                                   <div class="unit">{{ elem.ignorePadding ? 'Ignore viewport padding' : 'Within viewport padding' }}</div>
                                 </div>
                               </nb-list-item>
@@ -504,7 +522,13 @@
                               <nb-list-item *ngFor="let o of _options[elem.type].additional | keyvalue: settings.keyValueWithOriginalOrderPipe">
                                 <div class="key">{{ o.value }}:</div>
                                 <div class="value" *ngIf="_options[elem.type].units[o.key] === 'px' || _options[elem.type].units[o.key] === 's'">
-                                  <input nbInput type="number" [(ngModel)]="elem[o.key]" (change)="al.changes = true" fullWidth />
+                                  <input
+                                    nbInput
+                                    type="number"
+                                    [(ngModel)]="elem[o.key]"
+                                    (change)="elem.scale = o.key === 'width' || o.key === 'height' ? 100 : elem.scale; al.changes = true"
+                                    fullWidth
+                                  />
                                   <div class="unit">{{ _options[elem.type].units[o.key] }}</div>
                                 </div>
                               </nb-list-item>

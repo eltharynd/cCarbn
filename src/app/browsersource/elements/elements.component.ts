@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core'
 import { HypetrainService } from 'src/app/shared/hypetrain.service'
 import { OBSService } from 'src/app/shared/obs.service'
 import { PredictionsService } from 'src/app/shared/predictions.service'
+import { SettingsService } from 'src/app/shared/settings.service'
 import { AlertsService } from '../../shared/alerts.service'
 
 export enum POSITION {
@@ -116,15 +117,9 @@ export const ELEMENT_ANIMATIONS_OUT_INNER = [
   animations: [...ELEMENT_ANIMATIONS_IN, ...ELEMENT_ANIMATIONS_OUT],
 })
 export class ElementsComponent implements OnInit {
-  viewport = {
-    width: 1920,
-    height: 1080,
-    padding: 50,
-  }
-
   currentElements: any[] = []
 
-  constructor(private alerts: AlertsService, public OBS: OBSService, public hypetrain: HypetrainService, public predictions: PredictionsService) {
+  constructor(private alerts: AlertsService, public OBS: OBSService, public hypetrain: HypetrainService, public predictions: PredictionsService, public settings: SettingsService) {
     alerts.elementsSubject.subscribe((element) => {
       switch (element.what) {
         case 'start':
@@ -210,7 +205,6 @@ export class ElementsComponent implements OnInit {
           }
         } catch (e) {}
       } else if (/MANUAL/.test(element.position)) {
-        //TODO HANDLE MANUAL POSITIONING
         try {
           let _width = parseInt(outerStyle.width.replace('px', ''))
           let _height = parseInt(outerStyle.height.replace('px', ''))
@@ -218,8 +212,14 @@ export class ElementsComponent implements OnInit {
           let _targetX = +element.targetX
           let _targetY = +element.targetY
 
-          style.paddingLeft = `${_targetX - _width / 2 - (element.ignorePadding ? +viewport.padding : 0)}px`
-          style.paddingTop = `${_targetY - _height / 2 - (element.ignorePadding ? +viewport.padding : 0)}px`
+          style.paddingLeft = `${_targetX - _width / 2}px`
+          style.paddingTop = `${_targetY - _height / 2}px`
+
+          if (element.ignorePadding) {
+            style.position = 'absolute'
+            style.top = 0
+            style.left = 0
+          }
         } catch (e) {}
       } else {
         style.display = 'flex'
