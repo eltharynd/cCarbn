@@ -36,7 +36,7 @@ export class HypetrainService {
         return
       }
 
-      this.ending = data.type === 'Hype Train End' || (data.event.level === 5 && +data.event.progress >= +data.event.goal)
+      this.ending = data.type === 'Hype Train End' || (data.event?.level === 5 && +data.event?.progress >= +data.event?.goal)
 
       this.expiresAt = data.event.expires_at ? new Date(data.event.expires_at) : null
       this.progress = data.event.progress ? Math.floor((data.event.progress / data.event.goal) * 100) : 0
