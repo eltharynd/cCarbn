@@ -12,10 +12,10 @@
       [@in]="element.loaded ? element.transitionIN : 'loading'"
       [@out]="element.transitionOUT"
     >
-      <app-video *ngIf="element?.type === 'video'" [element]="element" [viewport]="settings.viewport"></app-video>
-      <app-clip *ngIf="element?.type === 'clip'" [element]="element" [viewport]="settings.viewport"></app-clip>
-      <app-gif *ngIf="element?.type === 'gif'" [element]="element" [viewport]="settings.viewport"></app-gif>
-      <app-image *ngIf="element?.type === 'image'" [element]="element" [viewport]="settings.viewport"></app-image>
+      <app-video *ngIf="element?.type === 'video'" [element]="element"></app-video>
+      <app-clip *ngIf="element?.type === 'clip'" [element]="element"></app-clip>
+      <app-gif *ngIf="element?.type === 'gif'" [element]="element"></app-gif>
+      <app-image *ngIf="element?.type === 'image'" [element]="element"></app-image>
     </div>
   </ng-container>
 

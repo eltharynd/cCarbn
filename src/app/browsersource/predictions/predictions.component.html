@@ -77,6 +77,14 @@
       }"
       class="predictions-title"
     >
+      <div
+        *ngIf="!predictions.currentPrediction.locked"
+        [ngStyle]="{
+          textAlign: settings.predictions.growLeftwards ? 'right' : 'unset'
+        }"
+      >
+        Locks in: <app-timediff [target]="predictions.currentPrediction.locks_at"></app-timediff>
+      </div>
       {{ predictions.currentPrediction.title }}
     </div>
   </div>

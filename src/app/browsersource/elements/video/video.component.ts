@@ -1,4 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core'
+import { SettingsService } from 'src/app/shared/settings.service'
 import { AlertsService } from '../../../shared/alerts.service'
 import { ElementsComponent, ELEMENT_ANIMATIONS_IN_INNER, ELEMENT_ANIMATIONS_OUT_INNER } from '../elements.component'
 
@@ -9,11 +10,10 @@ import { ElementsComponent, ELEMENT_ANIMATIONS_IN_INNER, ELEMENT_ANIMATIONS_OUT_
   animations: [...ELEMENT_ANIMATIONS_IN_INNER, ...ELEMENT_ANIMATIONS_OUT_INNER],
 })
 export class VideoComponent implements OnInit {
-  @Input() viewport: any
   @Input() element: any
   @ViewChild('videoPlayer') videoPlayer: ElementRef
 
-  constructor(private alerts: AlertsService) {}
+  constructor(private alerts: AlertsService, public settings: SettingsService) {}
 
   viewportStyle: any = {}
   outerStyle: any = {}
@@ -69,14 +69,7 @@ export class VideoComponent implements OnInit {
       this.outerStyle.height = this.innerStyle.height
     }
 
-    this.viewportStyle = ElementsComponent.elementViewportStyle(this.viewport, this.element, this.outerStyle, this.innerStyle)
-    setTimeout(() => {
-      this.alerts.elementsSubject.next({
-        type: 'video',
-        what: 'ended',
-        element: this.element,
-      })
-    }, 1000)
+    this.viewportStyle = ElementsComponent.elementViewportStyle(this.settings.viewport, this.element, this.outerStyle, this.innerStyle)
   }
 
   onLoadedData() {
@@ -90,7 +83,6 @@ export class VideoComponent implements OnInit {
   }
 
   onPlaybackEnded() {
-    return
     this.alerts.elementsSubject.next({
       type: 'video',
       what: 'ended',
