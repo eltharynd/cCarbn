@@ -5,6 +5,9 @@
 
 .outer-container {
   position: relative;
+  overflow: hidden;
+  min-width: fit-content;
+  min-height: fit-content;
 }
 .rainbow::before {
   content: '';
