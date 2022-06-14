@@ -19,7 +19,9 @@
       [ngStyle]="{
         width: (settings.hypetrain.train[type].size.width * (hypetrain.currentLocomotiveScale || 100)) / 100 + 'px',
         height: (settings.hypetrain.train[type].size.height * (hypetrain.currentLocomotiveScale || 100)) / 100 + 'px',
-        'background-image': settings.hypetrain.train[type].pictures.background ? 'url(' + settings.hypetrain.train[type].pictures.background + '#)' : 'url(locomotive-outer.png)'
+        'background-image': settings.hypetrain.train[type].pictures.background
+          ? 'url(' + settings.hypetrain.train[type].pictures.background + '#)'
+          : 'url(/assets/locomotive-outer.png)'
       }"
     >
       <img
@@ -39,7 +41,9 @@
           width: (settings.hypetrain.train[type].pictureBounds.width! * hypetrain.currentLocomotiveScale) / 100 + 'px',
           left: (settings.hypetrain.train[type].pictureBounds.left! * hypetrain.currentLocomotiveScale) / 100 + 'px',
           height: (settings.hypetrain.train[type].pictureBounds.height! * hypetrain.currentLocomotiveScale) / 100 + 'px',
-          'background-image': settings.hypetrain.train[type].pictures.foreground ? 'url(' + settings.hypetrain.train[type].pictures.foreground + '#)' : 'url(locomotive-inner.png)'
+          'background-image': settings.hypetrain.train[type].pictures.foreground
+            ? 'url(' + settings.hypetrain.train[type].pictures.foreground + '#)'
+            : 'url(/assets/locomotive-inner.png)'
         }"
       ></div>
     </div>

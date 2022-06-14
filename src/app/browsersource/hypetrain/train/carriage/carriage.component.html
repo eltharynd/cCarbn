@@ -14,7 +14,9 @@
     [ngStyle]="{
       width: (settings.hypetrain.train[type].size.width * (hypetrain.currentCarriageScale || 100)) / 100 + 'px',
       height: (settings.hypetrain.train[type].size.height * (hypetrain.currentCarriageScale || 100)) / 100 + 'px',
-      'background-image': settings.hypetrain.train[type].pictures.background ? 'url(' + settings.hypetrain.train[type].pictures.background + '#)' : 'url(carriage-outer.png)'
+      'background-image': settings.hypetrain.train[type].pictures.background
+        ? 'url(' + settings.hypetrain.train[type].pictures.background + '#)'
+        : 'url(/assets/carriage-outer.png)'
     }"
   >
     <img
@@ -34,7 +36,9 @@
         width: (settings.hypetrain.train[type].pictureBounds.width! * hypetrain.currentCarriageScale) / 100 + 'px',
         left: (settings.hypetrain.train[type].pictureBounds.left! * hypetrain.currentCarriageScale) / 100 + 'px',
         height: (settings.hypetrain.train[type].pictureBounds.height! * hypetrain.currentCarriageScale) / 100 + 'px',
-        'background-image': settings.hypetrain.train[type].pictures.foreground ? 'url(' + settings.hypetrain.train[type].pictures.foreground + '#)' : 'url(carriage-inner.png)'
+        'background-image': settings.hypetrain.train[type].pictures.foreground
+          ? 'url(' + settings.hypetrain.train[type].pictures.foreground + '#)'
+          : 'url(/assets/carriage-inner.png)'
       }"
     ></div>
   </div>
