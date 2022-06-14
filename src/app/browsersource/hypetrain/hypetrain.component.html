@@ -1,7 +1,13 @@
 <div
   *ngIf="settings.viewport && settings.hypetrain"
   class="viewport-flex"
-  [ngStyle]="{ width: +settings.viewport.width - +settings.viewport.padding * 2 + 'px', height: +settings.viewport.height - +settings.viewport.padding * 2 + 'px' }"
+  [ngStyle]="{
+    width: +settings.viewport.width - +settings.viewport.padding * 2 + 'px',
+    height: +settings.viewport.height - +settings.viewport.padding * 2 + 'px',
+    position: 'absolute',
+    top: 0,
+    left: 0
+  }"
 >
   <div *ngIf="cantPlay" style="color: red; font-weight: bold; position: absolute">IF YOU OPEN THIS ON A BROWSER YOU NEED TO INTERACT WITH THE PAGE BEFORE IT CAN PLAY MEDIA</div>
   <hypetrain-locomotive *ngIf="settings.hypetrain.train.enabled && hypetrain.currentLevel > 0" [user]="{ name: 'streamer', picture: hypetrain.channelPic }"> </hypetrain-locomotive>
