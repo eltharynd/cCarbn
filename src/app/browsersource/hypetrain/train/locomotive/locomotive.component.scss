@@ -1,27 +1,27 @@
 .anchor {
-    position: absolute;
+  position: absolute;
 }
 
 .container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: flex;
-    width: 1000px;
-    flex-direction: row;
-    flex-wrap: wrap;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  width: 1000px;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 .train {
-    background-image: url("../assets/locomotive-outer.png");
+  background-image: url('assets/templates/hypetrain//locomotive-outer.png');
+  background-size: cover;
+
+  .picture {
+    position: absolute;
+  }
+
+  .top {
+    position: absolute;
+    background-image: url('assets/templates/hypetrain//locomotive-inner.png');
     background-size: cover;
-
-    .picture {
-        position: absolute;
-    }
-
-    .top {
-        position: absolute;
-        background-image: url("../assets/locomotive-inner.png");
-        background-size: cover;
-    }
+  }
 }

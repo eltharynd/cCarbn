@@ -1,21 +1,21 @@
 .anchor {
-    //position: relative;
+  //position: relative;
 }
 
 .container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-image: url('assets/templates/hypetrain//carriage-outer.png');
+  background-size: cover;
+
+  .picture {
     position: absolute;
-    top: 0;
-    left: 0;
-    background-image: url("../assets/carriage-outer.png");
+  }
+
+  .top {
+    position: absolute;
+    background-image: url('assets/templates/hypetrain//carriage-inner.png');
     background-size: cover;
-
-    .picture {
-        position: absolute;
-    }
-
-    .top {
-        position: absolute;
-        background-image: url("../assets/carriage-inner.png");
-        background-size: cover;
-    }
+  }
 }
