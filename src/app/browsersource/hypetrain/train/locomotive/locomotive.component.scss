@@ -12,7 +12,7 @@
   flex-wrap: wrap;
 }
 .train {
-  background-image: url('assets/templates/hypetrain/locomotive-outer.png');
+  background-image: url('/assets/templates/hypetrain/locomotive-outer.png');
   background-size: cover;
 
   .picture {
@@ -21,7 +21,7 @@
 
   .top {
     position: absolute;
-    background-image: url('assets/templates/hypetrain/locomotive-inner.png');
+    background-image: url('/assets/templates/hypetrain/locomotive-inner.png');
     background-size: cover;
   }
 }
