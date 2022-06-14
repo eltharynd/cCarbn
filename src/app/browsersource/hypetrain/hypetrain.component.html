@@ -5,8 +5,8 @@
     width: +settings.viewport.width - +settings.viewport.padding * 2 + 'px',
     height: +settings.viewport.height - +settings.viewport.padding * 2 + 'px',
     position: 'absolute',
-    top: 0,
-    left: 0
+    top: +settings.viewport.padding + 'px',
+    left: +settings.viewport.padding + 'px'
   }"
 >
   <div *ngIf="cantPlay" style="color: red; font-weight: bold; position: absolute">IF YOU OPEN THIS ON A BROWSER YOU NEED TO INTERACT WITH THE PAGE BEFORE IT CAN PLAY MEDIA</div>
