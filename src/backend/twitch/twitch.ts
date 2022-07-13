@@ -236,6 +236,7 @@ export class Twitch {
     return subscriptions
   }
 
+  //TODO implement the rest of the listeners
   static async toggleListener(channel: HelixUser, listener: Listeners, enable, settings) {
     let iClient = await this.findByChannel(channel)
     if (!iClient && enable) {
