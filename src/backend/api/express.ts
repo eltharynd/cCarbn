@@ -1,5 +1,4 @@
 import * as express from 'express'
-import * as fs from 'fs'
 require('express-async-errors')
 import { createServer, Server } from 'http'
 import * as cors from 'cors'
@@ -8,11 +7,7 @@ import { PORT } from '..'
 import { AuthRoutes } from './endpoints/auth.routes'
 import { UserRoutes } from './endpoints/user.routes'
 import { AlertsRoutes } from './endpoints/alerts.routes'
-import { Mongo } from '../db/mongo'
-import { User } from '../db/models/user.model'
 
-import { TTSProvider } from '../external/tts.provider'
-import { File } from '../db/models/files.model'
 import { UploadRoutes } from './endpoints/uploads.routes'
 import { TTSRoutes } from './endpoints/tts.routes'
 
