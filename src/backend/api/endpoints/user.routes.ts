@@ -67,7 +67,7 @@ export class UserRoutes {
     })
 
     Api.endpoints.get('/api/user/:userId/settings', authMiddleware, async (req, res) => {
-      let found: any = await Settings.findOne({ userId: req.params.userId })
+      let found = await Settings.findOne({ userId: req.params.userId })
       if (!found) {
         found = new Settings({ userId: req.params.userId })
         await found.save()
