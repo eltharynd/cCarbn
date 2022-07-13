@@ -129,10 +129,7 @@ export class AuthRoutes {
 
     Api.endpoints.post('/api/auth/resume', async (req, res) => {
       let user = req.body
-      if (!user) {
-        res.status(400).send('Bad Request')
-        return
-      }
+      if (!user) return res.status(400).send('Bad Request')
 
       let registered = await User.findOne({ token: { $eq: req.body.token } })
       if (!registered) res.status(401).send('Could not resume session...')
