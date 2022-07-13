@@ -137,7 +137,7 @@ export class AuthRoutes {
         let twitch = new ApiClient({
           authProvider: Chat.defaultUserProvider,
         })
-        let helixUser: HelixUser = await twitch.users.getUserById(registered.twitchId)
+        let helixUser = await twitch.users.getUserById(registered.twitchId)
         if (helixUser) {
           registered.twitchPic = helixUser.profilePictureUrl
           registered.twitchName = helixUser.name
