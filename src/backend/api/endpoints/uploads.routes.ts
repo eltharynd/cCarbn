@@ -16,7 +16,32 @@ export class UploadRoutes {
 
     Api.endpoints
       .route('/api/uploads/:userId/:filename')
-      .post(authMiddleware, UploadRoutes.upload, async (req, res): Promise<any> => {
+      .get(async (req, res) => {
+        let found: any = await Mongo.Upload.findOne({ filename: req.params.filename, 'metadata.userId': Mongo.ObjectId(req.params.userId) })
+        if (!found) return res.status(404).send()
+        try {
+          const readStream = await Mongo.Upload.read({ _id: found._id })
+          if (!readStream) return res.status(404).send()
+          res.set({
+            'content-type': found.contentType,
+            'Last-modified': found.updatedAt.toUTCString(),
+          })
+          readStream.on('data', (chunk) => {
+            res.write(chunk)
+          })
+          readStream.on('end', () => {
+            res.status(200).end()
+          })
+          readStream.on('error', (err) => {
+            console.error(err)
+            res.status(500).send(err)
+          })
+        } catch (e) {
+          console.error(e)
+          return res.status(500).send()
+        }
+      })
+      .post(authMiddleware, UploadRoutes.upload, async (req, res) => {
         let autoIndexing = req.headers['autoindexing'] === 'true'
 
         //@ts-ignore
@@ -58,32 +83,7 @@ export class UploadRoutes {
           }
         )
       })
-      .get(async (req, res): Promise<any> => {
-        let found: any = await Mongo.Upload.findOne({ filename: req.params.filename, 'metadata.userId': Mongo.ObjectId(req.params.userId) })
-        if (!found) return res.status(404).send()
-        try {
-          const readStream = await Mongo.Upload.read({ _id: found._id })
-          if (!readStream) return res.status(404).send()
-          res.set({
-            'content-type': found.contentType,
-            'Last-modified': found.updatedAt.toUTCString(),
-          })
-          readStream.on('data', (chunk) => {
-            res.write(chunk)
-          })
-          readStream.on('end', () => {
-            res.status(200).end()
-          })
-          readStream.on('error', (err) => {
-            console.error(err)
-            res.status(500).send(err)
-          })
-        } catch (e) {
-          console.error(e)
-          return res.status(500).send()
-        }
-      })
-      .delete(authMiddleware, async (req, res): Promise<any> => {
+      .delete(authMiddleware, async (req, res) => {
         let found = await File.findOne({ filename: req.params.filename, 'metadata.userId': Mongo.ObjectId(req.params.userId) })
         if (!found) return res.status(404).send()
 
@@ -103,7 +103,7 @@ export class UploadRoutes {
         }
       })
 
-    Api.endpoints.get('/api/uploads/:userId/link/:filename', async (req, res): Promise<any> => {
+    Api.endpoints.get('/api/uploads/:userId/link/:filename', async (req, res) => {
       let found = await File.findOne({ filename: req.params.filename, 'metadata.userId': Mongo.ObjectId(req.params.userId) })
       if (!found) return res.status(404).send()
 
@@ -112,12 +112,12 @@ export class UploadRoutes {
       res.send({})
     })
 
-    Api.endpoints.get('/api/uploads/:userId/unlink/:filename', async (req, res): Promise<any> => {
+    Api.endpoints.get('/api/uploads/:userId/unlink/:filename', async (req, res) => {
       await UploadRoutes.unlink(req.params.filename, req.params.userId, res)
     })
   }
 
-  static async unlink(filename, userId, res?): Promise<any> {
+  static async unlink(filename, userId, res?) {
     let found = await File.findOne({ filename: filename, 'metadata.userId': Mongo.ObjectId(userId) })
     if (!found) return res ? res.status(404).send() : null
 
