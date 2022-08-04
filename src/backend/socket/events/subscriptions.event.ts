@@ -3,7 +3,7 @@ import {
   EventSubChannelSubscriptionEndEvent,
   EventSubChannelSubscriptionGiftEvent,
   EventSubChannelSubscriptionMessageEvent,
-} from '@twurple/eventsub/lib'
+} from '@twurple/eventsub'
 import { User } from '../../db/models/user.model'
 import { Socket } from '../socket'
 import { toJSON, getUserInfo } from './util/eventUtils'

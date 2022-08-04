@@ -1,4 +1,4 @@
-import { EventSubStreamOnlineEvent, EventSubStreamOfflineEvent } from '@twurple/eventsub/lib'
+import { EventSubStreamOnlineEvent, EventSubStreamOfflineEvent } from '@twurple/eventsub'
 import { filter, from, take, tap } from 'rxjs'
 import { User } from '../../db/models/user.model'
 import { Chat } from '../../twitch/chat'

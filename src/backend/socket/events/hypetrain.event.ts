@@ -1,5 +1,5 @@
-import { HelixUser } from '@twurple/api/lib'
-import { EventSubChannelHypeTrainBeginEvent, EventSubChannelHypeTrainEndEvent, EventSubChannelHypeTrainProgressEvent } from '@twurple/eventsub/lib'
+import { HelixUser } from '@twurple/api'
+import { EventSubChannelHypeTrainBeginEvent, EventSubChannelHypeTrainEndEvent, EventSubChannelHypeTrainProgressEvent } from '@twurple/eventsub'
 import { User } from '../../db/models/user.model'
 import { Twitch } from '../../twitch/twitch'
 import { Socket } from '../socket'

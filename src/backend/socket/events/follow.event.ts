@@ -1,4 +1,4 @@
-import { EventSubChannelFollowEvent } from '@twurple/eventsub/lib'
+import { EventSubChannelFollowEvent } from '@twurple/eventsub'
 import { User } from '../../db/models/user.model'
 import { Socket } from '../socket'
 import { toJSON, getUserInfo } from './util/eventUtils'
