@@ -17,10 +17,7 @@
     "noImplicitAny": false,
     "target": "es2020",
     "module": "es2020",
-    "lib": [
-      "es2018",
-      "dom"
-    ],
+    "lib": ["es2020", "dom"],
     "strictPropertyInitialization": false,
     "strictNullChecks": false
   },
@@ -31,9 +28,5 @@
     "strictTemplates": true,
     "strictPropertyInitialization": false
   },
-  "exclude": [
-    "src/backend/*.ts",
-    "src/backend/**/*.ts",
-    "src/backend/**/*.json"
-  ]
+  "exclude": ["src/backend/*.ts", "src/backend/**/*.ts", "src/backend/**/*.json"]
 }
