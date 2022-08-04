@@ -7,7 +7,7 @@
     "url": "https://twitch.tv/eltharynd"
   },
   "scripts": {
-    "build": "echo n| npm install && ng build && rm -rf dist/backend && tsc --project backend.tsconfig.json",
+    "build": "echo n| npm install --force && ng build && rm -rf dist/backend && tsc --project backend.tsconfig.json",
     "start": "NODE_ENV='production' node dist/backend/index.js",
     "start-win": "SET NODE_ENV='production' && node dist/backend/index.js",
     "angular-dev": "ng serve",
