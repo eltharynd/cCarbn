@@ -396,7 +396,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
       lesser: '<',
       lesserEqual: '<=',
       greater: '>',
-      greaterEqual: '<=',
+      greaterEqual: '>=',
     },
     user: {
       is: 'is',
