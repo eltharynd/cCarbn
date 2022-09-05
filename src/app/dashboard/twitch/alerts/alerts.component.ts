@@ -473,11 +473,13 @@ export class AlertsComponent implements OnInit, OnDestroy {
         position: 'Position',
         transitionIN: 'Transition IN',
         transitionOUT: 'Transition OUT',
+        volume: 'Volume',
       },
       default: {
         position: POSITION.CENTER,
         transitionIN: TRANSITION.NONE,
         transitionOUT: TRANSITION.NONE,
+        volume: 100,
       },
       additional: {
         width: 'Manual Width',
@@ -490,10 +492,26 @@ export class AlertsComponent implements OnInit, OnDestroy {
         position: 'POSITION',
         transitionIN: 'TRANSITION',
         transitionOUT: 'TRANSITION',
+        volume: '%',
         width: 'px',
         height: 'px',
         offsetX: 'px',
         offsetY: 'px',
+      },
+    },
+    audio: {
+      mandatory: {
+        volume: 'Volume',
+      },
+      default: {
+        volume: 100,
+      },
+      additional: {
+        delay: 'Delay execution',
+      },
+      units: {
+        volume: '%',
+        delay: 's',
       },
     },
     gif: {
@@ -556,35 +574,18 @@ export class AlertsComponent implements OnInit, OnDestroy {
         offsetY: 'px',
       },
     },
-    audio: {
-      mandatory: {
-        volume: 'Volume',
-      },
-      default: {
-        volume: 100,
-      },
-      additional: {
-        delay: 'Delay execution',
-      },
-      units: {
-        volume: '%',
-        delay: 's',
-      },
-    },
     clip: {
       mandatory: {
         position: 'Position',
         transitionIN: 'Transition IN',
         transitionOUT: 'Transition OUT',
         playerScale: 'Player scale',
-        volume: 'Volume',
       },
       default: {
         position: POSITION.CENTER,
         transitionIN: TRANSITION.NONE,
         transitionOUT: TRANSITION.NONE,
         playerScale: 100,
-        volume: 100,
       },
       additional: {
         delay: 'Delay execution',
@@ -594,7 +595,6 @@ export class AlertsComponent implements OnInit, OnDestroy {
         transitionIN: 'TRANSITION',
         transitionOUT: 'TRANSITION',
         playerScale: '%',
-        volume: '%',
         delay: 's',
       },
     },
