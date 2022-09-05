@@ -496,11 +496,6 @@ export class AlertsComponent implements OnInit, OnDestroy {
         offsetY: 'px',
       },
     },
-    audio: {
-      mandatory: {},
-      default: {},
-      additional: {},
-    },
     gif: {
       mandatory: {
         duration: 'Duration',
@@ -561,18 +556,35 @@ export class AlertsComponent implements OnInit, OnDestroy {
         offsetY: 'px',
       },
     },
+    audio: {
+      mandatory: {
+        volume: 'Volume',
+      },
+      default: {
+        volume: 100,
+      },
+      additional: {
+        delay: 'Delay execution',
+      },
+      units: {
+        volume: '%',
+        delay: 's',
+      },
+    },
     clip: {
       mandatory: {
         position: 'Position',
         transitionIN: 'Transition IN',
         transitionOUT: 'Transition OUT',
         playerScale: 'Player scale',
+        volume: 'Volume',
       },
       default: {
         position: POSITION.CENTER,
         transitionIN: TRANSITION.NONE,
         transitionOUT: TRANSITION.NONE,
         playerScale: 100,
+        volume: 100,
       },
       additional: {
         delay: 'Delay execution',
@@ -582,6 +594,7 @@ export class AlertsComponent implements OnInit, OnDestroy {
         transitionIN: 'TRANSITION',
         transitionOUT: 'TRANSITION',
         playerScale: '%',
+        volume: '%',
         delay: 's',
       },
     },

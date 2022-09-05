@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core'
 import { AlertsService } from '../../../shared/alerts.service'
 
 @Component({
@@ -7,13 +7,13 @@ import { AlertsService } from '../../../shared/alerts.service'
   styleUrls: ['../elements.component.scss'],
 })
 export class AudioComponent {
-
   @Input() element: any
   @ViewChild('audioPlayer') audioPlayer: ElementRef
 
   constructor(private alerts: AlertsService) {}
 
   onLoadedData() {
+    this.audioPlayer.nativeElement.volume = (this.element.volume || 100) / 100
     this.audioPlayer.nativeElement.play()
   }
 
@@ -26,8 +26,7 @@ export class AudioComponent {
     this.alerts.elementsSubject.next({
       type: 'audio',
       what: 'ended',
-      element: this.element
+      element: this.element,
     })
   }
-
 }
