@@ -20,25 +20,6 @@ import { v4 } from 'uuid'
 export var channelID
 
 let startApp = async () => {
-  let _att = []
-  let start = Date.now()
-  for (let i = 1; i <= 10000; i++) {
-    let secret = bcrypt.hashSync(v4(), 5)
-    let attempts = 1
-    while (secret.includes('/')) {
-      secret = bcrypt.hashSync(secret, 5)
-      attempts++
-    }
-    console.log(`Run ${i} attempts: ${attempts}`)
-    _att.push(attempts)
-  }
-
-  console.log(`---------------------------------`)
-  console.log(`Over 10000 attempts averaged: ${_att.reduce((a, b) => a + b) / 10000}`)
-  let elapsed = (Date.now() - start) / 1000
-  console.log(`Total time: ${Math.floor(elapsed)}s (average of ${Math.floor(elapsed / 10000)})`)
-  return
-
   console.info('CONNECTING TO DATABASE...')
 
   await Mongo.connect()
