@@ -82,6 +82,7 @@ let startApp = async () => {
         continue
       }
     }
+    break
   }
 
   console.info('SERVER STARTED SUCCESSFULLY...')
